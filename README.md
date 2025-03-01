@@ -5,7 +5,7 @@
 
 # ICUP-APP
 
-In this project, the user interface is developed to connect with ICUP-Server, the following technologies are used:
+In this project, the administration interface is developed to interact with the API and the backend of the ICUP app, the following technologies are used:
 
 - ReactJs
 - Zustand
@@ -22,6 +22,7 @@ In this project, the user interface is developed to connect with ICUP-Server, th
 Install my-project with npm or pnpm
 
 1. Clone the project
+
 2. Install dependencies
 
 ```
