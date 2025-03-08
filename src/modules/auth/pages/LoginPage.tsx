@@ -232,6 +232,35 @@ export const LoginPage = (): JSX.Element => {
           </form>
         </Form>
       </div>
+      {import.meta.env.VITE_FRONTEND_URL === 'https://icup-app-test.vercel.app' && (
+        <div className='mt-6 mx-auto w-[22rem] md:w-[30rem] px-4 py-4 bg-white dark:bg-gray-900 rounded-lg shadow-md dark:shadow-slate-800'>
+          <h4 className='text-lg font-bold text-gray-800 dark:text-gray-300 text-center mb-2'>
+            Credenciales de prueba
+          </h4>
+          <p className='text-sm text-gray-600 dark:text-gray-400 text-center mb-3'>
+            Usa estas credenciales para probar la aplicación:
+          </p>
+
+          <div className='space-y-2'>
+            {[
+              { email: 'user.test1@icup.com', password: 'Abcd12345#' },
+              { email: 'user.test2@icup.com', password: 'Abcd12345%' },
+            ].map((cred, index) => (
+              <div
+                key={index}
+                className='p-2 px-3 bg-slate-50 dark:bg-gray-800 rounded-lg shadow text-sm text-gray-700 dark:text-gray-300 flex flex-col sm:flex-row sm:justify-between sm:items-center text-center sm:text-left'
+              >
+                <p className='font-medium'>
+                  ✉️ <span className='text-blue-500'>Usuario:</span> {cred.email}
+                </p>
+                <p className='font-medium sm:ml-4'>
+                  🔑 <span className='text-blue-500'>Contraseña:</span> {cred.password}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
