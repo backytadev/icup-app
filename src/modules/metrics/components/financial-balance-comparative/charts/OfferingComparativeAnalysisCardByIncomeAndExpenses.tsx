@@ -45,7 +45,13 @@ import {
   SelectTrigger,
 } from '@/shared/components/ui/select';
 import { Button } from '@/shared/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
+import {
+  Card,
+  CardTitle,
+  CardHeader,
+  CardContent,
+  CardDescription,
+} from '@/shared/components/ui/card';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/shared/components/ui/form';
 
@@ -120,11 +126,16 @@ export const OfferingComparativeAnalysisCardByIncomeAndExpenses = ({
   }
 
   return (
-    <Card className='bg-slate-50/40 dark:bg-slate-900/40 flex flex-col col-start-1 col-end-3 h-[31.8rem] sm:h-[34rem] md:h-[34rem] lg:h-[36rem] m-0 border-slate-200 dark:border-slate-800'>
+    <Card className='bg-slate-50/40 dark:bg-slate-900/40 flex flex-col col-start-1 col-end-3 h-[33.2rem] sm:h-[34.8rem] md:h-[35.3rem] lg:h-[37.3rem] m-0 border-slate-200 dark:border-slate-800'>
       <CardHeader className='z-10 flex flex-col sm:flex-row items-center justify-between px-4 py-2.5'>
-        <CardTitle className='flex justify-center items-center gap-2 font-bold text-[22px] sm:text-[25px] md:text-[28px] 2xl:text-[30px]'>
-          Ingresos Vs Salidas
-        </CardTitle>
+        <div className='flex flex-col items-center sm:items-start'>
+          <CardTitle className='font-bold text-[22px] sm:text-[25px] md:text-[28px] 2xl:text-[30px]'>
+            Ingresos Vs Salidas
+          </CardTitle>
+          <CardDescription className='sm:ml-[2px] sm:text-left text-center text-[14px] md:text-[16px] italic'>
+            (No se considera las ofrendas de Terreno Iglesia).
+          </CardDescription>
+        </div>
         <Form {...form}>
           <form className='flex'>
             <FormField
