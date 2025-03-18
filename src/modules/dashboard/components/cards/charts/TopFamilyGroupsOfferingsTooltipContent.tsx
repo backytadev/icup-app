@@ -133,19 +133,19 @@ export const TopFamilyGroupsTooltipContent = (
       <ul className='list-disc pl-3 sm:pl-4 flex flex-col gap-1.5'>
         {payload[0]?.payload?.accumulatedOfferingPEN > 0 && (
           <li className='font-medium text-[13.5px] sm:text-[13.5px] dark:text-slate-400 text-slate-500'>
-            <span className='sm:-ml-1'>{`Soles: ${payload[0]?.payload?.accumulatedOfferingPEN} PEN`}</span>
+            <span className='sm:-ml-1'>{`Soles: ${payload[0]?.payload?.accumulatedOfferingPEN.toFixed(2)} PEN`}</span>
           </li>
         )}
 
         {payload[0]?.payload?.accumulatedOfferingUSD > 0 && (
           <li className='font-medium text-[13.5px] sm:text-[13.5px] dark:text-slate-400 text-slate-500'>
-            <span className='sm:-ml-1'>{`Dolares: ${payload[0]?.payload?.accumulatedOfferingUSD} USD`}</span>
+            <span className='sm:-ml-1'>{`Dolares: ${payload[0]?.payload?.accumulatedOfferingUSD.toFixed(2)} USD`}</span>
           </li>
         )}
 
         {payload[0]?.payload?.accumulatedOfferingEUR > 0 && (
           <li className='font-medium text-[13.5px] sm:text-[13.5px] dark:text-slate-400 text-slate-500'>
-            <span className='sm:-ml-1'>{`Euros: ${payload[0]?.payload?.accumulatedOfferingEUR} EUR`}</span>
+            <span className='sm:-ml-1'>{`Euros: ${payload[0]?.payload?.accumulatedOfferingEUR.toFixed(2)} EUR`}</span>
           </li>
         )}
       </ul>

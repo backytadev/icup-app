@@ -41,13 +41,12 @@ export const offeringIncomeInfoColumns: Array<ColumnDef<OfferingIncomeColumns, a
     },
   },
   {
-    id: 'typeWithSubtype',
-    accessorKey: 'type',
+    id: 'subType',
+    accessorKey: 'subType',
     cell: (info) => {
-      const amount = info.getValue();
-      const subType = info.row.original.subType;
+      const { type, subType } = info.row.original;
 
-      return `${amount}  ${subType === '-' ? '' : `- ${subType}`}`;
+      return `${type}  ${subType === '-' ? '' : `- ${subType}`}`;
     },
     header: ({ column }) => {
       return (
@@ -102,7 +101,12 @@ export const offeringIncomeInfoColumns: Array<ColumnDef<OfferingIncomeColumns, a
       } = info.row.original;
 
       const belongingMap = {
-        [OfferingIncomeCreationSubTypeNames.family_group]: familyGroup?.familyGroupName,
+        [OfferingIncomeCreationSubTypeNames.family_group]: (
+          <>
+            <span>{familyGroup?.familyGroupName}</span>
+            <p className='text-xs italic dark:text-slate-400 text-slate-500'>{`Pred: ${getInitialFullNames({ firstNames: familyGroup?.preacherFirstNames ?? '', lastNames: familyGroup?.preacherLastNames ?? '' })}`}</p>
+          </>
+        ),
         [OfferingIncomeCreationSubTypeNames.zonal_evangelism]: zone?.zoneName,
         [OfferingIncomeCreationSubTypeNames.zonal_fasting]: zone?.zoneName,
         [OfferingIncomeCreationSubTypeNames.zonal_vigil]: zone?.zoneName,
