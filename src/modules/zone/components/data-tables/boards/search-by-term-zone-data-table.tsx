@@ -227,6 +227,16 @@ export function SearchByTermZoneDataTable<TData, TValue>({
             )}
           </div>
 
+          {/* Records Count */}
+          <div>
+            <span className='text-purple-500 dark:text-purple-500 font-bold text-[14.5px] md:text-[16px]'>
+              Cantidad de registros:
+            </span>{' '}
+            <span className='font-medium text-[14px] md:text-[15px] italic'>
+              {query.data?.length ?? 0} registros
+            </span>
+          </div>
+
           {/* Search Church */}
           <div>
             <span className='dark:text-emerald-500 text-emerald-600 font-bold text-[14.5px] md:text-[15.5px]'>

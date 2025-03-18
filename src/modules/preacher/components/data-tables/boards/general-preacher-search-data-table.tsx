@@ -166,12 +166,33 @@ export function GeneralPreacherSearchDataTable<TData, TValue>({
       <Toaster position='top-center' richColors />
       {!isFiltersSearchGeneralDisabled && (
         <div>
-          <span className='text-amber-500 dark:text-offering-color font-bold text-[14.5px] md:text-[16px]'>
-            Búsqueda actual:
-          </span>{' '}
-          <span className='font-medium text-[14px] md:text-[15px] italic'>
-            Predicadores (Todos)
-          </span>
+          <div>
+            <span className='text-amber-500 dark:text-offering-color font-bold text-[14.5px] md:text-[16px]'>
+              Búsqueda actual:
+            </span>{' '}
+            <span className='font-medium text-[14px] md:text-[15px] italic'>
+              Predicadores (Todos)
+            </span>
+          </div>
+
+          <div>
+            <span className='text-purple-500 dark:text-purple-500 font-bold text-[14.5px] md:text-[16px]'>
+              Cantidad de registros:
+            </span>{' '}
+            <span className='font-medium text-[14px] md:text-[15px] italic'>
+              {query.data?.length ?? 0} registros
+            </span>
+          </div>
+
+          <div>
+            <span className='dark:text-emerald-500 text-emerald-600 font-bold text-[14.5px] md:text-[15.5px]'>
+              Iglesia de búsqueda:
+            </span>{' '}
+            <span className='font-medium text-[14px] md:text-[14.5px] italic'>
+              {`${query?.data?.[0]?.theirChurch?.abbreviatedChurchName ?? 'Todas las Iglesias'}`}
+            </span>
+          </div>
+
           <div className='pb-8 lg:pb-8 grid grid-cols-2 gap-4 lg:flex lg:items-center py-4 md:py-6 lg:py-4 lg:gap-3'>
             <div className='flex w-full col-span-2 gap-2 md:gap-3 md:row-start-1 md:row-end-2'>
               <Input

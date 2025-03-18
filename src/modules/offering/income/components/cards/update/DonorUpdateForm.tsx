@@ -48,7 +48,7 @@ import { Card, CardContent } from '@/shared/components/ui/card';
 import { Tabs, TabsContent } from '@/shared/components/ui/tabs';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
 
-interface DiscipleFormUpdateProps {
+interface DonorFormUpdateProps {
   id: string | undefined;
   dialogClose: () => void;
   scrollToTop: () => void;
@@ -60,7 +60,7 @@ export const DonorUpdateForm = ({
   data,
   dialogClose,
   scrollToTop,
-}: DiscipleFormUpdateProps): JSX.Element => {
+}: DonorFormUpdateProps): JSX.Element => {
   //* States
   const [isInputBirthDateOpen, setIsInputBirthDateOpen] = useState<boolean>(false);
   const [isInputDisabled, setIsInputDisabled] = useState<boolean>(false);
@@ -98,6 +98,7 @@ export const DonorUpdateForm = ({
     externalDonorUpdateForm: form,
     setIsMessageErrorDisabled,
     setIsSubmitButtonDisabled,
+    isInputDisabled,
   });
 
   const externalDonorUpdateMutation = useExternalDonorUpdateMutation({

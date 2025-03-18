@@ -216,7 +216,8 @@ export function SearchByTermOfferingExpenseDataTable<TData, TValue>({
                 Object.entries(OfferingExpenseSearchTypeNames).find(
                   ([key, value]) => key === dataForm?.searchType && value
                 )?.[1]
-              }`}
+              }`}{' '}
+              {!dataForm?.searchSubType ? '~ Por fecha' : ''}
             </span>
             {dataForm?.searchSubType &&
               (dataForm?.searchType === OfferingExpenseSearchType.PlaningEventsExpenses ||
@@ -232,7 +233,8 @@ export function SearchByTermOfferingExpenseDataTable<TData, TValue>({
                     Object.entries(OfferingExpenseSearchSubTypeNames).find(
                       ([key, value]) => key === dataForm?.searchSubType && value
                     )?.[1]
-                  }`}
+                  }`}{' '}
+                  ~ Por fecha
                 </span>
               )}
           </div>
@@ -262,6 +264,16 @@ export function SearchByTermOfferingExpenseDataTable<TData, TValue>({
                 }`}
               </span>
             )}
+          </div>
+
+          {/* Records Count*/}
+          <div>
+            <span className='text-purple-500 dark:text-purple-500 font-bold text-[14.5px] md:text-[16px]'>
+              Cantidad de registros:
+            </span>{' '}
+            <span className='font-medium text-[14px] md:text-[15px] italic'>
+              {query.data?.length} registros
+            </span>
           </div>
 
           {/* Search Church */}

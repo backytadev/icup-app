@@ -699,8 +699,8 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                             <Dialog open={isOpen} onOpenChange={setIsOpen}>
                               <DialogTrigger asChild>
                                 {externalDonorId && (
-                                  <Button className='w-[3.3rem] h-5 m-0 bg-slate-950 hover:bg-slate-950'>
-                                    <Pencil className='h-4 w-6 sm:h-6 sm:w-6 text-white' />
+                                  <Button className='w-[3.3rem] h-5 m-0 py-4 dark:bg-slate-950 dark:hover:bg-slate-900 bg-white hover:bg-slate-100'>
+                                    <Pencil className='h-4 w-6 sm:h-6 sm:w-6 dark:text-white text-black' />
                                   </Button>
                                 )}
                               </DialogTrigger>

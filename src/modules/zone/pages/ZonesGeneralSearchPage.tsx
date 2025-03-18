@@ -87,9 +87,7 @@ export const ZonesGeneralSearchPage = (): JSX.Element => {
   });
 
   //* Watchers
-  const limit = form.watch('limit');
-  const offset = form.watch('offset');
-  const order = form.watch('order');
+  const { limit, offset, order, all } = form.watch();
 
   //* Queries
   const churchesQuery = useQuery({
@@ -100,13 +98,11 @@ export const ZonesGeneralSearchPage = (): JSX.Element => {
 
   //* Effects
   useEffect(() => {
-    if (limit !== '' && offset !== '' && order !== '') {
-      setIsDisabledSubmitButton(false);
-    }
+    if (all) form.setValue('limit', '10');
+  }, [all]);
 
-    if (limit === '' || offset === '' || order === '') {
-      setIsDisabledSubmitButton(true);
-    }
+  useEffect(() => {
+    setIsDisabledSubmitButton(!limit || !offset || !order);
   }, [limit, offset, order]);
 
   useEffect(() => {
@@ -116,6 +112,12 @@ export const ZonesGeneralSearchPage = (): JSX.Element => {
   useEffect(() => {
     document.title = 'Modulo Zona - IcupApp';
   }, []);
+
+  useEffect(() => {
+    if (churchesQuery.data?.length) {
+      form.setValue('churchId', churchesQuery.data[0].id);
+    }
+  }, [churchesQuery.data, searchParams]);
 
   //* Form handler
   function onSubmit(formData: z.infer<typeof formSearchGeneralSchema>): void {
@@ -281,7 +283,7 @@ export const ZonesGeneralSearchPage = (): JSX.Element => {
                       </FormDescription>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        defaultValue={field.value || churchesQuery?.data?.[0]?.id}
                         value={field.value}
                       >
                         <FormControl className='text-[14px] md:text-[14px]'>

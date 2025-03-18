@@ -35,6 +35,7 @@ import {
 } from '@/modules/offering/income/enums/offering-income-search-sub-type.enum';
 import { OfferingIncomeCreationTypeNames } from '@/modules/offering/income/enums/offering-income-creation-type.enum';
 import { OfferingIncomeCreationSubTypeNames } from '@/modules/offering/income/enums/offering-income-creation-sub-type.enum';
+import { OfferingIncomeCreationCategoryNames } from '@/modules/offering/income/enums/offering-income-creation-category.enum';
 import { OfferingIncomeSearchSelectOptionNames } from '@/modules/offering/income/enums/offering-income-search-select-option.enum';
 
 import { type OfferingIncomeQueryParams } from '@/modules/offering/income/interfaces/offering-income-query-params.interface';
@@ -164,6 +165,10 @@ export function SearchByTermOfferingIncomeDataTable<TData, TValue>({
         subType:
           Object.entries(OfferingIncomeCreationSubTypeNames).find(
             ([key]) => key === item.subType
+          )?.[1] ?? '-',
+        category:
+          Object.entries(OfferingIncomeCreationCategoryNames).find(
+            ([key]) => key === item.category
           )?.[1] ?? '-',
       }));
       setTranslatedData(transformedData as any);
@@ -383,6 +388,16 @@ export function SearchByTermOfferingIncomeDataTable<TData, TValue>({
                 </span>
               )
             }
+          </div>
+
+          {/* Records Count*/}
+          <div>
+            <span className='text-purple-500 dark:text-purple-500 font-bold text-[14.5px] md:text-[16px]'>
+              Cantidad de registros:
+            </span>{' '}
+            <span className='font-medium text-[14px] md:text-[15px] italic'>
+              {query.data?.length} registros
+            </span>
           </div>
 
           {/* Search Church */}

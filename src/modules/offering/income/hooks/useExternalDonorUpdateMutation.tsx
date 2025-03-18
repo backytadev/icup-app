@@ -69,6 +69,7 @@ export const useExternalDonorUpdateMutation = ({
         position: 'top-center',
         className: 'justify-center',
       });
+      setIsSubmitButtonDisabled(true);
 
       setTimeout(() => {
         scrollToTop();

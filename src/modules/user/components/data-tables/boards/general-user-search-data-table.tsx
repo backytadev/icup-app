@@ -162,10 +162,22 @@ export function GeneralUserSearchDataTable<TData, TValue>({
       <Toaster position='top-center' richColors />
       {!isFiltersSearchGeneralDisabled && (
         <div>
-          <span className='text-amber-500 dark:text-offering-color font-bold text-[14.5px] md:text-[16px]'>
-            Búsqueda actual:
-          </span>{' '}
-          <span className='font-medium text-[14px] md:text-[15px] italic'>Usuarios (Todos)</span>
+          <div>
+            <span className='text-amber-500 dark:text-offering-color font-bold text-[14.5px] md:text-[16px]'>
+              Búsqueda actual:
+            </span>{' '}
+            <span className='font-medium text-[14px] md:text-[15px] italic'>Usuarios (Todos)</span>
+          </div>
+
+          <div>
+            <span className='text-teal-500 dark:text-teal-500 font-bold text-[14.5px] md:text-[16px]'>
+              Cantidad de registros:
+            </span>{' '}
+            <span className='font-medium text-[14px] md:text-[15px] italic'>
+              {query.data?.length ?? 0} registros
+            </span>
+          </div>
+
           <div className='pb-8 lg:pb-8 grid grid-cols-2 gap-4 lg:flex lg:items-center py-4 md:py-6 lg:py-4 lg:gap-3'>
             <div className='flex w-full col-span-2 gap-2 md:gap-3 md:row-start-1 md:row-end-2'>
               <Input

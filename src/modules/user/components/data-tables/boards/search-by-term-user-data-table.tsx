@@ -222,6 +222,15 @@ export function SearchByTermUserDataTable<TData, TValue>({
             )}
           </div>
 
+          <div>
+            <span className='text-teal-500 dark:text-teal-500 font-bold text-[14.5px] md:text-[16px]'>
+              Cantidad de registros:
+            </span>{' '}
+            <span className='font-medium text-[14px] md:text-[15px] italic'>
+              {query.data?.length ?? 0} registros
+            </span>
+          </div>
+
           {/* Inputs Filters */}
           <div className='pb-8 pt-4 lg:pb-8 grid grid-cols-2 gap-4 lg:flex lg:items-center lg:py-4 lg:gap-3'>
             <div className='flex w-full col-span-2 gap-2 md:gap-3 md:row-start-1 md:row-end-2'>

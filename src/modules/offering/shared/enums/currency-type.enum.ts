@@ -5,7 +5,7 @@ export enum CurrencyType {
 }
 
 export const CurrencyTypeNames: Record<CurrencyType, string> = {
-  [CurrencyType.PEN]: 'Soles',
-  [CurrencyType.USD]: 'Dólares',
-  [CurrencyType.EUR]: 'Euros',
+  [CurrencyType.PEN]: 'PEN',
+  [CurrencyType.USD]: 'USD',
+  [CurrencyType.EUR]: 'EUR',
 };

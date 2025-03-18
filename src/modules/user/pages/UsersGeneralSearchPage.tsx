@@ -82,19 +82,15 @@ export const UsersGeneralSearchPage = (): JSX.Element => {
   });
 
   //* Watchers
-  const limit = form.watch('limit');
-  const offset = form.watch('offset');
-  const order = form.watch('order');
+  const { limit, offset, order, all } = form.watch();
 
   //* Effects
   useEffect(() => {
-    if (limit !== '' && offset !== '' && order !== '') {
-      setIsDisabledSubmitButton(false);
-    }
+    if (all) form.setValue('limit', '10');
+  }, [all]);
 
-    if (limit === '' || offset === '' || order === '') {
-      setIsDisabledSubmitButton(true);
-    }
+  useEffect(() => {
+    setIsDisabledSubmitButton(!limit || !offset || !order);
   }, [limit, offset, order]);
 
   useEffect(() => {

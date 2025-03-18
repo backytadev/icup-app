@@ -8,6 +8,9 @@ import { OfferingIncomeInfoCard } from '@/modules/offering/income/components/car
 import { type OfferingIncomeColumns } from '@/modules/offering/income/interfaces/offering-income-columns.interface';
 import { OfferingIncomeGenerateTicket } from '@/modules/offering/income/components/cards/info/OfferingIncomeGenerateReceipt';
 
+import { MemberType } from '@/modules/offering/income/enums/member-type.enum';
+import { OfferingIncomeCreationSubTypeNames } from '@/modules/offering/income/enums/offering-income-creation-sub-type.enum';
+
 import { getInitialFullNames } from '@/shared/helpers/get-full-names.helper';
 import { formatDateToLimaDayMonthYear } from '@/shared/helpers/format-date-to-lima';
 import { CurrencyTypeNames } from '@/modules/offering/shared/enums/currency-type.enum';
@@ -38,8 +41,14 @@ export const offeringIncomeInfoColumns: Array<ColumnDef<OfferingIncomeColumns, a
     },
   },
   {
-    id: 'type',
+    id: 'typeWithSubtype',
     accessorKey: 'type',
+    cell: (info) => {
+      const amount = info.getValue();
+      const subType = info.row.original.subType;
+
+      return `${amount}  ${subType === '-' ? '' : `- ${subType}`}`;
+    },
     header: ({ column }) => {
       return (
         <Button
@@ -49,15 +58,76 @@ export const offeringIncomeInfoColumns: Array<ColumnDef<OfferingIncomeColumns, a
             column.toggleSorting(column.getIsSorted() === 'asc');
           }}
         >
-          Tipo
+          Tipo/Subtipo
+          <ArrowUpDown className='ml-2 h-4 w-4' />
+        </Button>
+      );
+    },
+  },
+
+  {
+    id: 'category',
+    accessorKey: 'category',
+    header: ({ column }) => {
+      return (
+        <Button
+          className='font-bold text-[14px] md:text-[14px]'
+          variant='ghost'
+          onClick={() => {
+            column.toggleSorting(column.getIsSorted() === 'asc');
+          }}
+        >
+          Categoría
           <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
       );
     },
   },
   {
-    id: 'subType',
+    id: 'belonging',
     accessorKey: 'subType',
+    cell: (info) => {
+      const {
+        zone,
+        pastor,
+        church,
+        subType,
+        preacher,
+        copastor,
+        disciple,
+        supervisor,
+        memberType,
+        familyGroup,
+        externalDonor,
+      } = info.row.original;
+
+      const belongingMap = {
+        [OfferingIncomeCreationSubTypeNames.family_group]: familyGroup?.familyGroupName,
+        [OfferingIncomeCreationSubTypeNames.zonal_evangelism]: zone?.zoneName,
+        [OfferingIncomeCreationSubTypeNames.zonal_fasting]: zone?.zoneName,
+        [OfferingIncomeCreationSubTypeNames.zonal_vigil]: zone?.zoneName,
+        [OfferingIncomeCreationSubTypeNames.church_ground]: memberType
+          ? {
+              [MemberType.Pastor]: `${pastor?.firstNames} ${pastor?.lastNames}`,
+              [MemberType.Copastor]: `${copastor?.firstNames} ${copastor?.lastNames}`,
+              [MemberType.Supervisor]: `${supervisor?.firstNames} ${supervisor?.lastNames}`,
+              [MemberType.Preacher]: `${preacher?.firstNames} ${preacher?.lastNames}`,
+              [MemberType.Disciple]: `${disciple?.firstNames} ${disciple?.lastNames}`,
+              [MemberType.ExternalDonor]: `${externalDonor?.firstNames} ${externalDonor?.lastNames}`,
+            }[memberType] // access the value before the member type computed properties
+          : church?.abbreviatedChurchName,
+        [OfferingIncomeCreationSubTypeNames.special]: {
+          [MemberType.Pastor]: `${pastor?.firstNames} ${pastor?.lastNames}`,
+          [MemberType.Copastor]: `${copastor?.firstNames} ${copastor?.lastNames}`,
+          [MemberType.Supervisor]: `${supervisor?.firstNames} ${supervisor?.lastNames}`,
+          [MemberType.Preacher]: `${preacher?.firstNames} ${preacher?.lastNames}`,
+          [MemberType.Disciple]: `${disciple?.firstNames} ${disciple?.lastNames}`,
+          [MemberType.ExternalDonor]: `${externalDonor?.firstNames} ${externalDonor?.lastNames}`,
+        }[memberType!],
+      };
+
+      return belongingMap[subType!] || church?.abbreviatedChurchName || 'Desconocido';
+    },
     header: ({ column }) => {
       return (
         <Button
@@ -67,15 +137,23 @@ export const offeringIncomeInfoColumns: Array<ColumnDef<OfferingIncomeColumns, a
             column.toggleSorting(column.getIsSorted() === 'asc');
           }}
         >
-          Sub-tipo
+          Pertenencia
           <ArrowUpDown className='ml-2 h-4 w-4' />
         </Button>
       );
     },
   },
   {
-    id: 'amount',
+    id: 'amountWithCurrency',
     accessorKey: 'amount',
+    cell: (info) => {
+      const amount = info.getValue();
+      const currency = info.row.original.currency;
+      const entry = Object.entries(CurrencyTypeNames).find(([key]) => key === currency);
+      const currencyLabel = entry ? entry[1] : 'Moneda desconocida';
+
+      return `${amount} ${currencyLabel}`;
+    },
     header: ({ column }) => {
       return (
         <Button
@@ -91,29 +169,7 @@ export const offeringIncomeInfoColumns: Array<ColumnDef<OfferingIncomeColumns, a
       );
     },
   },
-  {
-    id: 'currency',
-    accessorKey: 'currency',
-    cell: (info) => {
-      const currency = info.getValue();
-      const entry = Object.entries(CurrencyTypeNames).find(([key]) => key === currency);
-      return entry ? entry[1] : 'Moneda desconocida';
-    },
-    header: ({ column }) => {
-      return (
-        <Button
-          className='font-bold text-[14px] md:text-[14px]'
-          variant='ghost'
-          onClick={() => {
-            column.toggleSorting(column.getIsSorted() === 'asc');
-          }}
-        >
-          Divisa
-          <ArrowUpDown className='ml-2 h-4 w-4' />
-        </Button>
-      );
-    },
-  },
+
   {
     id: 'date',
     accessorKey: 'date',

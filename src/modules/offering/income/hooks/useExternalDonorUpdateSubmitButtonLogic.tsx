@@ -11,12 +11,14 @@ interface Options {
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMessageErrorDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   externalDonorUpdateForm: UseFormReturn<ExternalDonorFormData, any, undefined>;
+  isInputDisabled: boolean;
 }
 
 export const useExternalDonorUpdateSubmitButtonLogic = ({
   externalDonorUpdateForm,
   setIsSubmitButtonDisabled,
   setIsMessageErrorDisabled,
+  isInputDisabled,
 }: Options): void => {
   //* Watchers
   const donorFirstNames = externalDonorUpdateForm.watch('externalDonorFirstNames');
@@ -44,7 +46,8 @@ export const useExternalDonorUpdateSubmitButtonLogic = ({
       donorFirstNames &&
       donorLastNames &&
       donorGender &&
-      Object.values(externalDonorUpdateForm.formState.errors).length === 0
+      Object.values(externalDonorUpdateForm.formState.errors).length === 0 &&
+      !isInputDisabled
     ) {
       setIsSubmitButtonDisabled(false);
       setIsMessageErrorDisabled(false);

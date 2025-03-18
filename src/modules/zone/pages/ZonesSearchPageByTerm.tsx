@@ -102,9 +102,7 @@ export const ZonesSearchPageByTerm = (): JSX.Element => {
   });
 
   //* Watchers
-  const searchType = form.watch('searchType');
-  const limit = form.watch('limit');
-  const order = form.watch('order');
+  const { searchType, limit, order, all } = form.watch();
 
   //* Queries
   const churchesQuery = useQuery({
@@ -115,19 +113,11 @@ export const ZonesSearchPageByTerm = (): JSX.Element => {
 
   //* Effects
   useEffect(() => {
-    if (form.getValues('all')) {
-      form.setValue('limit', '10');
-    }
-  }, [form.getValues('all')]);
+    if (all) form.setValue('limit', '10');
+  }, [all]);
 
   useEffect(() => {
-    if (limit !== '' && order !== '') {
-      setIsDisabledSubmitButton(false);
-    }
-
-    if (limit === '' || order === '') {
-      setIsDisabledSubmitButton(true);
-    }
+    setIsDisabledSubmitButton(!limit || !order);
   }, [limit, order]);
 
   useEffect(() => {
@@ -137,6 +127,12 @@ export const ZonesSearchPageByTerm = (): JSX.Element => {
   useEffect(() => {
     document.title = 'Modulo Zona - IcupApp';
   }, []);
+
+  useEffect(() => {
+    if (churchesQuery.data?.length) {
+      form.setValue('churchId', churchesQuery.data[0].id);
+    }
+  }, [churchesQuery.data, searchParams]);
 
   //* Form handler
   function onSubmit(formData: z.infer<typeof zoneSearchByTermFormSchema>): void {
@@ -573,7 +569,7 @@ export const ZonesSearchPageByTerm = (): JSX.Element => {
                       </FormDescription>
                       <Select
                         onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        defaultValue={field.value || churchesQuery?.data?.[0]?.id}
                         value={field.value}
                       >
                         <FormControl className='text-[14px] md:text-[14px]'>
