@@ -118,7 +118,7 @@ export const DonorUpdateForm = ({
   return (
     <Tabs
       defaultValue='general-info'
-      className='w-[350px] sm:w-[450px] md:w-[630px] lg:w-[700px] xl:w-[700px]'
+      className='-mt-8 w-[350px] sm:w-[450px] md:w-[630px] lg:w-[700px] xl:w-[700px]'
     >
       <h2 className='text-center leading-7 text-orange-500 pb-2 font-bold text-[24px] sm:text-[26px] md:text-[28px]'>
         Modificar datos

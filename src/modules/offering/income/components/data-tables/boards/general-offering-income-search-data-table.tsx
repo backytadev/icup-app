@@ -222,19 +222,22 @@ export function GeneralOfferingIncomeSearchDataTable<TData, TValue>({
             <div className='flex w-full col-span-2 gap-2 md:gap-3 md:row-start-1 md:row-end-2'>
               <Input
                 disabled={isDisabledButton}
-                placeholder='Tipo...'
-                value={(table.getColumn('type')?.getFilterValue() as string) ?? ''}
-                onChange={(event) => table.getColumn('type')?.setFilterValue(event.target.value)}
-                className='text-[14px] lg:text-[14px] w-full col-start-1 col-end-2 row-start-1 row-end-2'
-              />
-
-              <Input
-                disabled={isDisabledButton}
                 placeholder='Sub-tipo...'
                 value={(table.getColumn('subType')?.getFilterValue() as string) ?? ''}
                 onChange={(event) => table.getColumn('subType')?.setFilterValue(event.target.value)}
                 className='col-start-2 col-end-3 row-start-1 row-end-2 text-[14px] lg:text-[14px] w-full'
               />
+
+              <Input
+                disabled={isDisabledButton}
+                placeholder='Categoría...'
+                value={(table.getColumn('category')?.getFilterValue() as string) ?? ''}
+                onChange={(event) =>
+                  table.getColumn('category')?.setFilterValue(event.target.value)
+                }
+                className='text-[14px] lg:text-[14px] w-full col-start-1 col-end-2 row-start-1 row-end-2'
+              />
+
               <Button
                 disabled={isDisabledButton}
                 variant='ghost'

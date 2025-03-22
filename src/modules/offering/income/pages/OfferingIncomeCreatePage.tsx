@@ -96,7 +96,13 @@ import { Calendar } from '@/shared/components/ui/calendar';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { Checkbox } from '@/shared/components/ui/checkbox';
 import { RadioGroup, RadioGroupItem } from '@/shared/components/ui/radio-group';
-import { Dialog, DialogContent, DialogTrigger } from '@/shared/components/ui/dialog';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+  DialogTrigger,
+} from '@/shared/components/ui/dialog';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
 
 type QueryDataResponse =
@@ -709,6 +715,8 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                                 ref={topRef}
                                 className='md:max-w-[700px] lg:max-w-[760px] xl:max-w-[760px] w-full max-h-full justify-center pt-[0.9rem] pb-[1.3rem] overflow-x-hidden overflow-y-auto'
                               >
+                                <DialogTitle></DialogTitle>
+                                <DialogDescription></DialogDescription>
                                 <DonorUpdateForm
                                   id={externalDonorId}
                                   data={data?.find((donor) => donor.id === field.value)}
