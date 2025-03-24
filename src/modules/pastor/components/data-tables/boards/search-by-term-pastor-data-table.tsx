@@ -367,28 +367,38 @@ export function SearchByTermPastorDataTable<TData, TValue>({
 
       {!query?.error && !isFiltersSearchByTermDisabled && !query.isPending && (
         <div className='flex items-center justify-between space-x-2 py-4'>
-          {!query.isPending && (
-            <Button
-              type='submit'
-              variant='ghost'
-              className={cn(
-                'px-4 py-3 text-[14px] font-semibold rounded-lg shadow-lg transition-transform transform focus:outline-none focus:ring-red-300',
-                !generateReportQuery.isFetching &&
-                  'text-white hover:text-white dark:text-white bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:via-amber-700 hover:to-amber-800',
-                generateReportQuery.isFetching &&
-                  'bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-200 cursor-not-allowed animate-pulse'
-              )}
-              onClick={handleGenerateReport}
-            >
-              <FaRegFilePdf
+          <div className='flex flex-col md:flex-row gap-y-2 items-center'>
+            {!query.isPending && (
+              <Button
+                type='submit'
+                variant='ghost'
                 className={cn(
-                  'mr-2 text-[1.5rem] text-white',
-                  generateReportQuery.isFetching && 'text-gray-600 dark:text-gray-200'
+                  'px-4 py-3 text-[14px] font-semibold rounded-lg shadow-lg transition-transform transform focus:outline-none focus:ring-red-300',
+                  !generateReportQuery.isFetching &&
+                    'text-white hover:text-white dark:text-white bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:via-amber-700 hover:to-amber-800',
+                  generateReportQuery.isFetching &&
+                    'bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-200 cursor-not-allowed animate-pulse'
                 )}
-              />
-              {generateReportQuery.isFetching ? 'Generando Reporte...' : 'Generar Reporte'}
-            </Button>
-          )}
+                onClick={handleGenerateReport}
+              >
+                <FaRegFilePdf
+                  className={cn(
+                    'mr-2 text-[1.5rem] text-white',
+                    generateReportQuery.isFetching && 'text-gray-600 dark:text-gray-200'
+                  )}
+                />
+                {generateReportQuery.isFetching ? 'Generando Reporte...' : 'Generar Reporte'}
+              </Button>
+            )}
+
+            <div className='flex w-[100px] items-center justify-center text-sm font-medium text-center md:hidden'>
+              Página {table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
+            </div>
+          </div>
+
+          <div className='w-[100px] items-center justify-center text-sm font-medium text-center hidden md:block'>
+            Página {table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
+          </div>
 
           <div>
             <Button

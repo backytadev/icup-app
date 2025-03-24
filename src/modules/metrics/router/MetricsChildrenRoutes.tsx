@@ -21,7 +21,7 @@ export const MetricsChildrenRoutes = [
     path: 'member',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazyMemberMetrics />,
+        <LazyMemberMetrics />
       </Suspense>
     ),
   },
@@ -29,7 +29,7 @@ export const MetricsChildrenRoutes = [
     path: 'family-group',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazyFamilyGroupMetrics />,
+        <LazyFamilyGroupMetrics />
       </Suspense>
     ),
   },
@@ -37,7 +37,7 @@ export const MetricsChildrenRoutes = [
     path: 'offering-income',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazyOfferingIncomeMetrics />,
+        <LazyOfferingIncomeMetrics />
       </Suspense>
     ),
   },
@@ -45,7 +45,7 @@ export const MetricsChildrenRoutes = [
     path: 'offering-expense',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazyOfferingExpenseMetrics />,
+        <LazyOfferingExpenseMetrics />
       </Suspense>
     ),
   },
@@ -53,7 +53,7 @@ export const MetricsChildrenRoutes = [
     path: 'offering-comparative',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazyFinancialBalanceComparisonMetrics />,
+        <LazyFinancialBalanceComparisonMetrics />
       </Suspense>
     ),
   },

@@ -21,7 +21,7 @@ export const DiscipleChildrenRoutes = [
     path: 'create',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazyDiscipleCreatePage />,
+        <LazyDiscipleCreatePage />
       </Suspense>
     ),
   },
@@ -29,7 +29,7 @@ export const DiscipleChildrenRoutes = [
     path: 'general-search',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazyDisciplesGeneralSearchPage />,
+        <LazyDisciplesGeneralSearchPage />
       </Suspense>
     ),
   },
@@ -37,7 +37,7 @@ export const DiscipleChildrenRoutes = [
     path: 'search-by-term',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazyDisciplesSearchPageByTerm />,
+        <LazyDisciplesSearchPageByTerm />
       </Suspense>
     ),
   },
@@ -45,7 +45,7 @@ export const DiscipleChildrenRoutes = [
     path: 'update',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazyDiscipleUpdatePage />,
+        <LazyDiscipleUpdatePage />
       </Suspense>
     ),
   },
@@ -53,7 +53,7 @@ export const DiscipleChildrenRoutes = [
     path: 'inactivate',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazyDiscipleInactivatePage />,
+        <LazyDiscipleInactivatePage />
       </Suspense>
     ),
   },

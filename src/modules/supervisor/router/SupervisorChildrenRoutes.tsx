@@ -25,7 +25,7 @@ export const SupervisorChildrenRoutes = [
     path: 'create',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazySupervisorCreatePage />,
+        <LazySupervisorCreatePage />
       </Suspense>
     ),
   },
@@ -33,7 +33,7 @@ export const SupervisorChildrenRoutes = [
     path: 'general-search',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazySupervisorsGeneralSearchPage />,
+        <LazySupervisorsGeneralSearchPage />
       </Suspense>
     ),
   },
@@ -41,7 +41,7 @@ export const SupervisorChildrenRoutes = [
     path: 'search-by-term',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazySupervisorsSearchPageByTerm />,
+        <LazySupervisorsSearchPageByTerm />
       </Suspense>
     ),
   },
@@ -49,7 +49,7 @@ export const SupervisorChildrenRoutes = [
     path: 'update',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazySupervisorUpdatePage />,
+        <LazySupervisorUpdatePage />
       </Suspense>
     ),
   },
@@ -57,7 +57,7 @@ export const SupervisorChildrenRoutes = [
     path: 'inactivate',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazySupervisorInactivatePage />,
+        <LazySupervisorInactivatePage />
       </Suspense>
     ),
   },

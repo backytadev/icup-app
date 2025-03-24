@@ -20,7 +20,7 @@ export const ChurchChildrenRoutes: RouteObject[] = [
     path: 'create',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazyChurchCreatePage />,
+        <LazyChurchCreatePage />
       </Suspense>
     ),
   },

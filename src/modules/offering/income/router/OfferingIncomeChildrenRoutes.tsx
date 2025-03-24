@@ -25,7 +25,7 @@ export const OfferingIncomeChildrenRoutes = [
     path: 'create',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazyOfferingIncomeCreatePage />,
+        <LazyOfferingIncomeCreatePage />
       </Suspense>
     ),
   },
@@ -33,7 +33,7 @@ export const OfferingIncomeChildrenRoutes = [
     path: 'general-search',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazyOfferingsIncomeGeneralSearchPage />,
+        <LazyOfferingsIncomeGeneralSearchPage />
       </Suspense>
     ),
   },
@@ -41,7 +41,7 @@ export const OfferingIncomeChildrenRoutes = [
     path: 'search-by-term',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazyOfferingsIncomeSearchPageByTerm />,
+        <LazyOfferingsIncomeSearchPageByTerm />
       </Suspense>
     ),
   },
@@ -49,7 +49,7 @@ export const OfferingIncomeChildrenRoutes = [
     path: 'update',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazyOfferingIncomeUpdatePage />,
+        <LazyOfferingIncomeUpdatePage />
       </Suspense>
     ),
   },
@@ -57,7 +57,7 @@ export const OfferingIncomeChildrenRoutes = [
     path: 'inactivate',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazyOfferingIncomeInactivatePage />,
+        <LazyOfferingIncomeInactivatePage />
       </Suspense>
     ),
   },

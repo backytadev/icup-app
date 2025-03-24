@@ -29,6 +29,7 @@ export const DashboardLayout = (): JSX.Element => {
 
         <div className='w-full px-4 py-0 relative'>
           <ToggleLayout />
+
           <Outlet />
         </div>
       </div>

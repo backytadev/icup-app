@@ -418,16 +418,18 @@ export function SearchByTermOfferingIncomeDataTable<TData, TValue>({
             <div className='flex w-full col-span-2 gap-2 md:gap-3 md:row-start-1 md:row-end-2'>
               <Input
                 disabled={isDisabledButton}
-                placeholder='Tipo...'
-                value={(table.getColumn('type')?.getFilterValue() as string) ?? ''}
-                onChange={(event) => table.getColumn('type')?.setFilterValue(event.target.value)}
+                placeholder='Sub-tipo...'
+                value={(table.getColumn('subType')?.getFilterValue() as string) ?? ''}
+                onChange={(event) => table.getColumn('subType')?.setFilterValue(event.target.value)}
                 className='text-[14px] lg:text-[14px] w-full col-start-1 col-end-2 row-start-1 row-end-2'
               />
               <Input
                 disabled={isDisabledButton}
-                placeholder='Sub-tipo...'
-                value={(table.getColumn('subType')?.getFilterValue() as string) ?? ''}
-                onChange={(event) => table.getColumn('subType')?.setFilterValue(event.target.value)}
+                placeholder='Categoría...'
+                value={(table.getColumn('category')?.getFilterValue() as string) ?? ''}
+                onChange={(event) =>
+                  table.getColumn('category')?.setFilterValue(event.target.value)
+                }
                 className='col-start-2 col-end-3 row-start-1 row-end-2 text-[14px] lg:text-[14px] w-full'
               />
               <Button
@@ -435,8 +437,8 @@ export function SearchByTermOfferingIncomeDataTable<TData, TValue>({
                 variant='ghost'
                 className='w-[15%] col-start-2 col-end-3 row-start-2 row-end-3 m-auto text-[14px] lg:text-[14px] h-full md:w-[5rem] px-4 py-2 border-1 border-red-500 bg-gradient-to-r from-red-400 via-red-500 to-red-600 text-white hover:text-red-100 hover:from-red-500 hover:via-red-600 hover:to-red-700 dark:from-red-600 dark:via-red-700 dark:to-red-800 dark:text-gray-100 dark:hover:text-gray-200 dark:hover:from-red-700 dark:hover:via-red-800 dark:hover:to-red-900'
                 onClick={() => {
-                  table.getColumn('type')?.setFilterValue('');
                   table.getColumn('subType')?.setFilterValue('');
+                  table.getColumn('category')?.setFilterValue('');
                 }}
               >
                 <Trash />
@@ -449,8 +451,8 @@ export function SearchByTermOfferingIncomeDataTable<TData, TValue>({
               className='col-start-1 col-end-3 row-start-2 row-end-3 md:row-start-1 md:row-end-2 md:col-start-3 w-full m-auto text-[14px] lg:text-[14px] h-full md:w-[15rem] px-4 py-2 border-1 border-green-500 bg-gradient-to-r from-green-400 via-green-500 to-green-600 text-white hover:text-green-100 hover:from-green-500 hover:via-green-600 hover:to-green-700 dark:from-green-600 dark:via-green-700 dark:to-green-800 dark:text-gray-100 dark:hover:text-gray-200 dark:hover:from-green-700 dark:hover:via-green-800 dark:hover:to-green-900'
               onClick={() => {
                 setIsFiltersSearchByTermDisabled(true);
-                table.getColumn('type')?.setFilterValue('');
                 table.getColumn('subType')?.setFilterValue('');
+                table.getColumn('category')?.setFilterValue('');
               }}
             >
               Nueva Búsqueda
@@ -511,28 +513,38 @@ export function SearchByTermOfferingIncomeDataTable<TData, TValue>({
 
       {!query?.error && !isFiltersSearchByTermDisabled && !query.isPending && (
         <div className='flex items-center justify-between space-x-2 py-4'>
-          {!query.isPending && (
-            <Button
-              type='submit'
-              variant='ghost'
-              className={cn(
-                'px-4 py-3 text-[14px] font-semibold rounded-lg shadow-lg transition-transform transform focus:outline-none focus:ring-red-300',
-                !generateReportQuery.isFetching &&
-                  'text-white hover:text-white dark:text-white bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:via-amber-700 hover:to-amber-800',
-                generateReportQuery.isFetching &&
-                  'bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-200 cursor-not-allowed animate-pulse'
-              )}
-              onClick={handleGenerateReport}
-            >
-              <FaRegFilePdf
+          <div className='flex flex-col md:flex-row gap-y-2 items-center'>
+            {!query.isPending && (
+              <Button
+                type='submit'
+                variant='ghost'
                 className={cn(
-                  'mr-2 text-[1.5rem] text-white',
-                  generateReportQuery.isFetching && 'text-gray-600 dark:text-gray-200'
+                  'px-4 py-3 text-[14px] font-semibold rounded-lg shadow-lg transition-transform transform focus:outline-none focus:ring-red-300',
+                  !generateReportQuery.isFetching &&
+                    'text-white hover:text-white dark:text-white bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:via-amber-700 hover:to-amber-800',
+                  generateReportQuery.isFetching &&
+                    'bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-200 cursor-not-allowed animate-pulse'
                 )}
-              />
-              {generateReportQuery.isFetching ? 'Generando Reporte...' : 'Generar Reporte'}
-            </Button>
-          )}
+                onClick={handleGenerateReport}
+              >
+                <FaRegFilePdf
+                  className={cn(
+                    'mr-2 text-[1.5rem] text-white',
+                    generateReportQuery.isFetching && 'text-gray-600 dark:text-gray-200'
+                  )}
+                />
+                {generateReportQuery.isFetching ? 'Generando Reporte...' : 'Generar Reporte'}
+              </Button>
+            )}
+
+            <div className='flex w-[100px] items-center justify-center text-sm font-medium text-center md:hidden'>
+              Página {table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
+            </div>
+          </div>
+
+          <div className='w-[100px] items-center justify-center text-sm font-medium text-center hidden md:block'>
+            Página {table.getState().pagination.pageIndex + 1} de {table.getPageCount()}
+          </div>
 
           <div>
             <Button

@@ -17,7 +17,7 @@ export const ZoneChildrenRoutes = [
     path: 'create',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazyZoneCreatePage />,
+        <LazyZoneCreatePage />
       </Suspense>
     ),
   },
@@ -25,7 +25,7 @@ export const ZoneChildrenRoutes = [
     path: 'general-search',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazyZonesGeneralSearchPage />,
+        <LazyZonesGeneralSearchPage />
       </Suspense>
     ),
   },
@@ -33,7 +33,7 @@ export const ZoneChildrenRoutes = [
     path: 'search-by-term',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazyZonesSearchPageByTerm />,
+        <LazyZonesSearchPageByTerm />
       </Suspense>
     ),
   },
@@ -41,7 +41,7 @@ export const ZoneChildrenRoutes = [
     path: 'update',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazyZoneUpdatePage />,
+        <LazyZoneUpdatePage />
       </Suspense>
     ),
   },
@@ -49,7 +49,7 @@ export const ZoneChildrenRoutes = [
     path: 'inactivate',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazyZoneInactivatePage />,
+        <LazyZoneInactivatePage />
       </Suspense>
     ),
   },

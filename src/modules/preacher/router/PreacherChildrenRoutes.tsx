@@ -21,7 +21,7 @@ export const PreacherChildrenRoutes = [
     path: 'create',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazyPreacherCreatePage />,
+        <LazyPreacherCreatePage />
       </Suspense>
     ),
   },
@@ -29,7 +29,7 @@ export const PreacherChildrenRoutes = [
     path: 'general-search',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazyPreachersGeneralSearchPage />,
+        <LazyPreachersGeneralSearchPage />
       </Suspense>
     ),
   },
@@ -37,7 +37,7 @@ export const PreacherChildrenRoutes = [
     path: 'search-by-term',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazyPreachersSearchPageByTerm />,
+        <LazyPreachersSearchPageByTerm />
       </Suspense>
     ),
   },
@@ -45,7 +45,7 @@ export const PreacherChildrenRoutes = [
     path: 'update',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazyPreacherUpdatePage />,
+        <LazyPreacherUpdatePage />
       </Suspense>
     ),
   },
@@ -53,7 +53,7 @@ export const PreacherChildrenRoutes = [
     path: 'inactivate',
     element: (
       <Suspense fallback={<LoadingSpinner />}>
-        <LazyPreacherInactivatePage />,
+        <LazyPreacherInactivatePage />
       </Suspense>
     ),
   },
