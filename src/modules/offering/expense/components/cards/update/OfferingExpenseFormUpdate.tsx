@@ -170,7 +170,7 @@ export const OfferingExpenseFormUpdate = ({
     accept: {
       'image/*': [],
     },
-    maxSize: 1024 * 1000, // 1KB
+    maxSize: 1024 * 1024 * 5, // 1KB
     onDrop,
     disabled: isDropZoneDisabled,
   });

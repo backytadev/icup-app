@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
-import { ArrowUpDown } from 'lucide-react';
+import { useState } from 'react';
+
+import { ArrowUpDown, ChevronUp, ChevronDown } from 'lucide-react';
 import { type ColumnDef } from '@tanstack/react-table';
 
 import { OfferingIncomeInfoCard } from '@/modules/offering/income/components/cards/info/OfferingIncomeInfoCard';
@@ -15,6 +17,11 @@ import { getInitialFullNames } from '@/shared/helpers/get-full-names.helper';
 import { formatDateToLimaDayMonthYear } from '@/shared/helpers/format-date-to-lima';
 import { CurrencyTypeNames } from '@/modules/offering/shared/enums/currency-type.enum';
 
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/shared/components/ui/collapsible';
 import { Button } from '@/shared/components/ui/button';
 
 export const offeringIncomeInfoColumns: Array<ColumnDef<OfferingIncomeColumns, any>> = [
@@ -99,14 +106,41 @@ export const offeringIncomeInfoColumns: Array<ColumnDef<OfferingIncomeColumns, a
         familyGroup,
         externalDonor,
       } = info.row.original;
+      const [isOpen, setIsOpen] = useState(false);
 
       const belongingMap = {
         [OfferingIncomeCreationSubTypeNames.family_group]: (
-          <>
-            <span>{familyGroup?.familyGroupName}</span>
-            <p className='text-xs italic dark:text-slate-400 text-slate-500'>{`Pred: ${getInitialFullNames({ firstNames: familyGroup?.preacherFirstNames ?? '', lastNames: familyGroup?.preacherLastNames ?? '' })}`}</p>
-          </>
+          <div>
+            <Collapsible open={isOpen} onOpenChange={setIsOpen} className='w-auto text-slate-500'>
+              <div className='flex items-center justify-center gap-2'>
+                <h4 className='text-xs font-semibold italic text-sky-500'>
+                  <span className='text-sm dark:text-white text-black  font-normal not-italic'>
+                    {familyGroup?.familyGroupName}
+                  </span>
+                </h4>
+                <CollapsibleTrigger asChild>
+                  <Button variant='ghost' size='sm' className='p-0 w-9 hover:text-slate-500'>
+                    {isOpen ? (
+                      <ChevronUp className='h-5 w-5' />
+                    ) : (
+                      <ChevronDown className='h-5 w-5' />
+                    )}
+                    <span className='sr-only'>Toggle</span>
+                  </Button>
+                </CollapsibleTrigger>
+              </div>
+              <CollapsibleContent className='space-y-1 mt-1'>
+                <p className='text-xs italic dark:text-slate-400 text-slate-500'>
+                  {`Código: ${familyGroup?.familyGroupCode ?? ''}`}
+                </p>
+                <p className='text-xs italic dark:text-slate-400 text-slate-500'>
+                  {`Predicador: ${getInitialFullNames({ firstNames: familyGroup?.preacherFirstNames ?? '', lastNames: familyGroup?.preacherLastNames ?? '' })}`}
+                </p>
+              </CollapsibleContent>
+            </Collapsible>
+          </div>
         ),
+
         [OfferingIncomeCreationSubTypeNames.zonal_evangelism]: zone?.zoneName,
         [OfferingIncomeCreationSubTypeNames.zonal_fasting]: zone?.zoneName,
         [OfferingIncomeCreationSubTypeNames.zonal_vigil]: zone?.zoneName,
