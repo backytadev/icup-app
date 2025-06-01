@@ -225,7 +225,7 @@ export function GeneralOfferingIncomeSearchDataTable<TData, TValue>({
             </div>
 
             <div>
-              <OfferingIncomeResumeCard data={query.data} />
+              <OfferingIncomeResumeCard data={query.data} isDisabled={isDisabledButton} />
             </div>
           </div>
           <div className='pb-8 lg:pb-8 grid grid-cols-2 gap-4 lg:flex lg:items-center py-4 md:py-6 lg:py-4 lg:gap-3'>

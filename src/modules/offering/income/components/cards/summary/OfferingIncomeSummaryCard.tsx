@@ -17,10 +17,11 @@ import { OfferingIncomeResponse } from '@/modules/offering/income/interfaces/off
 
 interface Props {
   data: OfferingIncomeResponse[] | undefined;
+  isDisabled: boolean;
   // churchId: string | undefined;
 }
 
-export const OfferingIncomeResumeCard = ({ data }: Props): JSX.Element => {
+export const OfferingIncomeResumeCard = ({ data, isDisabled }: Props): JSX.Element => {
   //* State
   const [isOpen, setIsOpen] = useState(false);
   const topRef = useRef<HTMLDivElement>(null);
@@ -36,10 +37,13 @@ export const OfferingIncomeResumeCard = ({ data }: Props): JSX.Element => {
         <DialogTrigger asChild>
           <div className='relative inline-block'>
             <Button
+              disabled={isDisabled}
               variant='outline'
-              className='px-1.5 bg-gray-600 text-white hover:bg-gray-700 hover:text-gray-200 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white'
+              className='px-3 py-3 bg-gray-600 text-white hover:bg-gray-700 hover:text-gray-100 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:hover:text-white rounded-md transition-colors'
             >
-              Ver Resumen <HiOutlineClipboardList className='text-[2rem]' />
+              <span className='flex items-center gap-2'>
+                Ver Resumen <HiOutlineClipboardList className='text-2xl' />
+              </span>
             </Button>
           </div>
         </DialogTrigger>
