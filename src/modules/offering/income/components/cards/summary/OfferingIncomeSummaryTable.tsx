@@ -55,7 +55,7 @@ type GroupedItemByUser = Totals & {
   lastNames: string;
 };
 
-export const OfferingIncomeSummaryTable = ({ churchId, dialogClose, data }: Props): JSX.Element => {
+export const OfferingIncomeSummaryTable = ({ data }: Props): JSX.Element => {
   //* States
   const [isOpenSummaryByType, setIsOpenSummaryByType] = useState(true);
   const [isOpenSummaryByShift, setIsOpenSummaryByShift] = useState(false);
