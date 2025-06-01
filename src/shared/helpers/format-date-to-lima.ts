@@ -1,7 +1,7 @@
 import { toZonedTime, format } from 'date-fns-tz';
 
 export const formatDateToLimaDayMonthYear = (dateString: Date): string => {
-  const timeZone = 'UTC';
+  const timeZone = 'America/Lima';
   const date = new Date(dateString);
 
   const zonedDate = toZonedTime(date, timeZone);
