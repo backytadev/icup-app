@@ -115,6 +115,8 @@ export default {
         fadeInPage: 'fadeIn .35s ease-in-out',
         pulse: 'pulse 1.5s ease-in-out infinite',
         bounce: 'bounce 1s infinite',
+        slideDown: 'slideDown 300ms ease-out',
+        slideUp: 'slideUp 300ms ease-out',
       },
       fontFamily: {
         'dancing-script': ['Dancing Script', 'cursive'],
@@ -131,6 +133,14 @@ export default {
         bounce: {
           '0%, 100%': { transform: 'translateY(0)' },
           '50%': { transform: 'translateY(-10px)' },
+        },
+        slideDown: {
+          from: { height: '0' },
+          to: { height: 'var(--radix-collapsible-content-height)' },
+        },
+        slideUp: {
+          from: { height: 'var(--radix-collapsible-content-height)' },
+          to: { height: '0' },
         },
       },
       extendUtilities: {

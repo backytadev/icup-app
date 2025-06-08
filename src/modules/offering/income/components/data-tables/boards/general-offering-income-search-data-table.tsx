@@ -224,11 +224,11 @@ export function GeneralOfferingIncomeSearchDataTable<TData, TValue>({
               </div>
             </div>
 
-            <div>
+            <div className='w-full md:w-auto hidden md:block'>
               <OfferingIncomeResumeCard data={query.data} isDisabled={isDisabledButton} />
             </div>
           </div>
-          <div className='pb-8 lg:pb-8 grid grid-cols-2 gap-4 lg:flex lg:items-center py-4 md:py-6 lg:py-4 lg:gap-3'>
+          <div className='lg:pb-8 grid grid-cols-2 gap-4 lg:flex lg:items-center py-4 md:py-6 lg:py-4 lg:gap-3'>
             <div className='flex w-full col-span-2 gap-2 md:gap-3 md:row-start-1 md:row-end-2'>
               <Input
                 disabled={isDisabledButton}
@@ -274,10 +274,13 @@ export function GeneralOfferingIncomeSearchDataTable<TData, TValue>({
               Nueva Búsqueda
             </Button>
           </div>
+          <div className='w-full md:w-auto pb-8 md:pb-0 block md:hidden'>
+            <OfferingIncomeResumeCard data={query.data} isDisabled={isDisabledButton} />
+          </div>
         </div>
       )}
 
-      <div className='rounded-md border '>
+      <div className='rounded-md border'>
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -316,7 +319,7 @@ export function GeneralOfferingIncomeSearchDataTable<TData, TValue>({
                 ))
               ) : (
                 <TableRow>
-                  <TableCell colSpan={columns?.length} className='h-24 text-center'>
+                  <TableCell colSpan={columns?.length} className='h-24 text-center '>
                     Sin resultados.
                   </TableCell>
                 </TableRow>

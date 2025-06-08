@@ -4,8 +4,9 @@
 
 import { useState } from 'react';
 
+import { cn } from '@/shared/lib/utils';
 import { FcExport } from 'react-icons/fc';
-import { ChevronsUpDown } from 'lucide-react';
+import { ChevronDown } from 'lucide-react';
 
 import { useAuthStore } from '@/stores/auth/auth.store';
 
@@ -135,17 +136,22 @@ export function DropdownMenuLeft(): JSX.Element {
                 <p className='text-[14px] md:text-[15px]'>Accesos permitidos</p>
                 <CollapsibleTrigger asChild>
                   <Button
-                    className='hover:text-green-500 focus:bg-slate-800'
+                    className='hover:text-green-500 focus:bg-slate-800 hover:bg-slate-800'
                     variant='ghost'
                     size='sm'
                   >
-                    <ChevronsUpDown className='h-4 w-4' />
+                    <ChevronDown
+                      className={cn(
+                        'h-4 w-4 md:h-5 md:w-5 transition-transform duration-300',
+                        isOpen && 'rotate-180'
+                      )}
+                    />
                     <span className='sr-only'>Toggle</span>
                   </Button>
                 </CollapsibleTrigger>
               </div>
 
-              <CollapsibleContent className='space-y-2'>
+              <CollapsibleContent className='space-y-2 data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp overflow-hidden'>
                 <p className='text-[13px] md:text-[14px] ml-2 text-amber-500'>Membresía:</p>
                 <ul className='ml-8 font-medium text-white list-disc'>
                   {(roles?.includes(UserRole.AdminUser) || roles?.includes(UserRole.SuperUser)) && (
