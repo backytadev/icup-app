@@ -57,6 +57,7 @@ export const getOfferingsIncome = async ({
   offset,
   all,
   order,
+  dateTerm,
   churchId,
 }: OfferingIncomeQueryParams): Promise<OfferingIncomeResponse[]> => {
   let result: OfferingIncomeResponse[];
@@ -68,6 +69,7 @@ export const getOfferingsIncome = async ({
           limit,
           offset,
           order,
+          searchDate: dateTerm,
           churchId,
         },
       });

@@ -7,9 +7,12 @@ import { useState, useEffect } from 'react';
 
 import { type z } from 'zod';
 import { Toaster } from 'sonner';
+import { es } from 'date-fns/locale';
 import { useForm } from 'react-hook-form';
+import { CalendarIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { endOfWeek, format, startOfWeek } from 'date-fns';
 
 import { cn } from '@/shared/lib/utils';
 
@@ -26,6 +29,7 @@ import { SearchTitle } from '@/shared/components/page/SearchTitle';
 
 import { type GeneralSearchForm } from '@/shared/interfaces/search-general-form.interface';
 import { formSearchGeneralSchema } from '@/shared/validations/form-search-general-schema';
+import { dateFormatterTermToTimestamp } from '@/shared/helpers/date-formatter-to-timestamp.helper';
 
 import { RecordOrder, RecordOrderNames } from '@/shared/enums/record-order.enum';
 
@@ -47,7 +51,9 @@ import {
 } from '@/shared/components/ui/form';
 import { Input } from '@/shared/components/ui/input';
 import { Button } from '@/shared/components/ui/button';
+import { Calendar } from '@/shared/components/ui/calendar';
 import { Checkbox } from '@/shared/components/ui/checkbox';
+import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
 
 const dataFictional: OfferingIncomeResponse[] = [
   {
@@ -94,6 +100,10 @@ export const OfferingsIncomeGeneralSearchPage = (): JSX.Element => {
       limit: '10',
       offset: '0',
       all: false,
+      dateTerm: {
+        from: startOfWeek(new Date(), { weekStartsOn: 1 }),
+        to: endOfWeek(new Date(), { weekStartsOn: 1 }),
+      },
       order: RecordOrder.Descending,
     },
   });
@@ -133,7 +143,20 @@ export const OfferingsIncomeGeneralSearchPage = (): JSX.Element => {
 
   //* Form handler
   function onSubmit(formData: z.infer<typeof formSearchGeneralSchema>): void {
-    setSearchParams(formData);
+    let newDateTermTo;
+    if (!formData.dateTerm?.to) {
+      newDateTermTo = formData.dateTerm?.from;
+    }
+
+    const newDateTerm = dateFormatterTermToTimestamp({
+      from: formData.dateTerm?.from,
+      to: formData.dateTerm?.to ? formData.dateTerm?.to : newDateTermTo,
+    });
+
+    setSearchParams({
+      ...formData,
+      dateTerm: newDateTerm as any,
+    });
     setIsDisabledSubmitButton(true);
     setIsFiltersSearchGeneralDisabled(false);
     form.reset();
@@ -162,7 +185,7 @@ export const OfferingsIncomeGeneralSearchPage = (): JSX.Element => {
                   control={form.control}
                   name='limit'
                   render={({ field }) => (
-                    <FormItem className='w-full'>
+                    <FormItem className='w-full sm:min-w-[6rem] xl:w-full'>
                       <FormLabel className='text-[14px] font-bold'>Limite</FormLabel>
                       <FormDescription className='text-[13.5px] md:text-[14px]'>
                         ¿Cuantos registros necesitas?
@@ -245,9 +268,65 @@ export const OfferingsIncomeGeneralSearchPage = (): JSX.Element => {
 
               <FormField
                 control={form.control}
+                name='dateTerm'
+                render={({ field }) => (
+                  <FormItem className='w-auto lg:min-w-[14rem] xl:min-w-[15rem] 2xl:w-full col-start-1 col-end-3 sm:col-start-auto sm:col-end-auto'>
+                    <FormLabel className='text-[14px] font-bold'>Fecha</FormLabel>
+                    <FormDescription className='text-[13.5px] md:text-[14px]'>
+                      Buscar por fecha o rango de fechas.
+                    </FormDescription>
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <FormControl className='text-[14px] md:text-[14px]'>
+                          <Button
+                            variant={'outline'}
+                            disabled={form.getValues('all')}
+                            className={cn(
+                              'w-full text-left font-normal justify-center p-4 text-[14px]',
+                              !field.value && 'text-muted-foreground'
+                            )}
+                          >
+                            <CalendarIcon className='mr-[0.1rem] h-4 w-4' />
+                            {field?.value?.from ? (
+                              field?.value.to ? (
+                                <>
+                                  {format(field?.value.from, 'LLL dd, y', {
+                                    locale: es,
+                                  })}{' '}
+                                  -{' '}
+                                  {format(field?.value.to, 'LLL dd, y', {
+                                    locale: es,
+                                  })}
+                                </>
+                              ) : (
+                                format(field?.value.from, 'LLL dd, y')
+                              )
+                            ) : (
+                              <span className='text-[14px] md:text-[14px]'>Elige una fecha</span>
+                            )}
+                          </Button>
+                        </FormControl>
+                      </PopoverTrigger>
+                      <PopoverContent className='w-auto p-0' align='start'>
+                        <Calendar
+                          initialFocus
+                          mode='range'
+                          selected={field.value}
+                          onSelect={field.onChange}
+                          numberOfMonths={2}
+                        />
+                      </PopoverContent>
+                    </Popover>
+                    <FormMessage className='text-[13px]' />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
                 name='order'
                 render={({ field }) => (
-                  <FormItem className='w-auto lg:min-w-[13rem] xl:min-w-[15rem] 2xl:w-full'>
+                  <FormItem className='w-auto lg:min-w-[13rem] xl:min-w-[15rem] 2xl:w-full col-start-1 col-end-3 sm:col-start-auto sm:col-end-auto'>
                     <FormLabel className='text-[14px] font-bold'>Orden</FormLabel>
                     <FormDescription className='text-[13.5px] md:text-[14px]'>
                       Selecciona el tipo de orden de los registros.
@@ -287,7 +366,7 @@ export const OfferingsIncomeGeneralSearchPage = (): JSX.Element => {
                 name='churchId'
                 render={({ field }) => {
                   return (
-                    <FormItem className='w-auto lg:min-w-[12rem] xl:min-w-[13rem] 2xl:w-full'>
+                    <FormItem className='w-auto lg:min-w-[12rem] xl:min-w-[13rem] 2xl:w-full col-start-1 col-end-3 sm:col-start-auto sm:col-end-auto'>
                       <FormLabel className='text-[14px] font-bold'>
                         Iglesia
                         <span className='ml-3 inline-block bg-gray-200 text-slate-600 border text-[10px] font-semibold uppercase px-2 py-[1px] rounded-full mr-1'>
@@ -332,7 +411,7 @@ export const OfferingsIncomeGeneralSearchPage = (): JSX.Element => {
                 }}
               />
 
-              <div className='col-start-1 col-end-3 md:row-start-3 md:row-end-4 md:col-start-1 md:col-end-3 lg:row-start-auto lg:col-start-auto lg:w-[50%]'>
+              <div className='col-start-1 col-end-3 sm:col-start-2 md:row-start-3 md:row-end-4 md:col-start-2 md:col-end-3 lg:row-start-auto lg:col-start-auto lg:w-[50%] xl:w-full'>
                 <Toaster position='top-center' richColors />
                 <Button
                   disabled={isDisabledSubmitButton}

@@ -8,6 +8,15 @@ export const formSearchGeneralSchema = z.object({
     })
   ),
 
+  dateTerm: z
+    .object(
+      { from: z.date(), to: z.date().optional() },
+      {
+        required_error: 'La fecha o rango de fechas es requerida.',
+      }
+    )
+    .optional(),
+
   limit: z
     .string()
     .refine(
