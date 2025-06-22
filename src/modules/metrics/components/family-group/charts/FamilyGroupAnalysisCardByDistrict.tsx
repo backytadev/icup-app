@@ -113,7 +113,7 @@ export const FamilyGroupAnalysisCardByDistrict = ({ churchId }: Props): JSX.Elem
       });
     },
     retry: false,
-    enabled: !!searchParams?.district && !!churchId,
+    enabled: !!churchId,
   });
 
   //* Effects
