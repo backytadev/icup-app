@@ -89,6 +89,7 @@ export const OfferingsExpenseGeneralSearchPage = (): JSX.Element => {
       limit: '10',
       offset: '0',
       all: false,
+      allByDate: true,
       dateTerm: {
         from: startOfWeek(new Date(), { weekStartsOn: 1 }),
         to: endOfWeek(new Date(), { weekStartsOn: 1 }),
@@ -98,7 +99,7 @@ export const OfferingsExpenseGeneralSearchPage = (): JSX.Element => {
   });
 
   //* Watchers
-  const { limit, offset, order, all } = form.watch();
+  const { limit, offset, order, all, allByDate } = form.watch();
 
   //* Queries
   const churchesQuery = useQuery({
@@ -110,7 +111,8 @@ export const OfferingsExpenseGeneralSearchPage = (): JSX.Element => {
   //* Effects
   useEffect(() => {
     if (all) form.setValue('limit', '10');
-  }, [all]);
+    if (allByDate) form.setValue('limit', '10');
+  }, [all, allByDate]);
 
   useEffect(() => {
     setIsDisabledSubmitButton(!limit || !offset || !order);
@@ -175,7 +177,7 @@ export const OfferingsExpenseGeneralSearchPage = (): JSX.Element => {
                   control={form.control}
                   name='limit'
                   render={({ field }) => (
-                    <FormItem className='w-full sm:min-w-[6rem] xl:w-full'>
+                    <FormItem className='w-full sm:min-w-[7.5rem] xl:w-full'>
                       <FormLabel className='text-[14px] font-bold'>Limite</FormLabel>
                       <FormDescription className='text-[13.5px] md:text-[14px]'>
                         ¿Cuantos registros necesitas?
@@ -183,9 +185,13 @@ export const OfferingsExpenseGeneralSearchPage = (): JSX.Element => {
                       <FormControl className='text-[14px] md:text-[14px]'>
                         <Input
                           {...field}
-                          disabled={form.getValues('all')}
+                          disabled={form.getValues('all') || form.getValues('allByDate')}
                           className='text-[14px] md:text-[14px]'
-                          value={form.getValues('all') ? '-' : field.value || ''}
+                          value={
+                            form.getValues('all') || form.getValues('allByDate')
+                              ? '-'
+                              : field.value || ''
+                          }
                           placeholder='Limite de registros'
                         />
                       </FormControl>
@@ -194,7 +200,7 @@ export const OfferingsExpenseGeneralSearchPage = (): JSX.Element => {
                   )}
                 />
 
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name='offset'
                   render={({ field }) => (
@@ -215,7 +221,7 @@ export const OfferingsExpenseGeneralSearchPage = (): JSX.Element => {
                       <FormMessage className='text-[13px]' />
                     </FormItem>
                   )}
-                />
+                /> */}
 
                 <FormField
                   control={form.control}
@@ -223,13 +229,18 @@ export const OfferingsExpenseGeneralSearchPage = (): JSX.Element => {
                   render={({ field }) => (
                     <FormItem className='flex flex-col justify-end'>
                       <FormLabel></FormLabel>
-                      <FormDescription></FormDescription>
+                      <FormDescription>
+                        <span className='tracking-wide text-center ml-1 mr-1 font-bold inline-block bg-gray-200 text-slate-600 border text-[10px] uppercase px-2 rounded-full'>
+                          General
+                        </span>
+                      </FormDescription>
                       <div className='flex items-center space-x-2 space-y-0 rounded-md border p-2.5 h-[2.5rem]'>
                         <FormControl className='text-[14px] md:text-[14px]'>
                           <Checkbox
                             disabled={
                               !form.getValues('limit') ||
                               !form.getValues('offset') ||
+                              form.getValues('allByDate') ||
                               !!form.formState.errors.limit // transform to boolean
                             }
                             checked={field?.value}
@@ -246,7 +257,113 @@ export const OfferingsExpenseGeneralSearchPage = (): JSX.Element => {
                           />
                         </FormControl>
                         <div className='space-y-1 leading-none'>
-                          <FormLabel className='text-[12.5px] md:text-[13px] cursor-pointer'>
+                          <FormLabel
+                            className={cn(
+                              'text-[12.5px] md:text-[13px] cursor-pointer',
+                              form.getValues('allByDate') && 'text-gray-500'
+                            )}
+                          >
+                            Todos
+                          </FormLabel>
+                        </div>
+                      </div>
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <div className='flex col-start-1 col-end-3 gap-2'>
+                <FormField
+                  control={form.control}
+                  name='dateTerm'
+                  render={({ field }) => (
+                    <FormItem className='w-full lg:min-w-[14rem] xl:min-w-[15rem] 2xl:w-full col-start-1 col-end-3 sm:col-start-auto sm:col-end-auto'>
+                      <FormLabel className='text-[14px] font-bold'>Fecha</FormLabel>
+                      <FormDescription className='text-[13.5px] md:text-[14px]'>
+                        Buscar por fecha o rango de fechas.
+                      </FormDescription>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <FormControl className='text-[14px] md:text-[14px]'>
+                            <Button
+                              variant={'outline'}
+                              disabled={form.getValues('all')}
+                              className={cn(
+                                'w-full text-left font-normal justify-center p-4 text-[14px]',
+                                !field.value && 'text-muted-foreground'
+                              )}
+                            >
+                              <CalendarIcon className='mr-[0.1rem] h-4 w-4' />
+                              {field?.value?.from ? (
+                                field?.value.to ? (
+                                  <>
+                                    {format(field?.value.from, 'LLL dd, y', {
+                                      locale: es,
+                                    })}{' '}
+                                    -{' '}
+                                    {format(field?.value.to, 'LLL dd, y', {
+                                      locale: es,
+                                    })}
+                                  </>
+                                ) : (
+                                  format(field?.value.from, 'LLL dd, y')
+                                )
+                              ) : (
+                                <span className='text-[14px] md:text-[14px]'>Elige una fecha</span>
+                              )}
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className='w-auto p-0' align='start'>
+                          <Calendar
+                            initialFocus
+                            mode='range'
+                            selected={field.value}
+                            onSelect={field.onChange}
+                            numberOfMonths={2}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage className='text-[13px]' />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name='allByDate'
+                  render={({ field }) => (
+                    <FormItem className='flex flex-col justify-end'>
+                      <FormLabel></FormLabel>
+                      <FormDescription>
+                        <span className='ml-1 mr-1 tracking-wide text-center inline-block bg-blue-200 text-blue-600 border text-[10px] font-bold uppercase px-2 rounded-full'>
+                          Por fecha
+                        </span>
+                      </FormDescription>
+                      <div className='flex items-center space-x-2 space-y-0 rounded-md border p-2.5 h-[2.5rem] w-[5.5rem]'>
+                        <FormControl className='text-[14px] md:text-[14px]'>
+                          <Checkbox
+                            disabled={form.getValues('all')}
+                            checked={field?.value}
+                            onCheckedChange={(checked) => {
+                              field.onChange(checked);
+                            }}
+                            className={
+                              (form.getValues('limit') || form.getValues('offset')) &&
+                              !form.formState.errors.limit &&
+                              !form.formState.errors.offset
+                                ? ''
+                                : 'bg-slate-500'
+                            }
+                          />
+                        </FormControl>
+                        <div className='space-y-1 leading-none'>
+                          <FormLabel
+                            className={cn(
+                              'text-[12.5px] md:text-[13px] cursor-pointer',
+                              form.getValues('all') && 'text-gray-500'
+                            )}
+                          >
                             Todos
                           </FormLabel>
                         </div>
@@ -258,65 +375,9 @@ export const OfferingsExpenseGeneralSearchPage = (): JSX.Element => {
 
               <FormField
                 control={form.control}
-                name='dateTerm'
-                render={({ field }) => (
-                  <FormItem className='w-auto lg:min-w-[14rem] xl:min-w-[15rem] 2xl:w-full col-start-1 col-end-3 sm:col-start-auto sm:col-end-auto'>
-                    <FormLabel className='text-[14px] font-bold'>Fecha</FormLabel>
-                    <FormDescription className='text-[13.5px] md:text-[14px]'>
-                      Buscar por fecha o rango de fechas.
-                    </FormDescription>
-                    <Popover>
-                      <PopoverTrigger asChild>
-                        <FormControl className='text-[14px] md:text-[14px]'>
-                          <Button
-                            variant={'outline'}
-                            disabled={form.getValues('all')}
-                            className={cn(
-                              'w-full text-left font-normal justify-center p-4 text-[14px]',
-                              !field.value && 'text-muted-foreground'
-                            )}
-                          >
-                            <CalendarIcon className='mr-[0.1rem] h-4 w-4' />
-                            {field?.value?.from ? (
-                              field?.value.to ? (
-                                <>
-                                  {format(field?.value.from, 'LLL dd, y', {
-                                    locale: es,
-                                  })}{' '}
-                                  -{' '}
-                                  {format(field?.value.to, 'LLL dd, y', {
-                                    locale: es,
-                                  })}
-                                </>
-                              ) : (
-                                format(field?.value.from, 'LLL dd, y')
-                              )
-                            ) : (
-                              <span className='text-[14px] md:text-[14px]'>Elige una fecha</span>
-                            )}
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className='w-auto p-0' align='start'>
-                        <Calendar
-                          initialFocus
-                          mode='range'
-                          selected={field.value}
-                          onSelect={field.onChange}
-                          numberOfMonths={2}
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage className='text-[13px]' />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
                 name='order'
                 render={({ field }) => (
-                  <FormItem className='w-auto lg:min-w-[13rem] xl:min-w-[15rem] 2xl:w-full col-start-1 col-end-3 sm:col-start-auto sm:col-end-auto'>
+                  <FormItem className='w-auto lg:min-w-[13rem] xl:min-w-[15rem] 2xl:w-full col-start-1 col-end-3 sm:col-start-auto sm:col-end-auto md:row-start-1 md:row-end-2 md:col-start-3 md:col-end-4 lg:col-start-auto lg:col-end-auto sm:row-start-auto sm:row-end-auto'>
                     <FormLabel className='text-[14px] font-bold'>Orden</FormLabel>
                     <FormDescription className='text-[13.5px] md:text-[14px]'>
                       Selecciona el tipo de orden de los registros.
@@ -401,7 +462,7 @@ export const OfferingsExpenseGeneralSearchPage = (): JSX.Element => {
                 }}
               />
 
-              <div className='col-start-1 col-end-3 sm:col-start-2 md:row-start-3 md:row-end-4 md:col-start-2 md:col-end-3 lg:row-start-auto lg:col-start-auto lg:w-[50%] xl:w-full'>
+              <div className='col-start-1 col-end-3 sm:col-start-1 md:row-start-4 md:row-end-5 md:col-start-1 md:col-end-4 lg:row-start-auto lg:col-start-auto lg:w-[50%] xl:w-full'>
                 <Toaster position='top-center' richColors />
                 <Button
                   disabled={isDisabledSubmitButton}

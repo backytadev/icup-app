@@ -13,4 +13,5 @@ export interface OfferingIncomeQueryParams {
 
   //* Validator for get all register
   all?: boolean;
+  allByDate?: boolean;
 }

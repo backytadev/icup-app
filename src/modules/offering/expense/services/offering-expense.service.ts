@@ -32,6 +32,7 @@ export const getOfferingsExpenses = async ({
   limit,
   offset,
   all,
+  allByDate,
   order,
   dateTerm,
   churchId,
@@ -39,11 +40,21 @@ export const getOfferingsExpenses = async ({
   let result: OfferingExpenseResponse[];
 
   try {
-    if (!all) {
+    if (!all && !allByDate) {
       const { data } = await icupApi<OfferingExpenseResponse[]>('/offering-expenses', {
         params: {
           limit,
           offset,
+          order,
+          searchDate: dateTerm,
+          churchId,
+        },
+      });
+
+      result = data;
+    } else if (allByDate && !all) {
+      const { data } = await icupApi<OfferingExpenseResponse[]>('/offering-expenses', {
+        params: {
           order,
           searchDate: dateTerm,
           churchId,

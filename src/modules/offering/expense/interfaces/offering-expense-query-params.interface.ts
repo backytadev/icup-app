@@ -10,4 +10,5 @@ export interface OfferingExpenseQueryParams {
 
   //* Validator for get all register
   all?: boolean;
+  allByDate?: boolean;
 }

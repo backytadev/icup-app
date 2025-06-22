@@ -62,4 +62,5 @@ export const formSearchGeneralSchema = z.object({
   churchId: z.string().max(40).optional(),
 
   all: z.boolean().optional(),
+  allByDate: z.boolean().optional(),
 });

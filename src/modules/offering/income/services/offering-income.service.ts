@@ -56,6 +56,7 @@ export const getOfferingsIncome = async ({
   limit,
   offset,
   all,
+  allByDate,
   order,
   dateTerm,
   churchId,
@@ -63,11 +64,21 @@ export const getOfferingsIncome = async ({
   let result: OfferingIncomeResponse[];
 
   try {
-    if (!all) {
+    if (!all && !allByDate) {
       const { data } = await icupApi<OfferingIncomeResponse[]>('/offering-income', {
         params: {
           limit,
           offset,
+          order,
+          searchDate: dateTerm,
+          churchId,
+        },
+      });
+
+      result = data;
+    } else if (allByDate && !all) {
+      const { data } = await icupApi<OfferingIncomeResponse[]>('/offering-income', {
+        params: {
           order,
           searchDate: dateTerm,
           churchId,
