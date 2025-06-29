@@ -10,7 +10,7 @@ import { type ExternalDonorFormData } from '@/modules/offering/income/interfaces
 interface Options {
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMessageErrorDisabled: React.Dispatch<React.SetStateAction<boolean>>;
-  externalDonorUpdateForm: UseFormReturn<ExternalDonorFormData, any, undefined>;
+  externalDonorUpdateForm: UseFormReturn<ExternalDonorFormData, any, ExternalDonorFormData>;
   isInputDisabled: boolean;
 }
 

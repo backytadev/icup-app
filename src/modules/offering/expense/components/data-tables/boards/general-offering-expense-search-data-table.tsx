@@ -38,6 +38,7 @@ import { type OfferingExpenseQueryParams } from '@/modules/offering/expense/inte
 
 import { LoadingSpinner } from '@/shared/components/spinner/LoadingSpinner';
 import { type GeneralSearchForm } from '@/shared/interfaces/search-general-form.interface';
+import { timeStampFormatterToDDMMYY } from '@/shared/helpers/date-formatter-to-ddmmyyyy.helper';
 
 import {
   Table,
@@ -213,6 +214,21 @@ export function GeneralOfferingExpenseSearchDataTable<TData, TValue>({
               {`${query?.data?.[0]?.church?.abbreviatedChurchName ?? 'Todas las Iglesias'}`}
             </span>
           </div>
+          <div>
+            <span className='dark:text-cyan-500 text-cyan-600 font-bold text-[14.5px] md:text-[15.5px]'>
+              Rango de búsqueda:
+            </span>{' '}
+            <span className='font-medium text-[14px] md:text-[14.5px] italic'>
+              {searchParams?.dateTerm
+                ? timeStampFormatterToDDMMYY(String(searchParams?.dateTerm).split('+')[0])
+                : 'Sin fecha de búsqueda'}
+              {' - '}
+              {searchParams?.dateTerm
+                ? timeStampFormatterToDDMMYY(String(searchParams?.dateTerm).split('+')[1])
+                : ''}
+            </span>
+          </div>
+
           <div className='pb-8 lg:pb-8 grid grid-cols-2 gap-4 lg:flex lg:items-center py-4 md:py-6 lg:py-4 lg:gap-3'>
             <div className='flex w-full col-span-2 gap-2 md:gap-3 md:row-start-1 md:row-end-2'>
               <Input

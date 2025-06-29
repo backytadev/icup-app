@@ -9,7 +9,7 @@ interface Options {
   isInputDisabled: boolean;
   setIsSubmitButtonDisabled: (value: boolean) => void;
   setIsMessageErrorDisabled: (value: boolean) => void;
-  zoneCreationForm: UseFormReturn<ZoneFormData, any, undefined>;
+  zoneCreationForm: UseFormReturn<ZoneFormData, any, ZoneFormData>;
 }
 
 export const useZoneCreationSubmitButtonLogic = ({

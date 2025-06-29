@@ -10,7 +10,7 @@ import { type UserResponse } from '@/modules/user/interfaces/user-response.inter
 import { type UserFormData } from '@/modules/user/interfaces/user-form-data.interface';
 
 interface Options {
-  userCreationForm: UseFormReturn<UserFormData, any, undefined>;
+  userCreationForm: UseFormReturn<UserFormData, any, UserFormData>;
   setIsInputDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }

@@ -4,7 +4,7 @@ import { MemberRole } from '@/shared/enums/member-role.enum';
 import { type DiscipleFormData } from '@/modules/disciple/interfaces/disciple-form-data.interface';
 
 interface Options {
-  discipleUpdateForm: UseFormReturn<DiscipleFormData, any, undefined>;
+  discipleUpdateForm: UseFormReturn<DiscipleFormData, any, DiscipleFormData>;
   setIsDisabledInput: React.Dispatch<React.SetStateAction<boolean>>;
   setIsDisabledPromoteButton: React.Dispatch<React.SetStateAction<boolean>>;
 }

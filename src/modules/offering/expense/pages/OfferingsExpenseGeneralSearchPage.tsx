@@ -12,7 +12,7 @@ import { useForm } from 'react-hook-form';
 import { CalendarIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { endOfWeek, format, startOfWeek } from 'date-fns';
+import { endOfMonth, format, startOfMonth } from 'date-fns';
 
 import { cn } from '@/shared/lib/utils';
 
@@ -88,11 +88,11 @@ export const OfferingsExpenseGeneralSearchPage = (): JSX.Element => {
     defaultValues: {
       limit: '10',
       offset: '0',
-      all: false,
-      allByDate: true,
+      all: true,
+      allByDate: false,
       dateTerm: {
-        from: startOfWeek(new Date(), { weekStartsOn: 1 }),
-        to: endOfWeek(new Date(), { weekStartsOn: 1 }),
+        from: startOfMonth(new Date()),
+        to: endOfMonth(new Date()),
       },
       order: RecordOrder.Descending,
     },
@@ -162,7 +162,7 @@ export const OfferingsExpenseGeneralSearchPage = (): JSX.Element => {
       <SearchTitle
         className='w-[14rem] sm:w-auto leading-8 sm:leading-10'
         isGeneralSearch
-        titleName={'registros de salida'}
+        titleName={'salidas'}
       />
 
       <div className='px-4 md:-px-2 md:px-[2rem] xl:px-[3rem] py-4 md:py-7 w-full'>
@@ -230,9 +230,9 @@ export const OfferingsExpenseGeneralSearchPage = (): JSX.Element => {
                     <FormItem className='flex flex-col justify-end'>
                       <FormLabel></FormLabel>
                       <FormDescription>
-                        <span className='tracking-wide text-center ml-1 mr-1 font-bold inline-block bg-gray-200 text-slate-600 border text-[10px] uppercase px-2 rounded-full'>
+                        {/* <span className='tracking-wide text-center ml-1 mr-1 font-bold inline-block bg-gray-200 text-slate-600 border text-[10px] uppercase px-2 rounded-full'>
                           General
-                        </span>
+                        </span> */}
                       </FormDescription>
                       <div className='flex items-center space-x-2 space-y-0 rounded-md border p-2.5 h-[2.5rem]'>
                         <FormControl className='text-[14px] md:text-[14px]'>
@@ -287,7 +287,7 @@ export const OfferingsExpenseGeneralSearchPage = (): JSX.Element => {
                           <FormControl className='text-[14px] md:text-[14px]'>
                             <Button
                               variant={'outline'}
-                              disabled={form.getValues('all')}
+                              // disabled={form.getValues('all')}
                               className={cn(
                                 'w-full text-left font-normal justify-center p-4 text-[14px]',
                                 !field.value && 'text-muted-foreground'
@@ -329,7 +329,7 @@ export const OfferingsExpenseGeneralSearchPage = (): JSX.Element => {
                   )}
                 />
 
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name='allByDate'
                   render={({ field }) => (
@@ -370,7 +370,7 @@ export const OfferingsExpenseGeneralSearchPage = (): JSX.Element => {
                       </div>
                     </FormItem>
                   )}
-                />
+                /> */}
               </div>
 
               <FormField

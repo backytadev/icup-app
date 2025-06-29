@@ -9,7 +9,7 @@ import { MemberRole } from '@/shared/enums/member-role.enum';
 import { type DiscipleFormData } from '@/modules/disciple/interfaces/disciple-form-data.interface';
 
 interface Options {
-  discipleCreationForm: UseFormReturn<DiscipleFormData, any, undefined>;
+  discipleCreationForm: UseFormReturn<DiscipleFormData, any, DiscipleFormData>;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMessageErrorDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   isInputDisabled: boolean;

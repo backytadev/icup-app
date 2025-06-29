@@ -379,14 +379,14 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
     <div className='animate-fadeInPage'>
       <PageTitle className='text-green-600'>Modulo de Ingreso</PageTitle>
 
-      <h1 className='text-left leading-8 pb-[2px] pt-2 px-4 sm:px-5 2xl:px-10 font-sans font-bold text-green-500 text-[1.6rem] sm:text-[1.75rem] md:text-[1.85rem] lg:text-[1.9rem] xl:text-[2.1rem] 2xl:text-4xl'>
+      <h1 className='text-left leading-8 pb-[8px] pt-2 px-4 sm:px-5 2xl:px-10 font-sans font-bold text-green-500 text-[1.6rem] sm:text-[1.75rem] md:text-[1.85rem] lg:text-[1.9rem] xl:text-[2.1rem] 2xl:text-4xl'>
         Crear nuevo ingreso de ofrenda
       </h1>
       <p className='dark:text-slate-300 text-left font-sans font-bold pl-5 pr-6 sm:pl-7 2xl:px-14 text-[13.5px] md:text-[15px] xl:text-base'>
         Por favor llena los siguientes datos para crear un nuevo registro de ingreso.
       </p>
 
-      <div className='flex flex-col items-center pb-8 gap-y-8 md:gap-y-12 px-6 py-4 sm:px-12 sm:py-8 2xl:px-[5rem]  2xl:py-8'>
+      <div className='flex flex-col items-center pb-8 gap-y-8 md:gap-y-12 px-6 py-4 sm:px-12 sm:py-8 2xl:px-[5rem] 2xl:py-8'>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}

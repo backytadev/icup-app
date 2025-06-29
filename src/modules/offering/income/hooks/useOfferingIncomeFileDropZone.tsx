@@ -15,7 +15,7 @@ interface Options {
   files: FilesProps[];
   setFiles: React.Dispatch<React.SetStateAction<FilesProps[]>>;
   setRejected: React.Dispatch<React.SetStateAction<RejectionProps[]>>;
-  offeringIncomeForm: UseFormReturn<OfferingIncomeFormData, any, undefined>;
+  offeringIncomeForm: UseFormReturn<OfferingIncomeFormData, any, OfferingIncomeFormData>;
 }
 
 export const useOfferingIncomeFileDropZone = ({

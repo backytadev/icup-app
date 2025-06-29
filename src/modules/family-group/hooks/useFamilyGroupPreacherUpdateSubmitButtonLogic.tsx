@@ -9,7 +9,11 @@ interface Options {
   isInputTheirPreacherDisabled: boolean;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMessageErrorDisabled: React.Dispatch<React.SetStateAction<boolean>>;
-  familyGroupPreacherUpdateForm: UseFormReturn<FamilyGroupPreacherUpdateFormData, any, undefined>;
+  familyGroupPreacherUpdateForm: UseFormReturn<
+    FamilyGroupPreacherUpdateFormData,
+    any,
+    FamilyGroupPreacherUpdateFormData
+  >;
 }
 
 export const useFamilyGroupPreacherUpdateSubmitButtonLogic = ({

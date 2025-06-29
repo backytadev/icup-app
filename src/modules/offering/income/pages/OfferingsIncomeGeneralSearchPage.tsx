@@ -99,8 +99,8 @@ export const OfferingsIncomeGeneralSearchPage = (): JSX.Element => {
     defaultValues: {
       limit: '10',
       offset: '0',
-      all: false,
-      allByDate: true,
+      all: true,
+      allByDate: false,
       dateTerm: {
         from: startOfWeek(new Date(), { weekStartsOn: 1 }),
         to: endOfWeek(new Date(), { weekStartsOn: 1 }),
@@ -172,7 +172,7 @@ export const OfferingsIncomeGeneralSearchPage = (): JSX.Element => {
       <SearchTitle
         className='w-[14rem] sm:w-auto leading-8 sm:leading-10'
         isGeneralSearch
-        titleName={'registros de ingreso'}
+        titleName={'ingresos'}
       />
 
       <div className='px-4 md:-px-2 md:px-[2rem] xl:px-[3rem] py-4 md:py-7 w-full'>
@@ -240,9 +240,9 @@ export const OfferingsIncomeGeneralSearchPage = (): JSX.Element => {
                     <FormItem className='flex flex-col justify-end'>
                       <FormLabel></FormLabel>
                       <FormDescription>
-                        <span className='tracking-wide text-center ml-1 mr-1 font-bold inline-block bg-gray-200 text-slate-600 border text-[10px] uppercase px-2 rounded-full'>
+                        {/* <span className='tracking-wide text-center ml-1 mr-1 font-bold inline-block bg-gray-200 text-slate-600 border text-[10px] uppercase px-2 rounded-full'>
                           General
-                        </span>
+                        </span> */}
                       </FormDescription>
                       <div className='flex items-center space-x-2 space-y-0 rounded-md border p-2.5 h-[2.5rem]'>
                         <FormControl className='text-[14px] md:text-[14px]'>
@@ -287,7 +287,7 @@ export const OfferingsIncomeGeneralSearchPage = (): JSX.Element => {
                   control={form.control}
                   name='dateTerm'
                   render={({ field }) => (
-                    <FormItem className='w-full lg:min-w-[14rem] xl:min-w-[15rem] 2xl:w-full col-start-1 col-end-3 sm:col-start-auto sm:col-end-auto'>
+                    <FormItem className='w-full lg:min-w-[15rem] xl:min-w-[15rem] 2xl:w-full col-start-1 col-end-3 sm:col-start-auto sm:col-end-auto'>
                       <FormLabel className='text-[14px] font-bold'>Fecha</FormLabel>
                       <FormDescription className='text-[13.5px] md:text-[14px]'>
                         Buscar por fecha o rango de fechas.
@@ -297,7 +297,7 @@ export const OfferingsIncomeGeneralSearchPage = (): JSX.Element => {
                           <FormControl className='text-[14px] md:text-[14px]'>
                             <Button
                               variant={'outline'}
-                              disabled={form.getValues('all')}
+                              // disabled={form.getValues('all')}
                               className={cn(
                                 'w-full text-left font-normal justify-center p-4 text-[14px]',
                                 !field.value && 'text-muted-foreground'
@@ -339,7 +339,7 @@ export const OfferingsIncomeGeneralSearchPage = (): JSX.Element => {
                   )}
                 />
 
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name='allByDate'
                   render={({ field }) => (
@@ -380,7 +380,7 @@ export const OfferingsIncomeGeneralSearchPage = (): JSX.Element => {
                       </div>
                     </FormItem>
                   )}
-                />
+                /> */}
               </div>
 
               <FormField

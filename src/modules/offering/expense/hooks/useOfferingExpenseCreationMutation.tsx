@@ -25,7 +25,7 @@ interface Options {
   setFiles: React.Dispatch<React.SetStateAction<FilesProps[]>>;
   setIsInputDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
-  offeringExpenseCreationForm: UseFormReturn<OfferingExpenseFormData, any, undefined>;
+  offeringExpenseCreationForm: UseFormReturn<OfferingExpenseFormData, any, OfferingExpenseFormData>;
 }
 
 export const useOfferingExpenseCreationMutation = ({

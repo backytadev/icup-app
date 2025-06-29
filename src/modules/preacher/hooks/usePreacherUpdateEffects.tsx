@@ -11,7 +11,7 @@ interface Options {
   id: string;
   data: PreacherResponse | undefined;
   setIsLoadingData: React.Dispatch<React.SetStateAction<boolean>>;
-  preacherUpdateForm: UseFormReturn<PreacherFormData, any, undefined>;
+  preacherUpdateForm: UseFormReturn<PreacherFormData, any, PreacherFormData>;
 }
 
 export const usePreacherUpdateEffects = ({

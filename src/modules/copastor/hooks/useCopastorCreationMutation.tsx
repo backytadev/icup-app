@@ -10,7 +10,7 @@ import { type CopastorResponse } from '@/modules/copastor/interfaces/copastor-re
 import { type CopastorFormData } from '@/modules/copastor/interfaces/copastor-form-data.interface';
 
 interface Options {
-  copastorCreationForm: UseFormReturn<CopastorFormData, any, undefined>;
+  copastorCreationForm: UseFormReturn<CopastorFormData, any, CopastorFormData>;
   setIsInputDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }

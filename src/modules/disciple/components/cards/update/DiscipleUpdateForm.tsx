@@ -1242,7 +1242,6 @@ export const DiscipleUpdateForm = ({
                             onClick={() => {
                               useDiscipleRolePromotionHandler({
                                 discipleUpdateForm: form,
-
                                 setIsDisabledPromoteButton: setIsPromoteButtonDisabled,
                                 setIsDisabledInput: setIsInputDisabled,
                               });

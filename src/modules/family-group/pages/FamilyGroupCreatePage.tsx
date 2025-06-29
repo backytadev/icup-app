@@ -171,7 +171,7 @@ export const FamilyGroupCreatePage = (): JSX.Element => {
         Modulo Grupo Familiar
       </PageTitle>
 
-      <h2 className='text-left leading-8 pb-[2px] pt-2 px-4 sm:px-5 2xl:px-10 font-sans font-bold text-green-500 text-[1.6rem] sm:text-[1.75rem] md:text-[1.85rem] lg:text-[1.9rem] xl:text-[2.1rem] 2xl:text-4xl'>
+      <h2 className='text-left leading-8 pb-[8px] pt-2 px-4 sm:px-5 2xl:px-10 font-sans font-bold text-green-500 text-[1.6rem] sm:text-[1.75rem] md:text-[1.85rem] lg:text-[1.9rem] xl:text-[2.1rem] 2xl:text-4xl'>
         Crear un nuevo grupo familiar
       </h2>
 

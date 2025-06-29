@@ -15,7 +15,7 @@ interface Options {
   isInputDisabled: boolean;
   isDropZoneDisabled: boolean;
   isDeleteFileButtonDisabled: boolean;
-  offeringIncomeCreationForm: UseFormReturn<OfferingIncomeFormData, any, undefined>;
+  offeringIncomeCreationForm: UseFormReturn<OfferingIncomeFormData, any, OfferingIncomeFormData>;
   setIsDropZoneDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMessageErrorDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;

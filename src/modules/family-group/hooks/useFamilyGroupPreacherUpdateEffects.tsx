@@ -13,7 +13,11 @@ interface Options {
   id: string;
   data: FamilyGroupResponse | undefined;
   preachersQuery: UseQueryResult<PreacherResponse[], Error>;
-  familyGroupPreacherUpdateForm: UseFormReturn<FamilyGroupPreacherUpdateFormData, any, undefined>;
+  familyGroupPreacherUpdateForm: UseFormReturn<
+    FamilyGroupPreacherUpdateFormData,
+    any,
+    FamilyGroupPreacherUpdateFormData
+  >;
 }
 
 export const useFamilyGroupPreacherUpdateEffects = ({

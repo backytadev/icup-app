@@ -10,7 +10,7 @@ import { type DiscipleResponse } from '@/modules/disciple/interfaces/disciple-re
 import { type DiscipleFormData } from '@/modules/disciple/interfaces/disciple-form-data.interface';
 
 interface Options {
-  discipleCreationForm: UseFormReturn<DiscipleFormData, any, undefined>;
+  discipleCreationForm: UseFormReturn<DiscipleFormData, any, DiscipleFormData>;
   setIsInputDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }

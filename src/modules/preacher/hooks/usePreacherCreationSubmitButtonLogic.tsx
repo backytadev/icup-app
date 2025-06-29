@@ -9,7 +9,7 @@ import { MemberRole } from '@/shared/enums/member-role.enum';
 import { type PreacherFormData } from '@/modules/preacher/interfaces/preacher-form-data.interface';
 
 interface Options {
-  preacherCreationForm: UseFormReturn<PreacherFormData, any, undefined>;
+  preacherCreationForm: UseFormReturn<PreacherFormData, any, PreacherFormData>;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMessageErrorDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   isInputDisabled: boolean;

@@ -11,7 +11,7 @@ interface Options {
   id: string;
   data: CopastorResponse | undefined;
   setIsLoadingData: React.Dispatch<React.SetStateAction<boolean>>;
-  copastorUpdateForm: UseFormReturn<CopastorFormData, any, undefined>;
+  copastorUpdateForm: UseFormReturn<CopastorFormData, any, CopastorFormData>;
 }
 
 export const useCopastorUpdateEffects = ({

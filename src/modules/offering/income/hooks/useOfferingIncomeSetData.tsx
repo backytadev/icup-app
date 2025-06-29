@@ -16,7 +16,7 @@ interface Options {
   data: OfferingIncomeResponse | undefined;
   setFiles: React.Dispatch<React.SetStateAction<FilesProps[]>>;
   setIsLoadingData: React.Dispatch<React.SetStateAction<boolean>>;
-  offeringIncomeUpdateForm: UseFormReturn<OfferingIncomeFormData, any, undefined>;
+  offeringIncomeUpdateForm: UseFormReturn<OfferingIncomeFormData, any, OfferingIncomeFormData>;
 }
 
 export const useOfferingIncomeSetData = ({

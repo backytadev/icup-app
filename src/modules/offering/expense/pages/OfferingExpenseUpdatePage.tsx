@@ -183,7 +183,7 @@ export const OfferingExpenseUpdatePage = (): JSX.Element => {
       <SearchTitle
         isUpdateSearch
         className='text-orange-500 w-[14rem] sm:w-auto leading-8 sm:leading-10'
-        titleName={'registros de salida'}
+        titleName={'salidas'}
       />
 
       <div className='px-4 md:-px-2 md:px-[2rem] xl:px-[3rem] py-4 md:py-7 w-full'>

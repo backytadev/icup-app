@@ -6,7 +6,7 @@ import { CopastorFieldNames } from '@/modules/copastor/enums/copastor-field-name
 import { type CopastorFormData } from '@/modules/copastor/interfaces/copastor-form-data.interface';
 
 interface Options {
-  copastorUpdateForm: UseFormReturn<CopastorFormData, any, undefined>;
+  copastorUpdateForm: UseFormReturn<CopastorFormData, any, CopastorFormData>;
   setIsPromoteButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }
 

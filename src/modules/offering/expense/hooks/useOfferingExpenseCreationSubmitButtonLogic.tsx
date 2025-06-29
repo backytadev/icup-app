@@ -14,7 +14,7 @@ interface Options {
   setIsDropZoneDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMessageErrorDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
-  offeringExpenseCreationForm: UseFormReturn<OfferingExpenseFormData, any, undefined>;
+  offeringExpenseCreationForm: UseFormReturn<OfferingExpenseFormData, any, OfferingExpenseFormData>;
 }
 
 export const useOfferingExpenseCreationSubmitButtonLogic = ({

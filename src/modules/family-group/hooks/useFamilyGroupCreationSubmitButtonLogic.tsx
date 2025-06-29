@@ -9,7 +9,7 @@ interface Options {
   isInputDisabled: boolean;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMessageErrorDisabled: React.Dispatch<React.SetStateAction<boolean>>;
-  familyGroupCreationForm: UseFormReturn<FamilyGroupFormData, any, undefined>;
+  familyGroupCreationForm: UseFormReturn<FamilyGroupFormData, any, FamilyGroupFormData>;
 }
 
 export const useFamilyGroupCreationSubmitButtonLogic = ({

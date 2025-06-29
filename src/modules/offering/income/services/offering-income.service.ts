@@ -76,20 +76,23 @@ export const getOfferingsIncome = async ({
       });
 
       result = data;
-    } else if (allByDate && !all) {
+    }
+    // else if (allByDate && !all) {
+    //   const { data } = await icupApi<OfferingIncomeResponse[]>('/offering-income', {
+    //     params: {
+    //       order,
+    //       searchDate: dateTerm,
+    //       churchId,
+    //     },
+    //   });
+
+    //   result = data;
+    // }
+    else {
       const { data } = await icupApi<OfferingIncomeResponse[]>('/offering-income', {
         params: {
           order,
           searchDate: dateTerm,
-          churchId,
-        },
-      });
-
-      result = data;
-    } else {
-      const { data } = await icupApi<OfferingIncomeResponse[]>('/offering-income', {
-        params: {
-          order,
           churchId,
         },
       });
@@ -566,9 +569,11 @@ export const getGeneralOfferingIncomeReport = async ({
   all,
   order,
   churchId,
+  allByDate,
+  dateTerm,
 }: OfferingIncomeQueryParams): Promise<boolean> => {
   try {
-    if (!all) {
+    if (!all && !allByDate) {
       const res = await icupApi<Blob>('/reports/offering-income', {
         params: {
           limit,
@@ -585,11 +590,30 @@ export const getGeneralOfferingIncomeReport = async ({
       openPdfInNewTab(res.data);
 
       return true;
-    } else {
+    }
+    // else if (allByDate && !all) {
+    //   const res = await icupApi<Blob>('/reports/offering-income', {
+    //     params: {
+    //       searchDate: dateTerm,
+    //       order,
+    //       churchId,
+    //     },
+    //     headers: {
+    //       'Content-Type': 'application/pdf',
+    //     },
+    //     responseType: 'blob',
+    //   });
+
+    //   openPdfInNewTab(res.data);
+
+    //   return true;
+    // }
+    else {
       const res = await icupApi<Blob>('/reports/offering-income', {
         params: {
           order,
           churchId,
+          searchDate: dateTerm,
         },
         headers: {
           'Content-Type': 'application/pdf',

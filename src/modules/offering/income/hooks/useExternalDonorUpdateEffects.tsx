@@ -9,7 +9,7 @@ import { type ExternalDonorFormData } from '@/modules/offering/income/interfaces
 interface Options {
   data: ExternalDonorResponse | undefined;
   setIsLoadingData: React.Dispatch<React.SetStateAction<boolean>>;
-  externalDonorUpdateForm: UseFormReturn<ExternalDonorFormData, any, undefined>;
+  externalDonorUpdateForm: UseFormReturn<ExternalDonorFormData, any, ExternalDonorFormData>;
 }
 
 export const useExternalDonorEffects = ({

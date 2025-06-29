@@ -6,7 +6,11 @@ import { type UseFormReturn } from 'react-hook-form';
 import { type ZoneSupervisorUpdateFormData } from '@/modules/zone/interfaces/zone-supervisor-update-form-data.interface';
 
 interface Options {
-  zoneSupervisorUpdateForm: UseFormReturn<ZoneSupervisorUpdateFormData, any, undefined>;
+  zoneSupervisorUpdateForm: UseFormReturn<
+    ZoneSupervisorUpdateFormData,
+    any,
+    ZoneSupervisorUpdateFormData
+  >;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMessageErrorDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   isInputTheirSupervisorDisabled: boolean;

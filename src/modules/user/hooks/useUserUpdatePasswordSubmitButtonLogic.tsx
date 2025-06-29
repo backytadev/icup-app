@@ -9,7 +9,11 @@ interface Options {
   isInputDisabled: boolean;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMessageErrorDisabled: React.Dispatch<React.SetStateAction<boolean>>;
-  userPasswordUpdateForm: UseFormReturn<UserPasswordUpdateFormData, any, undefined>;
+  userPasswordUpdateForm: UseFormReturn<
+    UserPasswordUpdateFormData,
+    any,
+    UserPasswordUpdateFormData
+  >;
   setIsMessageErrorPasswordDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }
 

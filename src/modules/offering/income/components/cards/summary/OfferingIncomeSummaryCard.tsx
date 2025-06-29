@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-confusing-void-expression */
 
-import { useCallback, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
-import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { toZonedTime } from 'date-fns-tz';
+import { cn } from '@/shared/lib/utils';
 import { ChevronDown } from 'lucide-react';
 import { HiOutlineClipboardList } from 'react-icons/hi';
+import { formatInTimeZone, toZonedTime } from 'date-fns-tz';
 
 import {
   Dialog,
@@ -37,7 +37,6 @@ import {
   OfferingIncomeCreationSubType,
   OfferingIncomeCreationSubTypeNames,
 } from '@/modules/offering/income/enums/offering-income-creation-sub-type.enum';
-import { cn } from '@/shared/lib/utils';
 
 interface Props {
   data: OfferingIncomeResponse[] | undefined;
@@ -70,16 +69,42 @@ export const OfferingIncomeResumeCard = ({ data, isDisabled }: Props): JSX.Eleme
   const [isOpenSummaryByType, setIsOpenSummaryByType] = useState(true);
   const [isOpenSummaryByShift, setIsOpenSummaryByShift] = useState(false);
   const [isOpenSummaryByUser, setIsOpenSummaryByUser] = useState(false);
+  const [initialDate, setInitialDate] = useState<string>('');
+  const [finalDate, setFinalDate] = useState<string>('');
 
   //* Functions
   const handleContainerClose = useCallback((): void => {
     setIsOpen(false);
   }, []);
 
-  //* Defs times
-  const timeZone = 'America/Lima';
-  const initialZonedDate = toZonedTime(data?.at(-1)?.createdAt ?? new Date(), timeZone);
-  const finalZonedDate = toZonedTime(data?.at(0)?.createdAt ?? new Date(), timeZone);
+  //* Effects
+  useEffect(() => {
+    if (data) {
+      const timeStamps = data.map((item) => new Date(item.date).getTime());
+      const minDate = new Date(Math.min(...timeStamps));
+      const maxDate = new Date(Math.max(...timeStamps));
+      const formattedMinDate = formatInTimeZone(
+        minDate ?? new Date(),
+        'UTC',
+        "dd 'de' MMMM 'de' yyyy",
+        {
+          locale: es,
+        }
+      );
+
+      const formattedMaxDate = formatInTimeZone(
+        maxDate ?? new Date(),
+        'UTC',
+        "dd 'de' MMMM 'de' yyyy",
+        {
+          locale: es,
+        }
+      );
+
+      setInitialDate(formattedMinDate);
+      setFinalDate(formattedMaxDate);
+    }
+  }, [data]);
 
   //* Format Data By Type
   const formatDataByType = data?.reduce(
@@ -254,14 +279,9 @@ export const OfferingIncomeResumeCard = ({ data, isDisabled }: Props): JSX.Eleme
                 resumen de ofrendas
               </span>{' '}
               desde el{' '}
-              <span className='font-bold text-indigo-600 dark:text-indigo-400'>
-                {format(initialZonedDate, "dd 'de' MMMM 'de' yyyy", { locale: es })}
-              </span>{' '}
+              <span className='font-bold text-indigo-600 dark:text-indigo-400'>{initialDate}</span>{' '}
               hasta el{' '}
-              <span className='font-bold text-indigo-600 dark:text-indigo-400'>
-                {format(finalZonedDate, "dd 'de' MMMM 'de' yyyy", { locale: es })}
-              </span>
-              .
+              <span className='font-bold text-indigo-600 dark:text-indigo-400'>{finalDate}</span>.
             </p>
           </DialogDescription>
 

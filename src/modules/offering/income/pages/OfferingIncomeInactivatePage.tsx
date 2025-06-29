@@ -209,7 +209,7 @@ export const OfferingIncomeInactivatePage = (): JSX.Element => {
       <SearchTitle
         isInactivateSearch
         className='text-red-500 w-[14rem] sm:w-auto leading-8 sm:leading-10'
-        titleName={'registros de ingreso'}
+        titleName={'ingresos'}
       />
 
       <div className='px-4 md:-px-2 md:px-[2rem] xl:px-[3rem] py-4 md:py-7 w-full'>

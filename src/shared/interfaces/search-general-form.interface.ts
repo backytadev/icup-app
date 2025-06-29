@@ -9,6 +9,7 @@ export interface GeneralSearchForm {
         from: Date;
         to?: Date | undefined;
       }
-    | undefined;
+    | undefined
+    | string;
   churchId?: string;
 }

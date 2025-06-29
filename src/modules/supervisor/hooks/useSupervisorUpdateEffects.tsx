@@ -11,7 +11,7 @@ interface Options {
   id: string;
   data: SupervisorResponse | undefined;
   setIsLoadingData: React.Dispatch<React.SetStateAction<boolean>>;
-  supervisorUpdateForm: UseFormReturn<SupervisorFormData, any, undefined>;
+  supervisorUpdateForm: UseFormReturn<SupervisorFormData, any, SupervisorFormData>;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMessageErrorDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }

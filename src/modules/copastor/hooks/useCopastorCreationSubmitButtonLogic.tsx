@@ -9,7 +9,7 @@ import { MemberRole } from '@/shared/enums/member-role.enum';
 import { type CopastorFormData } from '@/modules/copastor/interfaces/copastor-form-data.interface';
 
 interface Options {
-  copastorCreationForm: UseFormReturn<CopastorFormData, any, undefined>;
+  copastorCreationForm: UseFormReturn<CopastorFormData, any, CopastorFormData>;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMessageErrorDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   isInputDisabled: boolean;

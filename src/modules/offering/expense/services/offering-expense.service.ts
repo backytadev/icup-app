@@ -52,21 +52,24 @@ export const getOfferingsExpenses = async ({
       });
 
       result = data;
-    } else if (allByDate && !all) {
-      const { data } = await icupApi<OfferingExpenseResponse[]>('/offering-expenses', {
-        params: {
-          order,
-          searchDate: dateTerm,
-          churchId,
-        },
-      });
+    }
+    // else if (allByDate && !all) {
+    //   const { data } = await icupApi<OfferingExpenseResponse[]>('/offering-expenses', {
+    //     params: {
+    //       order,
+    //       searchDate: dateTerm,
+    //       churchId,
+    //     },
+    //   });
 
-      result = data;
-    } else {
+    //   result = data;
+    // }
+    else {
       const { data } = await icupApi<OfferingExpenseResponse[]>('/offering-expenses', {
         params: {
           order,
           churchId,
+          searchDate: dateTerm,
         },
       });
 
@@ -253,9 +256,11 @@ export const getGeneralOfferingExpensesReport = async ({
   all,
   order,
   churchId,
+  allByDate,
+  dateTerm,
 }: OfferingExpenseQueryParams): Promise<boolean> => {
   try {
-    if (!all) {
+    if (!all && !allByDate) {
       const res = await icupApi<Blob>('/reports/offering-expenses', {
         params: {
           limit,
@@ -272,11 +277,30 @@ export const getGeneralOfferingExpensesReport = async ({
       openPdfInNewTab(res.data);
 
       return true;
-    } else {
+    }
+    // else if (allByDate && !all) {
+    //   const res = await icupApi<Blob>('/reports/offering-expenses', {
+    //     params: {
+    //       searchDate: dateTerm,
+    //       order,
+    //       churchId,
+    //     },
+    //     headers: {
+    //       'Content-Type': 'application/pdf',
+    //     },
+    //     responseType: 'blob',
+    //   });
+
+    //   openPdfInNewTab(res.data);
+
+    //   return true;
+    // }
+    else {
       const res = await icupApi<Blob>('/reports/offering-expenses', {
         params: {
           order,
           churchId,
+          searchDate: dateTerm,
         },
         headers: {
           'Content-Type': 'application/pdf',

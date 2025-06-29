@@ -7,7 +7,7 @@ import { type UserFormData } from '@/modules/user/interfaces/user-form-data.inte
 
 interface Options {
   isInputDisabled: boolean;
-  userCreationForm: UseFormReturn<UserFormData, any, undefined>;
+  userCreationForm: UseFormReturn<UserFormData, any, UserFormData>;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMessageErrorDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMessageErrorPasswordDisabled: React.Dispatch<React.SetStateAction<boolean>>;
