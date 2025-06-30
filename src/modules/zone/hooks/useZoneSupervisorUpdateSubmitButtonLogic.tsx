@@ -9,7 +9,7 @@ interface Options {
   zoneSupervisorUpdateForm: UseFormReturn<
     ZoneSupervisorUpdateFormData,
     any,
-    ZoneSupervisorUpdateFormData
+    ZoneSupervisorUpdateFormData | undefined
   >;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMessageErrorDisabled: React.Dispatch<React.SetStateAction<boolean>>;

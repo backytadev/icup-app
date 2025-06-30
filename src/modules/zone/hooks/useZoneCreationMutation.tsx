@@ -10,7 +10,7 @@ import { type ZoneResponse } from '@/modules/zone/interfaces/zone-response.inter
 import { type ZoneFormData } from '@/modules/zone/interfaces/zone-form-data.interface';
 
 interface Options {
-  zoneCreationForm: UseFormReturn<ZoneFormData, any, ZoneFormData>;
+  zoneCreationForm: UseFormReturn<ZoneFormData, any, ZoneFormData | undefined>;
   setIsInputDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }

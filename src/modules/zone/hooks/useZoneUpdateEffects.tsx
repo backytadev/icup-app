@@ -10,7 +10,7 @@ interface Options {
   id: string;
   data: ZoneResponse | undefined;
   setIsLoadingData: React.Dispatch<React.SetStateAction<boolean>>;
-  zoneUpdateForm: UseFormReturn<ZoneFormData, any, ZoneFormData>;
+  zoneUpdateForm: UseFormReturn<ZoneFormData, any, ZoneFormData | undefined>;
 }
 
 export const useUpdateZoneEffects = ({

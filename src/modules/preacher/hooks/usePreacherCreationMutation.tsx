@@ -10,7 +10,7 @@ import { type PreacherResponse } from '@/modules/preacher/interfaces/preacher-re
 import { type PreacherFormData } from '@/modules/preacher/interfaces/preacher-form-data.interface';
 
 interface Options {
-  preacherCreationForm: UseFormReturn<PreacherFormData, any, PreacherFormData>;
+  preacherCreationForm: UseFormReturn<PreacherFormData, any, PreacherFormData | undefined>;
   setIsInputDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }

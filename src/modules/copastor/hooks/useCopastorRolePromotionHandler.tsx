@@ -4,7 +4,7 @@ import { MemberRole } from '@/shared/enums/member-role.enum';
 import { type CopastorFormData } from '@/modules/copastor/interfaces/copastor-form-data.interface';
 
 interface Options {
-  copastorUpdateForm: UseFormReturn<CopastorFormData, any, CopastorFormData>;
+  copastorUpdateForm: UseFormReturn<CopastorFormData, any, CopastorFormData | undefined>;
   setIsDisabledInput: React.Dispatch<React.SetStateAction<boolean>>;
   setIsDisabledPromoteButton: React.Dispatch<React.SetStateAction<boolean>>;
 }

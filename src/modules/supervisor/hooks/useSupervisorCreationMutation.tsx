@@ -10,7 +10,7 @@ import { type SupervisorResponse } from '@/modules/supervisor/interfaces/supervi
 import { type SupervisorFormData } from '@/modules/supervisor/interfaces/supervisor-form-data.interface';
 
 interface Options {
-  supervisorCreationForm: UseFormReturn<SupervisorFormData, any, SupervisorFormData>;
+  supervisorCreationForm: UseFormReturn<SupervisorFormData, any, SupervisorFormData | undefined>;
   setIsInputDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }

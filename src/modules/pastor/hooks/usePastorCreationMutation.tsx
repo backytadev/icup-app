@@ -11,7 +11,7 @@ import { type PastorFormData } from '@/modules/pastor/interfaces/pastor-form-dat
 
 interface Options {
   setIsInputDisabled: React.Dispatch<React.SetStateAction<boolean>>;
-  pastorCreationForm: UseFormReturn<PastorFormData, any, PastorFormData>;
+  pastorCreationForm: UseFormReturn<PastorFormData, any, PastorFormData | undefined>;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }
 

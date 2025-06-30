@@ -5,7 +5,7 @@ import { SupervisorFieldNames } from '@/modules/supervisor/enums/supervisor-fiel
 import { type SupervisorFormData } from '@/modules/supervisor/interfaces/supervisor-form-data.interface';
 
 interface Options {
-  supervisorUpdateForm: UseFormReturn<SupervisorFormData, any, SupervisorFormData>;
+  supervisorUpdateForm: UseFormReturn<SupervisorFormData, any, SupervisorFormData | undefined>;
   setIsPromoteButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }
 

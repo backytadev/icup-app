@@ -10,7 +10,7 @@ import { type ChurchResponse } from '@/modules/church/interfaces/church-response
 import { type ChurchFormData } from '@/modules/church/interfaces/church-form-data.interface';
 
 interface Options {
-  churchCreationForm: UseFormReturn<ChurchFormData, any, ChurchFormData>;
+  churchCreationForm: UseFormReturn<ChurchFormData, any, ChurchFormData | undefined>;
   setIsInputDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }

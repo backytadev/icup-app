@@ -11,7 +11,7 @@ interface Options {
   id: string;
   data: DiscipleResponse | undefined;
   setIsLoadingData: React.Dispatch<React.SetStateAction<boolean>>;
-  discipleUpdateForm: UseFormReturn<DiscipleFormData, any, DiscipleFormData>;
+  discipleUpdateForm: UseFormReturn<DiscipleFormData, any, DiscipleFormData | undefined>;
 }
 
 export const useDiscipleUpdateEffects = ({

@@ -12,7 +12,7 @@ interface Options {
   id: string;
   data: UserResponse | undefined;
   setIsLoadingData: React.Dispatch<React.SetStateAction<boolean>>;
-  userUpdateForm: UseFormReturn<UserFormData, any, UserFormData>;
+  userUpdateForm: UseFormReturn<UserFormData, any, UserFormData | undefined>;
 }
 
 export const useUserUpdateEffects = ({

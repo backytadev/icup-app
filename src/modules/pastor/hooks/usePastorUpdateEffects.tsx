@@ -11,7 +11,7 @@ interface Options {
   id: string;
   data: PastorResponse | undefined;
   setIsLoadingData: React.Dispatch<React.SetStateAction<boolean>>;
-  pastorUpdateForm: UseFormReturn<PastorFormData, any, PastorFormData>;
+  pastorUpdateForm: UseFormReturn<PastorFormData, any, PastorFormData | undefined>;
 }
 
 export const usePastorUpdateEffects = ({

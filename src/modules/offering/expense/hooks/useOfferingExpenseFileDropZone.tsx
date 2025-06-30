@@ -15,7 +15,11 @@ interface Options {
   files: FilesProps[];
   setFiles: React.Dispatch<React.SetStateAction<FilesProps[]>>;
   setRejected: React.Dispatch<React.SetStateAction<RejectionProps[]>>;
-  offeringExpenseForm: UseFormReturn<OfferingExpenseFormData, any, OfferingExpenseFormData>;
+  offeringExpenseForm: UseFormReturn<
+    OfferingExpenseFormData,
+    any,
+    OfferingExpenseFormData | undefined
+  >;
 }
 
 export const useOfferingExpenseFileDropZone = ({

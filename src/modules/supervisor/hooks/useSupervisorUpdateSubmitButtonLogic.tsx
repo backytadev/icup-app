@@ -12,7 +12,7 @@ import { type SupervisorFormData } from '@/modules/supervisor/interfaces/supervi
 interface Options {
   isInputDisabled: boolean;
   isRelationSelectDisabled: boolean;
-  supervisorUpdateForm: UseFormReturn<SupervisorFormData, any, SupervisorFormData>;
+  supervisorUpdateForm: UseFormReturn<SupervisorFormData, any, SupervisorFormData | undefined>;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMessageErrorDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }

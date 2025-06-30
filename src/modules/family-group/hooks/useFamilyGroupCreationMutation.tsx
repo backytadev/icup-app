@@ -13,7 +13,7 @@ import { createFamilyGroup } from '@/modules/family-group/services/family-group.
 import { type ErrorResponse } from '@/shared/interfaces/error-response.interface';
 
 interface Options {
-  familyGroupCreationForm: UseFormReturn<FamilyGroupFormData, any, FamilyGroupFormData>;
+  familyGroupCreationForm: UseFormReturn<FamilyGroupFormData, any, FamilyGroupFormData | undefined>;
   setIsInputDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }

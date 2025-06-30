@@ -12,7 +12,7 @@ interface Options {
   userPasswordUpdateForm: UseFormReturn<
     UserPasswordUpdateFormData,
     any,
-    UserPasswordUpdateFormData
+    UserPasswordUpdateFormData | undefined
   >;
   setIsMessageErrorPasswordDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }

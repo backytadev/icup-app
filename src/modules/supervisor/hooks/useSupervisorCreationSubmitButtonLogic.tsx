@@ -9,7 +9,7 @@ import { MemberRole } from '@/shared/enums/member-role.enum';
 import { type SupervisorFormData } from '@/modules/supervisor/interfaces/supervisor-form-data.interface';
 
 interface Options {
-  supervisorCreationForm: UseFormReturn<SupervisorFormData, any, SupervisorFormData>;
+  supervisorCreationForm: UseFormReturn<SupervisorFormData, any, SupervisorFormData | undefined>;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMessageErrorDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   isInputDisabled: boolean;

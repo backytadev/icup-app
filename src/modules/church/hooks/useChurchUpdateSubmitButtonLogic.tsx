@@ -6,7 +6,7 @@ import { type UseFormReturn } from 'react-hook-form';
 import { type ChurchFormData } from '@/modules/church/interfaces/church-form-data.interface';
 
 interface Options {
-  churchUpdateForm: UseFormReturn<ChurchFormData, any, ChurchFormData>;
+  churchUpdateForm: UseFormReturn<ChurchFormData, any, ChurchFormData | undefined>;
   isInputDisabled: boolean;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMessageErrorDisabled: React.Dispatch<React.SetStateAction<boolean>>;

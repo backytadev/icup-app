@@ -12,7 +12,7 @@ interface Options {
   familyGroupPreacherUpdateForm: UseFormReturn<
     FamilyGroupPreacherUpdateFormData,
     any,
-    FamilyGroupPreacherUpdateFormData
+    FamilyGroupPreacherUpdateFormData | undefined
   >;
 }
 

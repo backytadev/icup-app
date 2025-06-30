@@ -7,7 +7,7 @@ import { type ZoneFormData } from '@/modules/zone/interfaces/zone-form-data.inte
 
 interface Options {
   isInputDisabled: boolean;
-  zoneUpdateForm: UseFormReturn<ZoneFormData, any, ZoneFormData>;
+  zoneUpdateForm: UseFormReturn<ZoneFormData, any, ZoneFormData | undefined>;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMessageErrorDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }

@@ -14,7 +14,7 @@ interface Options {
   zoneSupervisorUpdateForm: UseFormReturn<
     ZoneSupervisorUpdateFormData,
     any,
-    ZoneSupervisorUpdateFormData
+    ZoneSupervisorUpdateFormData | undefined
   >;
   supervisorsQuery: UseQueryResult<SupervisorResponse[], Error>;
 }
