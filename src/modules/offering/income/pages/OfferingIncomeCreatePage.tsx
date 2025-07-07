@@ -1838,22 +1838,22 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                 name='generateReceipt'
                 render={({ field }) => (
                   <FormItem className='mt-4 border-t pt-3'>
-                    <FormLabel className='font-bold text-[14px] md:text-[14.5px] text-blue-500'>
-                      ¿Deseas generar el recibo para este registro?
+                    <FormLabel className='font-bold text-[14.5px] md:text-[14.5px] text-blue-500'>
+                      ¿Deseas abrir la versión imprimible del recibo tras guardar el registro?
                     </FormLabel>
                     <FormControl>
                       <RadioGroup
                         onValueChange={field.onChange}
                         defaultValue={field.value}
                         value={field.value}
-                        className='flex w-full px-4  justify-between'
+                        className='flex w-full px-0 md:px-4 justify-between'
                       >
                         <FormItem className='flex items-center mt-2 space-x-2 space-y-0'>
                           <FormControl>
                             <RadioGroupItem disabled={isInputDisabled} value='yes' />
                           </FormControl>
                           <FormLabel className='text-[14px] cursor-pointer'>
-                            Sí, quiero generar el recibo.
+                            Sí, guardar y abrir el imprimible.
                           </FormLabel>
                         </FormItem>
                         <FormItem className='flex items-center mt-2 space-x-2 space-y-0'>
@@ -1861,7 +1861,7 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                             <RadioGroupItem value='no' />
                           </FormControl>
                           <FormLabel className='text-[14px] cursor-pointer'>
-                            No, solo deseo registrarlo.
+                            No, solo guardar el registro.
                           </FormLabel>
                         </FormItem>
                       </RadioGroup>
