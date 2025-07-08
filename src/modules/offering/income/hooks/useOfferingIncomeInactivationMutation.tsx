@@ -16,12 +16,14 @@ interface Options {
   setIsCardOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsSelectInputDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsTextAreaDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const useOfferingIncomeInactivationMutation = ({
   scrollToTop,
   setIsCardOpen,
   setIsSelectInputDisabled,
+  setIsTextAreaDisabled,
   setIsButtonDisabled,
 }: Options): UseMutationResult<void, ErrorResponse, InactivateOfferingIncomeOptions, unknown> => {
   //* Hooks (external libraries)
@@ -44,6 +46,7 @@ export const useOfferingIncomeInactivationMutation = ({
           setIsCardOpen(true);
           setIsButtonDisabled(false);
           setIsSelectInputDisabled(false);
+          setIsTextAreaDisabled(false);
         }, 2000);
       }
 
@@ -79,6 +82,7 @@ export const useOfferingIncomeInactivationMutation = ({
       setTimeout(() => {
         setIsButtonDisabled(false);
         setIsSelectInputDisabled(false);
+        setIsTextAreaDisabled(false);
       }, 2100);
     },
   });

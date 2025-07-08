@@ -15,6 +15,7 @@ interface Options {
   scrollToTop: () => void;
   setIsCardOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsTextAreaDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsSelectInputDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -22,6 +23,7 @@ export const useOfferingExpenseInactivationMutation = ({
   scrollToTop,
   setIsCardOpen,
   setIsButtonDisabled,
+  setIsTextAreaDisabled,
   setIsSelectInputDisabled,
 }: Options): UseMutationResult<void, ErrorResponse, InactivateOfferingExpenseOptions, unknown> => {
   //* Hooks (external libraries)
@@ -44,6 +46,7 @@ export const useOfferingExpenseInactivationMutation = ({
           setIsCardOpen(true);
           setIsButtonDisabled(false);
           setIsSelectInputDisabled(false);
+          setIsTextAreaDisabled(false);
         }, 2000);
       }
 
@@ -79,6 +82,7 @@ export const useOfferingExpenseInactivationMutation = ({
       setTimeout(() => {
         setIsButtonDisabled(false);
         setIsSelectInputDisabled(false);
+        setIsTextAreaDisabled(false);
       }, 2100);
     },
   });

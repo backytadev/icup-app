@@ -129,9 +129,9 @@ export const OfferingExpenseTabsCard = ({
                 {!data?.comments
                   ? '-'
                   : data?.comments.split('\n').map((line, index) => (
-                      <span key={index} className='whitespace-pre-wrap'>
+                      <p key={index} className='whitespace-pre-wrap'>
                         {line}
-                      </span>
+                      </p>
                     ))}
               </CardDescription>
             </div>

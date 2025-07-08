@@ -5,6 +5,9 @@ import { ExchangeCurrencyTypes } from '@/modules/offering/income/enums/exchange-
 
 export const offeringInactivateFormSchema = z.object({
   offeringInactivationReason: z.string().min(1, { message: 'Debe seleccionar una opción.' }),
+  offeringInactivationDescription: z
+    .string()
+    .min(5, { message: 'Debe escribir una descripción mayor a 5 caracteres.' }),
 
   exchangeRate: z
     .string()

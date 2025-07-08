@@ -42,6 +42,7 @@ import {
   DialogDescription,
 } from '@/shared/components/ui/dialog';
 import { Button } from '@/shared/components/ui/button';
+import { Textarea } from '@/shared/components/ui/textarea';
 
 interface OfferingIncomeInactivateCardProps {
   id: string;
@@ -54,6 +55,7 @@ export const OfferingIncomeInactivateCard = ({
   const [isCardOpen, setIsCardOpen] = useState<boolean>(false);
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
   const [isSelectInputDisabled, setIsSelectInputDisabled] = useState<boolean>(false);
+  const [isTextAreaDisabled, setIsTextAreaDisabled] = useState<boolean>(false);
   const topRef = useRef<HTMLDivElement>(null);
 
   //* Form
@@ -62,21 +64,23 @@ export const OfferingIncomeInactivateCard = ({
     resolver: zodResolver(offeringInactivateFormSchema),
     defaultValues: {
       offeringInactivationReason: '',
+      offeringInactivationDescription: '',
     },
   });
 
   //* Watchers
   const offeringInactivationReason = form.watch('offeringInactivationReason');
+  const offeringInactivationDescription = form.watch('offeringInactivationDescription');
 
   //* Effects
   useEffect(() => {
-    if (!offeringInactivationReason) {
+    if (!offeringInactivationReason || offeringInactivationDescription.length === 0) {
       setIsButtonDisabled(true);
     }
-    if (offeringInactivationReason) {
+    if (offeringInactivationReason && offeringInactivationDescription.length > 5) {
       setIsButtonDisabled(false);
     }
-  }, [form, offeringInactivationReason]);
+  }, [form, offeringInactivationReason, offeringInactivationDescription]);
 
   useEffect(() => {
     const originalUrl = window.location.href;
@@ -105,17 +109,20 @@ export const OfferingIncomeInactivateCard = ({
     setIsCardOpen,
     setIsButtonDisabled,
     setIsSelectInputDisabled,
+    setIsTextAreaDisabled,
     scrollToTop: handleContainerScroll,
   });
 
   //* Form handler
   const handleSubmit = (formData: z.infer<typeof offeringInactivateFormSchema>): void => {
     setIsSelectInputDisabled(true);
+    setIsTextAreaDisabled(true);
     setIsButtonDisabled(true);
 
     offeringIncomeInactivationMutation.mutate({
       id,
       offeringInactivationReason: formData.offeringInactivationReason,
+      offeringInactivationDescription: formData.offeringInactivationDescription,
     });
   };
 
@@ -186,7 +193,7 @@ export const OfferingIncomeInactivateCard = ({
                         <FormControl className='text-[14px] md:text-[14px]'>
                           <SelectTrigger>
                             {field.value ? (
-                              <SelectValue placeholder='Selecciona una tipo de ofrenda' />
+                              <SelectValue placeholder='Selecciona un motivo' />
                             ) : (
                               'Selecciona un motivo'
                             )}
@@ -203,6 +210,31 @@ export const OfferingIncomeInactivateCard = ({
                           )}
                         </SelectContent>
                       </Select>
+                      <FormMessage className='text-[13px]' />
+                    </FormItem>
+                  );
+                }}
+              />
+
+              <FormField
+                control={form.control}
+                name='offeringInactivationDescription'
+                render={({ field }) => {
+                  return (
+                    <FormItem className='mt-3'>
+                      <FormDescription>
+                        ¿Por que estas inactivando este registro?
+                        <span className='ml-3 inline-block bg-orange-200 text-orange-600 border text-[10px] font-bold uppercase px-2 py-[2px] rounded-full mr-1'>
+                          Requerido
+                        </span>
+                      </FormDescription>
+                      <FormControl className='text-[14px] md:text-[14px]'>
+                        <Textarea
+                          disabled={isTextAreaDisabled}
+                          placeholder={`Describe brevemente el motivo inactivación del registro...`}
+                          {...field}
+                        />
+                      </FormControl>
                       <FormMessage className='text-[13px]' />
                     </FormItem>
                   );

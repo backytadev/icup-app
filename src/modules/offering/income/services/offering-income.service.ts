@@ -482,6 +482,7 @@ export const updateExternalDonor = async ({
 export interface InactivateOfferingIncomeOptions {
   id: string;
   offeringInactivationReason: string;
+  offeringInactivationDescription: string;
   exchangeRate?: string;
   exchangeCurrencyTypes?: string;
 }
@@ -489,6 +490,7 @@ export interface InactivateOfferingIncomeOptions {
 export const inactivateOfferingIncome = async ({
   id,
   offeringInactivationReason,
+  offeringInactivationDescription,
   exchangeRate,
   exchangeCurrencyTypes,
 }: InactivateOfferingIncomeOptions): Promise<void> => {
@@ -498,6 +500,7 @@ export const inactivateOfferingIncome = async ({
         exchangeRate,
         exchangeCurrencyTypes,
         offeringInactivationReason,
+        offeringInactivationDescription,
       },
     });
 
