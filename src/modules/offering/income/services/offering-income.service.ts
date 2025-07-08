@@ -482,7 +482,7 @@ export const updateExternalDonor = async ({
 export interface InactivateOfferingIncomeOptions {
   id: string;
   offeringInactivationReason: string;
-  offeringInactivationDescription: string;
+  offeringInactivationDescription?: string;
   exchangeRate?: string;
   exchangeCurrencyTypes?: string;
 }

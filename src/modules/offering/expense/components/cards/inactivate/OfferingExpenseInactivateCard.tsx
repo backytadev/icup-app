@@ -68,10 +68,14 @@ export const OfferingExpenseInactivateCard = ({
 
   //* Effects
   useEffect(() => {
-    if (!offeringInactivationReason || offeringInactivationDescription.length === 0) {
+    if (
+      !offeringInactivationReason ||
+      offeringInactivationDescription!.length === 0 ||
+      offeringInactivationDescription!.length < 5
+    ) {
       setIsButtonDisabled(true);
     }
-    if (offeringInactivationReason && offeringInactivationDescription.length > 5) {
+    if (offeringInactivationReason && offeringInactivationDescription!.length >= 5) {
       setIsButtonDisabled(false);
     }
   }, [form, offeringInactivationReason, offeringInactivationDescription]);
@@ -116,7 +120,7 @@ export const OfferingExpenseInactivateCard = ({
     offeringExpenseInactivationMutation.mutate({
       id: idRow,
       offeringInactivationReason: formData.offeringInactivationReason,
-      offeringInactivationDescription: formData.offeringInactivationDescription,
+      offeringInactivationDescription: formData.offeringInactivationDescription ?? '',
     });
   };
 

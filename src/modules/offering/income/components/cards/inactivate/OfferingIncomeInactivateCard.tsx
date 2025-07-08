@@ -74,10 +74,14 @@ export const OfferingIncomeInactivateCard = ({
 
   //* Effects
   useEffect(() => {
-    if (!offeringInactivationReason || offeringInactivationDescription.length === 0) {
+    if (
+      !offeringInactivationReason ||
+      offeringInactivationDescription!.length === 0 ||
+      offeringInactivationDescription!.length < 5
+    ) {
       setIsButtonDisabled(true);
     }
-    if (offeringInactivationReason && offeringInactivationDescription.length > 5) {
+    if (offeringInactivationReason && offeringInactivationDescription!.length >= 5) {
       setIsButtonDisabled(false);
     }
   }, [form, offeringInactivationReason, offeringInactivationDescription]);

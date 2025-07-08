@@ -68,6 +68,7 @@ export const OfferingIncomeCurrencyExchangeForm = ({
     resolver: zodResolver(offeringInactivateFormSchema),
     defaultValues: {
       offeringInactivationReason: OfferingIncomeInactivationReason.CurrencyExchange,
+      offeringInactivationDescription: '',
       exchangeRate: '',
       exchangeCurrencyTypes: '',
     },
