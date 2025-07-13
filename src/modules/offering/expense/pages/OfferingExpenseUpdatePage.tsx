@@ -29,7 +29,7 @@ import {
   SubTypeNamesOfferingExpenseSearchByEquipmentAndTechnologyExpenses,
   SubTypeNamesOfferingExpenseSearchByOtherExpenses,
 } from '@/modules/offering/expense/enums/offering-expense-search-sub-type.enum';
-import { OfferingExpenseSearchSelectOptionNames } from '@/modules/offering/expense/enums/offering-expense-search-select-option.enum';
+// import { OfferingExpenseSearchSelectOptionNames } from '@/modules/offering/expense/enums/offering-expense-search-select-option.enum';
 
 import { SearchByTermOfferingExpenseDataTable } from '@/modules/offering/expense/components/data-tables/boards/search-by-term-offering-expense-data-table';
 import { offeringExpenseUpdateColumns as columns } from '@/modules/offering/expense/components/data-tables/columns/offering-expense-update-columns';

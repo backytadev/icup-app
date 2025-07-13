@@ -38,7 +38,7 @@ import {
 import {
   OfferingIncomeSearchNamesByShift,
   OfferingIncomeSearchNamesByMemberType,
-  OfferingIncomeSearchNamesByRecordStatus,
+  // OfferingIncomeSearchNamesByRecordStatus,
 } from '@/modules/offering/income/enums/offering-income-search-select-option.enum';
 
 import { offeringIncomeUpdateColumns as columns } from '@/modules/offering/income/components/data-tables/columns/offering-income-update-columns';
