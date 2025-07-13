@@ -223,15 +223,18 @@ export const OfferingExpenseUpdatePage = (): JSX.Element => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {Object.entries(OfferingExpenseSearchTypeNames).map(([key, value]) => (
-                            <SelectItem
-                              className={`text-[14px] md:text-[14px]`}
-                              key={key}
-                              value={key}
-                            >
-                              {value}
-                            </SelectItem>
-                          ))}
+                          {Object.entries(OfferingExpenseSearchTypeNames).map(
+                            ([key, value]) =>
+                              key !== OfferingExpenseSearchType.RecordStatus && (
+                                <SelectItem
+                                  className={`text-[14px] md:text-[14px]`}
+                                  key={key}
+                                  value={key}
+                                >
+                                  {value}
+                                </SelectItem>
+                              )
+                          )}
                         </SelectContent>
                       </Select>
                       <FormMessage className='text-[13px]' />
@@ -318,7 +321,7 @@ export const OfferingExpenseUpdatePage = (): JSX.Element => {
                 />
               )}
 
-              {searchType === OfferingExpenseSearchType.RecordStatus && (
+              {/* {searchType === OfferingExpenseSearchType.RecordStatus && (
                 <FormField
                   control={form.control}
                   name='selectTerm'
@@ -366,7 +369,7 @@ export const OfferingExpenseUpdatePage = (): JSX.Element => {
                     );
                   }}
                 />
-              )}
+              )} */}
 
               {(searchType === OfferingExpenseSearchType.PlaningEventsExpenses ||
                 searchType === OfferingExpenseSearchType.DecorationExpenses ||
@@ -609,9 +612,10 @@ export const OfferingExpenseUpdatePage = (): JSX.Element => {
                 className={cn(
                   'w-full mt-2 md:mt-0 md:col-span-2 lg:col-span-3 xl:col-span-2',
                   !searchType && !searchSubType && 'md:col-span-2 lg:col-span-2 xl:col-span-4',
-                  searchType === OfferingExpenseSearchType.RecordStatus &&
+                  (searchType === OfferingExpenseSearchType.RecordStatus ||
+                    searchType === OfferingExpenseSearchType.ExpensesAdjustment) &&
                     !searchSubType &&
-                    'md:col-span-1 lg:col-span-1 xl:col-span-3'
+                    'md:col-span-2 lg:col-span-2 xl:col-span-3'
                 )}
               >
                 <Toaster position='top-center' richColors />

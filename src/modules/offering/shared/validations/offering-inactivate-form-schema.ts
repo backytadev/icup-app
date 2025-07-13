@@ -8,6 +8,7 @@ export const offeringInactivateFormSchema = z.object({
   offeringInactivationDescription: z
     .string()
     .min(5, { message: 'Debe escribir una descripción mayor a 5 caracteres.' })
+    .or(z.literal(''))
     .optional(),
 
   exchangeRate: z

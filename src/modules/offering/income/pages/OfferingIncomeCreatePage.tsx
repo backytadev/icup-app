@@ -1843,6 +1843,7 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                     </FormLabel>
                     <FormControl>
                       <RadioGroup
+                        disabled={isInputDisabled}
                         onValueChange={field.onChange}
                         defaultValue={field.value}
                         value={field.value}

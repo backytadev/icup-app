@@ -89,16 +89,20 @@ export const useOfferingIncomeUpdateMutation = ({
       }
     },
     onSuccess: async (data) => {
+      //* Se crea el recibo en pdf
       const generateReceiptPromise = await generateReceiptByOfferingIncomeId({
         id: data.id,
         generateReceipt: 'no',
-        generationType: 'update',
+        generationType: 'without-qr',
       });
 
+      //* Crea el url del pdf
       const receiptPdfUrl = URL.createObjectURL(generateReceiptPromise.data);
 
+      //* Convierte el url donde se abre el pdf en una imagen
       const receiptImage = await convertPdfBlobToImage(receiptPdfUrl);
 
+      //* Sube la imagen a cloudinary
       const { imageUrls: receiptImageUrls } = await uploadImages({
         files: [receiptImage] as any,
         fileType: OfferingFileType.Income,
@@ -106,6 +110,7 @@ export const useOfferingIncomeUpdateMutation = ({
         offeringSubType: data.subType ?? null,
       });
 
+      //* Borra la imagen anterior
       await deleteImage({
         publicId: extractPublicId(data.imageUrls[0]),
         path: extractPath(data.imageUrls[0]),
@@ -113,6 +118,7 @@ export const useOfferingIncomeUpdateMutation = ({
         fileType: OfferingFileType.Income,
       });
 
+      //* Actualiza el recibo creado anteriormente con la imagen nueva generada y subida a cloudinary
       await Promise.all([
         updateOfferingIncome({
           id: data.id,

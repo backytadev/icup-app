@@ -610,7 +610,11 @@ export const OfferingExpenseInactivatePage = (): JSX.Element => {
               <div
                 className={cn(
                   'w-full mt-2 md:mt-0 md:col-span-2 lg:col-span-3 xl:col-span-2',
-                  !searchType && !searchSubType && 'md:col-span-2 lg:col-span-2 xl:col-span-4'
+                  !searchType && !searchSubType && 'md:col-span-2 lg:col-span-2 xl:col-span-4',
+                  (searchType === OfferingExpenseSearchType.RecordStatus ||
+                    searchType === OfferingExpenseSearchType.ExpensesAdjustment) &&
+                    !searchSubType &&
+                    'md:col-span-2 lg:col-span-2 xl:col-span-3'
                 )}
               >
                 <Toaster position='top-center' richColors />

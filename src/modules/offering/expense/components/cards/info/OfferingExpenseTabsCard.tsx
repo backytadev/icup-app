@@ -126,13 +126,7 @@ export const OfferingExpenseTabsCard = ({
             <div className='space-y-1 col-start-1 col-end-4'>
               <Label className='text-[14px] md:text-[15px]'>Detalles / Observaciones</Label>
               <CardDescription className='px-2 text-[14px] md:text-[14.5px] overflow-hidden text-ellipsis'>
-                {!data?.comments
-                  ? '-'
-                  : data?.comments.split('\n').map((line, index) => (
-                      <p key={index} className='whitespace-pre-wrap'>
-                        {line}
-                      </p>
-                    ))}
+                {!data?.comments ? '-' : <p className='whitespace-pre-wrap'>{data?.comments}</p>}
               </CardDescription>
             </div>
 

@@ -132,7 +132,7 @@ export const OfferingIncomeCurrencyExchangeForm = ({
       defaultValue='general-info'
       className='w-auto -mt-8 sm:w-[420px] md:w-[480px] lg:w-[440px] xl:w-[530px]'
     >
-      <h2 className='text-center text-teal-500 font-bold text-[22px] sm:text-[22px] md:text-[26px]'>
+      <h2 className='text-center text-teal-500 font-bold text-[24px] sm:text-[24px] md:text-[28px]'>
         Cambio de Divisa
       </h2>
 
@@ -157,7 +157,7 @@ export const OfferingIncomeCurrencyExchangeForm = ({
               </span>
               <span className='pl-2 text-[14px] md:text-[14.5px]'>
                 ❌ <span className='font-medium'>El registro original</span>, cuyo monto fue
-                transformado, será eliminado.
+                transformado, será inactivado.
               </span>
             </span>
 

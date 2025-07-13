@@ -104,15 +104,20 @@ export const useOfferingIncomeCreationMutation = ({
     },
     onSuccess: async (data) => {
       if (generateReceipt) {
+        //* Se crea el recibo en pdf (no abre la nueva pestaña)
         const generateReceiptPromise = await generateReceiptByOfferingIncomeId({
           id: data.id,
           generateReceipt: 'no',
+          generationType: 'without-qr',
         });
 
+        //* Crea el url del pdf
         const receiptPdfUrl = URL.createObjectURL(generateReceiptPromise.data);
 
+        //* Convierte el url donde se abre el pdf en una imagen
         const receiptImage = await convertPdfBlobToImage(receiptPdfUrl);
 
+        //* Sube la imagen a cloudinary
         const { imageUrls: receiptImageUrls } = await uploadImages({
           files: [receiptImage] as any,
           fileType: OfferingFileType.Income,
@@ -125,6 +130,7 @@ export const useOfferingIncomeCreationMutation = ({
           className: 'justify-center',
         });
 
+        //* Actualiza el recibo creado anteriormente con la imagen subida a cloudinary
         await Promise.all([
           updateOfferingIncome({
             id: data.id,
@@ -158,9 +164,11 @@ export const useOfferingIncomeCreationMutation = ({
           }),
         ]);
 
+        //* Genera denuevo el recibo (con QR) esta vez si lo abre en el navegado para imprimir
         await generateReceiptByOfferingIncomeId({
           id: data.id,
           generateReceipt,
+          generationType: 'with-qr',
         });
 
         queryClient.invalidateQueries({ queryKey: ['general-offering-income'] });

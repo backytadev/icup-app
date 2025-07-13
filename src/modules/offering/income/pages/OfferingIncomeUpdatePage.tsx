@@ -252,15 +252,18 @@ export const OfferingIncomeUpdatePage = (): JSX.Element => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {Object.entries(OfferingIncomeSearchTypeNames).map(([key, value]) => (
-                            <SelectItem
-                              className={`text-[14px] md:text-[14px]`}
-                              key={key}
-                              value={key}
-                            >
-                              {value}
-                            </SelectItem>
-                          ))}
+                          {Object.entries(OfferingIncomeSearchTypeNames).map(
+                            ([key, value]) =>
+                              key !== OfferingIncomeSearchType.RecordStatus && (
+                                <SelectItem
+                                  className={`text-[14px] md:text-[14px]`}
+                                  key={key}
+                                  value={key}
+                                >
+                                  {value}
+                                </SelectItem>
+                              )
+                          )}
                         </SelectContent>
                       </Select>
                       <FormMessage className='text-[13px]' />
@@ -484,8 +487,10 @@ export const OfferingIncomeUpdatePage = (): JSX.Element => {
                   />
                 )}
 
-              {(searchType === OfferingIncomeSearchType.RecordStatus || // searchType === OfferingIncomeSearchType.SundaySchool ||
-                ((searchType === OfferingIncomeSearchType.SundayService ||
+              {
+                //searchType === OfferingIncomeSearchType.RecordStatus ||
+                // searchType === OfferingIncomeSearchType.SundaySchool ||
+                (searchType === OfferingIncomeSearchType.SundayService ||
                   searchType === OfferingIncomeSearchType.GeneralFasting ||
                   searchType === OfferingIncomeSearchType.GeneralVigil ||
                   searchType === OfferingIncomeSearchType.GeneralEvangelism ||
@@ -500,67 +505,68 @@ export const OfferingIncomeUpdatePage = (): JSX.Element => {
                     searchSubType === OfferingIncomeSearchSubType.OfferingByContributorFirstNames ||
                     searchSubType === OfferingIncomeSearchSubType.OfferingByContributorLastNames ||
                     searchSubType ===
-                      OfferingIncomeSearchSubType.OfferingByContributorFullNames))) && (
-                <FormField
-                  control={form.control}
-                  name='selectTerm'
-                  render={({ field }) => {
-                    return (
-                      <FormItem>
-                        <FormLabel className='text-[14px] font-bold'>
-                          {searchSubType === OfferingIncomeSearchSubType.OfferingByShift ||
-                          searchSubType === OfferingIncomeSearchSubType.OfferingByShiftDate
-                            ? `Turno`
-                            : searchType === OfferingIncomeSearchType.RecordStatus
-                              ? 'Estado de registro'
-                              : 'Tipo de miembro'}
-                        </FormLabel>
-                        <FormDescription className='text-[13.5px] md:text-[14px]'>
-                          Selecciona una opción de búsqueda.
-                        </FormDescription>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                          value={field.value}
-                        >
-                          <FormControl className='text-[14px] md:text-[14px]'>
-                            <SelectTrigger>
-                              {field.value ? (
-                                <SelectValue
-                                  className='text-[14px] md:text-[14px]'
-                                  placeholder='Elige una opción'
-                                />
-                              ) : (
-                                'Elige una opción'
-                              )}
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {Object.entries(
-                              searchType === OfferingIncomeSearchType.RecordStatus
-                                ? OfferingIncomeSearchNamesByRecordStatus
-                                : searchSubType === OfferingIncomeSearchSubType.OfferingByShift ||
+                      OfferingIncomeSearchSubType.OfferingByContributorFullNames) && (
+                    <FormField
+                      control={form.control}
+                      name='selectTerm'
+                      render={({ field }) => {
+                        return (
+                          <FormItem>
+                            <FormLabel className='text-[14px] font-bold'>
+                              {searchSubType === OfferingIncomeSearchSubType.OfferingByShift ||
+                              searchSubType === OfferingIncomeSearchSubType.OfferingByShiftDate
+                                ? `Turno`
+                                : //: searchType === OfferingIncomeSearchType.RecordStatus
+                                  //? 'Estado de registro'
+                                  'Tipo de miembro'}
+                            </FormLabel>
+                            <FormDescription className='text-[13.5px] md:text-[14px]'>
+                              Selecciona una opción de búsqueda.
+                            </FormDescription>
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                              value={field.value}
+                            >
+                              <FormControl className='text-[14px] md:text-[14px]'>
+                                <SelectTrigger>
+                                  {field.value ? (
+                                    <SelectValue
+                                      className='text-[14px] md:text-[14px]'
+                                      placeholder='Elige una opción'
+                                    />
+                                  ) : (
+                                    'Elige una opción'
+                                  )}
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {Object.entries(
+                                  // searchType === OfferingIncomeSearchType.RecordStatus
+                                  //   ? OfferingIncomeSearchNamesByRecordStatus :
+                                  searchSubType === OfferingIncomeSearchSubType.OfferingByShift ||
                                     searchSubType ===
                                       OfferingIncomeSearchSubType.OfferingByShiftDate
-                                  ? OfferingIncomeSearchNamesByShift
-                                  : OfferingIncomeSearchNamesByMemberType
-                            ).map(([key, value]) => (
-                              <SelectItem
-                                className={cn(`text-[14px] md:text-[14px]`)}
-                                key={key}
-                                value={key}
-                              >
-                                {value}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage className='text-[13px]' />
-                      </FormItem>
-                    );
-                  }}
-                />
-              )}
+                                    ? OfferingIncomeSearchNamesByShift
+                                    : OfferingIncomeSearchNamesByMemberType
+                                ).map(([key, value]) => (
+                                  <SelectItem
+                                    className={cn(`text-[14px] md:text-[14px]`)}
+                                    key={key}
+                                    value={key}
+                                  >
+                                    {value}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage className='text-[13px]' />
+                          </FormItem>
+                        );
+                      }}
+                    />
+                  )
+              }
 
               {(searchType === OfferingIncomeSearchType.ChurchGround ||
                 searchType === OfferingIncomeSearchType.FamilyGroup ||
