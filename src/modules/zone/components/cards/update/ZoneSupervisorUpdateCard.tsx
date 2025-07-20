@@ -3,7 +3,7 @@ import { useRef, useState, useCallback, useMemo } from 'react';
 import { GiCardExchange } from 'react-icons/gi';
 import { useMediaQuery } from '@react-hook/media-query';
 
-import { ZoneSupervisorUpdateForm } from '@/modules/zone/components/cards/update/ZoneSupervisorUpdateForm';
+import { ZoneSupervisorExchangeUpdateForm } from '@/modules/zone/components/cards/update/ZoneSupervisorExchangeUpdateForm';
 
 import { useZoneStore } from '@/stores/zone/zone.store';
 
@@ -65,7 +65,7 @@ export const ZoneSupervisorUpdateCard = ({
         >
           <DialogTitle></DialogTitle>
           <DialogDescription></DialogDescription>
-          <ZoneSupervisorUpdateForm
+          <ZoneSupervisorExchangeUpdateForm
             id={idRow}
             data={currentZone}
             dialogClose={handleContainerClose}
@@ -93,7 +93,7 @@ export const ZoneSupervisorUpdateCard = ({
       >
         <DialogTitle></DialogTitle>
         <DialogDescription></DialogDescription>
-        <ZoneSupervisorUpdateForm
+        <ZoneSupervisorExchangeUpdateForm
           id={idRow}
           data={currentZone}
           dialogClose={handleContainerClose}

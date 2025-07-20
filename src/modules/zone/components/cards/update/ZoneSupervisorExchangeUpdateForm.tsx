@@ -46,19 +46,19 @@ import { Card, CardContent } from '@/shared/components/ui/card';
 import { Tabs, TabsContent } from '@/shared/components/ui/tabs';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
 
-interface ZoneSupervisorFormUpdateProps {
+interface ZoneSupervisorExchangeFormUpdateProps {
   id: string;
   dialogClose: () => void;
   scrollToTop: () => void;
   data: ZoneResponse | undefined;
 }
 
-export const ZoneSupervisorUpdateForm = ({
+export const ZoneSupervisorExchangeUpdateForm = ({
   id,
   dialogClose,
   scrollToTop,
   data,
-}: ZoneSupervisorFormUpdateProps): JSX.Element => {
+}: ZoneSupervisorExchangeFormUpdateProps): JSX.Element => {
   //* States
   const [isInputDisabled, setIsInputDisabled] = useState<boolean>(true);
   const [isSubmitButtonDisabled, setIsSubmitButtonDisabled] = useState<boolean>(true);
@@ -130,7 +130,7 @@ export const ZoneSupervisorUpdateForm = ({
       defaultValue='general-info'
       className='-mt-8 w-auto sm:w-[480px] md:w-[550px] lg:w-[550px] xl:w-[600px]'
     >
-      <h2 className='text-center text-emerald-500 font-bold text-[24px] sm:text-[22px] md:text-[26px]'>
+      <h2 className='text-center text-emerald-500 font-bold text-[24px] sm:text-[24px] md:text-[30px] uppercase'>
         Intercambiar Supervisores
       </h2>
 
@@ -139,7 +139,7 @@ export const ZoneSupervisorUpdateForm = ({
           <CardContent className='py-4 px-4'>
             <div className='font-bold text-[15px] md:text-[15px] mb-4'>
               Copastor:{' '}
-              <span className='font-black text-blue-500 text-[16.5px] md:text-[17.5px]'>
+              <span className='font-black text-amber-500 text-[16.5px] md:text-[17.5px]'>
                 {`${data?.theirCopastor?.firstNames} ${data?.theirCopastor?.lastNames}`}
               </span>
             </div>
@@ -349,20 +349,26 @@ export const ZoneSupervisorUpdateForm = ({
               </form>
             </Form>
             <div className='mt-3'>
-              <p className='text-sky-500 text-[14px] md:text-[14px] font-bold mb-2'>
+              <p className='text-sky-500 text-[54px] md:text-[15px] font-bold mb-2'>
                 Consideraciones
               </p>
 
-              <p className='text-[13px] md:text-[13px] mb-2 font-medium '>
-                ✅ Solo se podrá hacer intercambio entre los supervisores que tengan el mismo
+              <p className='text-[14px] md:text-[14px] mb-2 font-medium'>
+                ℹ Solo se permitirá el intercambio entre Supervisores que estén bajo el mismo
                 Co-Pastor.
               </p>
-              <p className='text-[13px] md:text-[13px] mb-2 font-medium '>
-                ✅ Al ejecutar el intercambio el supervisor pasara a la otra Zona y viceversa.
+              <p className='text-[13px] md:text-[13px] mb-2 font-medium'>
+                ℹ Al ejecutar el intercambio, cada Supervisor pasará a la Zona del otro, adoptando
+                así toda la descendencia (predicadores, grupos familiares y discípulos) del
+                Supervisor intercambiado.
               </p>
-              <p className='text-[13px] md:text-[13px] mb-2 font-medium '>
-                ✅ Si quieres intercambiar por otro Supervisor, primero deberás actualizar ese
-                Supervisor al Co-Pastor correspondiente.
+              <p className='text-[14px] md:text-[14px] mb-2 font-medium'>
+                ℹ Esta opción es útil cuando ambos Supervisores pertenecen a un mismo grupo
+                liderado por el mismo Co-Pastor.
+              </p>
+              <p className='text-[13px] md:text-[13px] mb-2 font-medium'>
+                ℹ Si deseas intercambiar con otro Supervisor que no pertenece al mismo Co-Pastor,
+                primero debes reasignarlo al Co-Pastor correspondiente.
               </p>
             </div>
           </CardContent>

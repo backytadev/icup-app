@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable @typescript-eslint/no-misused-promises */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { type z } from 'zod';
 import { useForm } from 'react-hook-form';
@@ -21,6 +21,8 @@ import { type ZoneResponse } from '@/modules/zone/interfaces/zone-response.inter
 import { ZoneFormSkeleton } from '@/modules/zone/components/cards/update/ZoneFormSkeleton';
 
 import { getSimpleSupervisors } from '@/modules/supervisor/services/supervisor.service';
+
+import { AlertUpdateRelationZone } from '@/modules/zone/components/alerts/AlertUpdateRelationZone';
 
 import { cn } from '@/shared/lib/utils';
 
@@ -83,6 +85,9 @@ export const ZoneUpdateForm = ({
   const [isInputTheirSupervisorDisabled, setIsInputTheirSupervisorDisabled] =
     useState<boolean>(false);
 
+  const [changedId, setChangedId] = useState(data?.theirSupervisor?.id);
+  const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
+
   //* Hooks (external libraries)
   const { pathname } = useLocation();
 
@@ -103,6 +108,15 @@ export const ZoneUpdateForm = ({
 
   //* Helpers
   const districtsValidation = validateDistrictsAllowedByModule(pathname);
+
+  //* Effects
+  useEffect(() => {
+    if (data && data?.theirSupervisor?.id !== changedId) {
+      setTimeout(() => {
+        setIsAlertDialogOpen(true);
+      }, 100);
+    }
+  }, [changedId]);
 
   //* Custom hooks
   useUpdateZoneEffects({
@@ -417,6 +431,7 @@ export const ZoneUpdateForm = ({
                                             key={supervisor.id}
                                             onSelect={() => {
                                               form.setValue('theirSupervisor', supervisor.id);
+                                              setChangedId(supervisor.id);
                                               setIsInputTheirSupervisorOpen(false);
                                             }}
                                           >
@@ -449,6 +464,16 @@ export const ZoneUpdateForm = ({
                           </FormItem>
                         );
                       }}
+                    />
+
+                    <AlertUpdateRelationZone
+                      data={data}
+                      isAlertDialogOpen={isAlertDialogOpen}
+                      setIsAlertDialogOpen={setIsAlertDialogOpen}
+                      availableSupervisorsQuery={availableSupervisorsQuery}
+                      zoneUpdateForm={form}
+                      setChangedId={setChangedId}
+                      changedId={changedId}
                     />
 
                     <FormField

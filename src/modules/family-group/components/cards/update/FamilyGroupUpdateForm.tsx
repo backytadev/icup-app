@@ -72,6 +72,7 @@ import { Textarea } from '@/shared/components/ui/textarea';
 import { Card, CardContent } from '@/shared/components/ui/card';
 import { Tabs, TabsContent } from '@/shared/components/ui/tabs';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
+import { AlertUpdateRelationFamilyGroup } from '../../alerts/AlertUpdateRelationFamilyGroup';
 
 interface FamilyGroupFormUpdateProps {
   id: string;
@@ -537,8 +538,9 @@ export const FamilyGroupUpdateForm = ({
                       render={({ field }) => {
                         return (
                           <FormItem className='mt-2'>
-                            <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                              Zona
+                            <FormLabel className='text-[14px] md:text-[14.5px] font-bold flex justify-between items-center'>
+                              <p>Zona</p>
+                              <AlertUpdateRelationFamilyGroup />
                             </FormLabel>
                             <FormDescription className='text-[13.5px] md:text-[14px]'>
                               Asigna la Zona a la que pertenecerá este Grupo Familiar.

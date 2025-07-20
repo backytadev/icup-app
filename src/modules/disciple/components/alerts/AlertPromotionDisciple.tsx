@@ -35,6 +35,7 @@ export const AlertPromotionDisciple = ({
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button
+          type='button'
           disabled={isPromoteButtonDisabled}
           className='w-full text-[14px]  disabled:bg-slate-500 disabled:text-white bg-yellow-400 text-yellow-700 hover:text-white hover:bg-yellow-500'
         >

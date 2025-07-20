@@ -3,7 +3,7 @@ import { useRef, useState, useCallback, useMemo } from 'react';
 import { GiCardExchange } from 'react-icons/gi';
 import { useMediaQuery } from '@react-hook/media-query';
 
-import { FamilyGroupPreacherUpdateForm } from '@/modules/family-group/components/cards/update/FamilyGroupPreacherUpdateForm';
+import { FamilyGroupPreacherExchangeUpdateForm } from '@/modules/family-group/components/cards/update/FamilyGroupPreacherExchangeUpdateForm';
 
 import { useFamilyGroupStore } from '@/stores/family-group/family-group.store';
 
@@ -65,7 +65,7 @@ export const FamilyGroupPreacherUpdateCard = ({
         >
           <DialogTitle></DialogTitle>
           <DialogDescription></DialogDescription>
-          <FamilyGroupPreacherUpdateForm
+          <FamilyGroupPreacherExchangeUpdateForm
             id={idRow}
             data={currentFamilyGroup}
             dialogClose={handleContainerClose}
@@ -93,7 +93,7 @@ export const FamilyGroupPreacherUpdateCard = ({
       >
         <DialogTitle></DialogTitle>
         <DialogDescription></DialogDescription>
-        <FamilyGroupPreacherUpdateForm
+        <FamilyGroupPreacherExchangeUpdateForm
           id={idRow}
           data={currentFamilyGroup}
           dialogClose={handleContainerClose}

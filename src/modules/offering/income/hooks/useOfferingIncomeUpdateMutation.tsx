@@ -111,12 +111,14 @@ export const useOfferingIncomeUpdateMutation = ({
       });
 
       //* Borra la imagen anterior
-      await deleteImage({
-        publicId: extractPublicId(data.imageUrls[0]),
-        path: extractPath(data.imageUrls[0]),
-        secureUrl: data.imageUrls[0],
-        fileType: OfferingFileType.Income,
-      });
+      if (data.imageUrls) {
+        await deleteImage({
+          publicId: extractPublicId(data.imageUrls[0]),
+          path: extractPath(data.imageUrls[0]),
+          secureUrl: data.imageUrls[0],
+          fileType: OfferingFileType.Income,
+        });
+      }
 
       //* Actualiza el recibo creado anteriormente con la imagen nueva generada y subida a cloudinary
       await Promise.all([

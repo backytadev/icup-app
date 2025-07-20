@@ -47,19 +47,19 @@ import { Card, CardContent } from '@/shared/components/ui/card';
 import { Tabs, TabsContent } from '@/shared/components/ui/tabs';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
 
-interface FamilyGroupPreacherFormUpdateProps {
+interface FamilyGroupPreacherExchangeFormUpdateProps {
   id: string;
   dialogClose: () => void;
   scrollToTop: () => void;
   data: FamilyGroupResponse | undefined;
 }
 
-export const FamilyGroupPreacherUpdateForm = ({
+export const FamilyGroupPreacherExchangeUpdateForm = ({
   id,
   dialogClose,
   scrollToTop,
   data,
-}: FamilyGroupPreacherFormUpdateProps): JSX.Element => {
+}: FamilyGroupPreacherExchangeFormUpdateProps): JSX.Element => {
   //* States
   const [isInputDisabled, setIsInputDisabled] = useState<boolean>(true);
   const [isSubmitButtonDisabled, setIsSubmitButtonDisabled] = useState<boolean>(true);
@@ -131,7 +131,7 @@ export const FamilyGroupPreacherUpdateForm = ({
       defaultValue='general-info'
       className='-mt-8 w-auto sm:w-[480px] md:w-[550px] lg:w-[550px] xl:w-[600px]'
     >
-      <h2 className='text-center text-emerald-500 font-bold text-[22px] sm:text-[22px] md:text-[26px]'>
+      <h2 className='text-center text-emerald-500 font-bold text-[22px] sm:text-[24px] md:text-[30px] uppercase'>
         Intercambiar Predicadores
       </h2>
 
@@ -140,7 +140,7 @@ export const FamilyGroupPreacherUpdateForm = ({
           <CardContent className='py-4 px-4'>
             <div className='font-bold text-[15px] md:text-[15px] mb-4'>
               Nombre de Zona:{' '}
-              <span className='font-black text-blue-500 text-[16.5px] md:text-[17.5px]'>
+              <span className='font-black text-amber-500 text-[16.5px] md:text-[17.5px]'>
                 {data?.theirZone?.zoneName}
               </span>
             </div>
@@ -364,20 +364,24 @@ export const FamilyGroupPreacherUpdateForm = ({
               </form>
             </Form>
             <div className='mt-3'>
-              <p className='text-sky-500 text-[14px] md:text-[14px] font-bold mb-2'>
+              <p className='text-sky-500 text-[15px] md:text-[15px] font-bold mb-2'>
                 Consideraciones
               </p>
-              <p className='text-[13px] md:text-[13px] mb-2 font-medium '>
-                ✅ Se requiere que los Predicadores tengan la misma Zona para intercambiarlos entre
-                los Grupos Familiares.
+              <p className='text-[14px] md:text-[14px] mb-2 font-medium '>
+                ℹ Solo se permitirá el intercambio entre Predicadores que estén bajo la misma Zona
+                y Supervisor.
               </p>
-              <p className='text-[13px] md:text-[13px] mb-2 font-medium '>
-                ✅ Al ejecutar el intercambio el predicador pasara al otro Grupo Familiar y
-                viceversa.
+              <p className='text-[14px] md:text-[14px] mb-2 font-medium '>
+                ℹ Al ejecutar el intercambio, cada Predicador pasará al Grupo Familiar del otro,
+                adoptando así toda la descendencia (discípulos) del Predicador intercambiado.
               </p>
-              <p className='text-[13px] md:text-[13px] mb-2 font-medium '>
-                ✅ Si quieres intercambiar por otro Predicador, primero deberás actualizar ese
-                Predicador a la Zona correspondiente.
+              <p className='text-[14px] md:text-[14px] mb-2 font-medium'>
+                ℹ Esta opción es útil cuando ambos Predicadores pertenecen ana misma Zona liderado
+                por el mismo Supervisor.
+              </p>
+              <p className='text-[14px] md:text-[14px] mb-2 font-medium '>
+                ℹ Si deseas intercambiar con otro Predicador que no pertenece a la misma Zona,
+                primero debes reasignarlo a la Zona y Supervisor correspondiente.
               </p>
             </div>
           </CardContent>
