@@ -111,7 +111,7 @@ export const useOfferingIncomeUpdateMutation = ({
       });
 
       //* Borra la imagen anterior
-      if (data.imageUrls) {
+      if (data.imageUrls.length > 0) {
         await deleteImage({
           publicId: extractPublicId(data.imageUrls[0]),
           path: extractPath(data.imageUrls[0]),
