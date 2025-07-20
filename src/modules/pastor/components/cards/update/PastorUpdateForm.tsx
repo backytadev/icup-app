@@ -3,7 +3,7 @@
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { type z } from 'zod';
 import { format } from 'date-fns';
@@ -39,6 +39,8 @@ import { useRoleValidationByPath } from '@/shared/hooks/useRoleValidationByPath'
 
 import { validateDistrictsAllowedByModule } from '@/shared/helpers/validate-districts-allowed-by-module.helper';
 import { validateUrbanSectorsAllowedByDistrict } from '@/shared/helpers/validate-urban-sectors-allowed-by-district.helper';
+
+import { AlertUpdateRelationPastor } from '@/modules/pastor/components/alerts/AlertUpdateRelationPastor';
 
 import {
   Form,
@@ -96,6 +98,9 @@ export const PastorUpdateForm = ({
 
   const [isLoadingData, setIsLoadingData] = useState(true);
 
+  const [changedId, setChangedId] = useState(data?.theirChurch?.id);
+  const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
+
   //* Hooks (external libraries)
   const { pathname } = useLocation();
 
@@ -129,6 +134,15 @@ export const PastorUpdateForm = ({
 
   //* Watchers
   const residenceDistrict = form.watch('residenceDistrict');
+
+  //* Effects
+  useEffect(() => {
+    if (data && data?.theirChurch?.id !== changedId) {
+      setTimeout(() => {
+        setIsAlertDialogOpen(true);
+      }, 100);
+    }
+  }, [changedId]);
 
   //* Helpers
   const districtsValidation = validateDistrictsAllowedByModule(pathname);
@@ -992,6 +1006,7 @@ export const PastorUpdateForm = ({
                                               key={church.id}
                                               onSelect={() => {
                                                 form.setValue('theirChurch', church.id);
+                                                setChangedId(church.id);
                                                 setIsInputTheirChurchOpen(false);
                                               }}
                                             >
@@ -1025,6 +1040,16 @@ export const PastorUpdateForm = ({
                       />
                     </div>
                   </div>
+
+                  <AlertUpdateRelationPastor
+                    data={data}
+                    isAlertDialogOpen={isAlertDialogOpen}
+                    setIsAlertDialogOpen={setIsAlertDialogOpen}
+                    churchesQuery={churchesQuery}
+                    pastorUpdateForm={form}
+                    setChangedId={setChangedId}
+                    changedId={changedId}
+                  />
 
                   {isMessageErrorDisabled ? (
                     <p className='-mb-4 md:-mb-3 md:row-start-2 md:row-end-3 md:col-start-2 md:col-end-3 mx-auto md:w-full text-center text-red-500 text-[12.5px] md:text-[13px] font-bold'>

@@ -5,14 +5,14 @@ import { type CopastorFormData } from '@/modules/copastor/interfaces/copastor-fo
 
 interface Options {
   copastorUpdateForm: UseFormReturn<CopastorFormData, any, CopastorFormData | undefined>;
-  setIsDisabledInput: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsDisabledPromoteButton: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsInputDisabled: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsPromoteButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const useCopastorRolePromotionHandler = ({
   copastorUpdateForm,
-  setIsDisabledInput,
-  setIsDisabledPromoteButton,
+  setIsInputDisabled,
+  setIsPromoteButtonDisabled,
 }: Options): void => {
   copastorUpdateForm.setValue('theirPastor', '');
 
@@ -33,6 +33,6 @@ export const useCopastorRolePromotionHandler = ({
     copastorUpdateForm.setValue('roles', [...updatedRoles, MemberRole.Pastor]);
   }
 
-  setIsDisabledInput(true);
-  setIsDisabledPromoteButton(true);
+  setIsInputDisabled(true);
+  setIsPromoteButtonDisabled(true);
 };

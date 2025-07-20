@@ -148,6 +148,7 @@ export type TheirChurch = MainChurch;
 
 export interface TheirPastor {
   id: string;
+  member?: Member;
   firstNames?: string;
   lastNames?: string;
   gender?: string;
@@ -176,6 +177,7 @@ export interface TheirPastor {
 
 export interface TheirCopastor {
   id: string;
+  member?: Member;
   firstNames?: string;
   lastNames?: string;
   gender?: string;
@@ -204,6 +206,7 @@ export interface TheirCopastor {
 
 export interface TheirSupervisor {
   id: string;
+  member?: Member;
   firstNames?: string;
   lastNames?: string;
   gender?: string;

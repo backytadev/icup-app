@@ -5,14 +5,14 @@ import { type PreacherFormData } from '@/modules/preacher/interfaces/preacher-fo
 
 interface Options {
   preacherUpdateForm: UseFormReturn<PreacherFormData, any, PreacherFormData | undefined>;
-  setIsDisabledInput: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsDisabledPromoteButton: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsInputDisabled: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsPromoteButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const usePreacherRolePromotionHandler = ({
   preacherUpdateForm,
-  setIsDisabledInput,
-  setIsDisabledPromoteButton,
+  setIsInputDisabled,
+  setIsPromoteButtonDisabled,
 }: Options): void => {
   preacherUpdateForm.setValue('theirSupervisor', '');
 
@@ -49,6 +49,6 @@ export const usePreacherRolePromotionHandler = ({
     ]);
   }
 
-  setIsDisabledInput(true);
-  setIsDisabledPromoteButton(true);
+  setIsInputDisabled(true);
+  setIsPromoteButtonDisabled(true);
 };

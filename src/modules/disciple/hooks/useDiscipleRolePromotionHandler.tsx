@@ -5,14 +5,14 @@ import { type DiscipleFormData } from '@/modules/disciple/interfaces/disciple-fo
 
 interface Options {
   discipleUpdateForm: UseFormReturn<DiscipleFormData, any, DiscipleFormData | undefined>;
-  setIsDisabledInput: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsDisabledPromoteButton: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsInputDisabled: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsPromoteButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const useDiscipleRolePromotionHandler = ({
   discipleUpdateForm,
-  setIsDisabledInput,
-  setIsDisabledPromoteButton,
+  setIsInputDisabled,
+  setIsPromoteButtonDisabled,
 }: Options): void => {
   discipleUpdateForm.setValue('theirFamilyGroup', '');
 
@@ -33,6 +33,6 @@ export const useDiscipleRolePromotionHandler = ({
     discipleUpdateForm.setValue('roles', [...updatedRoles, MemberRole.Preacher]);
   }
 
-  setIsDisabledInput(true);
-  setIsDisabledPromoteButton(true);
+  setIsInputDisabled(true);
+  setIsPromoteButtonDisabled(true);
 };

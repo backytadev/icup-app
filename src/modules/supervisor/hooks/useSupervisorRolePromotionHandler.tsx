@@ -4,14 +4,13 @@ import { type SupervisorFormData } from '@/modules/supervisor/interfaces/supervi
 
 interface Options {
   supervisorUpdateForm: UseFormReturn<SupervisorFormData, any, SupervisorFormData | undefined>;
-  setIsDisabledInput: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsDisabledPromoteButton: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsInputDisabled: React.Dispatch<React.SetStateAction<boolean>>;
+  setIsPromoteButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }
-
 export const useSupervisorRolePromotionHandler = ({
   supervisorUpdateForm,
-  setIsDisabledInput,
-  setIsDisabledPromoteButton,
+  setIsInputDisabled,
+  setIsPromoteButtonDisabled,
 }: Options): void => {
   supervisorUpdateForm.setValue('theirCopastor', '');
 
@@ -39,6 +38,6 @@ export const useSupervisorRolePromotionHandler = ({
     supervisorUpdateForm.setValue('roles', [...updatedRoles, MemberRole.Copastor]);
   }
 
-  setIsDisabledInput(true);
-  setIsDisabledPromoteButton(true);
+  setIsInputDisabled(true);
+  setIsPromoteButtonDisabled(true);
 };

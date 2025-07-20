@@ -56,13 +56,6 @@ export const OfferingExpenseFormSkeleton = (): JSX.Element => {
               <Skeleton className='h-3 w-56 mt-3' />
               <Skeleton className='h-[6.5rem] w-full mt-2' />
             </div>
-
-            <div>
-              <Skeleton className='h-4 w-24 mt-5' />
-              <Skeleton className='h-8 w-full mt-2' />
-              <Skeleton className='h-3 w-full mt-3' />
-              <Skeleton className='h-3 w-64 mt-3' />
-            </div>
           </div>
 
           <div className='col-start-2 col-end-3'>

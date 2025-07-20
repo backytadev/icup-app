@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { type z } from 'zod';
 
@@ -29,7 +29,6 @@ import { MemberRole, MemberRoleNames } from '@/shared/enums/member-role.enum';
 import { useSupervisorUpdateEffects } from '@/modules/supervisor/hooks/useSupervisorUpdateEffects';
 import { useSupervisorUpdateMutation } from '@/modules/supervisor/hooks/useSupervisorUpdateMutation';
 import { useSupervisorPromoteButtonLogic } from '@/modules/supervisor/hooks/useSupervisorPromoteButtonLogic';
-import { useSupervisorRolePromotionHandler } from '@/modules/supervisor/hooks/useSupervisorRolePromotionHandler';
 import { useSupervisorUpdateSubmitButtonLogic } from '@/modules/supervisor/hooks/useSupervisorUpdateSubmitButtonLogic';
 
 import { supervisorFormSchema } from '@/modules/supervisor/validations/supervisor-form-schema';
@@ -46,6 +45,9 @@ import { useRoleValidationByPath } from '@/shared/hooks/useRoleValidationByPath'
 import { getFullNames } from '@/shared/helpers/get-full-names.helper';
 import { validateDistrictsAllowedByModule } from '@/shared/helpers/validate-districts-allowed-by-module.helper';
 import { validateUrbanSectorsAllowedByDistrict } from '@/shared/helpers/validate-urban-sectors-allowed-by-district.helper';
+
+import { AlertPromotionSupervisor } from '@/modules/supervisor/components/alerts/AlertPromotionSupervisor';
+import { AlertUpdateRelationSupervisor } from '@/modules/supervisor/components/alerts/AlertUpdateRelationSupervisor';
 
 import {
   Form,
@@ -70,17 +72,6 @@ import {
   SelectContent,
   SelectTrigger,
 } from '@/shared/components/ui/select';
-import {
-  AlertDialog,
-  AlertDialogTitle,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTrigger,
-  AlertDialogDescription,
-} from '@/shared/components/ui/alert-dialog';
 import { Input } from '@/shared/components/ui/input';
 import { Button } from '@/shared/components/ui/button';
 import { Checkbox } from '@/shared/components/ui/checkbox';
@@ -117,6 +108,9 @@ export const SupervisorUpdateForm = ({
   const [isMessagePromoteDisabled, setIsMessagePromoteDisabled] = useState<boolean>(false);
 
   const [isLoadingData, setIsLoadingData] = useState(true);
+
+  const [changedId, setChangedId] = useState(data?.theirCopastor?.id);
+  const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
 
   //* Hooks (external libraries)
   const { pathname } = useLocation();
@@ -156,6 +150,15 @@ export const SupervisorUpdateForm = ({
   const theirPastor = form.watch('theirPastor');
   const theirCopastor = form.watch('theirCopastor');
   const isDirectRelationToPastor = form.watch('isDirectRelationToPastor');
+
+  //* Effects
+  useEffect(() => {
+    if (data && data?.theirCopastor?.id !== changedId) {
+      setTimeout(() => {
+        setIsAlertDialogOpen(true);
+      }, 100);
+    }
+  }, [changedId]);
 
   //* Helpers
   const urbanSectorsValidation = validateUrbanSectorsAllowedByDistrict(residenceDistrict);
@@ -197,7 +200,7 @@ export const SupervisorUpdateForm = ({
   });
 
   //* Queries
-  const copastoresQuery = useQuery({
+  const copastorsQuery = useQuery({
     queryKey: ['copastors', id],
     queryFn: () => getSimpleCopastors({ isSimpleQuery: true }),
     retry: false,
@@ -1068,7 +1071,7 @@ export const SupervisorUpdateForm = ({
                                         )}
                                       >
                                         {field.value
-                                          ? `${copastoresQuery?.data?.find((copastor) => copastor.id === field.value)?.member?.firstNames} ${copastoresQuery?.data?.find((pastor) => pastor.id === field.value)?.member?.lastNames}`
+                                          ? `${copastorsQuery?.data?.find((copastor) => copastor.id === field.value)?.member?.firstNames} ${copastorsQuery?.data?.find((pastor) => pastor.id === field.value)?.member?.lastNames}`
                                           : 'Busque y seleccione un co-pastor'}
                                         <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-5' />
                                       </Button>
@@ -1076,8 +1079,8 @@ export const SupervisorUpdateForm = ({
                                   </PopoverTrigger>
                                   <PopoverContent align='center' className='w-auto px-4 py-2'>
                                     <Command>
-                                      {copastoresQuery?.data?.length &&
-                                      copastoresQuery?.data?.length > 0 ? (
+                                      {copastorsQuery?.data?.length &&
+                                      copastorsQuery?.data?.length > 0 ? (
                                         <>
                                           <CommandInput
                                             placeholder='Busque un co-pastor...'
@@ -1085,7 +1088,7 @@ export const SupervisorUpdateForm = ({
                                           />
                                           <CommandEmpty>Co-Pastor no encontrado.</CommandEmpty>
                                           <CommandGroup className='max-h-[200px] h-auto'>
-                                            {copastoresQuery?.data?.map((copastor) => (
+                                            {copastorsQuery?.data?.map((copastor) => (
                                               <CommandItem
                                                 className='text-[14px]'
                                                 value={getFullNames({
@@ -1096,6 +1099,7 @@ export const SupervisorUpdateForm = ({
                                                 onSelect={() => {
                                                   form.setValue('theirCopastor', copastor.id);
                                                   setIsInputTheirCopastorOpen(false);
+                                                  setChangedId(copastor.id);
                                                 }}
                                               >
                                                 {`${copastor?.member?.firstNames} ${copastor?.member?.lastNames}`}
@@ -1112,7 +1116,7 @@ export const SupervisorUpdateForm = ({
                                           </CommandGroup>
                                         </>
                                       ) : (
-                                        copastoresQuery?.data?.length === 0 && (
+                                        copastorsQuery?.data?.length === 0 && (
                                           <p className='text-[13.5px] md:text-[14.5px] font-medium text-red-500 text-center'>
                                             ❌No hay co-pastores disponibles.
                                           </p>
@@ -1127,6 +1131,16 @@ export const SupervisorUpdateForm = ({
                           }}
                         />
                       )}
+
+                      <AlertUpdateRelationSupervisor
+                        data={data}
+                        isAlertDialogOpen={isAlertDialogOpen}
+                        setIsAlertDialogOpen={setIsAlertDialogOpen}
+                        copastorsQuery={copastorsQuery}
+                        supervisorUpdateForm={form}
+                        setChangedId={setChangedId}
+                        changedId={changedId}
+                      />
 
                       {((isPromoteButtonDisabled && isInputDisabled && !theirCopastor) ||
                         isDirectRelationToPastor) && (
@@ -1229,75 +1243,13 @@ export const SupervisorUpdateForm = ({
                         </span>
                       )}
 
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button
-                          disabled={isPromoteButtonDisabled}
-                          className='w-full text-[14px]  disabled:bg-slate-500 disabled:text-white bg-yellow-400 text-yellow-700 hover:text-white hover:bg-yellow-500'
-                        >
-                          Promover de cargo
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent className='w-[23rem] sm:w-[25rem] md:w-full'>
-                        <AlertDialogHeader className='h-[26.5rem] md:h-[23rem]'>
-                          <AlertDialogTitle className='dark:text-yellow-500 text-amber-500 font-bold text-xl text-center md:text-[25px] pb-3'>
-                            ¿Estas seguro de promover a este Supervisor?
-                          </AlertDialogTitle>
-                          <AlertDialogDescription className={cn('h-[21rem] md:h-[18rem]')}>
-                            <span className='w-full text-left text-blue-500 font-medium mb-3 inline-block text-[16px] md:text-[18px]'>
-                              Secuencia de pasos y acciones:
-                            </span>
-                            <br />
-                            <span className='-ml-10 md:ml-0 text-left inline-block mb-2 text-[14px] md:text-[15px]'>
-                              ✅ Asignar la relación según el nuevo cargo.
-                            </span>
-                            <span className='-ml-1 md:ml-0 text-left inline-block mb-2 text-[14px] md:text-[15px]'>
-                              ✅ Guardar estos datos para aplicar la promoción.
-                            </span>
-                            <span className='text-left inline-block mb-2 text-[14px] md:text-[15px]'>
-                              ❌ De manera automática se eliminara el registro y se eliminaran todas
-                              sus relaciones que tenia en el anterior cargo.
-                            </span>
-
-                            <span className='text-left inline-block mb-2 text-[14px] md:text-[15px]'>
-                              ❌ Si era Supervisor(a) y sube a Co-Pastor(a) se eliminara su relación
-                              con sus discípulos, grupos familiares, predicadores y zona que
-                              englobaba su cargo.
-                            </span>
-
-                            <span className='text-left inline-block mb-2 text-[14px] md:text-[15px]'>
-                              ✅ Se deberá asignar otro Supervisor(a) para discípulos, grupos
-                              familiares, predicadores y zona que se quedaron sin Supervisor.
-                            </span>
-
-                            <span className='text-left inline-block mb-2 text-[14px] md:text-[15px]'>
-                              ✅ Finalmente el registro promovido esta apto para ser usado en su
-                              nuevo rol o cargo.
-                            </span>
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-                        <AlertDialogFooter>
-                          <AlertDialogCancel className='mt-3 text-[14px] w-full border-1 border-red-500 bg-gradient-to-r from-red-400 via-red-500 to-red-600 text-white hover:text-red-100 hover:from-red-500 hover:via-red-600 hover:to-red-700 dark:from-red-600 dark:via-red-700 dark:to-red-800 dark:text-gray-100 dark:hover:text-gray-200 dark:hover:from-red-700 dark:hover:via-red-800 dark:hover:to-red-900'>
-                            No, Cancelar
-                          </AlertDialogCancel>
-                          <AlertDialogAction
-                            className='text-[14px] w-full border-1 border-green-500 bg-gradient-to-r from-green-400 via-green-500 to-green-600 text-white hover:text-green-100 hover:from-green-500 hover:via-green-600 hover:to-green-700 dark:from-green-600 dark:via-green-700 dark:to-green-800 dark:text-gray-100 dark:hover:text-gray-200 dark:hover:from-green-700 dark:hover:via-green-800 dark:hover:to-green-900'
-                            onClick={() => {
-                              useSupervisorRolePromotionHandler({
-                                supervisorUpdateForm: form,
-
-                                setIsDisabledPromoteButton: setIsPromoteButtonDisabled,
-                                setIsDisabledInput: setIsInputDisabled,
-                              });
-
-                              setIsMessagePromoteDisabled(true);
-                            }}
-                          >
-                            Sí, Aceptar
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+                    <AlertPromotionSupervisor
+                      isPromoteButtonDisabled={isPromoteButtonDisabled}
+                      setIsInputDisabled={setIsInputDisabled}
+                      setIsPromoteButtonDisabled={setIsPromoteButtonDisabled}
+                      setIsMessagePromoteDisabled={setIsMessagePromoteDisabled}
+                      supervisorUpdateForm={form}
+                    />
 
                     <div>
                       <p className='text-red-500 text-[13.5px] md:text-[14px] font-bold mb-2'>

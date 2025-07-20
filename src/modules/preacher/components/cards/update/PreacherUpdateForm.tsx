@@ -4,7 +4,7 @@
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import { type z } from 'zod';
 
@@ -23,7 +23,6 @@ import { getSimpleCopastors } from '@/modules/copastor/services/copastor.service
 import { usePreacherUpdateEffects } from '@/modules/preacher/hooks/usePreacherUpdateEffects';
 import { usePreacherUpdateMutation } from '@/modules/preacher/hooks/usePreacherUpdateMutation';
 import { usePreacherPromoteButtonLogic } from '@/modules/preacher/hooks/usePreacherPromoteButtonLogic';
-import { usePreacherRolePromotionHandler } from '@/modules/preacher/hooks/usePreacherRolePromotionHandler';
 import { usePreacherUpdateSubmitButtonLogic } from '@/modules/preacher/hooks/usePreacherUpdateSubmitButtonLogic';
 
 import { getSimpleSupervisors } from '@/modules/supervisor/services/supervisor.service';
@@ -48,6 +47,9 @@ import { getFullNames } from '@/shared/helpers/get-full-names.helper';
 import { validateDistrictsAllowedByModule } from '@/shared/helpers/validate-districts-allowed-by-module.helper';
 import { validateUrbanSectorsAllowedByDistrict } from '@/shared/helpers/validate-urban-sectors-allowed-by-district.helper';
 
+import { AlertPromotionPreacher } from '@/modules/preacher/components/alerts/AlertPromotionPreacher';
+import { AlertUpdateRelationPreacher } from '@/modules/preacher/components/alerts/AlertUpdateRelationPreacher';
+
 import {
   Form,
   FormControl,
@@ -71,17 +73,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/shared/components/ui/select';
-import {
-  AlertDialog,
-  AlertDialogTitle,
-  AlertDialogAction,
-  AlertDialogFooter,
-  AlertDialogCancel,
-  AlertDialogHeader,
-  AlertDialogContent,
-  AlertDialogTrigger,
-  AlertDialogDescription,
-} from '@/shared/components/ui/alert-dialog';
 import { Input } from '@/shared/components/ui/input';
 import { Button } from '@/shared/components/ui/button';
 import { Checkbox } from '@/shared/components/ui/checkbox';
@@ -120,6 +111,9 @@ export const PreacherUpdateForm = ({
   const [isMessagePromoteDisabled, setIsMessagePromoteDisabled] = useState<boolean>(false);
 
   const [isLoadingData, setIsLoadingData] = useState(true);
+
+  const [changedId, setChangedId] = useState(data?.theirSupervisor?.id);
+  const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
 
   //* Hooks (external libraries)
   const { pathname } = useLocation();
@@ -160,6 +154,15 @@ export const PreacherUpdateForm = ({
   const theirSupervisor = form.watch('theirSupervisor');
   const theirPastor = form.watch('theirPastor');
   const isDirectRelationToPastor = form.watch('isDirectRelationToPastor');
+
+  //* Effects
+  useEffect(() => {
+    if (data && data?.theirSupervisor?.id !== changedId) {
+      setTimeout(() => {
+        setIsAlertDialogOpen(true);
+      }, 100);
+    }
+  }, [changedId]);
 
   //* Helpers
   const urbanSectorsValidation = validateUrbanSectorsAllowedByDistrict(residenceDistric);
@@ -1079,6 +1082,7 @@ export const PreacherUpdateForm = ({
                                             onSelect={() => {
                                               form.setValue('theirSupervisor', supervisor.id);
                                               setIsInputTheirSupervisorOpen(false);
+                                              setChangedId(supervisor.id);
                                             }}
                                           >
                                             {`${supervisor?.member?.firstNames} ${supervisor?.member?.lastNames}`}
@@ -1102,6 +1106,16 @@ export const PreacherUpdateForm = ({
                           }}
                         />
                       )}
+
+                      <AlertUpdateRelationPreacher
+                        data={data}
+                        isAlertDialogOpen={isAlertDialogOpen}
+                        setIsAlertDialogOpen={setIsAlertDialogOpen}
+                        supervisorsQuery={supervisorsQuery}
+                        preacherUpdateForm={form}
+                        setChangedId={setChangedId}
+                        changedId={changedId}
+                      />
 
                       {isPromoteButtonDisabled && isInputDisabled && isMessagePromoteDisabled && (
                         <FormField
@@ -1320,74 +1334,13 @@ export const PreacherUpdateForm = ({
                         </span>
                       )}
 
-                    <AlertDialog>
-                      <AlertDialogTrigger asChild>
-                        <Button
-                          disabled={isPromoteButtonDisabled}
-                          className='w-full text-[14px]  disabled:bg-slate-500 disabled:text-white bg-yellow-400 text-yellow-700 hover:text-white hover:bg-yellow-500'
-                        >
-                          Promover de cargo
-                        </Button>
-                      </AlertDialogTrigger>
-                      <AlertDialogContent className='w-[23rem] sm:w-[25rem] md:w-full'>
-                        <AlertDialogHeader className='h-auto'>
-                          <AlertDialogTitle className='dark:text-yellow-500 text-amber-500 font-bold text-xl text-center md:text-[25px] pb-3'>
-                            ¿Estas seguro de promover a este Predicador?
-                          </AlertDialogTitle>
-                          <AlertDialogDescription className={cn('h-[20.5rem] md:h-[17rem]')}>
-                            <span className='w-full text-left text-blue-500 font-medium mb-3 inline-block text-[16px] md:text-[18px]'>
-                              Secuencia de pasos y acciones:
-                            </span>
-                            <br />
-                            <span className='-ml-10 md:ml-0 text-left inline-block mb-2 text-[14.5px] md:text-[15px]'>
-                              ✅ Asignar la relación según el nuevo cargo.
-                            </span>
-                            <span className='-ml-1 md:ml-0 text-left inline-block mb-2 text-[14.5px] md:text-[15px]'>
-                              ✅ Guardar estos datos para aplicar la promoción.
-                            </span>
-                            <span className='text-left inline-block mb-2 text-[14.5px] md:text-[15px]'>
-                              ❌ De manera automática se eliminara el registro y se eliminaran todas
-                              sus relaciones que tenia en el anterior cargo.
-                            </span>
-
-                            <span className='text-left inline-block mb-2 text-[14.5px] md:text-[15px]'>
-                              ❌ Si era Predicador(a) y sube a Supervisor(a), se eliminara su
-                              relación con sus discípulos y grupo familiar.
-                            </span>
-                            <span className='text-left inline-block mb-2 text-[14.5px] md:text-[15px]'>
-                              ✅ Se deberá asignar otro Predicador(a) para los discípulos y grupos
-                              familiares que se quedaron sin predicador.
-                            </span>
-
-                            <span className='text-left inline-block mb-2 text-[14.5px] md:text-[15px]'>
-                              ✅ Finalmente el registro promovido esta apto para ser usado en su
-                              nuevo rol o cargo.
-                            </span>
-                          </AlertDialogDescription>
-                        </AlertDialogHeader>
-
-                        <AlertDialogFooter>
-                          <AlertDialogCancel className='mt-3 text-[14px] w-full border-1 border-red-500 bg-gradient-to-r from-red-400 via-red-500 to-red-600 text-white hover:text-red-100 hover:from-red-500 hover:via-red-600 hover:to-red-700 dark:from-red-600 dark:via-red-700 dark:to-red-800 dark:text-gray-100 dark:hover:text-gray-200 dark:hover:from-red-700 dark:hover:via-red-800 dark:hover:to-red-900'>
-                            No, Cancelar
-                          </AlertDialogCancel>
-                          <AlertDialogAction
-                            className='text-[14px] w-full border-1 border-green-500 bg-gradient-to-r from-green-400 via-green-500 to-green-600 text-white hover:text-green-100 hover:from-green-500 hover:via-green-600 hover:to-green-700 dark:from-green-600 dark:via-green-700 dark:to-green-800 dark:text-gray-100 dark:hover:text-gray-200 dark:hover:from-green-700 dark:hover:via-green-800 dark:hover:to-green-900'
-                            onClick={() => {
-                              usePreacherRolePromotionHandler({
-                                preacherUpdateForm: form,
-
-                                setIsDisabledPromoteButton: setIsPromoteButtonDisabled,
-                                setIsDisabledInput: setIsInputDisabled,
-                              });
-
-                              setIsMessagePromoteDisabled(true);
-                            }}
-                          >
-                            Sí, Aceptar
-                          </AlertDialogAction>
-                        </AlertDialogFooter>
-                      </AlertDialogContent>
-                    </AlertDialog>
+                    <AlertPromotionPreacher
+                      isPromoteButtonDisabled={isPromoteButtonDisabled}
+                      setIsInputDisabled={setIsInputDisabled}
+                      setIsPromoteButtonDisabled={setIsPromoteButtonDisabled}
+                      setIsMessagePromoteDisabled={setIsMessagePromoteDisabled}
+                      preacherUpdateForm={form}
+                    />
 
                     <div>
                       <p className='text-red-500 text-[13.5px] md:text-[14px] font-bold mb-2'>
