@@ -182,7 +182,7 @@ export const offeringIncomeFormSchema = z
       )
       .optional(),
 
-    generateReceipt: z.enum(['yes', 'no']).optional(),
+    shouldOpenReceiptInBrowser: z.enum(['yes', 'no']).optional(),
   })
   .refine(
     (data) => {
@@ -251,7 +251,7 @@ export const offeringIncomeFormSchema = z
             data.subType === OfferingIncomeCreationSubType.GeneralFasting ||
             data.subType === OfferingIncomeCreationSubType.GeneralVigil ||
             data.subType === OfferingIncomeCreationSubType.UnitedService))
-          // data.subType === OfferingIncomeCreationSubType.YouthService
+        // data.subType === OfferingIncomeCreationSubType.YouthService
       ) {
         return !!data.churchId;
       }

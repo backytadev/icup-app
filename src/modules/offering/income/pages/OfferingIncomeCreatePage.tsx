@@ -163,7 +163,7 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
       memberId: '',
       zoneId: '',
       churchId: '',
-      generateReceipt: 'yes',
+      shouldOpenReceiptInBrowser: 'yes',
     },
   });
 
@@ -175,7 +175,7 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
   const isNewExternalDonor = form.watch('isNewExternalDonor');
   const memberType = form.watch('memberType');
   const externalDonorId = form.watch('externalDonorId');
-  const generateReceipt = form.watch('generateReceipt');
+  const shouldOpenReceiptInBrowser = form.watch('shouldOpenReceiptInBrowser');
 
   //* Custom hooks
   useOfferingIncomeCreationSubmitButtonLogic({
@@ -239,7 +239,7 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
   const offeringIncomeCreationMutation = useOfferingIncomeCreationMutation({
     setFiles,
     imageUrls,
-    generateReceipt,
+    shouldOpenReceiptInBrowser,
     setIsInputDisabled,
     setIsInputMemberDisabled,
     setIsSubmitButtonDisabled,
@@ -286,11 +286,11 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
       type === OfferingIncomeCreationType.IncomeAdjustment ||
       subType !== OfferingIncomeCreationSubType.FamilyGroup
     ) {
-      form.setValue('generateReceipt', 'no');
+      form.setValue('shouldOpenReceiptInBrowser', 'no');
     }
 
     if (subType === OfferingIncomeCreationSubType.FamilyGroup) {
-      form.setValue('generateReceipt', 'yes');
+      form.setValue('shouldOpenReceiptInBrowser', 'yes');
     }
   }, [type, subType]);
 
@@ -316,6 +316,7 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
     let imageUrls;
 
     try {
+      //* This only works with dropzone (it is inactivate)
       if (files.length >= 1) {
         const uploadResult = await uploadImagesMutation.mutateAsync({
           files: files as any,
@@ -1781,22 +1782,27 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                         alt={file.name}
                         width={100}
                         height={100}
-                        onLoad={() => {
-                          URL.revokeObjectURL(file.preview);
-                        }}
+                        onLoad={() => URL.revokeObjectURL(file.preview)}
                         className='h-full w-full object-contain rounded-md'
                       />
-                      <button
+
+                      <Button
                         type='button'
                         disabled={isDeleteFileButtonDisabled}
-                        className='w-7 h-7 border border-secondary-400 bg-secondary-400 rounded-full flex justify-center items-center absolute -top-3 -right-3 hover:bg-white transition-colors'
-                        onClick={() => {
-                          removeFile(file.name);
-                        }}
+                        onClick={() => removeFile(file.name)}
+                        variant='ghost'
+                        className={cn(
+                          'w-8 h-8 absolute -top-2 -right-2 p-0 rounded-full flex items-center justify-center',
+                          'border-secondary-400 dark:bg-slate-950 bg-white text-red-500 dark:hover:bg-white hover:bg-slate-200 hover:text-red-600 transition-colors',
+                          'disabled:opacity-50 disabled:pointer-events-none disabled:bg-slate-100 disabled:border-slate-300 disabled:text-slate-400'
+                        )}
                       >
-                        <TiDeleteOutline className='w-12 h-12 fill-red-500 hover:fill-secondary-400 transition-colors' />
-                      </button>
-                      <p className='mt-2 text-neutral-500 text-[12px] font-medium'>{file.name}</p>
+                        <TiDeleteOutline className='w-8 h-8' />
+                      </Button>
+
+                      <p className='mt-2 text-neutral-500 text-[12px] font-medium truncate max-w-full text-center'>
+                        {file.name}
+                      </p>
                     </li>
                   ))}
                 </ul>
@@ -1818,7 +1824,7 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                           ))}
                         </ul>
                       </div>
-                      <button
+                      <Button
                         type='button'
                         disabled={isDeleteFileButtonDisabled}
                         className='mt-1 py-1 text-[11px] md:text-[11.5px] uppercase tracking-wider font-bold text-red-500 border border-red-400 rounded-md px-3 hover:bg-red-500 hover:text-white ease-in duration-200 transition-colors'
@@ -1827,7 +1833,7 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                         }}
                       >
                         remover
-                      </button>
+                      </Button>
                     </li>
                   ))}
                 </ul>
@@ -1835,7 +1841,7 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
 
               <FormField
                 control={form.control}
-                name='generateReceipt'
+                name='shouldOpenReceiptInBrowser'
                 render={({ field }) => (
                   <FormItem className='mt-4 border-t pt-3'>
                     <FormLabel className='font-bold text-[14.5px] md:text-[14.5px] text-blue-500'>

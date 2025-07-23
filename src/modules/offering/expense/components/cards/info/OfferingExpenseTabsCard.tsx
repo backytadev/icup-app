@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 
 import { cn } from '@/shared/lib/utils';
+import { FileText } from 'lucide-react';
 
 import { OfferingExpenseSearchTypeNames } from '@/modules/offering/expense/enums/offering-expense-search-type.enum';
 import { OfferingExpenseSearchSubTypeNames } from '@/modules/offering/expense/enums/offering-expense-search-sub-type.enum';
@@ -16,6 +17,7 @@ import { getInitialFullNames } from '@/shared/helpers/get-full-names.helper';
 import { type OfferingExpenseResponse } from '@/modules/offering/expense/interfaces/offering-expense-response.interface';
 
 import { CurrencyTypeNames } from '@/modules/offering/shared/enums/currency-type.enum';
+import { extractPublicId } from '@/modules/offering/shared/helpers/extract-data-secure-url.helper';
 
 import {
   Card,
@@ -133,20 +135,26 @@ export const OfferingExpenseTabsCard = ({
             <div className='space-y-1 col-start-1 col-end-4'>
               <Label className='text-[14px] md:text-[15px]'>Imágenes adjuntas</Label>
               <div className='px-2 text-green-600 w-full overflow-x-auto'>
-                <ul className='pl-4 flex justify-between gap-x-10 gap-y-2 list-disc w-fit'>
+                <ul className='pl-2 flex gap-x-5 gap-y-2 list-disc w-fit flex-wrap overflow-hidden'>
                   {data?.imageUrls?.length !== undefined && data?.imageUrls?.length > 0 ? (
-                    data?.imageUrls?.map((image, index) => (
-                      <li key={image} className='w-full'>
-                        <a
-                          className='block text-green-600 max-w-[40vw] overflow-hidden text-ellipsis whitespace-nowrap'
-                          href={image}
-                          target='_blank'
-                          rel='noopener noreferrer'
-                        >
-                          Imagen N°{index + 1}
-                        </a>
-                      </li>
-                    ))
+                    data?.imageUrls?.map((image, index) => {
+                      const name = extractPublicId(image);
+                      return (
+                        <li key={image} className='w-auto overflow-hidden text-ellipsis'>
+                          <a
+                            className='block text-green-600 max-w-[40vw] overflow-hidden text-ellipsis whitespace-nowrap'
+                            href={image}
+                            target='_blank'
+                            rel='noopener noreferrer'
+                          >
+                            <p className='underline underline-offset-2 font-medium truncate max-w-[40vw] flex items-center gap-x-2'>
+                              <FileText className='w-4 h-4 text-green-600 shrink-0' />
+                              <span>{name ?? `Boleta ${index + 1}`}</span>
+                            </p>
+                          </a>
+                        </li>
+                      );
+                    })
                   ) : (
                     <li className='text-red-500 text-[14px] md:text-[15px]'>
                       No hay imágenes adjuntadas.

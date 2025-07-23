@@ -517,14 +517,14 @@ export const inactivateOfferingIncome = async ({
 //? GENERATE RECEIPT BY OFFERING INCOME ID
 export interface GenerateReceiptOptions {
   id: string;
-  generateReceipt?: string;
+  shouldOpenReceiptInBrowser?: string;
   setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
   generationType?: string;
 }
 export const generateReceiptByOfferingIncomeId = async ({
   id,
   setOpen,
-  generateReceipt,
+  shouldOpenReceiptInBrowser,
   generationType,
 }: GenerateReceiptOptions): Promise<any> => {
   try {
@@ -542,7 +542,7 @@ export const generateReceiptByOfferingIncomeId = async ({
       setOpen!(false);
     }
 
-    if (generateReceipt === 'yes' || !generateReceipt) {
+    if (shouldOpenReceiptInBrowser === 'yes' || !shouldOpenReceiptInBrowser) {
       setTimeout(() => {
         openPdfInNewTab(res.data);
       }, 100);

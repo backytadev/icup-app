@@ -11,6 +11,7 @@ interface Options {
   isDropZoneDisabled: boolean;
   isDeleteFileButtonDisabled: boolean;
   isInputDisabled: boolean;
+  countExistImageUrl: number;
   setIsDropZoneDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMessageErrorDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
@@ -29,6 +30,7 @@ export const useOfferingExpenseUpdateSubmitButtonLogic = ({
   setIsMessageErrorDisabled,
   setIsSubmitButtonDisabled,
   isDeleteFileButtonDisabled,
+  countExistImageUrl,
 }: Options): void => {
   //* Watchers
   const type = offeringExpenseUpdateForm.watch('type');
@@ -102,7 +104,7 @@ export const useOfferingExpenseUpdateSubmitButtonLogic = ({
     }
 
     //* Limit images drop zone 3 (create income offering)
-    if (fileNames && fileNames?.length >= 4) {
+    if (fileNames && countExistImageUrl + fileNames?.length >= 4) {
       setIsDropZoneDisabled(true);
       setIsSubmitButtonDisabled(true);
     }

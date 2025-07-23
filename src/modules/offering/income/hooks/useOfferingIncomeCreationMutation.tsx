@@ -11,7 +11,6 @@ import { type OfferingIncomeFormData } from '@/modules/offering/income/interface
 import {
   createOfferingIncome,
   generateReceiptByOfferingIncomeId,
-  updateOfferingIncome,
 } from '@/modules/offering/income/services/offering-income.service';
 
 import {
@@ -21,15 +20,13 @@ import {
 
 import { type ErrorResponse } from '@/shared/interfaces/error-response.interface';
 
-import { MemberType } from '@/modules/offering/income/enums/member-type.enum';
 import { OfferingFileType } from '@/modules/offering/shared/enums/offering-file-type.enum';
 import { type FilesProps } from '@/modules/offering/shared/interfaces/files-props.interface';
-import { convertPdfBlobToImage } from '@/modules/offering/income/helpers/convert-pdf-to-image';
-import { deleteImage, uploadImages } from '@/modules/offering/shared/services/images-files.service';
+import { deleteImage } from '@/modules/offering/shared/services/images-files.service';
 
 interface Options {
   imageUrls: string[];
-  generateReceipt?: string;
+  shouldOpenReceiptInBrowser?: string;
   setFiles: React.Dispatch<React.SetStateAction<FilesProps[]>>;
   setIsInputDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsInputMemberDisabled: React.Dispatch<React.SetStateAction<boolean>>;
@@ -43,14 +40,12 @@ interface Options {
 }
 
 export const useOfferingIncomeCreationMutation = ({
-  setFiles,
   setIsInputDisabled,
   setIsInputMemberDisabled,
-  offeringIncomeCreationForm,
   setIsSubmitButtonDisabled,
   setIsDeleteFileButtonDisabled,
   imageUrls,
-  generateReceipt,
+  shouldOpenReceiptInBrowser,
 }: Options): UseMutationResult<
   OfferingIncomeResponse,
   ErrorResponse,
@@ -103,81 +98,21 @@ export const useOfferingIncomeCreationMutation = ({
       }
     },
     onSuccess: async (data) => {
-      if (generateReceipt) {
-        //* Se crea el recibo en pdf (no abre la nueva pestaña)
-        const generateReceiptPromise = await generateReceiptByOfferingIncomeId({
-          id: data.id,
-          generateReceipt: 'no',
-          generationType: 'without-qr',
-        });
-
-        //* Crea el url del pdf
-        const receiptPdfUrl = URL.createObjectURL(generateReceiptPromise.data);
-
-        //* Convierte el url donde se abre el pdf en una imagen
-        const receiptImage = await convertPdfBlobToImage(receiptPdfUrl);
-
-        //* Sube la imagen a cloudinary
-        const { imageUrls: receiptImageUrls } = await uploadImages({
-          files: [receiptImage] as any,
-          fileType: OfferingFileType.Income,
-          offeringType: data.type,
-          offeringSubType: data.subType ?? null,
-        });
-
+      if (shouldOpenReceiptInBrowser) {
         toast.success('Registro creado exitosamente.', {
           position: 'top-center',
           className: 'justify-center',
         });
 
-        //* Actualiza el recibo creado anteriormente con la imagen subida a cloudinary
-        await Promise.all([
-          updateOfferingIncome({
-            id: data.id,
-            formData: {
-              type: data.type,
-              subType: data.subType,
-              category: data.category,
-              shift: data.shift,
-              amount: data.amount,
-              currency: data.currency,
-              date: data.date,
-              comments: data.comments,
-              memberType: data.memberType,
-              zoneId: data.zone?.id ?? undefined,
-              familyGroupId: data.familyGroup?.id ?? undefined,
-              memberId:
-                data.memberType === MemberType.Pastor
-                  ? data?.pastor?.id
-                  : data.memberType === MemberType.Copastor
-                    ? data.copastor?.id
-                    : data.memberType === MemberType.Supervisor
-                      ? data.supervisor?.id
-                      : data.memberType === MemberType.Preacher
-                        ? data.preacher?.id
-                        : data.disciple?.id,
-              churchId: data?.church?.id!,
-              externalDonorId: data?.externalDonor?.id,
-              recordStatus: data.recordStatus,
-              imageUrls: receiptImageUrls,
-            },
-          }),
-        ]);
-
-        //* Genera denuevo el recibo (con QR) esta vez si lo abre en el navegado para imprimir
         await generateReceiptByOfferingIncomeId({
           id: data.id,
-          generateReceipt,
+          shouldOpenReceiptInBrowser,
           generationType: 'with-qr',
         });
 
         queryClient.invalidateQueries({ queryKey: ['general-offering-income'] });
+        navigate('/offerings/income');
       }
-
-      navigate('/offerings/income');
-
-      setFiles([]);
-      offeringIncomeCreationForm.reset();
     },
   });
 

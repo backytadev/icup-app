@@ -150,6 +150,7 @@ export const OfferingExpenseFormUpdate = ({
     setIsDropZoneDisabled,
     setIsMessageErrorDisabled,
     setIsSubmitButtonDisabled,
+    countExistImageUrl: data?.imageUrls.length ?? 0,
   });
 
   //* Queries
@@ -206,7 +207,7 @@ export const OfferingExpenseFormUpdate = ({
     try {
       if (filesOnly.length >= 1) {
         const uploadResult = await uploadImagesMutation.mutateAsync({
-          files: files as any,
+          files: filesOnly as any,
           fileType: OfferingFileType.Expense,
           offeringType: formData.type,
           offeringSubType: formData.subType ?? null,
@@ -657,53 +658,68 @@ export const OfferingExpenseFormUpdate = ({
                         Archivos Aceptados
                       </h3>
                       <ul className='mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-2 gap-x-5 gap-y-20'>
-                        {files.map((file, index) => (
-                          <li
-                            key={file.name ?? file}
-                            className='relative h-32 rounded-md shadow-lg'
-                          >
-                            <img
-                              src={file.preview ?? file}
-                              alt={file.name ?? file}
-                              width={100}
-                              height={100}
-                              onLoad={() => {
-                                URL.revokeObjectURL(file.preview);
-                              }}
-                              className='h-full w-full object-contain rounded-md'
-                            />
-                            {file?.name ? (
-                              <button
-                                type='button'
-                                disabled={isDeleteFileButtonDisabled}
-                                className='border-none p-0 bg-secondary-400 rounded-full flex justify-center items-center absolute -top-3 -right-3 dark:hover:bg-slate-950 hover:bg-white'
-                                onClick={() => {
-                                  removeFile(file.name);
-                                }}
-                              >
-                                <TiDeleteOutline className='w-8 h-8 p-0  rounded-full fill-red-500 dark:hover:bg-white hover:bg-slate-200' />
-                              </button>
-                            ) : (
-                              <DestroyImageButton
-                                fileType={OfferingFileType.Expense}
-                                isDeleteFileButtonDisabled={isDeleteFileButtonDisabled}
-                                secureUrl={file as any}
-                                removeCloudFile={removeCloudFile}
-                              />
-                            )}
+                        {files.map((file) => {
+                          const isString = typeof file === 'string';
 
-                            <p className='mt-4 text-center text-slate-500 text-[11px] md:text-[12px] font-medium'>
-                              <a href={file as any} target='_blank' rel='noreferrer'>
-                                {file.name ??
-                                  (file as any)
-                                    .split('/')
-                                    .slice(0, 3)
-                                    .join('/')
-                                    .replace('cloudinary.com', `cloudinary-image-${index + 1}.com`)}
-                              </a>
-                            </p>
-                          </li>
-                        ))}
+                          const filePublicId =
+                            isString &&
+                            (file as any)
+                              .split('/')
+                              .pop()
+                              ?.replace(/\.[^/.]+$/, '')
+                              .toLowerCase();
+
+                          return (
+                            <li
+                              key={file.name ?? file}
+                              className='relative h-32 rounded-md shadow-lg'
+                            >
+                              <img
+                                src={file.preview ?? file}
+                                alt={file.name ?? file}
+                                width={100}
+                                height={100}
+                                onLoad={() => {
+                                  URL.revokeObjectURL(file.preview);
+                                }}
+                                className='h-full w-full object-contain rounded-md'
+                              />
+                              {file?.name ? (
+                                <Button
+                                  type='button'
+                                  disabled={isDeleteFileButtonDisabled}
+                                  className='border-none p-0 bg-secondary-400 rounded-full flex justify-center items-center absolute -top-3 -right-3 dark:hover:bg-slate-950 hover:bg-white'
+                                  onClick={() => {
+                                    removeFile(file.name);
+                                  }}
+                                >
+                                  <TiDeleteOutline className='w-8 h-8 p-0  rounded-full fill-red-500 dark:hover:bg-white hover:bg-slate-200' />
+                                </Button>
+                              ) : (
+                                <DestroyImageButton
+                                  fileType={OfferingFileType.Expense}
+                                  isDeleteFileButtonDisabled={isDeleteFileButtonDisabled}
+                                  secureUrl={file as any}
+                                  removeCloudFile={removeCloudFile}
+                                />
+                              )}
+
+                              <p className='mt-4 text-center text-slate-500 text-[11px] md:text-[12px] font-medium'>
+                                <a href={file as any} target='_blank' rel='noreferrer'>
+                                  {file.name ??
+                                    (file as any)
+                                      .split('/')
+                                      .slice(0, 3)
+                                      .join('/')
+                                      .replace(
+                                        'res.cloudinary.com',
+                                        `cloudinary-${filePublicId}.com`
+                                      )}
+                                </a>
+                              </p>
+                            </li>
+                          );
+                        })}
                       </ul>
 
                       {/* Rejected Files */}
