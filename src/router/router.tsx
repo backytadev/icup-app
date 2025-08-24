@@ -14,6 +14,7 @@ import { LoadingSpinner } from '@/shared/components/spinner/LoadingSpinner';
 //? Routers by module
 //* Members
 import { ChurchChildrenRoutes } from '@/modules/church/router/ChurchChildrenRoutes';
+import { MinistryChildrenRoutes } from '@/modules/ministry/router/MinistryChildrenRoutes';
 import { PastorChildrenRoutes } from '@/modules/pastor/router/PastorChildrenRoutes';
 import { CopastorChildrenRoutes } from '@/modules/copastor/router/CopastorChildrenRoutes';
 import { PreacherChildrenRoutes } from '@/modules/preacher/router/PreacherChildrenRoutes';
@@ -53,6 +54,7 @@ const LazySupervisorOptionsPage = lazy(
 const LazyDashboardPage = lazy(() => import('@/modules/dashboard/pages/DashboardPage'));
 const LazyPastorOptionsPage = lazy(() => import('@/modules/pastor/pages/PastorOptionsPage'));
 const LazyChurchOptionsPage = lazy(() => import('@/modules/church/pages/ChurchOptionsPage'));
+const LazyMinistryOptionsPage = lazy(() => import('@/modules/ministry/pages/MinistryOptionsPage'));
 const LazyCopastorOptionsPage = lazy(() => import('@/modules/copastor/pages/CopastorOptionsPage'));
 const LazyPreacherOptionsPage = lazy(() => import('@/modules/preacher/pages/PreacherOptionsPage'));
 const LazyDiscipleOptionsPage = lazy(() => import('@/modules/disciple/pages/DiscipleOptionsPage'));
@@ -108,6 +110,14 @@ export const router = createBrowserRouter([
             element: (
               <Suspense fallback={<LoadingSpinner />}>
                 <LazyChurchOptionsPage />
+              </Suspense>
+            ),
+          },
+          {
+            path: 'ministries',
+            element: (
+              <Suspense fallback={<LoadingSpinner />}>
+                <LazyMinistryOptionsPage />
               </Suspense>
             ),
           },
@@ -220,6 +230,15 @@ export const router = createBrowserRouter([
           </Suspense>
         ),
         children: ChurchChildrenRoutes,
+      },
+      {
+        path: 'ministries',
+        element: (
+          <Suspense fallback={<LoadingSpinner />}>
+            <LazyDashboardLayout />
+          </Suspense>
+        ),
+        children: MinistryChildrenRoutes,
       },
       {
         path: 'disciples',

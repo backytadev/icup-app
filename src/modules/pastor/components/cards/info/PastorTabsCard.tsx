@@ -171,6 +171,20 @@ export const PastorTabsCard = ({ data, id }: PastorTabsCardProps): JSX.Element =
 
             {/* Relaciones */}
             <div className='space-y-1'>
+              <Label className='text-[14px] md:text-[15px]'>Ministerios</Label>
+              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
+                {data?.ministries?.length ?? '-'}
+              </CardDescription>
+              <PopoverDataCard
+                data={data?.ministries}
+                title={'Ministerios'}
+                moduleName={'Pastor'}
+                firstValue={'ministryType'}
+                secondValue={'customMinistryName'}
+              />
+            </div>
+
+            <div className='space-y-1'>
               <Label className='text-[14px] md:text-[15px]'>Co-Pastores</Label>
               <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
                 {data?.copastors?.length ?? '-'}
@@ -256,7 +270,7 @@ export const PastorTabsCard = ({ data, id }: PastorTabsCardProps): JSX.Element =
 
             <span
               className={cn(
-                'pt-1 md:pt-0 col-start-1 col-end-4 row-start-6 row-end-7 md:row-start-auto md:row-end-auto text-[15px] md:text-[16px] font-bold text-yellow-500',
+                'pt-1 md:pt-0 col-start-1 col-end-4 row-start-7 row-end-8 md:row-start-auto md:row-end-auto text-[15px] md:text-[16px] font-bold text-yellow-500',
                 data?.inactivationCategory && 'col-start-1 col-end-4 row-start-6 row-end-7'
               )}
             >
@@ -265,7 +279,7 @@ export const PastorTabsCard = ({ data, id }: PastorTabsCardProps): JSX.Element =
 
             <div
               className={cn(
-                'space-y-1 flex justify-between items-center row-start-7 row-end-8 col-start-1 col-end-4 md:grid md:col-auto md:row-auto',
+                'space-y-1 flex justify-between items-center row-start-8 row-end-9 col-start-1 col-end-4 md:grid md:col-auto md:row-auto',
                 data?.inactivationCategory && 'row-start-7 row-end-8 col-start-1 col-end-4'
               )}
             >
@@ -282,9 +296,9 @@ export const PastorTabsCard = ({ data, id }: PastorTabsCardProps): JSX.Element =
 
             <div
               className={cn(
-                'space-y-1 col-start-1 col-end-4 flex justify-between items-center row-start-8 row-end-9 md:grid  md:row-start-7 md:row-end-8 md:col-start-2 md:col-end-4',
+                'space-y-1 col-start-1 col-end-4 flex justify-between items-center row-start-9 row-end-10 md:grid  md:row-start-8 md:row-end-9 md:col-start-2 md:col-end-4',
                 data?.inactivationCategory &&
-                  'row-start-8 row-end-9 col-start-1 col-end-4 md:col-start-2 md:col-end-3 md:row-start-7 md:row-end-8'
+                  'row-start-8 row-end-9 col-start-1 col-end-4 md:col-start-2 md:col-end-3 md:row-start-8 md:row-end-9'
               )}
             >
               <Label className='text-[14px] md:text-[15px]'>Fecha de creación</Label>
@@ -297,7 +311,7 @@ export const PastorTabsCard = ({ data, id }: PastorTabsCardProps): JSX.Element =
 
             <div
               className={cn(
-                'space-y-1 col-start-1 col-end-4 flex justify-between items-center row-start-9 row-end-10 md:grid md:row-auto  md:col-start-1 md:col-end-2',
+                'space-y-1 col-start-1 col-end-4 flex justify-between items-center row-start-10 row-end-11 md:grid md:row-auto  md:col-start-1 md:col-end-2',
                 data?.inactivationCategory && 'row-start-9 row-end-10 col-start-1 col-end-4'
               )}
             >
@@ -314,9 +328,9 @@ export const PastorTabsCard = ({ data, id }: PastorTabsCardProps): JSX.Element =
 
             <div
               className={cn(
-                'space-y-1 col-start-1 col-end-4 flex justify-between items-center row-start-10 row-end-11 md:grid md:row-auto md:col-start-2 md:col-end-4',
+                'space-y-1 col-start-1 col-end-4 flex justify-between items-center row-start-11 row-end-12 md:grid md:row-auto md:col-start-2 md:col-end-4',
                 data?.inactivationCategory &&
-                  'row-start-10 row-end-11 col-start-1 col-end-4 md:row-start-8 md:row-end-9 md:col-start-2 md:col-end-4'
+                  'row-start-11 row-end-12 col-start-1 col-end-4 md:row-start-9 md:row-end-10 md:col-start-2 md:col-end-4'
               )}
             >
               <Label className='text-[14px] md:text-[15px]'>Ultima fecha de actualización</Label>
@@ -329,9 +343,9 @@ export const PastorTabsCard = ({ data, id }: PastorTabsCardProps): JSX.Element =
 
             <div
               className={cn(
-                'space-y-1 col-start-1 col-end-4 flex justify-between md:justify-center items-center row-start-11 row-end-12 md:grid md:row-start-7 md:row-end-8 md:col-start-3 md:col-end-4',
+                'space-y-1 col-start-1 col-end-4 flex justify-between md:justify-center items-center row-start-12 row-end-13 md:grid md:row-start-8 md:row-end-9 md:col-start-3 md:col-end-4',
                 data?.inactivationCategory &&
-                  'row-start-11 row-end-12 col-start-1 col-end-4 md:col-start-3 md:col-end-4 md:row-start-7 md:row-end-8'
+                  'row-start-12 row-end-13 col-start-1 col-end-4 md:col-start-3 md:col-end-4 md:row-start-9 md:row-end-10'
               )}
             >
               <Label className='text-[14px] md:text-[15px]'>Estado</Label>

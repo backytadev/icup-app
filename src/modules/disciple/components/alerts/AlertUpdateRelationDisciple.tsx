@@ -61,7 +61,7 @@ export const AlertUpdateRelationDisciple = ({
               <div className='flex justify-between flex-wrap'>
                 <p>
                   <span>G. Familiar:</span>{' '}
-                  <strong>{`${data?.theirFamilyGroup?.familyGroupCode} ~ 
+                  <strong>{`${data?.theirFamilyGroup?.familyGroupCode ?? 'Sin Grupo Familiar'} ~ 
                       ${getInitialFullNames({
                         firstNames: data?.theirPreacher?.firstNames ?? '',
                         lastNames: data?.theirPreacher?.lastNames ?? '',

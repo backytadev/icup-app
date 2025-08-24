@@ -226,7 +226,7 @@ export enum SubTypeOfferingExpenseSearchByMaintenanceAndRepairExpenses {
   SoundEquipmentMaintenance = 'sound_equipment_maintenance',
   LightingEquipmentMaintenance = 'lighting_equipment_maintenance',
   LightingEquipmentRepairs = 'lighting_equipment_repair',
-  SoundEquipmentRepairs = 'sound_equipment_repair',
+  SoundEquipmentRepairs = 'sound_equipment_repairs',
   GardenAndExteriorMaintenance = 'garden_and_exterior_maintenance',
   GeneralEquipmentRepairs = 'general_equipment_repairs',
   GeneralEquipmentMaintenance = 'general_equipment_maintenance',

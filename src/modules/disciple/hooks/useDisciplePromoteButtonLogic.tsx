@@ -2,18 +2,22 @@ import { useEffect, useState } from 'react';
 
 import { type UseFormReturn } from 'react-hook-form';
 
+import { RelationType } from '@/shared/enums/relation-type.enum';
 import { DiscipleFieldNames } from '@/modules/disciple/enums/disciple-field-names.enum';
+import { MinistryMemberBlock } from '@/shared/interfaces/ministry-member-block.interface';
 import { type DiscipleFormData } from '@/modules/disciple/interfaces/disciple-form-data.interface';
 
 interface Options {
   discipleUpdateForm: UseFormReturn<DiscipleFormData, any, DiscipleFormData | undefined>;
   setIsPromoteButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
+  ministryBlocks: MinistryMemberBlock[];
 }
 
 export const useDisciplePromoteButtonLogic = ({
   discipleUpdateForm,
   setIsPromoteButtonDisabled,
-}: Options): any => {
+  ministryBlocks,
+}: Options) => {
   //* States
   const [fixedValues, setFixedValues] = useState<DiscipleFormData[]>([]);
   const [lastValues, setLastValues] = useState<DiscipleFormData[]>([]);
@@ -38,7 +42,9 @@ export const useDisciplePromoteButtonLogic = ({
   const referenceAddress = discipleUpdateForm.watch('referenceAddress');
   const roles = discipleUpdateForm.watch('roles');
   const recordStatus = discipleUpdateForm.watch('recordStatus');
+  const theirPastor = discipleUpdateForm.watch('theirPastor');
   const theirFamilyGroup = discipleUpdateForm.watch('theirFamilyGroup');
+  const relationType = discipleUpdateForm.watch('relationType');
 
   //? Effects
   //* Set the fixed values in a new state
@@ -81,6 +87,31 @@ export const useDisciplePromoteButtonLogic = ({
       setIsPromoteButtonDisabled(false);
     }
 
+    const isValidBlocks =
+      ministryBlocks?.length > 0 &&
+      ministryBlocks.every(
+        (item) =>
+          item.churchId && item.ministryId && item.ministryType && item.ministryRoles.length > 0
+      );
+
+    if (
+      relationType === RelationType.OnlyRelatedMinistries &&
+      ((!theirPastor && !isValidBlocks) ||
+        (!theirPastor && isValidBlocks) ||
+        (theirPastor && !isValidBlocks))
+    ) {
+      setIsPromoteButtonDisabled(true);
+    }
+
+    if (
+      relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover &&
+      ((!theirFamilyGroup && !isValidBlocks) ||
+        (!theirFamilyGroup && isValidBlocks) ||
+        (theirFamilyGroup && !isValidBlocks))
+    ) {
+      setIsPromoteButtonDisabled(true);
+    }
+
     //* If there are no matches, set the current value to lastValues
     setLastValues(currentValues);
   }, [
@@ -104,5 +135,8 @@ export const useDisciplePromoteButtonLogic = ({
     roles,
     theirFamilyGroup,
     recordStatus,
+    relationType,
+    theirPastor,
+    ministryBlocks,
   ]);
 };

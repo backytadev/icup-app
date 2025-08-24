@@ -97,6 +97,7 @@ const dataFictional: CopastorResponse[] = [
       residenceAddress: '',
       referenceAddress: '',
       roles: [],
+      ministries: [],
     },
     recordStatus: '',
     theirChurch: null,
@@ -144,7 +145,6 @@ export const CopastorUpdatePage = (): JSX.Element => {
     retry: false,
   });
 
-  //* Effects
   //* Effects
   useEffect(() => {
     if (all) form.setValue('limit', '10');

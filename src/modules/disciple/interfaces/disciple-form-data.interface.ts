@@ -1,5 +1,10 @@
 import { type MemberRole } from '@/shared/enums/member-role.enum';
 
+export interface MinistryAssignment {
+  ministryId: string | null;
+  ministryRoles: string[];
+}
+
 export interface DiscipleFormData {
   firstNames: string;
   lastNames: string;
@@ -8,7 +13,7 @@ export interface DiscipleFormData {
   birthDate: Date;
   maritalStatus: string;
   numberChildren: string;
-  conversionDate: Date;
+  conversionDate?: Date;
   email?: string | undefined;
   phoneNumber?: string | undefined;
   residenceCountry: string;
@@ -20,11 +25,14 @@ export interface DiscipleFormData {
   referenceAddress: string;
   roles: MemberRole[];
   recordStatus?: string | undefined;
+  relationType: string;
+  theirPastor?: string | undefined;
   theirFamilyGroup?: string | undefined;
   theirSupervisor?: string | undefined;
+  theirMinistries?: MinistryAssignment[] | undefined;
 }
 
-export type CopastorFormDataKeys =
+export type DiscipleFormDataKeys =
   | 'firstNames'
   | 'lastNames'
   | 'gender'
@@ -44,5 +52,8 @@ export type CopastorFormDataKeys =
   | 'referenceAddress'
   | 'roles'
   | 'recordStatus'
+  | 'relationType'
+  | 'theirPastor'
   | 'theirFamilyGroup'
-  | 'theirSupervisor';
+  | 'theirSupervisor'
+  | 'theirMinistries';

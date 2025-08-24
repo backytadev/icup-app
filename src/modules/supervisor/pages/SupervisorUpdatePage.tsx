@@ -97,6 +97,7 @@ const dataFictional: SupervisorResponse[] = [
       residenceAddress: '',
       referenceAddress: '',
       roles: [],
+      ministries: [],
     },
     isDirectRelationToPastor: false,
     recordStatus: '',

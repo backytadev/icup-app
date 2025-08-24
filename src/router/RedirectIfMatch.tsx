@@ -17,6 +17,20 @@ export const RedirectIfMatch = (): JSX.Element => {
     return <Navigate to='/churches/inactivate' />;
   }
 
+  // If starts with ministry
+  if (location.pathname.startsWith('/ministries/general-search/')) {
+    return <Navigate to='/ministries/general-search' />;
+  }
+  if (location.pathname.startsWith('/ministries/search-by-term/')) {
+    return <Navigate to='/ministries/search-by-term' />;
+  }
+  if (location.pathname.startsWith('/ministries/update/')) {
+    return <Navigate to='/ministries/update' />;
+  }
+  if (location.pathname.startsWith('/ministries/inactivate/')) {
+    return <Navigate to='/ministries/inactivate' />;
+  }
+
   // If starts with pastor
   if (location.pathname.startsWith('/pastors/general-search/')) {
     return <Navigate to='/pastors/general-search' />;

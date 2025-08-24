@@ -24,6 +24,8 @@ import {
   MemberInactivationReasonNames,
 } from '@/shared/enums/member-inactivation-reason.enum';
 import { type MemberRole, MemberRoleNames } from '@/shared/enums/member-role.enum';
+import { MinistryMemberRole } from '@/modules/ministry/enums/ministry-member-role.enum';
+import { MinistryType, MinistryTypeNames } from '@/modules/ministry/enums/ministry-type.enum';
 
 import {
   Card,
@@ -34,6 +36,7 @@ import {
 } from '@/shared/components/ui/card';
 import { Label } from '@/shared/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
+import { RelationType, RelationTypeNames } from '@/shared/enums/relation-type.enum';
 
 interface DiscipleTabsCardProps {
   id: string;
@@ -66,6 +69,12 @@ export const DiscipleTabsCard = ({ data, id }: DiscipleTabsCardProps): JSX.Eleme
       window.history.replaceState({}, '', originalUrl);
     };
   }, [id]);
+
+  const allMinistryRoles = data?.member.ministries.flatMap((item) => item.ministryRoles);
+  const allMinistryTypes = data?.member.ministries.flatMap(
+    (item) =>
+      `${MinistryTypeNames[item.ministryType as MinistryType]} ~ (${item.churchMinistryName})`
+  );
 
   return (
     <Tabs defaultValue='general-info' className='md:-mt-8 w-[650px] md:w-[630px]'>
@@ -294,31 +303,61 @@ export const DiscipleTabsCard = ({ data, id }: DiscipleTabsCardProps): JSX.Eleme
 
           <CardContent className='grid  grid-cols-2 pl-[1.5rem] pr-[1rem] gap-x-6 gap-y-4 md:gap-x-10 md:gap-y-6 md:pl-[6rem] md:pr-[3rem]'>
             <div className='space-y-1'>
-              <Label className='text-[14px] md:text-[15px]'>Roles de Membresía</Label>
-              <div className='px-2 text-[14px] md:text-[14.5px]'>
-                <ul className='list-disc pl-5 text-slate-500 dark:text-slate-400'>
-                  {data?.member?.roles &&
-                  data?.member?.roles.filter(
-                    (rol) => !MemberRoleNames[rol as MemberRole]?.includes('Min.')
-                  ).length > 0
-                    ? data?.member?.roles
-                        .filter((rol) => !MemberRoleNames[rol as MemberRole]?.includes('Min.'))
-                        .map((rol) => <li key={rol}>{MemberRoleNames[rol as MemberRole]}</li>)
-                    : '-'}
+              <Label className='text-[14px] md:text-[15px]'>Tipo de Relación</Label>
+              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
+                <li>
+                  {data?.relationType
+                    ? `${RelationTypeNames[data?.relationType as RelationType]}`
+                    : 'Este discípulo no tiene una iglesia asignada.'}
+                </li>
+              </CardDescription>
+            </div>
+
+            <div className='space-y-1'>
+              <Label className='text-[14px] md:text-[15px]'>Ministerios</Label>
+              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
+                <ul
+                  className={cn(
+                    'list-disc pl-5 text-slate-500 dark:text-slate-400',
+                    data?.member.ministries.length === 0 && 'pl-0'
+                  )}
+                >
+                  {data?.member.ministries && data?.member.ministries.length > 0
+                    ? allMinistryTypes?.map((item) => <li key={item}>{item}</li>)
+                    : 'Este discípulo no esta relacionado a ningún ministerio.'}
                 </ul>
-              </div>
+              </CardDescription>
             </div>
 
             <div className='space-y-1'>
               <Label className='text-[14px] md:text-[15px]'>Roles Ministeriales</Label>
               <div className='px-2 text-[14px] md:text-[14.5px]'>
                 <ul className='list-disc pl-5 text-slate-500 dark:text-slate-400'>
+                  {allMinistryRoles &&
+                  allMinistryRoles.length > 0 &&
+                  allMinistryRoles.filter((rol) => MemberRoleNames[rol as MinistryMemberRole])
+                    .length > 0
+                    ? allMinistryRoles
+                        .filter((rol) => MemberRoleNames[rol as MinistryMemberRole])
+                        .map((rol) => (
+                          <li key={rol}>{MemberRoleNames[rol as MinistryMemberRole]}</li>
+                        ))
+                    : '-'}
+                </ul>
+              </div>
+            </div>
+
+            <div className='space-y-1'>
+              <Label className='text-[14px] md:text-[15px]'>Roles de Membresía</Label>
+              <div className='px-2 text-[14px] md:text-[14.5px]'>
+                <ul className='list-disc pl-5 text-slate-500 dark:text-slate-400'>
                   {data?.member?.roles &&
-                  data?.member?.roles.filter((rol) =>
-                    MemberRoleNames[rol as MemberRole]?.includes('Min.')
+                  data?.member?.roles.length > 0 &&
+                  data?.member?.roles.filter(
+                    (rol) => !MemberRoleNames[rol as MemberRole]?.includes('Min.')
                   ).length > 0
                     ? data?.member?.roles
-                        .filter((rol) => MemberRoleNames[rol as MemberRole]?.includes('Min.'))
+                        .filter((rol) => !MemberRoleNames[rol as MemberRole]?.includes('Min.'))
                         .map((rol) => <li key={rol}>{MemberRoleNames[rol as MemberRole]}</li>)
                     : '-'}
                 </ul>

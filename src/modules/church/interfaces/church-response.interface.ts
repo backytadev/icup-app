@@ -10,6 +10,7 @@ import {
   type CreatedBy,
   type UpdatedBy,
   type MainChurch,
+  type Ministry,
 } from '@/shared/interfaces/relations-response.interface';
 
 export interface ChurchResponse {
@@ -43,6 +44,7 @@ export interface ChurchResponse {
   preachers?: Preacher[];
   familyGroups?: FamilyGroup[];
   disciples?: Disciple[];
+  ministries?: Ministry[];
   recordStatus: string;
   theirMainChurch?: MainChurch | null;
 }
