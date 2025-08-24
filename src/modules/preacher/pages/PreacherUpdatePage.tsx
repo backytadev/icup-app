@@ -96,6 +96,7 @@ const dataFictional: PreacherResponse[] = [
       residenceAddress: '',
       referenceAddress: '',
       roles: [],
+      ministries: [],
     },
     recordStatus: '',
     theirSupervisor: null,

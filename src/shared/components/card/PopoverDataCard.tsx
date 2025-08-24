@@ -5,10 +5,10 @@ import { cn } from '@/shared/lib/utils';
 import { getInitialFullNames } from '@/shared/helpers/get-full-names.helper';
 import {
   Dialog,
-  DialogContent,
-  DialogDescription,
   DialogTitle,
+  DialogContent,
   DialogTrigger,
+  DialogDescription,
 } from '@/shared/components/ui/dialog';
 
 import { Button } from '@/shared/components/ui/button';
@@ -19,10 +19,13 @@ import {
   type Pastor,
   type Copastor,
   type Disciple,
+  type Ministry,
   type Preacher,
   type Supervisor,
   type FamilyGroup,
+  type MinistryMember,
 } from '@/shared/interfaces/relations-response.interface';
+import { MinistryType, MinistryTypeNames } from '@/modules/ministry/enums/ministry-type.enum';
 
 export type AllowedTypes =
   | Anexe[]
@@ -32,7 +35,9 @@ export type AllowedTypes =
   | Zone[]
   | Preacher[]
   | FamilyGroup[]
-  | Disciple[];
+  | Disciple[]
+  | Ministry[]
+  | MinistryMember[];
 
 interface PopoverDataProps {
   data: AllowedTypes | undefined;
@@ -84,18 +89,22 @@ export const PopoverDataCard = ({
               const valueA =
                 title === 'Anexos' || title === 'Zonas' || title === 'Grupos Familiares'
                   ? `${a?.[firstValue]} - ${a?.[secondValue]}`
-                  : getInitialFullNames({
-                      firstNames: a?.[firstValue] ?? '',
-                      lastNames: a?.[secondValue] ?? '',
-                    });
+                  : title === 'Ministerios'
+                    ? `${MinistryTypeNames[a?.[firstValue] as MinistryType]} - ${a?.[secondValue]}`
+                    : getInitialFullNames({
+                        firstNames: a?.[firstValue] ?? '',
+                        lastNames: a?.[secondValue] ?? '',
+                      });
 
               const valueB =
                 title === 'Anexos' || title === 'Zonas' || title === 'Grupos Familiares'
                   ? `${b?.[firstValue]} - ${b?.[secondValue]}`
-                  : getInitialFullNames({
-                      firstNames: b?.[firstValue] ?? '',
-                      lastNames: b?.[secondValue] ?? '',
-                    });
+                  : title === 'Ministerios'
+                    ? `${MinistryTypeNames[b?.[firstValue] as MinistryType]} - ${b?.[secondValue]}`
+                    : getInitialFullNames({
+                        firstNames: b?.[firstValue] ?? '',
+                        lastNames: b?.[secondValue] ?? '',
+                      });
 
               return valueA.localeCompare(valueB);
             })
@@ -104,10 +113,12 @@ export const PopoverDataCard = ({
               const displayValue =
                 title === 'Anexos' || title === 'Zonas' || title === 'Grupos Familiares'
                   ? `${element?.[firstValue]} - ${element?.[secondValue]}`
-                  : getInitialFullNames({
-                      firstNames: element?.[firstValue] ?? '',
-                      lastNames: element?.[secondValue] ?? '',
-                    });
+                  : title === 'Ministerios'
+                    ? `${MinistryTypeNames[element?.[firstValue] as MinistryType]} ~ "${element?.[secondValue]}"`
+                    : getInitialFullNames({
+                        firstNames: element?.[firstValue] ?? '',
+                        lastNames: element?.[secondValue] ?? '',
+                      });
 
               return <li key={key}>{displayValue}</li>;
             })}

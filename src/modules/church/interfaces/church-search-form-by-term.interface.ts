@@ -1,4 +1,5 @@
 import { type ChurchSearchType } from '@/modules/church/enums/church-search-type.enum';
+
 export interface ChurchSearchFormByTerm {
   searchType: ChurchSearchType;
   order: string;

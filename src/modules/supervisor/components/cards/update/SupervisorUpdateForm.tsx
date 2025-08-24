@@ -930,10 +930,10 @@ export const SupervisorUpdateForm = ({
                               role !== MemberRole.Presbyter &&
                               role !== MemberRole.KidsMinistryLeader &&
                               role !== MemberRole.DiscipleshipMinistryLeader &&
-                              role !== MemberRole.KidsMinistryTeamMember &&
+                              role !== MemberRole.KidsMinistryMember &&
                               role !== MemberRole.YouthMinistryLeader &&
-                              role !== MemberRole.YouthMinistryTeamMember &&
-                              role !== MemberRole.TechnologyMinistryTeamMember && (
+                              role !== MemberRole.YouthMinistryMember &&
+                              role !== MemberRole.TechnologyMinistryMember && (
                                 <FormField
                                   key={role}
                                   control={form.control}

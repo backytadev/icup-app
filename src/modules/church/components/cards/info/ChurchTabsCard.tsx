@@ -175,6 +175,20 @@ export const ChurchTabsCard = ({ data, id }: ChurchTabsCardProps): JSX.Element =
             </div>
 
             <div className='space-y-1 '>
+              <Label className='text-[14px] md:text-[15px]'>Ministerios</Label>
+              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
+                {data?.ministries?.length ?? '-'}
+              </CardDescription>
+              <PopoverDataCard
+                data={data?.ministries}
+                title={'Ministerios'}
+                moduleName={'Iglesia'}
+                firstValue={'ministryType'}
+                secondValue={'customMinistryName'}
+              />
+            </div>
+
+            <div className='space-y-1 '>
               <Label className='text-[14px] md:text-[15px]'>Pastores</Label>
               <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
                 {data?.pastors?.length ?? '-'}

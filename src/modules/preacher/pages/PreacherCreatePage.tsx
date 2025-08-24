@@ -804,7 +804,7 @@ export const PreacherCreatePage = (): JSX.Element => {
                           role !== MemberRole.IntercessionMinistryLeader &&
                           role !== MemberRole.EvangelismMinistryLeader &&
                           role !== MemberRole.DiscipleshipMinistryLeader &&
-                          role !== MemberRole.TechnologyMinistryTeamMember && (
+                          role !== MemberRole.TechnologyMinistryMember && (
                             <FormField
                               key={role}
                               control={form.control}

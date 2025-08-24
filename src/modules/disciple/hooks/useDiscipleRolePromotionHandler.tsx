@@ -15,6 +15,7 @@ export const useDiscipleRolePromotionHandler = ({
   setIsPromoteButtonDisabled,
 }: Options): void => {
   discipleUpdateForm.setValue('theirFamilyGroup', '');
+  discipleUpdateForm.setValue('theirPastor', '');
 
   const currentRoles: MemberRole[] = discipleUpdateForm.getValues('roles');
 

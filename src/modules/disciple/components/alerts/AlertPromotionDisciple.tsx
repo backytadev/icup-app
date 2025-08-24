@@ -18,6 +18,7 @@ import { useDiscipleRolePromotionHandler } from '@/modules/disciple/hooks/useDis
 
 export interface AlertPromotionDiscipleProps {
   isPromoteButtonDisabled: boolean;
+  isInputDisabled: boolean;
   setIsInputDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsPromoteButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMessagePromoteDisabled: React.Dispatch<React.SetStateAction<boolean>>;
@@ -25,18 +26,19 @@ export interface AlertPromotionDiscipleProps {
 }
 
 export const AlertPromotionDisciple = ({
-  isPromoteButtonDisabled,
+  isInputDisabled,
   setIsInputDisabled,
+  discipleUpdateForm,
+  isPromoteButtonDisabled,
   setIsPromoteButtonDisabled,
   setIsMessagePromoteDisabled,
-  discipleUpdateForm,
 }: AlertPromotionDiscipleProps) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button
           type='button'
-          disabled={isPromoteButtonDisabled}
+          disabled={isPromoteButtonDisabled || isInputDisabled}
           className='w-full text-[14px]  disabled:bg-slate-500 disabled:text-white bg-yellow-400 text-yellow-700 hover:text-white hover:bg-yellow-500'
         >
           Promover de cargo

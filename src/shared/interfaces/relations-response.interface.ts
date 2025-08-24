@@ -1,9 +1,29 @@
+import { MinistryMemberRole } from '@/modules/ministry/enums/ministry-member-role.enum';
+import { MinistryType } from '@/modules/ministry/enums/ministry-type.enum';
+
 export interface Anexe {
   id: string;
   churchName: string;
   abbreviatedChurchName: string;
   district: string;
   urbanSector: string;
+}
+export interface Ministry {
+  id: string;
+  ministryType: MinistryType;
+  customMinistryName: string;
+  district: string;
+}
+
+export interface MinistryMember {
+  id: string;
+  memberInfo: {
+    id: string;
+    firstNames: string;
+    lastNames: string;
+  };
+  memberRoles: string[];
+  ministryRoles: string[];
 }
 
 export interface Pastor {
@@ -89,6 +109,14 @@ export interface Member {
   residenceAddress: string;
   referenceAddress: string;
   roles: string[];
+  ministries: {
+    id: string;
+    ministryType: string;
+    churchMinistryName: string;
+    churchMinistryId: string;
+    customMinistryName: string;
+    ministryRoles: MinistryMemberRole[];
+  }[];
   createdAt?: Date;
   createdBy?: CreatedBy;
   updatedAt?: Date;

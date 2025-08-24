@@ -55,7 +55,7 @@ export const getSimpleChurches = async ({
   try {
     const { data } = await icupApi<ChurchResponse[]>('/churches', {
       params: {
-        order: 'ASC',
+        order: RecordOrder.Ascending,
         isSimpleQuery: isSimpleQuery.toString(),
       },
     });

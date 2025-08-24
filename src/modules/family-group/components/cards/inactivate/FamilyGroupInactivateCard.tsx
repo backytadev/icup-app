@@ -146,7 +146,7 @@ export const FamilyGroupInactivateCard = ({
         className='w-[23rem] sm:w-[25rem] md:w-full max-h-full overflow-x-hidden overflow-y-auto'
       >
         <div className='h-auto'>
-          <DialogTitle className='dark:text-yellow-500 text-amber-500 font-bold text-[22px] text-center md:text-[25px] pb-3'>
+          <DialogTitle className='dark:text-yellow-500 text-amber-500 font-bold text-[24px] text-center md:text-[28px] pb-3'>
             ¿Estas seguro de inactivar este Grupo Familiar?
           </DialogTitle>
 

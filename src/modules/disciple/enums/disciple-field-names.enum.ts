@@ -18,5 +18,8 @@ export enum DiscipleFieldNames {
   ReferenceAddress = 'referenceAddress',
   Roles = 'roles',
   RecordStatus = 'recordStatus',
+  RelationType = 'relationType',
+  TheirPastor = 'theirPastor',
   TheirFamilyGroup = 'theirFamilyGroup',
+  TheirSupervisor = 'theirSupervisor',
 }

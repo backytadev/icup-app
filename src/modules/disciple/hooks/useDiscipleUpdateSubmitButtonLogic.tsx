@@ -6,6 +6,9 @@ import { useEffect } from 'react';
 import { type UseFormReturn } from 'react-hook-form';
 
 import { MemberRole } from '@/shared/enums/member-role.enum';
+import { RelationType } from '@/shared/enums/relation-type.enum';
+
+import { MinistryMemberBlock } from '@/shared/interfaces/ministry-member-block.interface';
 import { type DiscipleFormData } from '@/modules/disciple/interfaces/disciple-form-data.interface';
 
 interface Options {
@@ -14,6 +17,8 @@ interface Options {
   setIsMessageErrorDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   isInputDisabled: boolean;
   isRelationSelectDisabled: boolean;
+  ministryBlocks: MinistryMemberBlock[];
+  setMinistryBlocks: React.Dispatch<React.SetStateAction<MinistryMemberBlock[]>>;
 }
 
 export const useDiscipleUpdateSubmitButtonLogic = ({
@@ -21,6 +26,7 @@ export const useDiscipleUpdateSubmitButtonLogic = ({
   setIsSubmitButtonDisabled,
   setIsMessageErrorDisabled,
   isInputDisabled,
+  ministryBlocks,
   isRelationSelectDisabled,
 }: Options): void => {
   //* Watchers
@@ -45,9 +51,12 @@ export const useDiscipleUpdateSubmitButtonLogic = ({
   const recordStatus = discipleUpdateForm.watch('recordStatus');
   const theirFamilyGroup = discipleUpdateForm.watch('theirFamilyGroup');
   const theirSupervisor = discipleUpdateForm.watch('theirSupervisor');
+  const theirPastor = discipleUpdateForm.watch('theirPastor');
+  const relationType = discipleUpdateForm.watch('relationType');
 
   //* Effects
   useEffect(() => {
+    //? Enabled
     if (
       discipleUpdateForm.formState.errors &&
       Object.values(discipleUpdateForm.formState.errors).length > 0
@@ -59,9 +68,85 @@ export const useDiscipleUpdateSubmitButtonLogic = ({
     if (
       roles.includes(MemberRole.Disciple) &&
       !roles.includes(MemberRole.Preacher) &&
+      relationType === RelationType.OnlyRelatedHierarchicalCover &&
+      !theirFamilyGroup
+    ) {
+      setIsSubmitButtonDisabled(true);
+      setIsMessageErrorDisabled(true);
+    }
+
+    if (
+      roles.includes(MemberRole.Disciple) &&
+      !roles.includes(MemberRole.Preacher) &&
+      relationType === RelationType.OnlyRelatedMinistries &&
+      ((theirPastor &&
+        ministryBlocks?.some(
+          (item) =>
+            !item.churchId ||
+            !item.ministryId ||
+            !item.ministryType ||
+            item.ministryRoles.length === 0
+        )) ||
+        (!theirPastor &&
+          ministryBlocks?.every(
+            (item) =>
+              item.churchId && item.ministryId && item.ministryType && item.ministryRoles.length > 0
+          )) ||
+        (!theirPastor &&
+          ministryBlocks?.some(
+            (item) =>
+              !item.churchId ||
+              !item.ministryId ||
+              !item.ministryType ||
+              item.ministryRoles.length === 0
+          )))
+    ) {
+      setIsSubmitButtonDisabled(true);
+      setIsMessageErrorDisabled(true);
+    }
+
+    if (
+      roles.includes(MemberRole.Disciple) &&
+      !roles.includes(MemberRole.Preacher) &&
+      !isInputDisabled &&
+      ((theirFamilyGroup &&
+        relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover &&
+        ministryBlocks?.some(
+          (item) =>
+            !item.churchId ||
+            !item.ministryId ||
+            !item.ministryType ||
+            item.ministryRoles.length === 0
+        )) ||
+        (!theirFamilyGroup &&
+          relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover &&
+          ministryBlocks?.every(
+            (item) =>
+              item.churchId && item.ministryId && item.ministryType && item.ministryRoles.length > 0
+          ))) &&
+      Object.values(discipleUpdateForm.formState.errors).length === 0
+    ) {
+      setIsSubmitButtonDisabled(true);
+      setIsMessageErrorDisabled(true);
+    }
+
+    if (
+      roles.includes(MemberRole.Preacher) &&
+      !roles.includes(MemberRole.Disciple) &&
+      !theirSupervisor
+    ) {
+      setIsSubmitButtonDisabled(true);
+      setIsMessageErrorDisabled(true);
+    }
+
+    //? Disabled
+    if (
+      roles.includes(MemberRole.Disciple) &&
+      !roles.includes(MemberRole.Preacher) &&
+      !isInputDisabled &&
       theirFamilyGroup &&
-      Object.values(discipleUpdateForm.formState.errors).length === 0 &&
-      !isInputDisabled
+      relationType === RelationType.OnlyRelatedHierarchicalCover &&
+      Object.values(discipleUpdateForm.formState.errors).length === 0
     ) {
       setIsSubmitButtonDisabled(false);
       setIsMessageErrorDisabled(false);
@@ -70,15 +155,33 @@ export const useDiscipleUpdateSubmitButtonLogic = ({
     if (
       roles.includes(MemberRole.Disciple) &&
       !roles.includes(MemberRole.Preacher) &&
-      !theirFamilyGroup
+      !isInputDisabled &&
+      theirFamilyGroup &&
+      relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover &&
+      ministryBlocks?.every(
+        (item) =>
+          item.churchId && item.ministryId && item.ministryType && item.ministryRoles.length > 0
+      ) &&
+      Object.values(discipleUpdateForm.formState.errors).length === 0
     ) {
-      setIsSubmitButtonDisabled(true);
-      setIsMessageErrorDisabled(true);
+      setIsSubmitButtonDisabled(false);
+      setIsMessageErrorDisabled(false);
     }
 
-    if (roles.includes(MemberRole.Preacher) && !theirSupervisor) {
-      setIsSubmitButtonDisabled(true);
-      setIsMessageErrorDisabled(true);
+    if (
+      roles.includes(MemberRole.Disciple) &&
+      !roles.includes(MemberRole.Preacher) &&
+      theirPastor &&
+      !isInputDisabled &&
+      relationType === RelationType.OnlyRelatedMinistries &&
+      ministryBlocks?.every(
+        (item) =>
+          item.churchId && item.ministryId && item.ministryType && item.ministryRoles.length > 0
+      ) &&
+      Object.values(discipleUpdateForm.formState.errors).length === 0
+    ) {
+      setIsSubmitButtonDisabled(false);
+      setIsMessageErrorDisabled(false);
     }
 
     if (
@@ -134,6 +237,8 @@ export const useDiscipleUpdateSubmitButtonLogic = ({
     theirFamilyGroup,
     theirSupervisor,
     roles,
+    relationType,
+    ministryBlocks,
     recordStatus,
   ]);
 };

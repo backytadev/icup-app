@@ -3,6 +3,7 @@ import {
   type Member,
   type Copastor,
   type Preacher,
+  type Ministry,
   type Disciple,
   type CreatedBy,
   type UpdatedBy,
@@ -26,6 +27,7 @@ export interface PastorResponse {
   preachers?: Preacher[];
   familyGroups?: FamilyGroup[];
   disciples?: Disciple[];
+  ministries?: Ministry[];
   recordStatus: string;
   theirChurch?: TheirChurch | null;
 }

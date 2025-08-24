@@ -18,6 +18,7 @@ export interface DiscipleResponse {
   createdBy?: CreatedBy;
   updatedAt?: Date;
   updatedBy?: UpdatedBy;
+  relationType: string;
   inactivationCategory?: string;
   inactivationReason?: string;
   recordStatus: string;

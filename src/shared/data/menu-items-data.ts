@@ -9,6 +9,7 @@ import {
   FcSportsMode,
   FcStatistics,
   FcBusinessman,
+  FcOrganization,
   FcReadingEbook,
   FcBusinesswoman,
   FcPodiumWithSpeaker,
@@ -38,6 +39,12 @@ export const menuItems: MenuItem[] = [
   { title: 'Discípulo', subTitle: 'Modulo Discípulo', href: '/disciples', Icon: FcSportsMode },
   { title: 'Ofrenda', subTitle: 'Modulo Ofrenda', href: '/offerings', Icon: FcLike },
   { title: 'Usuario', subTitle: 'Modulo Usuario', href: '/users', Icon: FcReadingEbook },
+  {
+    title: 'Ministerio',
+    subTitle: 'Módulo Ministerio',
+    href: '/ministries',
+    Icon: FcOrganization,
+  },
   {
     title: 'Métricas y Estadísticas',
     subTitle: 'Gráficos y estadísticas',

@@ -6,6 +6,8 @@ import { useEffect } from 'react';
 import { type UseFormReturn } from 'react-hook-form';
 
 import { MemberRole } from '@/shared/enums/member-role.enum';
+import { RelationType } from '@/shared/enums/relation-type.enum';
+import { MinistryMemberBlock } from '@/shared/interfaces/ministry-member-block.interface';
 import { type DiscipleFormData } from '@/modules/disciple/interfaces/disciple-form-data.interface';
 
 interface Options {
@@ -13,15 +15,20 @@ interface Options {
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMessageErrorDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   isInputDisabled: boolean;
+  setMinistryBlocks: React.Dispatch<React.SetStateAction<MinistryMemberBlock[]>>;
+  ministryBlocks: MinistryMemberBlock[];
 }
 
 export const useDiscipleCreationSubmitButtonLogic = ({
   isInputDisabled,
+  ministryBlocks,
+  setMinistryBlocks,
   discipleCreationForm,
   setIsSubmitButtonDisabled,
   setIsMessageErrorDisabled,
 }: Options): void => {
   //* Watchers
+  const relationType = discipleCreationForm.watch('relationType');
   const firstNames = discipleCreationForm.watch('firstNames');
   const lastNames = discipleCreationForm.watch('lastNames');
   const gender = discipleCreationForm.watch('gender');
@@ -41,9 +48,11 @@ export const useDiscipleCreationSubmitButtonLogic = ({
   const roles = discipleCreationForm.watch('roles');
   const referenceAddress = discipleCreationForm.watch('referenceAddress');
   const theirFamilyGroup = discipleCreationForm.watch('theirFamilyGroup');
+  const theirPastor = discipleCreationForm.watch('theirPastor');
 
   //* Effects
   useEffect(() => {
+    //? Enabled
     if (
       discipleCreationForm.formState.errors &&
       Object.values(discipleCreationForm.formState.errors).length > 0
@@ -53,21 +62,112 @@ export const useDiscipleCreationSubmitButtonLogic = ({
     }
 
     if (
-      theirFamilyGroup &&
+      !theirFamilyGroup &&
+      relationType === RelationType.OnlyRelatedHierarchicalCover &&
       roles.includes(MemberRole.Disciple) &&
       Object.values(discipleCreationForm.formState.errors).length === 0 &&
       !isInputDisabled
+    ) {
+      setIsSubmitButtonDisabled(true);
+      setIsMessageErrorDisabled(true);
+    }
+
+    if (
+      roles.includes(MemberRole.Disciple) &&
+      !isInputDisabled &&
+      Object.values(discipleCreationForm.formState.errors).length === 0 &&
+      ((!theirPastor &&
+        relationType === RelationType.OnlyRelatedMinistries &&
+        ministryBlocks?.every(
+          (item) =>
+            item.churchId && item.ministryId && item.ministryType && item.ministryRoles.length > 0
+        )) ||
+        (theirPastor &&
+          relationType === RelationType.OnlyRelatedMinistries &&
+          ministryBlocks?.some(
+            (item) =>
+              !item.churchId ||
+              !item.ministryId ||
+              !item.ministryType ||
+              item.ministryRoles.length === 0
+          )))
+    ) {
+      setIsSubmitButtonDisabled(true);
+      setIsMessageErrorDisabled(true);
+    }
+
+    if (
+      roles.includes(MemberRole.Disciple) &&
+      Object.values(discipleCreationForm.formState.errors).length === 0 &&
+      !isInputDisabled &&
+      ((!theirFamilyGroup &&
+        relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover &&
+        ministryBlocks?.every(
+          (item) =>
+            item.churchId && item.ministryId && item.ministryType && item.ministryRoles.length > 0
+        )) ||
+        (theirFamilyGroup &&
+          relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover &&
+          ministryBlocks?.some(
+            (item) =>
+              !item.churchId ||
+              !item.ministryId ||
+              !item.ministryType ||
+              item.ministryRoles.length === 0
+          )))
+    ) {
+      setIsSubmitButtonDisabled(true);
+      setIsMessageErrorDisabled(true);
+    }
+
+    if (
+      theirFamilyGroup &&
+      !isInputDisabled &&
+      roles.includes(MemberRole.Disciple) &&
+      relationType === RelationType.OnlyRelatedHierarchicalCover &&
+      Object.values(discipleCreationForm.formState.errors).length === 0
     ) {
       setIsSubmitButtonDisabled(false);
       setIsMessageErrorDisabled(false);
     }
 
     if (
+      theirPastor &&
+      relationType === RelationType.OnlyRelatedMinistries &&
+      roles.includes(MemberRole.Disciple) &&
+      Object.values(discipleCreationForm.formState.errors).length === 0 &&
+      !isInputDisabled &&
+      ministryBlocks?.every(
+        (item) =>
+          item.churchId && item.ministryId && item.ministryType && item.ministryRoles.length > 0
+      )
+    ) {
+      setIsSubmitButtonDisabled(false);
+      setIsMessageErrorDisabled(false);
+    }
+
+    if (
+      theirFamilyGroup &&
+      relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover &&
+      roles.includes(MemberRole.Disciple) &&
+      Object.values(discipleCreationForm.formState.errors).length === 0 &&
+      !isInputDisabled &&
+      ministryBlocks?.every(
+        (item) =>
+          item.churchId && item.ministryId && item.ministryType && item.ministryRoles.length > 0
+      )
+    ) {
+      setIsSubmitButtonDisabled(false);
+      setIsMessageErrorDisabled(false);
+    }
+
+    if (
+      !relationType ||
       !firstNames ||
       !lastNames ||
       !gender ||
       !birthDate ||
-      !conversionDate ||
+      // !conversionDate ||
       !maritalStatus ||
       !originCountry ||
       !numberChildren ||
@@ -79,7 +179,6 @@ export const useDiscipleCreationSubmitButtonLogic = ({
       !residenceUrbanSector ||
       !residenceAddress ||
       !referenceAddress ||
-      !theirFamilyGroup ||
       roles.length === 0
     ) {
       setIsSubmitButtonDisabled(true);
@@ -106,6 +205,9 @@ export const useDiscipleCreationSubmitButtonLogic = ({
     referenceAddress,
     theirFamilyGroup,
     roles,
+    relationType,
+    ministryBlocks,
+    setMinistryBlocks,
   ]);
 
   useEffect(() => {
