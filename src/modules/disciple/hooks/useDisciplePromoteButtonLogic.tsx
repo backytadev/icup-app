@@ -2,25 +2,70 @@ import { useEffect, useState } from 'react';
 
 import { type UseFormReturn } from 'react-hook-form';
 
-import { RelationType } from '@/shared/enums/relation-type.enum';
-import { DiscipleFieldNames } from '@/modules/disciple/enums/disciple-field-names.enum';
 import { MinistryMemberBlock } from '@/shared/interfaces/ministry-member-block.interface';
+import { DiscipleResponse } from '@/modules/disciple/interfaces/disciple-response.interface';
 import { type DiscipleFormData } from '@/modules/disciple/interfaces/disciple-form-data.interface';
+
+import { getSimpleMinistries } from '@/modules/ministry/services/ministry.service';
+import { DiscipleFieldNames } from '@/modules/disciple/enums/disciple-field-names.enum';
+
+import {
+  rolesEqualIgnoreOrder,
+  ministriesEqualIgnoreOrder,
+} from '@/shared/helpers/normalize-compare-ministries';
 
 interface Options {
   discipleUpdateForm: UseFormReturn<DiscipleFormData, any, DiscipleFormData | undefined>;
   setIsPromoteButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   ministryBlocks: MinistryMemberBlock[];
+  data: DiscipleResponse | undefined;
 }
 
 export const useDisciplePromoteButtonLogic = ({
   discipleUpdateForm,
   setIsPromoteButtonDisabled,
   ministryBlocks,
+  data,
 }: Options) => {
   //* States
   const [fixedValues, setFixedValues] = useState<DiscipleFormData[]>([]);
   const [lastValues, setLastValues] = useState<DiscipleFormData[]>([]);
+  const [fixedMinistryBlocks, setFixedMinistryBlocks] = useState<any[]>([]);
+
+  const fetchMinistriesByChurch = async (churchId: string) => {
+    try {
+      const respData = await getSimpleMinistries({ isSimpleQuery: true, churchId });
+      return respData ?? [];
+    } catch (error) {
+      return [];
+    }
+  };
+
+  //* Set fixed ministries blocks
+  useEffect(() => {
+    const loadMinistryBlocks = async () => {
+      if (data?.member?.ministries && data?.member?.ministries?.length > 0) {
+        const blocks = await Promise.all(
+          data.member.ministries.map(async (m) => {
+            const ministriesList = await fetchMinistriesByChurch(m.churchMinistryId ?? '');
+            return {
+              churchPopoverOpen: false,
+              ministryPopoverOpen: false,
+              churchId: m.churchMinistryId ?? '',
+              ministryId: m.id ?? '',
+              ministryRoles: m.ministryRoles,
+              ministries: ministriesList,
+              ministryType: m.ministryType,
+            };
+          })
+        );
+
+        setFixedMinistryBlocks(blocks);
+      }
+    };
+
+    loadMinistryBlocks();
+  }, []);
 
   //* Watchers
   const firstNames = discipleUpdateForm.watch('firstNames');
@@ -49,16 +94,86 @@ export const useDisciplePromoteButtonLogic = ({
   //? Effects
   //* Set the fixed values in a new state
   useEffect(() => {
-    const initialValues = discipleUpdateForm.getValues([...Object.values(DiscipleFieldNames)]);
-    setFixedValues(initialValues);
-  }, []);
+    const valuesFromForm = discipleUpdateForm.getValues([...Object.values(DiscipleFieldNames)]);
 
+    const formatMinistriesData = fixedMinistryBlocks.map((item) => ({
+      ministryType: item.ministryType,
+      ministryId: item.ministryId,
+      churchId: item.churchId,
+      ministryRoles: item.ministryRoles,
+    }));
+
+    const initialValues: DiscipleFormData = {
+      firstNames: valuesFromForm[0],
+      lastNames: valuesFromForm[1],
+      gender: valuesFromForm[2],
+      originCountry: valuesFromForm[3],
+      birthDate: valuesFromForm[4],
+      maritalStatus: valuesFromForm[5],
+      numberChildren: valuesFromForm[6],
+      conversionDate: valuesFromForm[7],
+      email: valuesFromForm[8],
+      phoneNumber: valuesFromForm[9],
+      residenceCountry: valuesFromForm[10],
+      residenceDepartment: valuesFromForm[11],
+      residenceProvince: valuesFromForm[12],
+      residenceDistrict: valuesFromForm[13],
+      residenceUrbanSector: valuesFromForm[14],
+      residenceAddress: valuesFromForm[15],
+      referenceAddress: valuesFromForm[16],
+      roles: valuesFromForm[17],
+      recordStatus: valuesFromForm[18],
+      relationType: valuesFromForm[19],
+      theirPastor: valuesFromForm[20],
+      theirFamilyGroup: valuesFromForm[21],
+      theirSupervisor: valuesFromForm[22],
+      theirMinistries: formatMinistriesData,
+    };
+
+    setFixedValues(Object.values(initialValues) as DiscipleFormData[]);
+  }, [fixedMinistryBlocks]);
+
+  //* Compares the last values with the current values to enable or disable the promote button
   useEffect(() => {
     //* Assigns the previous values and the current values
     const previousValues: DiscipleFormData[] = lastValues;
-    const currentValues: DiscipleFormData[] = discipleUpdateForm.getValues([
-      ...Object.values(DiscipleFieldNames),
-    ]);
+    let currentValues: DiscipleFormData[] | any[] = [];
+
+    currentValues = discipleUpdateForm.getValues([...Object.values(DiscipleFieldNames)]);
+
+    const formatMinistriesData = ministryBlocks?.map((item) => ({
+      ministryType: item.ministryType,
+      ministryId: item.ministryId,
+      churchId: item.churchId,
+      ministryRoles: item.ministryRoles,
+    }));
+
+    currentValues = [
+      currentValues[0],
+      currentValues[1],
+      currentValues[2],
+      currentValues[3],
+      currentValues[4],
+      currentValues[5],
+      currentValues[6],
+      currentValues[7],
+      currentValues[8],
+      currentValues[9],
+      currentValues[10],
+      currentValues[11],
+      currentValues[12],
+      currentValues[13],
+      currentValues[14],
+      currentValues[15],
+      currentValues[16],
+      currentValues[17],
+      currentValues[18],
+      currentValues[19],
+      currentValues[20],
+      currentValues[21],
+      currentValues[22],
+      formatMinistriesData,
+    ];
 
     //* Validates and compares if it has the same initial information, sorts and activates the button
     if (
@@ -68,46 +183,35 @@ export const useDisciplePromoteButtonLogic = ({
       setIsPromoteButtonDisabled(true);
     }
 
-    //* Validates and compares if it has the same initial information, sorts and activates the button
-    const arrayEqualsIgnoreOrder = (
-      fixed: DiscipleFormData[],
-      current: DiscipleFormData[]
-    ): boolean => {
-      const sortedA = Array.isArray(fixed[17]) && fixed[17]?.sort();
-      const sortedB = Array.isArray(current[17]) && current[17]?.sort();
-
-      return JSON.stringify(sortedA) === JSON.stringify(sortedB);
-    };
-
+    //* Validates and compares if it has the same initial information, sorts and activates the button (roles)
     if (
-      arrayEqualsIgnoreOrder(fixedValues, currentValues) &&
+      rolesEqualIgnoreOrder(fixedValues, currentValues) &&
       JSON.stringify(fixedValues) === JSON.stringify(currentValues) &&
       recordStatus === 'active'
     ) {
       setIsPromoteButtonDisabled(false);
     }
 
-    const isValidBlocks =
-      ministryBlocks?.length > 0 &&
-      ministryBlocks.every(
-        (item) =>
-          item.churchId && item.ministryId && item.ministryType && item.ministryRoles.length > 0
-      );
+    //* Validate if same array data ministries
+    const fixedMinistries = fixedValues[23] ?? [];
+    const currentMinistries = currentValues[23];
+
+    const ministriesEqual = ministriesEqualIgnoreOrder(fixedMinistries as any, currentMinistries);
 
     if (
-      relationType === RelationType.OnlyRelatedMinistries &&
-      ((!theirPastor && !isValidBlocks) ||
-        (!theirPastor && isValidBlocks) ||
-        (theirPastor && !isValidBlocks))
+      ministriesEqual &&
+      JSON.stringify({ ...fixedValues.slice(0, -1) }) ===
+        JSON.stringify({ ...currentValues.slice(0, -1) }) &&
+      recordStatus === 'active'
     ) {
-      setIsPromoteButtonDisabled(true);
+      setIsPromoteButtonDisabled(false);
     }
 
     if (
-      relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover &&
-      ((!theirFamilyGroup && !isValidBlocks) ||
-        (!theirFamilyGroup && isValidBlocks) ||
-        (theirFamilyGroup && !isValidBlocks))
+      ministriesEqual &&
+      JSON.stringify({ ...fixedValues.slice(0, -1) }) !==
+        JSON.stringify({ ...currentValues.slice(0, -1) }) &&
+      recordStatus === 'active'
     ) {
       setIsPromoteButtonDisabled(true);
     }

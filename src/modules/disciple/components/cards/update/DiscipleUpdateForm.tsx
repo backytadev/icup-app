@@ -225,9 +225,10 @@ export const DiscipleUpdateForm = ({
   });
 
   useDisciplePromoteButtonLogic({
+    data,
+    ministryBlocks,
     discipleUpdateForm: form,
     setIsPromoteButtonDisabled,
-    ministryBlocks,
   });
 
   useDiscipleUpdateSubmitButtonLogic({

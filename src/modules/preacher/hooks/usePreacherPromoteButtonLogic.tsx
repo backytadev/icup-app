@@ -5,6 +5,8 @@ import { type UseFormReturn } from 'react-hook-form';
 import { PreacherFieldNames } from '@/modules/preacher/enums/preacher-field-names.enum';
 import { type PreacherFormData } from '@/modules/preacher/interfaces/preacher-form-data.interface';
 
+import { rolesEqualIgnoreOrder } from '@/shared/helpers/normalize-compare-ministries';
+
 interface Options {
   preacherUpdateForm: UseFormReturn<PreacherFormData, any, PreacherFormData | undefined>;
   setIsPromoteButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
@@ -64,18 +66,8 @@ export const usePreacherPromoteButtonLogic = ({
     }
 
     //* Valida y compara si tiene la misma información inicial, ordena y activa el botón
-    const arrayEqualsIgnoreOrder = (
-      fixed: PreacherFormData[],
-      current: PreacherFormData[]
-    ): boolean => {
-      const sortedA = Array.isArray(fixed['17']) && fixed[17]?.sort();
-      const sortedB = Array.isArray(current[17]) && current[17]?.sort();
-
-      return JSON.stringify(sortedA) === JSON.stringify(sortedB);
-    };
-
     if (
-      arrayEqualsIgnoreOrder(fixedValues, currentValues) &&
+      rolesEqualIgnoreOrder(fixedValues, currentValues) &&
       JSON.stringify(fixedValues) === JSON.stringify(currentValues) &&
       recordStatus === 'active'
     ) {

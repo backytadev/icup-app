@@ -4,6 +4,8 @@ import { type UseFormReturn } from 'react-hook-form';
 import { SupervisorFieldNames } from '@/modules/supervisor/enums/supervisor-field-names.enum';
 import { type SupervisorFormData } from '@/modules/supervisor/interfaces/supervisor-form-data.interface';
 
+import { rolesEqualIgnoreOrder } from '@/shared/helpers/normalize-compare-ministries';
+
 interface Options {
   supervisorUpdateForm: UseFormReturn<SupervisorFormData, any, SupervisorFormData | undefined>;
   setIsPromoteButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
@@ -70,18 +72,8 @@ export const useSupervisorPromoteButtonLogic = ({
     }
 
     //* Validates and compares if it has the same initial information, sorts and activates the button
-    const arrayEqualsIgnoreOrder = (
-      fixed: SupervisorFormData[],
-      current: SupervisorFormData[]
-    ): boolean => {
-      const sortedA = Array.isArray(fixed[17]) && fixed[17]?.sort();
-      const sortedB = Array.isArray(current[17]) && current[17]?.sort();
-
-      return JSON.stringify(sortedA) === JSON.stringify(sortedB);
-    };
-
     if (
-      arrayEqualsIgnoreOrder(fixedValues, currentValues) &&
+      rolesEqualIgnoreOrder(fixedValues, currentValues) &&
       JSON.stringify(fixedValues) === JSON.stringify(currentValues) &&
       recordStatus === 'active'
     ) {
