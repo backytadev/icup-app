@@ -5,6 +5,8 @@ import { type UseFormReturn } from 'react-hook-form';
 import { CopastorFieldNames } from '@/modules/copastor/enums/copastor-field-names.enum';
 import { type CopastorFormData } from '@/modules/copastor/interfaces/copastor-form-data.interface';
 
+import { rolesEqualIgnoreOrder } from '@/shared/helpers/normalize-compare-ministries';
+
 interface Options {
   copastorUpdateForm: UseFormReturn<CopastorFormData, any, CopastorFormData | undefined>;
   setIsPromoteButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
@@ -64,18 +66,8 @@ export const useCopastorPromoteButtonLogic = ({
     }
 
     //* Valida y compara si tiene la misma información inicial, ordena y activa el botón
-    const arrayEqualsIgnoreOrder = (
-      fixed: CopastorFormData[],
-      current: CopastorFormData[]
-    ): boolean => {
-      const sortedA = Array.isArray(fixed[17]) && fixed[17]?.sort();
-      const sortedB = Array.isArray(current[17]) && current[17]?.sort();
-
-      return JSON.stringify(sortedA) === JSON.stringify(sortedB);
-    };
-
     if (
-      arrayEqualsIgnoreOrder(fixedValues, currentValues) &&
+      rolesEqualIgnoreOrder(fixedValues, currentValues) &&
       JSON.stringify(fixedValues) === JSON.stringify(currentValues) &&
       recordStatus === 'active'
     ) {
