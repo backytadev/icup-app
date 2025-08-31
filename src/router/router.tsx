@@ -3,7 +3,7 @@
 
 import { lazy, Suspense } from 'react';
 
-import { createBrowserRouter } from 'react-router-dom';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
 
 import { Root } from '@/Root';
 
@@ -88,6 +88,10 @@ export const router = createBrowserRouter([
     path: '/',
     element: <Root />,
     children: [
+      {
+        index: true,
+        element: <Navigate to='/auth/login' replace />,
+      },
       {
         path: '/',
         element: (
@@ -352,6 +356,7 @@ export const router = createBrowserRouter([
       { path: 'auth', element: <AuthLayout />, children: AuthChildrenRoutes },
     ],
   },
+
   {
     path: '*',
     element: (
