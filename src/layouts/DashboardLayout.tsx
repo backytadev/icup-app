@@ -15,16 +15,12 @@ export const DashboardLayout = (): JSX.Element | null => {
   const authStatus = useAuthStore((state) => state.status);
 
   if (authStatus === 'pending') {
-    console.log('xddd');
     return <LoadingSpinner />;
   }
 
   if (authStatus === 'unauthorized') {
-    console.log('xd2333');
     return <Navigate to='/auth/login' replace />;
   }
-
-  console.log(authStatus);
 
   if (authStatus === 'authorized') {
     return (

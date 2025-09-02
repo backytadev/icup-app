@@ -167,7 +167,6 @@ export const useDiscipleCreationSubmitButtonLogic = ({
       !lastNames ||
       !gender ||
       !birthDate ||
-      // !conversionDate ||
       !maritalStatus ||
       !originCountry ||
       !numberChildren ||

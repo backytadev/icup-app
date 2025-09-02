@@ -40,7 +40,7 @@ import {
   SearchTypesDiscipleshipMinistry,
   SearchTypesIntercessionMinistry,
 } from '@/modules/ministry/enums/ministry-member-role.enum';
-import { RelationType, RelationTypeNames } from '@/shared/enums/relation-type.enum';
+import { RelationType, RelationTypeModuleNames } from '@/shared/enums/relation-type.enum';
 import { MinistryType, MinistryTypeNames } from '@/modules/ministry/enums/ministry-type.enum';
 
 import { MinistryMemberBlock } from '@/shared/interfaces/ministry-member-block.interface';
@@ -990,11 +990,13 @@ export const DiscipleCreatePage = (): JSX.Element => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {Object.entries(RelationTypeNames).map(([key, value]) => (
-                            <SelectItem className={`text-[14px]`} key={key} value={key}>
-                              {value}
-                            </SelectItem>
-                          ))}
+                          {Object.entries(RelationTypeModuleNames['disciple']).map(
+                            ([key, value]) => (
+                              <SelectItem className={`text-[14px]`} key={key} value={key}>
+                                {value}
+                              </SelectItem>
+                            )
+                          )}
                         </SelectContent>
                       </Select>
                       <FormMessage className='text-[13px]' />

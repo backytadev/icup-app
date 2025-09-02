@@ -36,7 +36,7 @@ import {
 } from '@/shared/components/ui/card';
 import { Label } from '@/shared/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
-import { RelationType, RelationTypeNames } from '@/shared/enums/relation-type.enum';
+import { RelationType, RelationTypeModuleNames } from '@/shared/enums/relation-type.enum';
 
 interface DiscipleTabsCardProps {
   id: string;
@@ -307,7 +307,7 @@ export const DiscipleTabsCard = ({ data, id }: DiscipleTabsCardProps): JSX.Eleme
               <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
                 <li>
                   {data?.relationType
-                    ? `${RelationTypeNames[data?.relationType as RelationType]}`
+                    ? `${RelationTypeModuleNames['disciple'][data?.relationType as RelationType]}`
                     : 'Este discípulo no tiene una iglesia asignada.'}
                 </li>
               </CardDescription>
