@@ -11,6 +11,7 @@ export const AuthLayout = (): JSX.Element => {
   const authStatus = useAuthStore((state) => state.status);
 
   if (authStatus === 'authorized') {
+    console.log('xsd11212');
     return <Navigate to='/dashboard' />;
   }
 

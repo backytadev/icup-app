@@ -10,31 +10,37 @@ import { SideMenu } from '@/shared/components/side-menu/SideMenu';
 import { ToggleLayout } from '@/shared/components/toggle-theme/ToggleLayout';
 import { LoadingSpinner } from '@/shared/components/spinner/LoadingSpinner';
 
-export const DashboardLayout = (): JSX.Element => {
+export const DashboardLayout = (): JSX.Element | null => {
   //* States
   const authStatus = useAuthStore((state) => state.status);
 
   if (authStatus === 'pending') {
+    console.log('xddd');
     return <LoadingSpinner />;
   }
 
   if (authStatus === 'unauthorized') {
-    return <Navigate to='/auth/login' />;
+    console.log('xd2333');
+    return <Navigate to='/auth/login' replace />;
   }
 
-  return (
-    <div className='light:bg-slate-500 w-full h-auto antialiased light:text-slate-900 selection:bg-blue-900 selection:text-white'>
-      <div className='flex flex-col md:flex-row md:relative md:w-full md:min-h-full relative'>
-        <SideMenu />
+  console.log(authStatus);
 
-        <div className='w-full px-4 py-0 relative'>
-          <ToggleLayout />
-
-          <Outlet />
+  if (authStatus === 'authorized') {
+    return (
+      <div className='light:bg-slate-500 w-full h-auto antialiased light:text-slate-900 selection:bg-blue-900 selection:text-white'>
+        <div className='flex flex-col md:flex-row md:relative md:w-full md:min-h-full relative'>
+          <SideMenu />
+          <div className='w-full px-4 py-0 relative'>
+            <ToggleLayout />
+            <Outlet />
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  }
+
+  return null;
 };
 
 export default DashboardLayout;
