@@ -73,9 +73,10 @@ export const preacherFormSchema = z
         }
       ),
 
-    conversionDate: z.date({
-      required_error: 'La fecha de conversión es requerida.',
-    }),
+    conversionDate: z.preprocess(
+      (value) => (value === '' || value === null ? undefined : value),
+      z.date().optional()
+    ),
 
     //* Contact Info and status
     email: z.preprocess(

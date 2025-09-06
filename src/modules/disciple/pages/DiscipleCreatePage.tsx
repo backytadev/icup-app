@@ -309,7 +309,6 @@ export const DiscipleCreatePage = (): JSX.Element => {
 
   //* Form handler
   const handleSubmit = (formData: z.infer<typeof discipleFormSchema>): void => {
-    console.log(formData);
     const ministriesData = ministryBlocks.map((ministryData) => {
       return {
         ministryId: ministryData.ministryId,

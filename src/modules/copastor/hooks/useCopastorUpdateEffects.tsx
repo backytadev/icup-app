@@ -36,7 +36,9 @@ export const useCopastorUpdateEffects = ({
     copastorUpdateForm.setValue('numberChildren', String(data?.member?.numberChildren) ?? '0');
     copastorUpdateForm.setValue(
       'conversionDate',
-      new Date(String(data?.member?.conversionDate).replace(/-/g, '/'))
+      data?.member?.conversionDate && String(data.member.conversionDate) !== '1969-12-31'
+        ? new Date(String(data.member.conversionDate).replace(/-/g, '/'))
+        : undefined
     );
     copastorUpdateForm.setValue('email', data?.member?.email ?? '');
     copastorUpdateForm.setValue('phoneNumber', data?.member?.phoneNumber ?? '');

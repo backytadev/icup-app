@@ -107,7 +107,6 @@ export const usePreacherUpdateSubmitButtonLogic = ({
       !lastNames ||
       !gender ||
       !birthDate ||
-      !conversionDate ||
       !maritalStatus ||
       !originCountry ||
       !numberChildren ||

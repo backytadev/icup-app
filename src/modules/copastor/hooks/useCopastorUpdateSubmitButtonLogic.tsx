@@ -92,7 +92,6 @@ export const useCopastorUpdateSubmitButtonLogic = ({
       !lastNames ||
       !gender ||
       !birthDate ||
-      !conversionDate ||
       !maritalStatus ||
       !originCountry ||
       !numberChildren ||

@@ -67,7 +67,6 @@ export const usePastorCreationSubmitButtonLogic = ({
       !lastNames ||
       !gender ||
       !birthDate ||
-      !conversionDate ||
       !maritalStatus ||
       !originCountry ||
       !numberChildren ||

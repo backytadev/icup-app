@@ -36,7 +36,9 @@ export const usePastorUpdateEffects = ({
     pastorUpdateForm.setValue('numberChildren', String(data?.member?.numberChildren) ?? '0');
     pastorUpdateForm.setValue(
       'conversionDate',
-      new Date(String(data?.member?.conversionDate).replace(/-/g, '/'))
+      data?.member?.conversionDate && String(data.member.conversionDate) !== '1969-12-31'
+        ? new Date(String(data.member.conversionDate).replace(/-/g, '/'))
+        : undefined
     );
     pastorUpdateForm.setValue('email', data?.member?.email ?? '');
     pastorUpdateForm.setValue('phoneNumber', data?.member?.phoneNumber ?? '');

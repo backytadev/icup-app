@@ -470,7 +470,12 @@ export const PreacherUpdateForm = ({
                       name='conversionDate'
                       render={({ field }) => (
                         <FormItem className='mt-2'>
-                          <FormLabel className='text-[14px]'>Fecha de conversión</FormLabel>
+                          <FormLabel className='text-[14px]'>
+                            Fecha de conversión
+                            <span className='ml-3 inline-block bg-gray-200 text-slate-600 border text-[10px] font-semibold uppercase px-2 py-[1px] rounded-full mr-1'>
+                              Opcional
+                            </span>
+                          </FormLabel>
                           <Popover
                             open={isInputConvertionDateOpen}
                             onOpenChange={setIsInputConvertionDateOpen}

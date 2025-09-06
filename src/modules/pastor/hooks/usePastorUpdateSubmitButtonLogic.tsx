@@ -69,7 +69,6 @@ export const usePastorUpdateSubmitButtonLogic = ({
       !lastNames ||
       !gender ||
       !birthDate ||
-      !conversionDate ||
       !maritalStatus ||
       !originCountry ||
       !numberChildren ||

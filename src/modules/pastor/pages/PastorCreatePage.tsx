@@ -280,7 +280,12 @@ export const PastorCreatePage = (): JSX.Element => {
                 name='birthDate'
                 render={({ field }) => (
                   <FormItem className='mt-3'>
-                    <FormLabel className='text-[14px] font-medium'>Fecha de nacimiento</FormLabel>
+                    <FormLabel className='text-[14px] font-medium'>
+                      Fecha de nacimiento
+                      <span className='ml-3 inline-block bg-gray-200 text-slate-600 border text-[10px] font-semibold uppercase px-2 py-[1px] rounded-full mr-1'>
+                        Opcional
+                      </span>
+                    </FormLabel>
                     <Popover open={isInputBirthDateOpen} onOpenChange={setIsInputBirthDateOpen}>
                       <PopoverTrigger asChild>
                         <FormControl className='text-[14px] md:text-[14px]'>
@@ -378,7 +383,12 @@ export const PastorCreatePage = (): JSX.Element => {
                 name='conversionDate'
                 render={({ field }) => (
                   <FormItem className='mt-3'>
-                    <FormLabel className='text-[14px] font-medium'>Fecha de conversión</FormLabel>
+                    <FormLabel className='text-[14px] font-medium'>
+                      Fecha de conversión
+                      <span className='ml-3 inline-block bg-gray-200 text-slate-600 border text-[10px] font-semibold uppercase px-2 py-[1px] rounded-full mr-1'>
+                        Opcional
+                      </span>
+                    </FormLabel>
                     <Popover
                       open={isInputConvertionDateOpen}
                       onOpenChange={setIsInputConvertionDateOpen}

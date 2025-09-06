@@ -8,7 +8,7 @@ export interface SupervisorFormData {
   birthDate: Date;
   maritalStatus: string;
   numberChildren: string;
-  conversionDate: Date;
+  conversionDate?: Date;
   email?: string | undefined;
   phoneNumber?: string | undefined;
   residenceCountry: string;

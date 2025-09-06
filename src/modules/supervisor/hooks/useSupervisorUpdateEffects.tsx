@@ -42,7 +42,9 @@ export const useSupervisorUpdateEffects = ({
     supervisorUpdateForm.setValue('numberChildren', String(data?.member?.numberChildren) ?? '0');
     supervisorUpdateForm.setValue(
       'conversionDate',
-      new Date(String(data?.member?.conversionDate).replace(/-/g, '/'))
+      data?.member?.conversionDate && String(data.member.conversionDate) !== '1969-12-31'
+        ? new Date(String(data.member.conversionDate).replace(/-/g, '/'))
+        : undefined
     );
     supervisorUpdateForm.setValue('email', data?.member?.email ?? '');
     supervisorUpdateForm.setValue('phoneNumber', data?.member?.phoneNumber ?? '');

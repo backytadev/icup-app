@@ -79,6 +79,12 @@ export const useDiscipleUpdateEffects = ({
       'conversionDate',
       new Date(String(data?.member?.conversionDate).replace(/-/g, '/'))
     );
+    discipleUpdateForm.setValue(
+      'conversionDate',
+      data?.member?.conversionDate && String(data.member.conversionDate) !== '1969-12-31'
+        ? new Date(String(data.member.conversionDate).replace(/-/g, '/'))
+        : undefined
+    );
     discipleUpdateForm.setValue('email', data?.member?.email ?? '');
     discipleUpdateForm.setValue('phoneNumber', data?.member?.phoneNumber ?? '');
     discipleUpdateForm.setValue('residenceCountry', data?.member?.residenceCountry ?? '');
