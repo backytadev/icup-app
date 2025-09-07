@@ -17,21 +17,21 @@ export const RelationTypeModuleNames: Record<ModuleName, Record<RelationType, st
   disciple: {
     [RelationType.OnlyRelatedHierarchicalCover]: 'Solo con grupo familiar',
     [RelationType.OnlyRelatedMinistries]: 'Solo con ministerios',
-    [RelationType.RelatedBothMinistriesAndHierarchicalCover]: 'Con ministerios y grupo familiar',
+    [RelationType.RelatedBothMinistriesAndHierarchicalCover]: 'Con grupo familiar y ministerios',
   },
   preacher: {
     [RelationType.OnlyRelatedHierarchicalCover]: 'Solo con supervisor',
     [RelationType.OnlyRelatedMinistries]: 'Solo con ministerios',
-    [RelationType.RelatedBothMinistriesAndHierarchicalCover]: 'Con ministerios y supervisor',
+    [RelationType.RelatedBothMinistriesAndHierarchicalCover]: 'Con supervisor y ministerios',
   },
   supervisor: {
     [RelationType.OnlyRelatedHierarchicalCover]: 'Solo con copastor',
     [RelationType.OnlyRelatedMinistries]: 'Solo con ministerios',
-    [RelationType.RelatedBothMinistriesAndHierarchicalCover]: 'Con ministerios y copastor',
+    [RelationType.RelatedBothMinistriesAndHierarchicalCover]: 'Con copastor y ministerios',
   },
   copastor: {
     [RelationType.OnlyRelatedHierarchicalCover]: 'Solo con pastor',
     [RelationType.OnlyRelatedMinistries]: 'Solo con ministerios',
-    [RelationType.RelatedBothMinistriesAndHierarchicalCover]: 'Con ministerios y pastor',
+    [RelationType.RelatedBothMinistriesAndHierarchicalCover]: 'Con pastor y ministerios',
   },
 };

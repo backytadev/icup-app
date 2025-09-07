@@ -19,5 +19,8 @@ export enum PreacherFieldNames {
   Roles = 'roles',
   RecordStatus = 'recordStatus',
   IsDirectRelationToPastor = 'isDirectRelationToPastor',
+  RelationType = 'relationType',
+  TheirPastorRelationDirect = 'theirPastorRelationDirect',
+  TheirPastorOnlyMinistries = 'theirPastorOnlyMinistries',
   TheirSupervisor = 'theirSupervisor',
 }

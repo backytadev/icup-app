@@ -98,6 +98,7 @@ const dataFictional: PreacherResponse[] = [
       ministries: [],
       roles: [],
     },
+    relationType: '',
     recordStatus: '',
     theirSupervisor: null,
     theirCopastor: null,

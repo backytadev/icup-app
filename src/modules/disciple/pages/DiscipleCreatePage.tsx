@@ -54,6 +54,7 @@ import { MaritalStatusNames } from '@/shared/enums/marital-status.enum';
 import { Department, DepartmentNames } from '@/shared/enums/department.enum';
 import { MemberRole, MemberRoleNames } from '@/shared/enums/member-role.enum';
 
+import { getFullNames, getInitialFullNames } from '@/shared/helpers/get-full-names.helper';
 import { getCodeAndNameFamilyGroup } from '@/shared/helpers/get-code-and-name-family-group.helper';
 import { validateDistrictsAllowedByModule } from '@/shared/helpers/validate-districts-allowed-by-module.helper';
 import { validateUrbanSectorsAllowedByDistrict } from '@/shared/helpers/validate-urban-sectors-allowed-by-district.helper';
@@ -88,7 +89,6 @@ import { Calendar } from '@/shared/components/ui/calendar';
 import { Checkbox } from '@/shared/components/ui/checkbox';
 import { Textarea } from '@/shared/components/ui/textarea';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
-import { getFullNames, getInitialFullNames } from '@/shared/helpers/get-full-names.helper';
 
 export const DiscipleCreatePage = (): JSX.Element => {
   //* States
@@ -101,7 +101,6 @@ export const DiscipleCreatePage = (): JSX.Element => {
   const [isSubmitButtonDisabled, setIsSubmitButtonDisabled] = useState<boolean>(true);
   const [isMessageErrorDisabled, setIsMessageErrorDisabled] = useState<boolean>(true);
 
-  // const [isRelatedMinistry, setIsRelatedMinistry] = useState<boolean>(false);
   const [ministryBlocks, setMinistryBlocks] = useState<MinistryMemberBlock[]>([
     {
       churchId: null,

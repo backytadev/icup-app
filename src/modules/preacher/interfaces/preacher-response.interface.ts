@@ -22,6 +22,7 @@ export interface PreacherResponse {
   inactivationReason?: string;
   disciples?: Disciple[];
   recordStatus?: string;
+  relationType: string;
   theirChurch?: TheirChurch | null;
   theirPastor?: TheirPastor | null;
   theirCopastor?: TheirCopastor | null;

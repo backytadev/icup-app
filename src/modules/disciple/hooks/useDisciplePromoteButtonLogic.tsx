@@ -6,6 +6,7 @@ import { MinistryMemberBlock } from '@/shared/interfaces/ministry-member-block.i
 import { DiscipleResponse } from '@/modules/disciple/interfaces/disciple-response.interface';
 import { type DiscipleFormData } from '@/modules/disciple/interfaces/disciple-form-data.interface';
 
+import { RelationType } from '@/shared/enums/relation-type.enum';
 import { getSimpleMinistries } from '@/modules/ministry/services/ministry.service';
 import { DiscipleFieldNames } from '@/modules/disciple/enums/disciple-field-names.enum';
 
@@ -214,6 +215,69 @@ export const useDisciplePromoteButtonLogic = ({
       recordStatus === 'active'
     ) {
       setIsPromoteButtonDisabled(true);
+    }
+
+    if (
+      !ministriesEqual &&
+      relationType === RelationType.OnlyRelatedHierarchicalCover &&
+      JSON.stringify({ ...fixedValues.slice(0, -1) }) !==
+        JSON.stringify({ ...currentValues.slice(0, -1) }) &&
+      recordStatus === 'active'
+    ) {
+      setIsPromoteButtonDisabled(true);
+    }
+
+    if (
+      !ministriesEqual &&
+      relationType === RelationType.OnlyRelatedHierarchicalCover &&
+      JSON.stringify({ ...fixedValues.slice(0, -1) }) ===
+        JSON.stringify({ ...currentValues.slice(0, -1) }) &&
+      recordStatus === 'active'
+    ) {
+      setIsPromoteButtonDisabled(false);
+    }
+
+    if (
+      data?.relationType !== RelationType.OnlyRelatedHierarchicalCover &&
+      JSON.stringify({ ...fixedValues.slice(0, -1) }) !==
+        JSON.stringify({ ...currentValues.slice(0, -1) }) &&
+      recordStatus === 'active'
+    ) {
+      setIsPromoteButtonDisabled(true);
+    }
+
+    if (
+      data?.relationType === RelationType.OnlyRelatedHierarchicalCover &&
+      JSON.stringify({ ...fixedValues.slice(0, -1) }) ===
+        JSON.stringify({ ...currentValues.slice(0, -1) }) &&
+      recordStatus === 'active'
+    ) {
+      setIsPromoteButtonDisabled(false);
+    }
+
+    if (
+      fixedMinistryBlocks.length !== formatMinistriesData.length &&
+      data?.relationType !== RelationType.OnlyRelatedHierarchicalCover &&
+      (JSON.stringify({ ...fixedValues.slice(0, -1) }) ===
+        JSON.stringify({ ...currentValues.slice(0, -1) }) ||
+        JSON.stringify({ ...fixedValues.slice(0, -1) }) ===
+          JSON.stringify({ ...currentValues.slice(0, -1) })) &&
+      recordStatus === 'active'
+    ) {
+      setIsPromoteButtonDisabled(true);
+    }
+
+    if (
+      fixedMinistryBlocks.length === formatMinistriesData.length &&
+      data?.relationType !== RelationType.OnlyRelatedHierarchicalCover &&
+      ministriesEqual &&
+      (JSON.stringify({ ...fixedValues.slice(0, -1) }) ===
+        JSON.stringify({ ...currentValues.slice(0, -1) }) ||
+        JSON.stringify({ ...fixedValues.slice(0, -1) }) ===
+          JSON.stringify({ ...currentValues.slice(0, -1) })) &&
+      recordStatus === 'active'
+    ) {
+      setIsPromoteButtonDisabled(false);
     }
 
     //* If there are no matches, set the current value to lastValues

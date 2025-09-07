@@ -18,7 +18,6 @@ interface Options {
   isInputDisabled: boolean;
   isRelationSelectDisabled: boolean;
   ministryBlocks: MinistryMemberBlock[];
-  setMinistryBlocks: React.Dispatch<React.SetStateAction<MinistryMemberBlock[]>>;
 }
 
 export const useDiscipleUpdateSubmitButtonLogic = ({
@@ -199,7 +198,6 @@ export const useDiscipleUpdateSubmitButtonLogic = ({
       !lastNames ||
       !gender ||
       !birthDate ||
-      !conversionDate ||
       !maritalStatus ||
       !originCountry ||
       !numberChildren ||

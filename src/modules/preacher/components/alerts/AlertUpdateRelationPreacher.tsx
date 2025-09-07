@@ -63,8 +63,8 @@ export const AlertUpdateRelationPreacher = ({
                   <span>Supervisor:</span>{' '}
                   <strong>
                     {getInitialFullNames({
-                      firstNames: data?.theirSupervisor?.firstNames ?? '',
-                      lastNames: data?.theirSupervisor?.lastNames ?? '',
+                      firstNames: data?.theirSupervisor?.firstNames ?? 'Sin',
+                      lastNames: data?.theirSupervisor?.lastNames ?? 'Supervisor',
                     })}
                   </strong>
                 </p>

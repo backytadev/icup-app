@@ -238,7 +238,6 @@ export const DiscipleUpdateForm = ({
     setIsSubmitButtonDisabled,
     isRelationSelectDisabled,
     ministryBlocks,
-    setMinistryBlocks,
   });
 
   const discipleUpdateMutation = useDiscipleUpdateMutation({

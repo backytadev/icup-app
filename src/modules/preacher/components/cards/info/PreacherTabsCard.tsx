@@ -17,6 +17,7 @@ import {
 } from '@/shared/enums/member-inactivation-category.enum';
 import { RecordStatus } from '@/shared/enums/record-status.enum';
 import { type Gender, GenderNames } from '@/shared/enums/gender.enum';
+import { MinistryType, MinistryTypeNames } from '@/modules/ministry/enums/ministry-type.enum';
 import { type MemberRole, MemberRoleNames } from '@/shared/enums/member-role.enum';
 
 import {
@@ -35,6 +36,8 @@ import {
 } from '@/shared/components/ui/card';
 import { Label } from '@/shared/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
+import { MinistryMemberRole } from '@/modules/ministry/enums/ministry-member-role.enum';
+import { RelationType, RelationTypeModuleNames } from '@/shared/enums/relation-type.enum';
 
 interface PreacherTabsCardProps {
   id: string;
@@ -67,6 +70,14 @@ export const PreacherTabsCard = ({ data, id }: PreacherTabsCardProps): JSX.Eleme
       window.history.replaceState({}, '', originalUrl);
     };
   }, [id]);
+
+  const allMinistryRoles = data?.member.ministries.flatMap((item) => item.ministryRoles);
+  const allMinistryTypes = data?.member.ministries.flatMap(
+    (item) =>
+      `${MinistryTypeNames[item.ministryType as MinistryType]} ~ (${item.churchMinistryName})`
+  );
+
+  console.log(data);
 
   return (
     <Tabs defaultValue='general-info' className='md:-mt-8 w-[650px] md:w-[630px]'>
@@ -310,6 +321,51 @@ export const PreacherTabsCard = ({ data, id }: PreacherTabsCardProps): JSX.Eleme
 
           <CardContent className='grid grid-cols-2 pl-[1.5rem] pr-[1rem] gap-x-6 gap-y-4 md:gap-x-10 md:gap-y-7 md:pl-[5.5rem] md:pr-[2.5rem]'>
             <div className='space-y-1'>
+              <Label className='text-[14px] md:text-[15px]'>Tipo de Relación</Label>
+              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
+                <li>
+                  {data?.relationType
+                    ? `${RelationTypeModuleNames['preacher'][data?.relationType as RelationType]}`
+                    : 'Este discípulo no tiene una iglesia asignada.'}
+                </li>
+              </CardDescription>
+            </div>
+
+            <div className='space-y-1'>
+              <Label className='text-[14px] md:text-[15px]'>Ministerios</Label>
+              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
+                <ul
+                  className={cn(
+                    'list-disc pl-5 text-slate-500 dark:text-slate-400',
+                    data?.member.ministries.length === 0 && 'pl-0'
+                  )}
+                >
+                  {data?.member.ministries && data?.member.ministries.length > 0
+                    ? allMinistryTypes?.map((item) => <li key={item}>{item}</li>)
+                    : 'Este discípulo no esta relacionado a ningún ministerio.'}
+                </ul>
+              </CardDescription>
+            </div>
+
+            <div className='space-y-1'>
+              <Label className='text-[14px] md:text-[15px]'>Roles Ministeriales</Label>
+              <div className='px-2 text-[14px] md:text-[14.5px]'>
+                <ul className='list-disc pl-5 text-slate-500 dark:text-slate-400'>
+                  {allMinistryRoles &&
+                  allMinistryRoles.length > 0 &&
+                  allMinistryRoles.filter((rol) => MemberRoleNames[rol as MinistryMemberRole])
+                    .length > 0
+                    ? allMinistryRoles
+                        .filter((rol) => MemberRoleNames[rol as MinistryMemberRole])
+                        .map((rol) => (
+                          <li key={rol}>{MemberRoleNames[rol as MinistryMemberRole]}</li>
+                        ))
+                    : '-'}
+                </ul>
+              </div>
+            </div>
+
+            <div className='space-y-1'>
               <Label className='text-[14px] md:text-[15px]'>Roles de Membresía</Label>
               <div className='px-2 text-[14px] md:text-[14.5px]'>
                 <ul className='list-disc pl-5 text-slate-500 dark:text-slate-400'>
@@ -319,22 +375,6 @@ export const PreacherTabsCard = ({ data, id }: PreacherTabsCardProps): JSX.Eleme
                   ).length > 0
                     ? data?.member?.roles
                         .filter((rol) => !MemberRoleNames[rol as MemberRole]?.includes('Min.'))
-                        .map((rol) => <li key={rol}>{MemberRoleNames[rol as MemberRole]}</li>)
-                    : '-'}
-                </ul>
-              </div>
-            </div>
-
-            <div className='space-y-1'>
-              <Label className='text-[14px] md:text-[15px]'>Roles Ministeriales</Label>
-              <div className='px-2 text-[14px] md:text-[14.5px]'>
-                <ul className='list-disc pl-5 text-slate-500 dark:text-slate-400'>
-                  {data?.member?.roles &&
-                  data?.member?.roles.filter((rol) =>
-                    MemberRoleNames[rol as MemberRole]?.includes('Min.')
-                  ).length > 0
-                    ? data?.member?.roles
-                        .filter((rol) => MemberRoleNames[rol as MemberRole]?.includes('Min.'))
                         .map((rol) => <li key={rol}>{MemberRoleNames[rol as MemberRole]}</li>)
                     : '-'}
                 </ul>

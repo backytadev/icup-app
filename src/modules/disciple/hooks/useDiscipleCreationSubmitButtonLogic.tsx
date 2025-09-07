@@ -14,9 +14,9 @@ interface Options {
   discipleCreationForm: UseFormReturn<DiscipleFormData, any, DiscipleFormData | undefined>;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMessageErrorDisabled: React.Dispatch<React.SetStateAction<boolean>>;
-  isInputDisabled: boolean;
   setMinistryBlocks: React.Dispatch<React.SetStateAction<MinistryMemberBlock[]>>;
   ministryBlocks: MinistryMemberBlock[];
+  isInputDisabled: boolean;
 }
 
 export const useDiscipleCreationSubmitButtonLogic = ({
@@ -28,7 +28,6 @@ export const useDiscipleCreationSubmitButtonLogic = ({
   setIsMessageErrorDisabled,
 }: Options): void => {
   //* Watchers
-  const relationType = discipleCreationForm.watch('relationType');
   const firstNames = discipleCreationForm.watch('firstNames');
   const lastNames = discipleCreationForm.watch('lastNames');
   const gender = discipleCreationForm.watch('gender');
@@ -49,6 +48,7 @@ export const useDiscipleCreationSubmitButtonLogic = ({
   const referenceAddress = discipleCreationForm.watch('referenceAddress');
   const theirFamilyGroup = discipleCreationForm.watch('theirFamilyGroup');
   const theirPastor = discipleCreationForm.watch('theirPastor');
+  const relationType = discipleCreationForm.watch('relationType');
 
   //* Effects
   useEffect(() => {
@@ -83,6 +83,15 @@ export const useDiscipleCreationSubmitButtonLogic = ({
             item.churchId && item.ministryId && item.ministryType && item.ministryRoles.length > 0
         )) ||
         (theirPastor &&
+          relationType === RelationType.OnlyRelatedMinistries &&
+          ministryBlocks?.some(
+            (item) =>
+              !item.churchId ||
+              !item.ministryId ||
+              !item.ministryType ||
+              item.ministryRoles.length === 0
+          )) ||
+        (!theirPastor &&
           relationType === RelationType.OnlyRelatedMinistries &&
           ministryBlocks?.some(
             (item) =>

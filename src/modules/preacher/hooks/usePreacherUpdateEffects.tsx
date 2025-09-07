@@ -4,6 +4,9 @@ import { useEffect } from 'react';
 import { type UseFormReturn } from 'react-hook-form';
 
 import { type MemberRole } from '@/shared/enums/member-role.enum';
+import { RelationType } from '@/shared/enums/relation-type.enum';
+import { getSimpleMinistries } from '@/modules/ministry/services/ministry.service';
+import { MinistryMemberBlock } from '@/shared/interfaces/ministry-member-block.interface';
 import { type PreacherResponse } from '@/modules/preacher/interfaces/preacher-response.interface';
 import { type PreacherFormData } from '@/modules/preacher/interfaces/preacher-form-data.interface';
 
@@ -11,6 +14,7 @@ interface Options {
   id: string;
   data: PreacherResponse | undefined;
   setIsLoadingData: React.Dispatch<React.SetStateAction<boolean>>;
+  setMinistryBlocks: React.Dispatch<React.SetStateAction<MinistryMemberBlock[]>>;
   preacherUpdateForm: UseFormReturn<PreacherFormData, any, PreacherFormData | undefined>;
 }
 
@@ -18,10 +22,46 @@ export const usePreacherUpdateEffects = ({
   id,
   data,
   setIsLoadingData,
+  setMinistryBlocks,
   preacherUpdateForm,
 }: Options): void => {
   const residenceDistrict = preacherUpdateForm.watch('residenceDistrict');
   const isDirectRelationToPastor = preacherUpdateForm.watch('isDirectRelationToPastor');
+
+  const fetchMinistriesByChurch = async (churchId: string) => {
+    try {
+      const respData = await getSimpleMinistries({ isSimpleQuery: true, churchId });
+      return respData ?? [];
+    } catch (error) {
+      return [];
+    }
+  };
+
+  //* Set ministry blocks
+  useEffect(() => {
+    const loadMinistryBlocks = async () => {
+      if (data?.member.ministries && data.member.ministries.length > 0) {
+        const blocks = await Promise.all(
+          data.member.ministries.map(async (m) => {
+            const ministriesList = await fetchMinistriesByChurch(m.churchMinistryId ?? '');
+            return {
+              churchPopoverOpen: false,
+              ministryPopoverOpen: false,
+              churchId: m.churchMinistryId ?? '',
+              ministryId: m.id ?? '',
+              ministryRoles: m.ministryRoles,
+              ministries: ministriesList,
+              ministryType: m.ministryType,
+            };
+          })
+        );
+
+        setMinistryBlocks(blocks);
+      }
+    };
+
+    loadMinistryBlocks();
+  }, [data]);
 
   //* Set data
   useEffect(() => {
@@ -53,6 +93,10 @@ export const usePreacherUpdateEffects = ({
     preacherUpdateForm.setValue('roles', data?.member?.roles as MemberRole[]);
     preacherUpdateForm.setValue('theirSupervisor', data?.theirSupervisor?.id ?? '');
     preacherUpdateForm.setValue('recordStatus', data?.recordStatus);
+    preacherUpdateForm.setValue('relationType', data?.relationType ?? '');
+    if (data?.relationType && data?.relationType === RelationType.OnlyRelatedMinistries) {
+      preacherUpdateForm.setValue('theirPastorOnlyMinistries', data?.theirPastor?.id ?? '');
+    }
 
     const timeoutId = setTimeout(() => {
       setIsLoadingData(false);
@@ -76,10 +120,13 @@ export const usePreacherUpdateEffects = ({
       preacherUpdateForm.resetField('theirCopastor', {
         keepError: true,
       });
+      preacherUpdateForm.resetField('theirPastorOnlyMinistries', {
+        keepError: true,
+      });
     }
 
     if (!isDirectRelationToPastor) {
-      preacherUpdateForm.resetField('theirPastor', {
+      preacherUpdateForm.resetField('theirPastorRelationDirect', {
         keepError: true,
       });
     }

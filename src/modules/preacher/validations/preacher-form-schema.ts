@@ -10,7 +10,10 @@ import { Department } from '@/shared/enums/department.enum';
 import { MemberRole } from '@/shared/enums/member-role.enum';
 import { UrbanSector } from '@/shared/enums/urban-sector.enum';
 import { RecordStatus } from '@/shared/enums/record-status.enum';
+import { RelationType } from '@/shared/enums/relation-type.enum';
 import { MaritalStatus } from '@/shared/enums/marital-status.enum';
+
+import { MinistryAssignmentSchema } from '@/modules/ministry/validations/ministry-assignment';
 
 export const preacherFormSchema = z
   .object({
@@ -172,6 +175,16 @@ export const preacherFormSchema = z
       )
       .optional(),
 
+    relationType: z
+      .string(
+        z.nativeEnum(RelationType, {
+          required_error: 'El tipo de relación es requerido.',
+        })
+      )
+      .refine((value) => value !== undefined && value.trim() !== '', {
+        message: 'El tipo de relación es requerido.',
+      }),
+
     isDirectRelationToPastor: z.boolean().optional(),
 
     //* Relations
@@ -179,20 +192,12 @@ export const preacherFormSchema = z
 
     theirSupervisor: z.string({ required_error: 'Debe asignar un Supervisor.' }).optional(),
 
-    theirPastor: z.string({ required_error: 'Debe asignar un Pastor.' }).optional(),
+    theirPastorRelationDirect: z.string({ required_error: 'Debe asignar un Pastor.' }).optional(),
+
+    theirPastorOnlyMinistries: z.string({ required_error: 'Debe asignar un Pastor.' }).optional(),
+
+    theirMinistries: z.array(MinistryAssignmentSchema).optional(),
   })
-  .refine(
-    (data) => {
-      if (data.roles.includes(MemberRole.Preacher) && data.roles.includes(MemberRole.Disciple)) {
-        return !!data.theirSupervisor;
-      }
-      return true;
-    },
-    {
-      message: 'Debe asignar un Supervisor.',
-      path: ['theirSupervisor'],
-    }
-  )
   .refine(
     (data) => {
       if (
@@ -233,7 +238,7 @@ export const preacherFormSchema = z
         data.roles.includes(MemberRole.Disciple) &&
         data.isDirectRelationToPastor
       ) {
-        return !!data.theirPastor;
+        return !!data.theirPastorRelationDirect;
       }
       return true;
     },
@@ -250,7 +255,7 @@ export const preacherFormSchema = z
         data.roles.includes(MemberRole.Disciple) &&
         data.isDirectRelationToPastor
       ) {
-        return !!data.theirPastor;
+        return !!data.theirPastorRelationDirect;
       }
       return true;
     },

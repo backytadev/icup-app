@@ -1,3 +1,4 @@
+import { MinistryAssignment } from '@/modules/disciple/interfaces/disciple-form-data.interface';
 import { type MemberRole } from '@/shared/enums/member-role.enum';
 
 export interface PreacherFormData {
@@ -20,10 +21,13 @@ export interface PreacherFormData {
   referenceAddress: string;
   roles: MemberRole[];
   recordStatus?: string | undefined;
+  relationType: string;
   isDirectRelationToPastor?: boolean | undefined;
   theirSupervisor?: string | undefined;
   theirCopastor?: string | undefined;
-  theirPastor?: string | undefined;
+  theirPastorRelationDirect?: string | undefined;
+  theirPastorOnlyMinistries?: string | undefined;
+  theirMinistries?: MinistryAssignment[] | undefined;
 }
 
 export type PreacherFormDataKeys =
@@ -46,7 +50,10 @@ export type PreacherFormDataKeys =
   | 'ReferenceAddress'
   | 'residenceRoles'
   | 'recordStatus'
+  | 'relationType'
   | 'isDirectRelationToPastor'
   | 'theirSupervisor'
   | 'theirCopastor'
-  | 'theirPastor';
+  | 'theirPastorRelationDirect'
+  | 'theirPastorOnlyMinistries'
+  | 'theirMinistries';
