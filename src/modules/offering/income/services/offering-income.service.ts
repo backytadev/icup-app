@@ -234,10 +234,11 @@ export const getOfferingsIncomeByTerm = async ({
     }
   }
 
-  //* Zonal fasting and vigil and Zonal Evangelism
+  //* Zonal fasting and vigil and Zonal Evangelism and Zone United Service
   if (
     searchType === OfferingIncomeSearchType.ZonalFasting ||
     searchType === OfferingIncomeSearchType.ZonalVigil ||
+    searchType === OfferingIncomeSearchType.ZonalUnitedService ||
     searchType === OfferingIncomeSearchType.ZonalEvangelism
   ) {
     const term =
@@ -654,6 +655,8 @@ export const getOfferingIncomeReportByTerm = async ({
 }: OfferingIncomeQueryParams): Promise<boolean> => {
   let newTerm: string | undefined = '';
 
+  console.log(searchType, searchSubType);
+
   const termMapping: Partial<
     Record<OfferingIncomeSearchSubType | OfferingIncomeSearchType, string | undefined>
   > = {
@@ -679,6 +682,8 @@ export const getOfferingIncomeReportByTerm = async ({
   newTerm =
     termMapping[searchSubType as OfferingIncomeSearchSubType] ??
     termMapping[searchType as OfferingIncomeSearchType];
+
+  console.log(newTerm);
 
   try {
     if (!all) {

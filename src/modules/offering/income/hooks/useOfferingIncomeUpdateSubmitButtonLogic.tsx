@@ -142,6 +142,7 @@ export const useOfferingIncomeUpdateSubmitButtonLogic = ({
     if (
       type === OfferingIncomeCreationType.Offering &&
       (subType === OfferingIncomeCreationSubType.ZonalVigil ||
+        subType === OfferingIncomeCreationSubType.ZonalUnitedService ||
         subType === OfferingIncomeCreationSubType.ZonalFasting ||
         subType === OfferingIncomeCreationSubType.ZonalEvangelism) &&
       amount &&
@@ -158,6 +159,7 @@ export const useOfferingIncomeUpdateSubmitButtonLogic = ({
     if (
       type === OfferingIncomeCreationType.Offering &&
       (subType === OfferingIncomeCreationSubType.ZonalVigil ||
+        subType === OfferingIncomeCreationSubType.ZonalUnitedService ||
         subType === OfferingIncomeCreationSubType.ZonalFasting ||
         subType === OfferingIncomeCreationSubType.ZonalEvangelism) &&
       (!amount || !currency || !zoneId || !comments)

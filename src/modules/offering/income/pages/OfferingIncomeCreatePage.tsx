@@ -591,7 +591,8 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                                 subType === OfferingIncomeCreationSubType.ZonalVigil ||
                                 subType === OfferingIncomeCreationSubType.ZonalEvangelism ||
                                 subType === OfferingIncomeCreationSubType.GeneralEvangelism ||
-                                subType === OfferingIncomeCreationSubType.UnitedService ? (
+                                subType === OfferingIncomeCreationSubType.UnitedService ||
+                                subType === OfferingIncomeCreationSubType.ZonalUnitedService ? (
                                   key === OfferingIncomeCreationCategory.OfferingBox && (
                                     <SelectItem key={key} value={key}>
                                       {value}
@@ -1398,6 +1399,9 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                 category === OfferingIncomeCreationCategory.OfferingBox) ||
                 (type === OfferingIncomeCreationType.Offering &&
                   subType === OfferingIncomeCreationSubType.ZonalVigil &&
+                  category === OfferingIncomeCreationCategory.OfferingBox) ||
+                (type === OfferingIncomeCreationType.Offering &&
+                  subType === OfferingIncomeCreationSubType.ZonalUnitedService &&
                   category === OfferingIncomeCreationCategory.OfferingBox) ||
                 (type === OfferingIncomeCreationType.Offering &&
                   subType === OfferingIncomeCreationSubType.ZonalEvangelism &&

@@ -645,6 +645,7 @@ export const useOfferingIncomeCreationSubmitButtonLogic = ({
       category === OfferingIncomeCreationCategory.OfferingBox &&
       (subType === OfferingIncomeCreationSubType.ZonalVigil ||
         subType === OfferingIncomeCreationSubType.ZonalFasting ||
+        subType === OfferingIncomeCreationSubType.ZonalUnitedService ||
         subType === OfferingIncomeCreationSubType.ZonalEvangelism) &&
       amount &&
       currency &&
@@ -661,6 +662,7 @@ export const useOfferingIncomeCreationSubmitButtonLogic = ({
       type === OfferingIncomeCreationType.Offering &&
       (subType === OfferingIncomeCreationSubType.ZonalVigil ||
         subType === OfferingIncomeCreationSubType.ZonalFasting ||
+        subType === OfferingIncomeCreationSubType.ZonalUnitedService ||
         subType === OfferingIncomeCreationSubType.ZonalEvangelism) &&
       (!churchId || !date || !amount || !currency || !zoneId)
     ) {

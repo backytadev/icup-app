@@ -930,6 +930,12 @@ export const OfferingIncomeFormUpdate = ({
                       category === OfferingIncomeCreationCategory.OfferingBox) ||
                       (type === OfferingIncomeCreationType.Offering &&
                         subType === OfferingIncomeCreationSubType.ZonalVigil &&
+                        category === OfferingIncomeCreationCategory.OfferingBox) ||
+                      (type === OfferingIncomeCreationType.Offering &&
+                        subType === OfferingIncomeCreationSubType.ZonalUnitedService &&
+                        category === OfferingIncomeCreationCategory.OfferingBox) ||
+                      (type === OfferingIncomeCreationType.Offering &&
+                        subType === OfferingIncomeCreationSubType.ZonalEvangelism &&
                         category === OfferingIncomeCreationCategory.OfferingBox)) && (
                       <FormField
                         control={form.control}

@@ -205,7 +205,8 @@ export const OfferingIncomeTabsCard = ({ data, id }: OfferingIncomeTabsCardProps
               data?.subType === OfferingIncomeCreationSubType.FamilyGroup ||
               data?.subType === OfferingIncomeCreationSubType.ZonalFasting ||
               data?.subType === OfferingIncomeCreationSubType.ZonalVigil ||
-              data?.subType === OfferingIncomeCreationSubType.ZonalEvangelism) && (
+              data?.subType === OfferingIncomeCreationSubType.ZonalEvangelism ||
+              data?.subType === OfferingIncomeCreationSubType.ZonalUnitedService) && (
               <>
                 <Label className='md:-mb-2 mt-1 md:-mt-1 col-start-1 col-end-4 row-start-auto row-end-auto text-[15px] md:text-[16px] font-bold text-violet-500'>
                   Información del aportante
@@ -360,6 +361,7 @@ export const OfferingIncomeTabsCard = ({ data, id }: OfferingIncomeTabsCardProps
                   data?.subType !== OfferingIncomeCreationSubType.ZonalEvangelism &&
                   data?.subType !== OfferingIncomeCreationSubType.ZonalFasting &&
                   data?.subType !== OfferingIncomeCreationSubType.ZonalVigil &&
+                  data?.subType !== OfferingIncomeCreationSubType.ZonalUnitedService &&
                   data?.subType !== OfferingIncomeCreationSubType.Special &&
                   data?.subType !== OfferingIncomeCreationSubType.ChurchGround &&
                   'row-start-9 row-end-10'
@@ -375,6 +377,7 @@ export const OfferingIncomeTabsCard = ({ data, id }: OfferingIncomeTabsCardProps
                   data?.subType !== OfferingIncomeCreationSubType.ZonalEvangelism &&
                   data?.subType !== OfferingIncomeCreationSubType.ZonalFasting &&
                   data?.subType !== OfferingIncomeCreationSubType.ZonalVigil &&
+                  data?.subType !== OfferingIncomeCreationSubType.ZonalUnitedService &&
                   data?.subType !== OfferingIncomeCreationSubType.Special &&
                   data?.subType !== OfferingIncomeCreationSubType.ChurchGround &&
                   'row-start-10 row-end-11'
@@ -398,6 +401,7 @@ export const OfferingIncomeTabsCard = ({ data, id }: OfferingIncomeTabsCardProps
                   data?.subType !== OfferingIncomeCreationSubType.ZonalEvangelism &&
                   data?.subType !== OfferingIncomeCreationSubType.ZonalFasting &&
                   data?.subType !== OfferingIncomeCreationSubType.ZonalVigil &&
+                  data?.subType !== OfferingIncomeCreationSubType.ZonalUnitedService &&
                   data?.subType !== OfferingIncomeCreationSubType.Special &&
                   data?.subType !== OfferingIncomeCreationSubType.ChurchGround &&
                   'row-start-11 row-end-12'
@@ -418,6 +422,7 @@ export const OfferingIncomeTabsCard = ({ data, id }: OfferingIncomeTabsCardProps
                   data?.subType !== OfferingIncomeCreationSubType.ZonalEvangelism &&
                   data?.subType !== OfferingIncomeCreationSubType.ZonalFasting &&
                   data?.subType !== OfferingIncomeCreationSubType.ZonalVigil &&
+                  data?.subType !== OfferingIncomeCreationSubType.ZonalUnitedService &&
                   data?.subType !== OfferingIncomeCreationSubType.Special &&
                   data?.subType !== OfferingIncomeCreationSubType.ChurchGround &&
                   'row-start-12 row-end-13'
@@ -441,6 +446,7 @@ export const OfferingIncomeTabsCard = ({ data, id }: OfferingIncomeTabsCardProps
                   data?.subType !== OfferingIncomeCreationSubType.ZonalEvangelism &&
                   data?.subType !== OfferingIncomeCreationSubType.ZonalFasting &&
                   data?.subType !== OfferingIncomeCreationSubType.ZonalVigil &&
+                  data?.subType !== OfferingIncomeCreationSubType.ZonalUnitedService &&
                   data?.subType !== OfferingIncomeCreationSubType.Special &&
                   data?.subType !== OfferingIncomeCreationSubType.ChurchGround &&
                   'row-start-13 row-end-14'
@@ -461,6 +467,7 @@ export const OfferingIncomeTabsCard = ({ data, id }: OfferingIncomeTabsCardProps
                   data?.subType === OfferingIncomeCreationSubType.ZonalEvangelism ||
                   data?.subType === OfferingIncomeCreationSubType.ZonalFasting ||
                   data?.subType === OfferingIncomeCreationSubType.ZonalVigil ||
+                  data?.subType === OfferingIncomeCreationSubType.ZonalUnitedService ||
                   data?.subType === OfferingIncomeCreationSubType.Special ||
                   data?.subType === OfferingIncomeCreationSubType.ChurchGround) &&
                   'md:row-start-11 md:row-end-12'
