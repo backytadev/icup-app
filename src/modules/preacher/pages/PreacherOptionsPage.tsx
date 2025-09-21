@@ -62,7 +62,7 @@ export const PreacherOptionsPage = (): JSX.Element => {
           key='/preachers/search-by-term'
           to='/preachers/search-by-term'
           end
-          className='row-start-3 row-end-4 lg:row-start-1 lg:row-end-2 lg:col-start-2 lg:col-end-3 xl:row-start-3 xl:row-end-4 xl:col-start-2 xl:col-end-3 2xl:row-start-3 2xl:row-end-4 2xl:col-start-2 2xl:col-end-3'
+          className='row-start-3 row-end-4 lg:row-start-1 lg:row-end-2 lg:col-start-2 lg:col-end-3 xl:row-start-2 xl:row-end-3 xl:col-start-1 xl:col-end-2 2xl:row-start-3 2xl:row-end-4 2xl:col-start-2 2xl:col-end-3'
         >
           <WhiteCard className='h-[10.5rem] md:h-[11rem]' centered>
             <FcClearFilters className='text-[4rem] sm:text-[5rem] md:text-[6rem]' />
@@ -79,7 +79,7 @@ export const PreacherOptionsPage = (): JSX.Element => {
           key='/preachers/update'
           to='/preachers/update'
           end
-          className='row-start-4 row-end-5 lg:h-full lg:row-start-2 lg:row-end-3 lg:col-start-2 lg:col-end-3 xl:row-start-2 xl:row-end-3 xl:col-start-1 xl:col-end-2 2xl:row-start-1 2xl:row-end-4 2xl:col-start-3 2xl:col-end-4'
+          className='row-start-4 row-end-5 lg:h-full lg:row-start-2 lg:row-end-3 lg:col-start-2 lg:col-end-3 xl:row-start-3 xl:row-end-4 xl:col-start-1 xl:col-end-2 2xl:row-start-1 2xl:row-end-4 2xl:col-start-3 2xl:col-end-4'
         >
           <WhiteCard className='h-[10.5rem] md:h-[11rem]' centered>
             <FcSupport className='text-[4rem] sm:text-[5rem] md:text-[6rem]' />
@@ -96,7 +96,7 @@ export const PreacherOptionsPage = (): JSX.Element => {
           key='/preachers/inactivate'
           to='/preachers/inactivate'
           end
-          className='row-start-5 row-end-6 lg:row-start-3 lg:row-end-4 lg:col-start-2 lg:col-end-3 xl:row-start-3 xl:row-end-4 xl:col-start-1 xl:col-end-2 2xl:row-start-1 2xl:row-end-4 2xl:col-start-4 2xl:col-end-5'
+          className='row-start-5 row-end-6 lg:row-start-3 lg:row-end-4 lg:col-start-2 lg:col-end-3 xl:row-start-3 xl:row-end-4 xl:col-start-2 xl:col-end-3 2xl:row-start-1 2xl:row-end-4 2xl:col-start-4 2xl:col-end-5'
         >
           <WhiteCard className='md:h-[11rem]' centered>
             <RiDeleteBin2Fill className='text-[4rem] sm:text-[5rem] md:text-[6rem] text-red-500' />

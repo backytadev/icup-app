@@ -263,15 +263,27 @@ export const CopastorsSearchPageByTerm = (): JSX.Element => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {Object.entries(CopastorSearchTypeNames).map(([key, value]) => (
-                            <SelectItem
-                              className={`text-[14px] md:text-[14px]`}
-                              key={key}
-                              value={key}
-                            >
-                              {value}
-                            </SelectItem>
-                          ))}
+                          {Object.entries(CopastorSearchTypeNames)
+                            .filter(
+                              ([key]) =>
+                                ![
+                                  CopastorSearchType.OriginCountry,
+                                  CopastorSearchType.ResidenceCountry,
+                                  CopastorSearchType.ResidenceDepartment,
+                                  CopastorSearchType.ResidenceProvince,
+                                  CopastorSearchType.ResidenceDistrict,
+                                  CopastorSearchType.ResidenceAddress,
+                                ].includes(key as CopastorSearchType)
+                            )
+                            .map(([key, value]) => (
+                              <SelectItem
+                                className={`text-[14px] md:text-[14px]`}
+                                key={key}
+                                value={key}
+                              >
+                                {value}
+                              </SelectItem>
+                            ))}
                         </SelectContent>
                       </Select>
                       <FormMessage className='text-[13px]' />

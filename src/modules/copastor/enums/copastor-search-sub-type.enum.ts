@@ -26,8 +26,8 @@ export const SubTypeNamesCopastorSearchByFirstNames: Record<
   SubTypeCopastorSearchByFirstNames,
   string
 > = {
-  [SubTypeCopastorSearchByFirstNames.CopastorByPastorFirstNames]: 'Por nombres de su pastor',
   [SubTypeCopastorSearchByFirstNames.ByCopastorFirstNames]: 'Por sus nombres',
+  [SubTypeCopastorSearchByFirstNames.CopastorByPastorFirstNames]: 'Por nombres de su pastor',
 };
 
 //* LastNames
@@ -40,8 +40,8 @@ export const SubTypeNamesCopastorSearchByLastNames: Record<
   SubTypeCopastorSearchByLastNames,
   string
 > = {
-  [SubTypeCopastorSearchByLastNames.CopastorByPastorLastNames]: 'Por apellidos de su pastor',
   [SubTypeCopastorSearchByLastNames.ByCopastorLastNames]: 'Por sus apellidos',
+  [SubTypeCopastorSearchByLastNames.CopastorByPastorLastNames]: 'Por apellidos de su pastor',
 };
 
 //* Full Name
@@ -54,7 +54,7 @@ export const SubTypeNamesCopastorSearchByFullNames: Record<
   SubTypeCopastorSearchByFullNames,
   string
 > = {
+  [SubTypeCopastorSearchByFullNames.ByCopastorFullNames]: 'Por sus nombres y apellidos',
   [SubTypeCopastorSearchByFullNames.CopastorByPastorFullNames]:
     'Por nombres y apellidos de su pastor',
-  [SubTypeCopastorSearchByFullNames.ByCopastorFullNames]: 'Por sus nombres y apellidos',
 };

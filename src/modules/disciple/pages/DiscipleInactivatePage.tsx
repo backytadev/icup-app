@@ -259,18 +259,30 @@ export const DiscipleInactivatePage = (): JSX.Element => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {Object.entries(DiscipleSearchTypeNames).map(
-                            ([key, value]) =>
-                              key !== DiscipleSearchType.RecordStatus && (
-                                <SelectItem
-                                  className={`text-[14px] md:text-[14px]`}
-                                  key={key}
-                                  value={key}
-                                >
-                                  {value}
-                                </SelectItem>
-                              )
-                          )}
+                          {Object.entries(DiscipleSearchTypeNames)
+                            .filter(
+                              ([key]) =>
+                                ![
+                                  DiscipleSearchType.OriginCountry,
+                                  DiscipleSearchType.ResidenceCountry,
+                                  DiscipleSearchType.ResidenceDepartment,
+                                  DiscipleSearchType.ResidenceProvince,
+                                  DiscipleSearchType.ResidenceDistrict,
+                                  DiscipleSearchType.ResidenceAddress,
+                                ].includes(key as DiscipleSearchType)
+                            )
+                            .map(
+                              ([key, value]) =>
+                                key !== DiscipleSearchType.RecordStatus && (
+                                  <SelectItem
+                                    className={`text-[14px] md:text-[14px]`}
+                                    key={key}
+                                    value={key}
+                                  >
+                                    {value}
+                                  </SelectItem>
+                                )
+                            )}
                         </SelectContent>
                       </Select>
                       <FormMessage className='text-[13px]' />

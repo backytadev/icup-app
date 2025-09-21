@@ -768,7 +768,7 @@ export const OfferingIncomeFormUpdate = ({
                                       variant='outline'
                                       role='combobox'
                                       className={cn(
-                                        'w-full justify-between ',
+                                        'w-full justify-between truncate',
                                         !field.value && 'font-normal'
                                       )}
                                     >
@@ -788,7 +788,7 @@ export const OfferingIncomeFormUpdate = ({
                                           className='h-9 text-[14px]'
                                         />
                                         <CommandEmpty>Miembro no encontrado.</CommandEmpty>
-                                        <CommandGroup className='max-h-[200px] h-auto'>
+                                        <CommandGroup className='max-h-[200px] overflow-y-auto'>
                                           {queryData?.map((member) => (
                                             <CommandItem
                                               className='text-[14px]'
@@ -857,15 +857,40 @@ export const OfferingIncomeFormUpdate = ({
                                       variant='outline'
                                       role='combobox'
                                       className={cn(
-                                        'w-full justify-between',
+                                        'w-full justify-between truncate h-[50px] sm:h-auto',
                                         !field.value && 'text-slate-500 font-normal'
                                       )}
                                     >
-                                      {field.value
-                                        ? `${familyGroupsQuery?.data?.find((familyGroup) => familyGroup.id === field.value)?.familyGroupName} 
-                                            (${familyGroupsQuery?.data?.find((familyGroup) => familyGroup.id === field.value)?.familyGroupCode}) ~ 
-                                              ${getInitialFullNames({ firstNames: familyGroupsQuery?.data?.find((familyGroup) => familyGroup.id === field.value)?.theirPreacher?.firstNames ?? '', lastNames: familyGroupsQuery?.data?.find((familyGroup) => familyGroup.id === field.value)?.theirPreacher?.lastNames ?? '' })}`
-                                        : 'Busque y seleccione un grupo familiar'}
+                                      {field.value ? (
+                                        <div className='flex justify-start flex-col sm:gap-2 sm:flex-row'>
+                                          {
+                                            familyGroupsQuery?.data?.find(
+                                              (familyGroup) => familyGroup.id === field.value
+                                            )?.familyGroupName
+                                          }{' '}
+                                          (
+                                          {
+                                            familyGroupsQuery?.data?.find(
+                                              (familyGroup) => familyGroup.id === field.value
+                                            )?.familyGroupCode
+                                          }
+                                          ) ~ <br />
+                                          <span className='text-left'>
+                                            {getInitialFullNames({
+                                              firstNames:
+                                                familyGroupsQuery?.data?.find(
+                                                  (familyGroup) => familyGroup.id === field.value
+                                                )?.theirPreacher?.firstNames ?? '',
+                                              lastNames:
+                                                familyGroupsQuery?.data?.find(
+                                                  (familyGroup) => familyGroup.id === field.value
+                                                )?.theirPreacher?.lastNames ?? '',
+                                            })}
+                                          </span>
+                                        </div>
+                                      ) : (
+                                        'Busque y seleccione un grupo familiar'
+                                      )}
                                       <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-5' />
                                     </Button>
                                   </FormControl>
@@ -880,7 +905,7 @@ export const OfferingIncomeFormUpdate = ({
                                           className='h-9 text-[14px]'
                                         />
                                         <CommandEmpty>Grupo familiar no encontrado.</CommandEmpty>
-                                        <CommandGroup className='max-h-[200px] h-auto'>
+                                        <CommandGroup className='max-h-[200px] overflow-y-auto'>
                                           {familyGroupsQuery?.data?.map((familyGroup) => (
                                             <CommandItem
                                               className='text-[14px]'
@@ -959,7 +984,7 @@ export const OfferingIncomeFormUpdate = ({
                                     variant='outline'
                                     role='combobox'
                                     className={cn(
-                                      'w-full justify-between',
+                                      'w-full justify-between truncate',
                                       !field.value && 'text-slate-500 font-normal'
                                     )}
                                   >
@@ -991,7 +1016,7 @@ export const OfferingIncomeFormUpdate = ({
                                         className='h-9 text-[14px]'
                                       />
                                       <CommandEmpty>Zona no encontrada.</CommandEmpty>
-                                      <CommandGroup className='max-h-[200px] h-auto'>
+                                      <CommandGroup className='max-h-[200px] overflow-y-auto'>
                                         {zonesQuery?.data?.map((zone) => (
                                           <CommandItem
                                             className='text-[14px]'

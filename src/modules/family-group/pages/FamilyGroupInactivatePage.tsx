@@ -220,18 +220,29 @@ export const FamilyGroupInactivatePage = (): JSX.Element => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {Object.entries(FamilyGroupSearchTypeNames).map(
-                            ([key, value]) =>
-                              key !== FamilyGroupSearchType.RecordStatus && (
-                                <SelectItem
-                                  className={`text-[14px] md:text-[14px]`}
-                                  key={key}
-                                  value={key}
-                                >
-                                  {value}
-                                </SelectItem>
-                              )
-                          )}
+                          {Object.entries(FamilyGroupSearchTypeNames)
+                            .filter(
+                              ([key]) =>
+                                ![
+                                  FamilyGroupSearchType.Country,
+                                  FamilyGroupSearchType.Department,
+                                  FamilyGroupSearchType.Province,
+                                  FamilyGroupSearchType.District,
+                                  FamilyGroupSearchType.Address,
+                                ].includes(key as FamilyGroupSearchType)
+                            )
+                            .map(
+                              ([key, value]) =>
+                                key !== FamilyGroupSearchType.RecordStatus && (
+                                  <SelectItem
+                                    className={`text-[14px] md:text-[14px]`}
+                                    key={key}
+                                    value={key}
+                                  >
+                                    {value}
+                                  </SelectItem>
+                                )
+                            )}
                         </SelectContent>
                       </Select>
                       <FormMessage className='text-[13px]' />

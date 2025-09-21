@@ -263,15 +263,27 @@ export const SupervisorUpdatePage = (): JSX.Element => {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {Object.entries(SupervisorSearchTypeNames).map(([key, value]) => (
-                            <SelectItem
-                              className={`text-[14px] md:text-[14px]`}
-                              key={key}
-                              value={key}
-                            >
-                              {value}
-                            </SelectItem>
-                          ))}
+                          {Object.entries(SupervisorSearchTypeNames)
+                            .filter(
+                              ([key]) =>
+                                ![
+                                  SupervisorSearchType.OriginCountry,
+                                  SupervisorSearchType.ResidenceCountry,
+                                  SupervisorSearchType.ResidenceDepartment,
+                                  SupervisorSearchType.ResidenceProvince,
+                                  SupervisorSearchType.ResidenceDistrict,
+                                  SupervisorSearchType.ResidenceAddress,
+                                ].includes(key as SupervisorSearchType)
+                            )
+                            .map(([key, value]) => (
+                              <SelectItem
+                                className={`text-[14px] md:text-[14px]`}
+                                key={key}
+                                value={key}
+                              >
+                                {value}
+                              </SelectItem>
+                            ))}
                         </SelectContent>
                       </Select>
                       <FormMessage className='text-[13px]' />

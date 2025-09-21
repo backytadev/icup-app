@@ -34,10 +34,10 @@ export const SubTypeNamesSupervisorSearchByFirstNames: Record<
   SubTypeSupervisorSearchByFirstNames,
   string
 > = {
-  [SubTypeSupervisorSearchByFirstNames.SupervisorByPastorFirstNames]: 'Por nombres de su pastor',
+  [SubTypeSupervisorSearchByFirstNames.BySupervisorFirstNames]: 'Por sus nombres',
   [SubTypeSupervisorSearchByFirstNames.SupervisorByCopastorFirstNames]:
     'Por nombres de su co-pastor',
-  [SubTypeSupervisorSearchByFirstNames.BySupervisorFirstNames]: 'Por sus nombres',
+  [SubTypeSupervisorSearchByFirstNames.SupervisorByPastorFirstNames]: 'Por nombres de su pastor',
 };
 
 //* LastNames
@@ -51,10 +51,10 @@ export const SubTypeNamesSupervisorSearchByLastNames: Record<
   SubTypeSupervisorSearchByLastNames,
   string
 > = {
-  [SubTypeSupervisorSearchByLastNames.SupervisorByPastorLastNames]: 'Por apellidos de su pastor',
+  [SubTypeSupervisorSearchByLastNames.BySupervisorLastNames]: 'Por sus apellidos',
   [SubTypeSupervisorSearchByLastNames.SupervisorByCopastorLastNames]:
     'Por apellidos de su co-pastor',
-  [SubTypeSupervisorSearchByLastNames.BySupervisorLastNames]: 'Por sus apellidos',
+  [SubTypeSupervisorSearchByLastNames.SupervisorByPastorLastNames]: 'Por apellidos de su pastor',
 };
 
 //* Full Name
@@ -68,9 +68,9 @@ export const SubTypeNamesSupervisorSearchByFullNames: Record<
   SubTypeSupervisorSearchByFullNames,
   string
 > = {
-  [SubTypeSupervisorSearchByFullNames.SupervisorByPastorFullNames]:
-    'Por nombres y apellidos de su pastor',
+  [SubTypeSupervisorSearchByFullNames.BySupervisorFullNames]: 'Por sus nombres y apellidos',
   [SubTypeSupervisorSearchByFullNames.SupervisorByCopastorFullNames]:
     'Por nombres y apellidos de su co-pastor',
-  [SubTypeSupervisorSearchByFullNames.BySupervisorFullNames]: 'Por sus nombres y apellidos',
+  [SubTypeSupervisorSearchByFullNames.SupervisorByPastorFullNames]:
+    'Por nombres y apellidos de su pastor',
 };

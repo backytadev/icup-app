@@ -40,11 +40,11 @@ export const SubTypeNamesPreacherSearchByFirstNames: Record<
   SubTypePreacherSearchByFirstNames,
   string
 > = {
-  [SubTypePreacherSearchByFirstNames.PreacherByPastorFirstNames]: 'Por nombres de su pastor',
-  [SubTypePreacherSearchByFirstNames.PreacherByCopastorFirstNames]: 'Por nombres de su co-pastor',
+  [SubTypePreacherSearchByFirstNames.ByPreacherFirstNames]: 'Por sus nombres',
   [SubTypePreacherSearchByFirstNames.PreacherBySupervisorFirstNames]:
     'Por nombres de su supervisor',
-  [SubTypePreacherSearchByFirstNames.ByPreacherFirstNames]: 'Por sus nombres',
+  [SubTypePreacherSearchByFirstNames.PreacherByCopastorFirstNames]: 'Por nombres de su co-pastor',
+  [SubTypePreacherSearchByFirstNames.PreacherByPastorFirstNames]: 'Por nombres de su pastor',
 };
 
 //* LastNames
@@ -59,11 +59,11 @@ export const SubTypeNamesPreacherSearchByLastNames: Record<
   SubTypePreacherSearchByLastNames,
   string
 > = {
-  [SubTypePreacherSearchByLastNames.PreacherByPastorLastNames]: 'Por apellidos de su pastor',
-  [SubTypePreacherSearchByLastNames.PreacherByCopastorLastNames]: 'Por apellidos de su co-pastor',
+  [SubTypePreacherSearchByLastNames.ByPreacherLastNames]: 'Por sus apellidos',
   [SubTypePreacherSearchByLastNames.PreacherBySupervisorLastNames]:
     'Por apellidos de su supervisor',
-  [SubTypePreacherSearchByLastNames.ByPreacherLastNames]: 'Por sus apellidos',
+  [SubTypePreacherSearchByLastNames.PreacherByCopastorLastNames]: 'Por apellidos de su co-pastor',
+  [SubTypePreacherSearchByLastNames.PreacherByPastorLastNames]: 'Por apellidos de su pastor',
 };
 
 //* Full Name
@@ -78,11 +78,11 @@ export const SubTypeNamesPreacherSearchByFullNames: Record<
   SubTypePreacherSearchByFullNames,
   string
 > = {
-  [SubTypePreacherSearchByFullNames.PreacherByPastorFullNames]:
-    'Por nombres y apellidos de su pastor',
-  [SubTypePreacherSearchByFullNames.PreacherByCopastorFullNames]:
-    'Por nombres y apellidos de su co-pastor',
+  [SubTypePreacherSearchByFullNames.ByPreacherFullNames]: 'Por sus nombres y apellidos',
   [SubTypePreacherSearchByFullNames.PreacherBySupervisorFullNames]:
     'Por nombres y apellidos de su supervisor',
-  [SubTypePreacherSearchByFullNames.ByPreacherFullNames]: 'Por sus nombres y apellidos',
+  [SubTypePreacherSearchByFullNames.PreacherByCopastorFullNames]:
+    'Por nombres y apellidos de su co-pastor',
+  [SubTypePreacherSearchByFullNames.PreacherByPastorFullNames]:
+    'Por nombres y apellidos de su pastor',
 };

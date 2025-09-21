@@ -19,21 +19,21 @@ export enum OfferingIncomeSearchType {
 }
 
 export const OfferingIncomeSearchTypeNames: Record<OfferingIncomeSearchType, string> = {
-  [OfferingIncomeSearchType.SundayService]: 'Ofrendas - Culto Dominical',
   [OfferingIncomeSearchType.FamilyGroup]: 'Ofrendas - Grupo Familiar',
-  [OfferingIncomeSearchType.GeneralFasting]: 'Ofrendas - Ayuno General',
-  [OfferingIncomeSearchType.GeneralVigil]: 'Ofrenda - Vigilia General',
-  [OfferingIncomeSearchType.GeneralEvangelism]: 'Ofrendas - Evangelismo General',
+  [OfferingIncomeSearchType.SundayService]: 'Ofrendas - Culto Dominical',
   [OfferingIncomeSearchType.ZonalFasting]: 'Ofrenda - Ayuno Zonal',
   [OfferingIncomeSearchType.ZonalVigil]: 'Ofrendas - Vigilia Zonal',
   [OfferingIncomeSearchType.ZonalEvangelism]: 'Ofrendas - Evangelismo Zonal',
+  [OfferingIncomeSearchType.ZonalUnitedService]: 'Ofrendas - Culto Unido Zonal',
+  [OfferingIncomeSearchType.GeneralFasting]: 'Ofrendas - Ayuno General',
+  [OfferingIncomeSearchType.GeneralVigil]: 'Ofrenda - Vigilia General',
+  [OfferingIncomeSearchType.UnitedService]: 'Ofrendas - Culto Unido General',
+  [OfferingIncomeSearchType.GeneralEvangelism]: 'Ofrendas - Evangelismo General',
   // [OfferingIncomeSearchType.SundaySchool]: 'Ofrendas - Escuela Dominical',
   // [OfferingIncomeSearchType.YouthService]: 'Ofrendas - Culto Jóvenes',
-  [OfferingIncomeSearchType.UnitedService]: 'Ofrendas - Culto Unido General',
-  [OfferingIncomeSearchType.ZonalUnitedService]: 'Ofrendas - Culto Unido Zonal',
+  [OfferingIncomeSearchType.Special]: 'Ofrendas - Especial',
   [OfferingIncomeSearchType.Activities]: 'Ofrendas - Actividades',
   [OfferingIncomeSearchType.ChurchGround]: 'Ofrendas - Terreno Iglesia',
-  [OfferingIncomeSearchType.Special]: 'Ofrendas - Especial',
   [OfferingIncomeSearchType.IncomeAdjustment]: 'Ajustes por Ingreso',
   [OfferingIncomeSearchType.RecordStatus]: 'Estado de Registro',
 };

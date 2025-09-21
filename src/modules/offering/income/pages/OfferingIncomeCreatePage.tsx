@@ -1239,7 +1239,7 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                                 variant='outline'
                                 role='combobox'
                                 className={cn(
-                                  'w-full justify-between ',
+                                  'w-full justify-between truncate',
                                   !field.value && 'font-normal'
                                 )}
                               >
@@ -1259,7 +1259,7 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                                     className='h-9 text-[14px]'
                                   />
                                   <CommandEmpty>Miembro no encontrado.</CommandEmpty>
-                                  <CommandGroup className='max-h-[200px] h-auto'>
+                                  <CommandGroup className='max-h-[200px] overflow-y-auto'>
                                     {queryData?.map((item) => (
                                       <CommandItem
                                         className='text-[14px]'
@@ -1326,7 +1326,7 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                                 variant='outline'
                                 role='combobox'
                                 className={cn(
-                                  'w-full justify-between',
+                                  'w-full justify-between truncate',
                                   !field.value && 'text-slate-500 font-normal'
                                 )}
                               >
@@ -1339,7 +1339,7 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                               </Button>
                             </FormControl>
                           </PopoverTrigger>
-                          <PopoverContent align='center' className='w-auto px-4 py-2'>
+                          <PopoverContent align='center' className='w-full max-w-[90vw] px-4 py-2'>
                             <Command>
                               {familyGroupsQuery?.data?.length &&
                               familyGroupsQuery?.data?.length > 0 ? (
@@ -1349,10 +1349,10 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                                     className='h-9 text-[14px]'
                                   />
                                   <CommandEmpty>Grupo familiar no encontrado.</CommandEmpty>
-                                  <CommandGroup className='max-h-[200px] h-auto'>
+                                  <CommandGroup className='max-h-[200px] overflow-y-auto'>
                                     {familyGroupsQuery?.data?.map((familyGroup) => (
                                       <CommandItem
-                                        className='text-[14px]'
+                                        className='"text-[14px] w-full'
                                         value={getCodeAndNameFamilyGroup({
                                           code: familyGroup.familyGroupCode,
                                           name: familyGroup.familyGroupName,
@@ -1423,7 +1423,7 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                               variant='outline'
                               role='combobox'
                               className={cn(
-                                'w-full justify-between',
+                                'w-full justify-between truncate',
                                 !field.value && 'text-slate-500 font-normal'
                               )}
                             >
@@ -1453,7 +1453,7 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                                   className='h-9 text-[14px]'
                                 />
                                 <CommandEmpty>Zona no encontrada.</CommandEmpty>
-                                <CommandGroup className='max-h-[200px] h-auto'>
+                                <CommandGroup className='max-h-[200px] overflow-y-auto'>
                                   {zonesQuery?.data?.map((zone) => (
                                     <CommandItem
                                       className='text-[14px]'
