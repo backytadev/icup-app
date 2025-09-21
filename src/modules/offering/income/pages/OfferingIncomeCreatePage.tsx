@@ -1259,7 +1259,7 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                                     className='h-9 text-[14px]'
                                   />
                                   <CommandEmpty>Miembro no encontrado.</CommandEmpty>
-                                  <CommandGroup className='max-h-[200px] overflow-y-auto'>
+                                  <CommandGroup className='max-h-[200px] overflow-y-auto sm:overflow-y-hidden sm:h-auto'>
                                     {queryData?.map((item) => (
                                       <CommandItem
                                         className='text-[14px]'
@@ -1349,7 +1349,7 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                                     className='h-9 text-[14px]'
                                   />
                                   <CommandEmpty>Grupo familiar no encontrado.</CommandEmpty>
-                                  <CommandGroup className='max-h-[200px] overflow-y-auto'>
+                                  <CommandGroup className='max-h-[200px] overflow-y-auto sm:overflow-y-hidden sm:h-auto'>
                                     {familyGroupsQuery?.data?.map((familyGroup) => (
                                       <CommandItem
                                         className='"text-[14px] w-full'
@@ -1453,7 +1453,7 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                                   className='h-9 text-[14px]'
                                 />
                                 <CommandEmpty>Zona no encontrada.</CommandEmpty>
-                                <CommandGroup className='max-h-[200px] overflow-y-auto'>
+                                <CommandGroup className='max-h-[200px] overflow-y-auto sm:overflow-y-hidden sm:h-auto'>
                                   {zonesQuery?.data?.map((zone) => (
                                     <CommandItem
                                       className='text-[14px]'

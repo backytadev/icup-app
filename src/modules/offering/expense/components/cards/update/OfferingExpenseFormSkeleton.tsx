@@ -3,7 +3,7 @@ import { Skeleton } from '@/shared/components/ui/skeleton';
 
 export const OfferingExpenseFormSkeleton = (): JSX.Element => {
   return (
-    <CardContent className='py-3 px-1'>
+    <CardContent className='py-3 px-2 md:px-4'>
       <div className='dark:text-slate-300 text-slate-500 font-bold text-[16px] mb-4 md:pl-4'>
         <Skeleton className='ml-2 h-7 w-auto md:w-[40rem]' />
         <Skeleton className='ml-2 h-4 w-auto md:w-[40rem] mt-2' />
@@ -49,7 +49,7 @@ export const OfferingExpenseFormSkeleton = (): JSX.Element => {
             </div>
 
             <div>
-              <div className='flex'>
+              <div className='md:flex'>
                 <Skeleton className='h-4 w-24 mt-5' />
                 <Skeleton className='ml-2 h-4 w-20 mt-5' />
               </div>
@@ -70,7 +70,7 @@ export const OfferingExpenseFormSkeleton = (): JSX.Element => {
             </div>
 
             <div>
-              <div className='flex justify-between mt-6'>
+              <div className='md:flex md:justify-between mt-6'>
                 <Skeleton className='h-6 w-44 mt-5' />
                 <Skeleton className='h-10 w-40 mt-5' />
               </div>
@@ -87,9 +87,9 @@ export const OfferingExpenseFormSkeleton = (): JSX.Element => {
             </div>
           </div>
 
-          <div className='col-start-1 col-end-3 w-[20rem] mx-auto'>
+          <div className='col-start-1 col-end-3 md:w-[20rem] mx-auto'>
             <Skeleton className='h-10 mt-3' />
-            <div className='flex flex-col  justify-center items-center mt-1'>
+            <div className='md:flex md:flex-col md:justify-center md:items-center mt-1'>
               <Skeleton className='text-center h-4 w-64 mt-2' />
               <Skeleton className='text-center h-4 w-60 mt-2' />
             </div>

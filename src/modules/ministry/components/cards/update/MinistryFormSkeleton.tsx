@@ -3,7 +3,7 @@ import { Skeleton } from '@/shared/components/ui/skeleton';
 
 export const MinistryFormSkeleton = (): JSX.Element => {
   return (
-    <CardContent className='py-3 px-6'>
+    <CardContent className='py-3 px-2 md:px-4'>
       <div className='dark:text-slate-300 text-slate-500 font-bold text-[16px] mb-4 pl-0 md:pl-4'>
         <Skeleton className='ml-2 h-7 w-[18rem] md:w-[40rem]' />
       </div>
@@ -34,39 +34,39 @@ export const MinistryFormSkeleton = (): JSX.Element => {
               <Skeleton className='h-5 w-24 mt-5' />
               <Skeleton className='h-[12px] w-44 mt-2' />
               <div className='flex flex-wrap space-x-5 space-y-1 mt-3'>
-                <div className='flex items-center gap-2 mt-2'>
+                <div className='md:flex md:items-center md:gap-2 mt-2'>
                   <Skeleton className='h-5 w-5 rounded-md' />
                   <Skeleton className='h-3 w-10 rounded-md' />
                 </div>
-                <div className='flex items-center gap-2 mt-2'>
+                <div className='md:flex md:items-center md:gap-2 mt-2'>
                   <Skeleton className='h-5 w-5 rounded-md' />
                   <Skeleton className='h-3 w-10 rounded-md' />
                 </div>
-                <div className='flex items-center gap-2 mt-2'>
+                <div className='md:flex md:items-center md:gap-2 mt-2'>
                   <Skeleton className='h-5 w-5 rounded-md' />
                   <Skeleton className='h-3 w-10 rounded-md' />
                 </div>
-                <div className='flex items-center gap-2 mt-2'>
+                <div className='md:flex md:items-center md:gap-2 mt-2'>
                   <Skeleton className='h-5 w-5 rounded-md' />
                   <Skeleton className='h-3 w-10 rounded-md' />
                 </div>
-                <div className='flex items-center gap-2 mt-2'>
+                <div className='md:flex md:items-center md:gap-2 mt-2'>
                   <Skeleton className='h-5 w-5 rounded-md' />
                   <Skeleton className='h-3 w-10 rounded-md' />
                 </div>
-                <div className='flex items-center gap-2 mt-2'>
+                <div className='md:flex md:items-center md:gap-2 mt-2'>
                   <Skeleton className='h-5 w-5 rounded-md' />
                   <Skeleton className='h-3 w-10 rounded-md' />
                 </div>
-                <div className='flex items-center gap-2 mt-2'>
+                <div className='md:flex md:items-center md:gap-2 mt-2'>
                   <Skeleton className='h-5 w-5 rounded-md' />
                   <Skeleton className='h-3 w-10 rounded-md' />
                 </div>
-                <div className='flex items-center gap-2 mt-2'>
+                <div className='md:flex md:items-center md:gap-2 mt-2'>
                   <Skeleton className='h-5 w-5 rounded-md' />
                   <Skeleton className='h-3 w-10 rounded-md' />
                 </div>
-                <div className='flex items-center gap-2 mt-2'>
+                <div className='md:flex md:items-center md:gap-2 mt-2'>
                   <Skeleton className='h-5 w-5 rounded-md' />
                   <Skeleton className='h-3 w-10 rounded-md' />
                 </div>
@@ -145,7 +145,7 @@ export const MinistryFormSkeleton = (): JSX.Element => {
 
           <div className='mt-3 md:mt-1 md:col-start-1 md:col-end-3 md:row-start-3 md:row-end-4 w-full md:w-[20rem] md:m-auto'>
             <Skeleton className='h-10 w-full' />
-            <div className='flex flex-col  justify-center items-center mt-3'>
+            <div className='md:flex md:flex-col md:justify-center md:items-center mt-3'>
               <Skeleton className='text-center h-4 w-64 mt-2' />
               <Skeleton className='text-center h-4 w-64 mt-2' />
             </div>

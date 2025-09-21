@@ -3,7 +3,7 @@ import { Skeleton } from '@/shared/components/ui/skeleton';
 
 export const ZoneFormSkeleton = (): JSX.Element => {
   return (
-    <CardContent className='py-3 px-6'>
+    <CardContent className='py-3 px-2 md:px-4'>
       <div className='dark:text-slate-300 text-slate-500 font-bold text-[16px] mb-4 pl-0 md:pl-4'>
         <Skeleton className='h-7 w-64' />
       </div>
@@ -58,7 +58,7 @@ export const ZoneFormSkeleton = (): JSX.Element => {
 
           <div className='mt-2 md:mt-1 md:col-start-1 md:col-end-3 md:row-start-3 md:row-end-4 w-full md:w-[20rem] md:m-auto'>
             <Skeleton className='h-10 w-full' />
-            <div className='flex flex-col  justify-center items-center mt-1'>
+            <div className='md:flex md:flex-col md:justify-center md:items-center mt-1'>
               <Skeleton className='text-center h-4 w-64 mt-2' />
               <Skeleton className='text-center h-4 w-64 mt-2' />
             </div>

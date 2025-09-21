@@ -759,8 +759,7 @@ export const OfferingExpenseFormUpdate = ({
 
                   {isMessageErrorDisabled ? (
                     <p className='-mb-6 mt-4 md:-mb-6 md:mt-0 md:row-start-2 md:row-end-3 md:col-start-1 md:col-end-3 mx-auto md:w-[80%] lg:w-[80%] text-center text-red-500 text-[12.5px] md:text-[13px] font-bold'>
-                      ❌ Este registro no pude ser modificado, hable con el administrador del
-                      sistema.
+                      ❌ Datos incompletos, completa todos los campos para guardar el registro.
                     </p>
                   ) : (
                     <p className='-mt-3 order-last md:-mt-3 md:row-start-3 md:row-end-4 md:col-start-1 md:col-end-3 mx-auto md:w-[80%] lg:w-[80%] text-center text-green-500 text-[12.5px] md:text-[13px] font-bold'>

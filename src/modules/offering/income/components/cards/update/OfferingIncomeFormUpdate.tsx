@@ -788,7 +788,7 @@ export const OfferingIncomeFormUpdate = ({
                                           className='h-9 text-[14px]'
                                         />
                                         <CommandEmpty>Miembro no encontrado.</CommandEmpty>
-                                        <CommandGroup className='max-h-[200px] overflow-y-auto'>
+                                        <CommandGroup className='max-h-[200px] overflow-y-auto sm:overflow-y-hidden sm:h-auto'>
                                           {queryData?.map((member) => (
                                             <CommandItem
                                               className='text-[14px]'
@@ -905,7 +905,7 @@ export const OfferingIncomeFormUpdate = ({
                                           className='h-9 text-[14px]'
                                         />
                                         <CommandEmpty>Grupo familiar no encontrado.</CommandEmpty>
-                                        <CommandGroup className='max-h-[200px] overflow-y-auto'>
+                                        <CommandGroup className='max-h-[200px] overflow-y-auto sm:overflow-y-hidden sm:h-auto'>
                                           {familyGroupsQuery?.data?.map((familyGroup) => (
                                             <CommandItem
                                               className='text-[14px]'
@@ -1016,18 +1016,24 @@ export const OfferingIncomeFormUpdate = ({
                                         className='h-9 text-[14px]'
                                       />
                                       <CommandEmpty>Zona no encontrada.</CommandEmpty>
-                                      <CommandGroup className='max-h-[200px] overflow-y-auto'>
+                                      <CommandGroup className='max-h-[200px] overflow-y-auto sm:overflow-y-hidden sm:h-auto'>
                                         {zonesQuery?.data?.map((zone) => (
                                           <CommandItem
                                             className='text-[14px]'
-                                            value={`${zone.zoneName} ${getInitialFullNames({ firstNames: zone?.theirSupervisor?.firstNames ?? '', lastNames: zone?.theirSupervisor?.lastNames ?? '' })}`}
+                                            value={`${zone.zoneName} ${getInitialFullNames({
+                                              firstNames: zone?.theirSupervisor?.firstNames ?? '',
+                                              lastNames: zone?.theirSupervisor?.lastNames ?? '',
+                                            })}`}
                                             key={zone.id}
                                             onSelect={() => {
                                               form.setValue('zoneId', zone.id);
                                               setIsInputRelationOpen(false);
                                             }}
                                           >
-                                            {`${zone.zoneName} ~ ${getInitialFullNames({ firstNames: zone?.theirSupervisor?.firstNames ?? '', lastNames: zone?.theirSupervisor?.lastNames ?? '' })}`}
+                                            {`${zone.zoneName} ~ ${getInitialFullNames({
+                                              firstNames: zone?.theirSupervisor?.firstNames ?? '',
+                                              lastNames: zone?.theirSupervisor?.lastNames ?? '',
+                                            })}`}
                                             <CheckIcon
                                               className={cn(
                                                 'ml-auto h-4 w-4',
@@ -1495,8 +1501,7 @@ export const OfferingIncomeFormUpdate = ({
 
                   {isMessageErrorDisabled ? (
                     <p className='-mb-5 mt-2 md:-mb-2 md:row-start-2 md:row-end-3 md:col-start-1 md:col-end-3 mx-auto md:w-[100%] lg:w-[80%] text-center text-red-500 text-[12.5px] md:text-[13px] font-bold'>
-                      ❌ Este registro no pude ser modificado, hable con el administrador del
-                      sistema.
+                      ❌ Datos incompletos, completa todos los campos para guardar el registro.
                     </p>
                   ) : (
                     <p className='-mt-2 order-last md:-mt-3 md:row-start-4 md:row-end-5 md:col-start-1 md:col-end-3 mx-auto md:w-[80%] lg:w-[80%] text-center text-green-500 text-[12.5px] md:text-[13px] font-bold'>

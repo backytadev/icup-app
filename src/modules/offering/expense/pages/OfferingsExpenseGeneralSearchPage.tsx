@@ -12,6 +12,7 @@ import { useForm } from 'react-hook-form';
 import { CalendarIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMediaQuery } from '@react-hook/media-query';
 import { endOfMonth, format, startOfMonth } from 'date-fns';
 
 import { cn } from '@/shared/lib/utils';
@@ -80,6 +81,9 @@ export const OfferingsExpenseGeneralSearchPage = (): JSX.Element => {
   const setIsFiltersSearchGeneralDisabled = useOfferingExpenseStore(
     (state) => state.setIsFiltersSearchGeneralDisabled
   );
+
+  //* Hooks (external libraries)
+  const isDesktop = useMediaQuery('(min-width: 768px)');
 
   //* Forms
   const form = useForm<z.infer<typeof formSearchGeneralSchema>>({
@@ -320,7 +324,7 @@ export const OfferingsExpenseGeneralSearchPage = (): JSX.Element => {
                             mode='range'
                             selected={field.value}
                             onSelect={field.onChange}
-                            numberOfMonths={2}
+                            numberOfMonths={isDesktop ? 2 : 1}
                           />
                         </PopoverContent>
                       </Popover>

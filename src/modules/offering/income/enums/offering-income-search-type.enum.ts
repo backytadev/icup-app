@@ -19,8 +19,8 @@ export enum OfferingIncomeSearchType {
 }
 
 export const OfferingIncomeSearchTypeNames: Record<OfferingIncomeSearchType, string> = {
-  [OfferingIncomeSearchType.FamilyGroup]: 'Ofrendas - Grupo Familiar',
   [OfferingIncomeSearchType.SundayService]: 'Ofrendas - Culto Dominical',
+  [OfferingIncomeSearchType.FamilyGroup]: 'Ofrendas - Grupo Familiar',
   [OfferingIncomeSearchType.ZonalFasting]: 'Ofrenda - Ayuno Zonal',
   [OfferingIncomeSearchType.ZonalVigil]: 'Ofrendas - Vigilia Zonal',
   [OfferingIncomeSearchType.ZonalEvangelism]: 'Ofrendas - Evangelismo Zonal',

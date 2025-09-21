@@ -13,6 +13,7 @@ import { useForm } from 'react-hook-form';
 import { CalendarIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMediaQuery } from '@react-hook/media-query';
 
 import { useOfferingExpenseStore } from '@/stores/offering-expense/offering-expenses.store';
 
@@ -99,6 +100,9 @@ export const OfferingExpenseUpdatePage = (): JSX.Element => {
 
   const [dataForm, setDataForm] = useState<OfferingExpenseSearchFormByTerm>();
   const [searchParams, setSearchParams] = useState<OfferingExpenseSearchFormByTerm | undefined>();
+
+  //* Hooks (external libraries)
+  const isDesktop = useMediaQuery('(min-width: 768px)');
 
   //* Forms
   const form = useForm<z.infer<typeof offeringExpenseSearchByTermFormSchema>>({
@@ -425,7 +429,7 @@ export const OfferingExpenseUpdatePage = (): JSX.Element => {
                             mode='range'
                             selected={field.value}
                             onSelect={field.onChange}
-                            numberOfMonths={2}
+                            numberOfMonths={isDesktop ? 2 : 1}
                           />
                         </PopoverContent>
                       </Popover>

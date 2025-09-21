@@ -32,7 +32,7 @@ export const MetricsOptionsPage = (): JSX.Element => {
           className='row-start-1 row-end-2 md:row-start-1 md:row-end-2 md:col-start-1 md:col-end-2 lg:row-start-1 lg:row-end-3 lg:col-start-1 lg:col-end-2 xl:row-start-1 xl:row-end-2 xl:col-start-1 xl:col-end-2 2xl:row-start-1 2xl:row-end-4 2xl:col-start-1 2xl:col-end-2'
         >
           <WhiteCard className='h-[12rem] md:h-[11rem]' centered>
-            <FcConferenceCall className='text-[5rem] sm:text-[5rem] md:text-[6rem]' />
+            <FcConferenceCall className='text-[4rem] sm:text-[5rem] md:text-[6rem]' />
             <h2 className='text-sky-500 font-bold text-[22px] sm:text-2xl lg:text-3xl xl:text-4xl'>
               Métricas de Miembro
             </h2>
@@ -101,8 +101,8 @@ export const MetricsOptionsPage = (): JSX.Element => {
         >
           <WhiteCard className='h-[15rem] md:h-[12rem] 2xl:gap-y-2' centered>
             <div className='flex'>
-              <FcRefresh className='text-[4.5rem] sm:text-[5rem] md:text-[5.5rem]' />
-              <FaBalanceScale className='text-[4.5rem] sm:text-[5rem] md:text-[5.5rem] text-[#1565C0] xl:text-[6rem]' />
+              <FcRefresh className='text-[3.5rem] sm:text-[5rem] md:text-[5.5rem]' />
+              <FaBalanceScale className='text-[3.5rem] sm:text-[5rem] md:text-[5.5rem] text-[#1565C0] xl:text-[6rem]' />
             </div>
             <h2 className='text-blue-500 font-bold text-[22px] sm:text-2xl lg:text-3xl xl:text-4xl'>
               <span className='block'>Métricas de Ofrenda</span>
