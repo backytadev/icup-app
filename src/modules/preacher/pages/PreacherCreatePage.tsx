@@ -148,8 +148,6 @@ export const PreacherCreatePage = (): JSX.Element => {
 
   //* Watchers
   const residenceDistrict = form.watch('residenceDistrict');
-  const theirSupervisor = form.watch('theirSupervisor');
-  const theirPastorOnlyMinistries = form.watch('theirPastorOnlyMinistries');
   const relationType = form.watch('relationType');
 
   //* Effects
@@ -165,15 +163,15 @@ export const PreacherCreatePage = (): JSX.Element => {
 
   useEffect(() => {
     if (relationType === RelationType.OnlyRelatedHierarchicalCover) {
-      form.setValue('theirPastorOnlyMinistries', undefined);
+      form.setValue('theirPastorOnlyMinistries', '');
     }
     if (relationType === RelationType.OnlyRelatedMinistries) {
-      form.setValue('theirSupervisor', undefined);
+      form.setValue('theirSupervisor', '');
     }
     if (relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover) {
-      form.setValue('theirPastorOnlyMinistries', undefined);
+      form.setValue('theirPastorOnlyMinistries', '');
     }
-  }, [theirSupervisor, theirPastorOnlyMinistries, relationType]);
+  }, [relationType]);
 
   //* Helpers
   const districtsValidation = validateDistrictsAllowedByModule(pathname);
@@ -188,7 +186,6 @@ export const PreacherCreatePage = (): JSX.Element => {
     preacherCreationForm: form,
     isInputDisabled,
     ministryBlocks,
-    setMinistryBlocks,
     setIsMessageErrorDisabled,
     setIsSubmitButtonDisabled,
   });

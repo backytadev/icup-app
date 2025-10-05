@@ -200,11 +200,7 @@ export const preacherFormSchema = z
   })
   .refine(
     (data) => {
-      if (
-        data.roles.includes(MemberRole.Supervisor) &&
-        data.roles.includes(MemberRole.Disciple) &&
-        !data.isDirectRelationToPastor
-      ) {
+      if (data.roles.includes(MemberRole.Supervisor) && !data.isDirectRelationToPastor) {
         return !!data.theirCopastor;
       }
       return true;
@@ -219,7 +215,6 @@ export const preacherFormSchema = z
       if (
         data.roles.includes(MemberRole.Supervisor) &&
         data.roles.includes(MemberRole.Treasurer) &&
-        data.roles.includes(MemberRole.Disciple) &&
         !data.isDirectRelationToPastor
       ) {
         return !!data.theirCopastor;
@@ -233,11 +228,7 @@ export const preacherFormSchema = z
   )
   .refine(
     (data) => {
-      if (
-        data.roles.includes(MemberRole.Supervisor) &&
-        data.roles.includes(MemberRole.Disciple) &&
-        data.isDirectRelationToPastor
-      ) {
+      if (data.roles.includes(MemberRole.Supervisor) && data.isDirectRelationToPastor) {
         return !!data.theirPastorRelationDirect;
       }
       return true;
@@ -252,7 +243,6 @@ export const preacherFormSchema = z
       if (
         data.roles.includes(MemberRole.Supervisor) &&
         data.roles.includes(MemberRole.Treasurer) &&
-        data.roles.includes(MemberRole.Disciple) &&
         data.isDirectRelationToPastor
       ) {
         return !!data.theirPastorRelationDirect;

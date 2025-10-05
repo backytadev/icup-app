@@ -84,6 +84,10 @@ export const CopastorCreatePage = (): JSX.Element => {
   //* Library hooks
   const { pathname } = useLocation();
 
+  // todo: solo poner 2 tipos de relacion la mixta y la de jerarquia en copastor y pastor porque solo se necesitan esos para alternar
+  // todo: revisar el flujo de todo al momento de actualizar y subir de nivel desde disciple hasta pastor.
+  // revisar en especial el flujo de preacher cuando se cambia de supervisor como afecta a las casas, revisar pero terminar el front
+  // generar base form para replicar en todos y selects
   //* Form
   const form = useForm<z.infer<typeof copastorFormSchema>>({
     mode: 'onChange',

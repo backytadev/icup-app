@@ -14,13 +14,13 @@ import {
 export interface SupervisorResponse {
   id: string;
   member: Member;
-  isDirectRelationToPastor: boolean;
   createdAt?: Date;
   createdBy?: CreatedBy;
   updatedAt?: Date;
   updatedBy?: UpdatedBy;
   inactivationCategory?: string;
   inactivationReason?: string;
+  relationType: string;
   preachers?: Preacher[];
   familyGroups?: FamilyGroup[];
   disciples?: Disciple[];

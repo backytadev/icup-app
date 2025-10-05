@@ -10,7 +10,10 @@ import { Department } from '@/shared/enums/department.enum';
 import { MemberRole } from '@/shared/enums/member-role.enum';
 import { UrbanSector } from '@/shared/enums/urban-sector.enum';
 import { RecordStatus } from '@/shared/enums/record-status.enum';
+import { RelationType } from '@/shared/enums/relation-type.enum';
 import { MaritalStatus } from '@/shared/enums/marital-status.enum';
+
+import { MinistryAssignmentSchema } from '@/modules/ministry/validations/ministry-assignment';
 
 export const supervisorFormSchema = z
   .object({
@@ -172,54 +175,70 @@ export const supervisorFormSchema = z
       )
       .optional(),
 
-    isDirectRelationToPastor: z.boolean().optional(),
+    relationType: z
+      .string(
+        z.nativeEnum(RelationType, {
+          required_error: 'El tipo de relación es requerido.',
+        })
+      )
+      .refine((value) => value !== undefined && value.trim() !== '', {
+        message: 'El tipo de relación es requerido.',
+      }),
 
     //* Relations
     theirCopastor: z.string({ required_error: 'Debe asignar un Pastor.' }).optional(),
 
-    theirPastor: z.string({ required_error: 'Debe asignar una Iglesia.' }).optional(),
+    theirPastorRelationDirect: z.string({ required_error: 'Debe asignar un Pastor.' }).optional(),
+
+    theirPastorOnlyMinistries: z.string({ required_error: 'Debe asignar un Pastor.' }).optional(),
+
+    theirPastor: z.string({ required_error: 'Debe asignar un Pastor.' }).optional(),
+
+    theirMinistries: z.array(MinistryAssignmentSchema).optional(),
   })
   .refine(
     (data) => {
       if (
         data.roles.includes(MemberRole.Supervisor) &&
-        data.roles.includes(MemberRole.Disciple) &&
-        !data.isDirectRelationToPastor
+        data.relationType === RelationType.RelatedDirectToPastor
+      ) {
+        return !!data.theirPastorRelationDirect;
+      }
+      return true;
+    },
+    {
+      message: 'Debe asignar un Co-Pastor.',
+      path: ['theirPastorRelationDirect'],
+    }
+  )
+  .refine(
+    (data) => {
+      if (
+        data.roles.includes(MemberRole.Supervisor) &&
+        data.relationType === RelationType.OnlyRelatedMinistries
+      ) {
+        return !!data.theirPastorOnlyMinistries;
+      }
+      return true;
+    },
+    {
+      message: 'Debe asignar un Pastor.',
+      path: ['theirPastorOnlyMinistries'],
+    }
+  )
+  .refine(
+    (data) => {
+      if (
+        data.roles.includes(MemberRole.Supervisor) &&
+        (data.relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover ||
+          data.relationType === RelationType.OnlyRelatedHierarchicalCover)
       ) {
         return !!data.theirCopastor;
       }
       return true;
     },
     {
-      message: 'Debe asignar un Co-Pastor.',
+      message: 'Debe asignar un Pastor.',
       path: ['theirCopastor'],
-    }
-  )
-  .refine(
-    (data) => {
-      if (
-        data.roles.includes(MemberRole.Supervisor) &&
-        data.roles.includes(MemberRole.Disciple) &&
-        data.isDirectRelationToPastor
-      ) {
-        return !!data.theirPastor;
-      }
-      return true;
-    },
-    {
-      message: 'Debe asignar un Pastor.',
-      path: ['theirPastor'],
-    }
-  )
-  .refine(
-    (data) => {
-      if (data.roles.includes(MemberRole.Copastor) && data.roles.includes(MemberRole.Disciple)) {
-        return !!data.theirPastor;
-      }
-      return true;
-    },
-    {
-      message: 'Debe asignar un Pastor.',
-      path: ['theirPastor'],
     }
   );

@@ -17,8 +17,11 @@ import {
 } from '@/shared/enums/member-inactivation-category.enum';
 import { RecordStatus } from '@/shared/enums/record-status.enum';
 import { type Gender, GenderNames } from '@/shared/enums/gender.enum';
-import { MinistryType, MinistryTypeNames } from '@/modules/ministry/enums/ministry-type.enum';
 import { type MemberRole, MemberRoleNames } from '@/shared/enums/member-role.enum';
+import { RelationType, RelationTypeModuleNames } from '@/shared/enums/relation-type.enum';
+
+import { MinistryMemberRole } from '@/modules/ministry/enums/ministry-member-role.enum';
+import { MinistryType, MinistryTypeNames } from '@/modules/ministry/enums/ministry-type.enum';
 
 import {
   formatDateToLimaTime,
@@ -36,8 +39,6 @@ import {
 } from '@/shared/components/ui/card';
 import { Label } from '@/shared/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
-import { MinistryMemberRole } from '@/modules/ministry/enums/ministry-member-role.enum';
-import { RelationType, RelationTypeModuleNames } from '@/shared/enums/relation-type.enum';
 
 interface PreacherTabsCardProps {
   id: string;
@@ -76,8 +77,6 @@ export const PreacherTabsCard = ({ data, id }: PreacherTabsCardProps): JSX.Eleme
     (item) =>
       `${MinistryTypeNames[item.ministryType as MinistryType]} ~ (${item.churchMinistryName})`
   );
-
-  console.log(data);
 
   return (
     <Tabs defaultValue='general-info' className='md:-mt-8 w-[650px] md:w-[630px]'>

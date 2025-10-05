@@ -63,8 +63,8 @@ export const AlertUpdateRelationDisciple = ({
                   <span>G. Familiar:</span>{' '}
                   <strong>{`${data?.theirFamilyGroup?.familyGroupCode ?? 'Sin Grupo Familiar'} ~ 
                       ${getInitialFullNames({
-                        firstNames: data?.theirPreacher?.firstNames ?? '',
-                        lastNames: data?.theirPreacher?.lastNames ?? '',
+                        firstNames: data?.theirPreacher?.firstNames ?? 'Sin',
+                        lastNames: data?.theirPreacher?.lastNames ?? 'Predicador',
                       })}
                   `}</strong>
                 </p>
