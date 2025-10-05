@@ -30,7 +30,7 @@ import { useUserStore } from '@/stores/user/user.store';
 import { getGeneralUsersReport, getUsers } from '@/modules/user/services/user.service';
 import { type UserQueryParams } from '@/modules/user/interfaces/user-query-params.interface';
 
-import { LoadingSpinner } from '@/shared/components/spinner/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 
 import { type GeneralSearchForm } from '@/shared/interfaces/search-general-form.interface';
 

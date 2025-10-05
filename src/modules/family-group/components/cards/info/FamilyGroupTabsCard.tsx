@@ -18,7 +18,7 @@ import { FamilyGroupServiceTimeNames } from '@/modules/family-group/enums/family
 
 import { cn } from '@/shared/lib/utils';
 
-import { PopoverDataCard } from '@/shared/components/card/PopoverDataCard';
+import { PopoverDataCard } from '@/shared/components/cards/PopoverDataCard';
 
 import {
   formatDateToLimaTime,

@@ -41,7 +41,7 @@ import {
 
 import { useFamilyGroupStore } from '@/stores/family-group/family-group.store';
 
-import { LoadingSpinner } from '@/shared/components/spinner/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 
 import {
   Table,

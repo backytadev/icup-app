@@ -36,7 +36,7 @@ import {
 } from '@/modules/offering/expense/services/offering-expense.service';
 import { type OfferingExpenseQueryParams } from '@/modules/offering/expense/interfaces/offering-expense-query-params.interface';
 
-import { LoadingSpinner } from '@/shared/components/spinner/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 import { type GeneralSearchForm } from '@/shared/interfaces/search-general-form.interface';
 import { timeStampFormatterToDDMMYY } from '@/shared/helpers/date-formatter-to-ddmmyyyy.helper';
 

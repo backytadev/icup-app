@@ -21,8 +21,8 @@ import { GeneralPreacherSearchDataTable } from '@/modules/preacher/components/da
 
 import { type PreacherResponse } from '@/modules/preacher/interfaces/preacher-response.interface';
 
-import { PageTitle } from '@/shared/components/page/PageTitle';
-import { SearchTitle } from '@/shared/components/page/SearchTitle';
+import { PageTitle } from '@/shared/components/page-header/PageTitle';
+import { SearchTitle } from '@/shared/components/page-header/SearchTitle';
 
 import { RecordOrder, RecordOrderNames } from '@/shared/enums/record-order.enum';
 import { type GeneralSearchForm } from '@/shared/interfaces/search-general-form.interface';

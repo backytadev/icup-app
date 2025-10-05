@@ -30,7 +30,7 @@ import { type ChurchQueryParams } from '@/modules/church/interfaces/church-query
 
 import { useChurchStore } from '@/stores/church/church.store';
 
-import { LoadingSpinner } from '@/shared/components/spinner/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 import { type GeneralSearchForm } from '@/shared/interfaces/search-general-form.interface';
 
 import {

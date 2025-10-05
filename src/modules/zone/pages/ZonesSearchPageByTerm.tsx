@@ -34,8 +34,8 @@ import { SearchByTermZoneDataTable } from '@/modules/zone/components/data-tables
 
 import { cn } from '@/shared/lib/utils';
 
-import { PageTitle } from '@/shared/components/page/PageTitle';
-import { SearchTitle } from '@/shared/components/page/SearchTitle';
+import { PageTitle } from '@/shared/components/page-header/PageTitle';
+import { SearchTitle } from '@/shared/components/page-header/SearchTitle';
 
 import { RecordOrder, RecordOrderNames } from '@/shared/enums/record-order.enum';
 import { firstNamesFormatter, lastNamesFormatter } from '@/shared/helpers/names-formatter.helper';

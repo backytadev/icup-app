@@ -9,7 +9,7 @@ import { Root } from '@/Root';
 
 import { AuthLayout } from '@/layouts/AuthLayout';
 
-import { LoadingSpinner } from '@/shared/components/spinner/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 
 //? Routers by module
 //* Members

@@ -7,7 +7,7 @@ import { NavLink } from 'react-router-dom';
 import { RiDeleteBin2Fill } from 'react-icons/ri';
 import { FcBusinessman, FcClearFilters, FcSearch, FcSupport } from 'react-icons/fc';
 
-import { WhiteCard } from '@/shared/components/card/WhiteCard';
+import { WhiteCard } from '@/shared/components/cards/WhiteCard';
 
 export const SupervisorOptionsPage = (): JSX.Element => {
   useEffect(() => {

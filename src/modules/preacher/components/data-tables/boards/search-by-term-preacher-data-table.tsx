@@ -41,7 +41,7 @@ import {
 import { type PreacherQueryParams } from '@/modules/preacher/interfaces/preacher-query-params.interface';
 import { type PreacherSearchFormByTerm } from '@/modules/preacher/interfaces/preacher-form-search-by-term.interface';
 
-import { LoadingSpinner } from '@/shared/components/spinner/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 import { dateFormatterToDDMMYYYY } from '@/shared/helpers/date-formatter-to-ddmmyyyy.helper';
 
 import {

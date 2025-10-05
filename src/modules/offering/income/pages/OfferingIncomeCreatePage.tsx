@@ -64,7 +64,7 @@ import { cn } from '@/shared/lib/utils';
 import { GenderNames } from '@/shared/enums/gender.enum';
 import { getCodeAndNameFamilyGroup } from '@/shared/helpers/get-code-and-name-family-group.helper';
 
-import { PageTitle } from '@/shared/components/page/PageTitle';
+import { PageTitle } from '@/shared/components/page-header/PageTitle';
 import { getFullNames, getInitialFullNames } from '@/shared/helpers/get-full-names.helper';
 
 import {

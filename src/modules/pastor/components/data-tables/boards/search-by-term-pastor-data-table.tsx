@@ -36,7 +36,7 @@ import { type PastorSearchFormByTerm } from '@/modules/pastor/interfaces/pastor-
 
 import { usePastorStore } from '@/stores/pastor/pastor.store';
 
-import { LoadingSpinner } from '@/shared/components/spinner/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 import { dateFormatterToDDMMYYYY } from '@/shared/helpers/date-formatter-to-ddmmyyyy.helper';
 
 import {

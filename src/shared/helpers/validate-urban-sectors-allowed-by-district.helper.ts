@@ -9,7 +9,7 @@ import {
 import { District } from '@/shared/enums/district.enum';
 import { UrbanSectorNames } from '@/shared/enums/urban-sector.enum';
 
-interface DisabledUrbanSectorsResult {
+export interface DisabledUrbanSectorsResult {
   urbanSectorsDataResult: string[];
 }
 

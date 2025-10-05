@@ -33,7 +33,7 @@ import { type SupervisorQueryParams } from '@/modules/supervisor/interfaces/supe
 
 import { useSupervisorStore } from '@/stores/supervisor/supervisor.store';
 
-import { LoadingSpinner } from '@/shared/components/spinner/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 
 import { type GeneralSearchForm } from '@/shared/interfaces/search-general-form.interface';
 

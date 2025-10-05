@@ -35,7 +35,7 @@ import { useMinistryStore } from '@/stores/ministry/ministry.store';
 
 import { getSimpleChurches } from '@/modules/church/services/church.service';
 
-import { LoadingSpinner } from '@/shared/components/spinner/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 import { dateFormatterToDDMMYYYY } from '@/shared/helpers/date-formatter-to-ddmmyyyy.helper';
 
 import {

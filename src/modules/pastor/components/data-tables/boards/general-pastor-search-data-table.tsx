@@ -30,7 +30,7 @@ import { usePastorStore } from '@/stores/pastor/pastor.store';
 import { getGeneralPastorsReport, getPastors } from '@/modules/pastor/services/pastor.service';
 import { type PastorQueryParams } from '@/modules/pastor/interfaces/pastor-query-params.interface';
 
-import { LoadingSpinner } from '@/shared/components/spinner/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 import { type GeneralSearchForm } from '@/shared/interfaces/search-general-form.interface';
 
 import {

@@ -33,7 +33,7 @@ import { type MinistryQueryParams } from '@/modules/ministry/interfaces/ministry
 
 import { useMinistryStore } from '@/stores/ministry/ministry.store';
 
-import { LoadingSpinner } from '@/shared/components/spinner/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 import { type GeneralSearchForm } from '@/shared/interfaces/search-general-form.interface';
 
 import {

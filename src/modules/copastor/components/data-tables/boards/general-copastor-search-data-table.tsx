@@ -33,7 +33,7 @@ import {
 } from '@/modules/copastor/services/copastor.service';
 import { type CopastorQueryParams } from '@/modules/copastor/interfaces/copastor-query-params.interface';
 
-import { LoadingSpinner } from '@/shared/components/spinner/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 import { type GeneralSearchForm } from '@/shared/interfaces/search-general-form.interface';
 
 import {

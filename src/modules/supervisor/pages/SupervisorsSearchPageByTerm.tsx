@@ -44,8 +44,8 @@ import {
   SupervisorSearchNamesByMaritalStatus,
 } from '@/modules/supervisor/enums/supervisor-search-select-option.enum';
 
-import { PageTitle } from '@/shared/components/page/PageTitle';
-import { SearchTitle } from '@/shared/components/page/SearchTitle';
+import { PageTitle } from '@/shared/components/page-header/PageTitle';
+import { SearchTitle } from '@/shared/components/page-header/SearchTitle';
 
 import { RecordOrder, RecordOrderNames } from '@/shared/enums/record-order.enum';
 

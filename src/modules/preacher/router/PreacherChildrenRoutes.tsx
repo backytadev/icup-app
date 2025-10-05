@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/promise-function-async */
 
 import { lazy, Suspense } from 'react';
-import { LoadingSpinner } from '@/shared/components/spinner/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 
 //! Lazy load children routes
 const LazyPreacherInactivatePage = lazy(

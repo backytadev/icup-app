@@ -8,7 +8,7 @@ import { PiChurch } from 'react-icons/pi';
 import { RiDeleteBin2Fill } from 'react-icons/ri';
 import { FcClearFilters, FcSearch, FcSupport } from 'react-icons/fc';
 
-import { WhiteCard } from '@/shared/components/card/WhiteCard';
+import { WhiteCard } from '@/shared/components/cards/WhiteCard';
 
 export const ChurchOptionsPage = (): JSX.Element => {
   useEffect(() => {

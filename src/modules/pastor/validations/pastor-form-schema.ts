@@ -11,6 +11,9 @@ import { MemberRole } from '@/shared/enums/member-role.enum';
 import { UrbanSector } from '@/shared/enums/urban-sector.enum';
 import { RecordStatus } from '@/shared/enums/record-status.enum';
 import { MaritalStatus } from '@/shared/enums/marital-status.enum';
+import { RelationType } from '@/shared/enums/relation-type.enum';
+
+import { MinistryAssignmentSchema } from '@/modules/ministry/validations/ministry-assignment';
 
 export const pastorFormSchema = z
   .object({
@@ -172,8 +175,20 @@ export const pastorFormSchema = z
       )
       .optional(),
 
+    relationType: z
+      .string(
+        z.nativeEnum(RelationType, {
+          required_error: 'El tipo de relación es requerido.',
+        })
+      )
+      .refine((value) => value !== undefined && value.trim() !== '', {
+        message: 'El tipo de relación es requerido.',
+      }),
+
     //* Relations
     theirChurch: z.string({ required_error: 'Debe asignar una Iglesia.' }).optional(),
+
+    theirMinistries: z.array(MinistryAssignmentSchema).optional(),
   })
   .refine(
     (data) => {

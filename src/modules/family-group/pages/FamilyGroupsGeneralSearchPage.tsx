@@ -20,8 +20,8 @@ import { GeneralFamilyGroupSearchDataTable } from '@/modules/family-group/compon
 
 import { type FamilyGroupResponse } from '@/modules/family-group/interfaces/family-group-response.interface';
 
-import { PageTitle } from '@/shared/components/page/PageTitle';
-import { SearchTitle } from '@/shared/components/page/SearchTitle';
+import { PageTitle } from '@/shared/components/page-header/PageTitle';
+import { SearchTitle } from '@/shared/components/page-header/SearchTitle';
 import { type GeneralSearchForm } from '@/shared/interfaces/search-general-form.interface';
 
 import { RecordOrder, RecordOrderNames } from '@/shared/enums/record-order.enum';

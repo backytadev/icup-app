@@ -30,7 +30,7 @@ import {
   CardDescription,
 } from '@/shared/components/ui/card';
 import { Label } from '@/shared/components/ui/label';
-import { PopoverDataCard } from '@/shared/components/card/PopoverDataCard';
+import { PopoverDataCard } from '@/shared/components/cards/PopoverDataCard';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
 
 interface ZoneTabsCardProps {

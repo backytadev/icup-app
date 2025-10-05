@@ -1,9 +1,5 @@
 import { type MemberRole } from '@/shared/enums/member-role.enum';
-
-export interface MinistryAssignment {
-  ministryId: string | null;
-  ministryRoles: string[];
-}
+import { MinistryAssignment } from '@/shared/interfaces/ministry-assignment';
 
 export interface DiscipleFormData {
   firstNames: string;

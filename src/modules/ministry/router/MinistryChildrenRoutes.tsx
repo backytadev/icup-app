@@ -2,7 +2,7 @@
 
 import { lazy, Suspense } from 'react';
 import { type RouteObject } from 'react-router-dom';
-import { LoadingSpinner } from '@/shared/components/spinner/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 
 //! Lazy load children routes
 const LazyMinistriesSearchPageByTerm = lazy(

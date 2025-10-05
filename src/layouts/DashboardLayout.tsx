@@ -8,7 +8,7 @@ import { useAuthStore } from '@/stores/auth/auth.store';
 
 import { SideMenu } from '@/shared/components/side-menu/SideMenu';
 import { ToggleLayout } from '@/shared/components/toggle-theme/ToggleLayout';
-import { LoadingSpinner } from '@/shared/components/spinner/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 
 export const DashboardLayout = (): JSX.Element | null => {
   //* States

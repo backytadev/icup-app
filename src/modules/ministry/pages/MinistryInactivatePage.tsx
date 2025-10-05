@@ -42,8 +42,8 @@ import { ministrySearchByTermFormSchema } from '@/modules/ministry/validations/m
 
 import { dateFormatterTermToTimestamp } from '@/shared/helpers/date-formatter-to-timestamp.helper';
 
-import { PageTitle } from '@/shared/components/page/PageTitle';
-import { SearchTitle } from '@/shared/components/page/SearchTitle';
+import { PageTitle } from '@/shared/components/page-header/PageTitle';
+import { SearchTitle } from '@/shared/components/page-header/SearchTitle';
 
 import {
   Form,

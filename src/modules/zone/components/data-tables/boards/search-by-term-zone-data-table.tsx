@@ -33,7 +33,7 @@ import { ZoneSearchSelectOptionNames } from '@/modules/zone/enums/zone-search-se
 
 import { useZoneStore } from '@/stores/zone/zone.store';
 
-import { LoadingSpinner } from '@/shared/components/spinner/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 
 import {
   Table,

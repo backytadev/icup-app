@@ -47,7 +47,7 @@ import { useImagesUploadMutation } from '@/modules/offering/shared/hooks/useImag
 import { type FilesProps } from '@/modules/offering/shared/interfaces/files-props.interface';
 import { type RejectionProps } from '@/modules/offering/shared/interfaces/rejected-props.interface';
 
-import { PageTitle } from '@/shared/components/page/PageTitle';
+import { PageTitle } from '@/shared/components/page-header/PageTitle';
 
 import {
   Form,

@@ -1,4 +1,5 @@
 import { type MemberRole } from '@/shared/enums/member-role.enum';
+import { MinistryAssignment } from '@/shared/interfaces/ministry-assignment';
 
 export interface CopastorFormData {
   firstNames: string;
@@ -18,10 +19,12 @@ export interface CopastorFormData {
   residenceUrbanSector: string;
   residenceAddress: string;
   referenceAddress: string;
+  relationType: string;
   roles: MemberRole[];
   recordStatus?: string | undefined;
   theirPastor?: string | undefined;
   theirChurch?: string | undefined;
+  theirMinistries?: MinistryAssignment[] | undefined;
 }
 
 export type CopastorFormDataKeys =
@@ -42,7 +45,9 @@ export type CopastorFormDataKeys =
   | 'residenceUrbanSector'
   | 'residenceAddress'
   | 'referenceAddress'
+  | 'relationType'
   | 'roles'
   | 'recordStatus'
   | 'theirPastor'
-  | 'theirChurch';
+  | 'theirChurch'
+  | 'theirMinistries';

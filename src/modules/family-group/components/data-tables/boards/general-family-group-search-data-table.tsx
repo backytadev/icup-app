@@ -33,7 +33,7 @@ import { type FamilyGroupQueryParams } from '@/modules/family-group/interfaces/f
 
 import { useFamilyGroupStore } from '@/stores/family-group/family-group.store';
 
-import { LoadingSpinner } from '@/shared/components/spinner/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 import { type GeneralSearchForm } from '@/shared/interfaces/search-general-form.interface';
 
 import {

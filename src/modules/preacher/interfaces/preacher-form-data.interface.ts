@@ -1,5 +1,5 @@
-import { MinistryAssignment } from '@/modules/disciple/interfaces/disciple-form-data.interface';
 import { type MemberRole } from '@/shared/enums/member-role.enum';
+import { MinistryAssignment } from '@/shared/interfaces/ministry-assignment';
 
 export interface PreacherFormData {
   firstNames: string;

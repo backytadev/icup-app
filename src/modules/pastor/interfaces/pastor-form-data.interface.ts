@@ -1,4 +1,5 @@
 import { type MemberRole } from '@/shared/enums/member-role.enum';
+import { MinistryAssignment } from '@/shared/interfaces/ministry-assignment';
 export interface PastorFormData {
   firstNames: string;
   lastNames: string;
@@ -17,9 +18,11 @@ export interface PastorFormData {
   residenceUrbanSector: string;
   residenceAddress: string;
   referenceAddress: string;
+  relationType: string;
   roles: MemberRole[];
   recordStatus?: string | undefined;
   theirChurch?: string | undefined;
+  theirMinistries?: MinistryAssignment[] | undefined;
 }
 
 export type PastorFormDataKeys =
@@ -40,6 +43,8 @@ export type PastorFormDataKeys =
   | 'residenceUrbanSector'
   | 'residenceAddress'
   | 'referenceAddress'
+  | 'relationType'
   | 'roles'
   | 'status'
-  | 'theirChurch';
+  | 'theirChurch'
+  | 'theirMinistries';

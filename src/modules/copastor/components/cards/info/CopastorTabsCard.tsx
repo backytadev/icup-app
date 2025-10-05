@@ -25,7 +25,7 @@ import {
 } from '@/shared/helpers/format-date-to-lima';
 import { getInitialFullNames } from '@/shared/helpers/get-full-names.helper';
 
-import { PopoverDataCard } from '@/shared/components/card/PopoverDataCard';
+import { PopoverDataCard } from '@/shared/components/cards/PopoverDataCard';
 
 import {
   Card,

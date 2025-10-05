@@ -13,7 +13,7 @@ export const RelationTypeNames: Record<RelationType, string> = {
     'Con ministerios y cobertura jerárquica',
 };
 
-type ModuleName = 'disciple' | 'preacher' | 'supervisor' | 'copastor';
+export type ModuleName = 'disciple' | 'preacher' | 'supervisor' | 'copastor' | 'pastor';
 
 export const RelationTypeModuleNames: Record<ModuleName, Partial<Record<RelationType, string>>> = {
   disciple: {
@@ -34,7 +34,10 @@ export const RelationTypeModuleNames: Record<ModuleName, Partial<Record<Relation
   },
   copastor: {
     [RelationType.OnlyRelatedHierarchicalCover]: 'Solo con pastor',
-    [RelationType.OnlyRelatedMinistries]: 'Solo con ministerios',
     [RelationType.RelatedBothMinistriesAndHierarchicalCover]: 'Con pastor y ministerios',
+  },
+  pastor: {
+    [RelationType.OnlyRelatedHierarchicalCover]: 'Solo con iglesia',
+    [RelationType.RelatedBothMinistriesAndHierarchicalCover]: 'Con iglesia y ministerios',
   },
 };

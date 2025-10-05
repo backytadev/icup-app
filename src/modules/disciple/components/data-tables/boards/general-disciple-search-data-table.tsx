@@ -33,7 +33,7 @@ import {
 } from '@/modules/disciple/services/disciple.service';
 import { type DiscipleQueryParams } from '@/modules/disciple/interfaces/disciple-query-params.interface';
 
-import { LoadingSpinner } from '@/shared/components/spinner/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 import { type GeneralSearchForm } from '@/shared/interfaces/search-general-form.interface';
 
 import {

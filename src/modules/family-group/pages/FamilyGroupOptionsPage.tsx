@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom';
 import { RiDeleteBin2Fill } from 'react-icons/ri';
 import { FcClearFilters, FcHome, FcSearch, FcSupport } from 'react-icons/fc';
 
-import { WhiteCard } from '@/shared/components/card/WhiteCard';
+import { WhiteCard } from '@/shared/components/cards/WhiteCard';
 
 export const FamilyGroupOptionsPage = (): JSX.Element => {
   useEffect(() => {

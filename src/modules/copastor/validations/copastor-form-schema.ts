@@ -10,7 +10,9 @@ import { Department } from '@/shared/enums/department.enum';
 import { MemberRole } from '@/shared/enums/member-role.enum';
 import { UrbanSector } from '@/shared/enums/urban-sector.enum';
 import { RecordStatus } from '@/shared/enums/record-status.enum';
+import { RelationType } from '@/shared/enums/relation-type.enum';
 import { MaritalStatus } from '@/shared/enums/marital-status.enum';
+import { MinistryAssignmentSchema } from '@/modules/ministry/validations/ministry-assignment';
 
 export const copastorFormSchema = z
   .object({
@@ -172,14 +174,26 @@ export const copastorFormSchema = z
       )
       .optional(),
 
+    relationType: z
+      .string(
+        z.nativeEnum(RelationType, {
+          required_error: 'El tipo de relación es requerido.',
+        })
+      )
+      .refine((value) => value !== undefined && value.trim() !== '', {
+        message: 'El tipo de relación es requerido.',
+      }),
+
     //* Relations
     theirPastor: z.string({ required_error: 'Debe asignar un Pastor.' }).optional(),
 
     theirChurch: z.string({ required_error: 'Debe asignar una Iglesia.' }).optional(),
+
+    theirMinistries: z.array(MinistryAssignmentSchema).optional(),
   })
   .refine(
     (data) => {
-      if (data.roles.includes(MemberRole.Copastor) && data.roles.includes(MemberRole.Disciple)) {
+      if (data.roles.includes(MemberRole.Copastor)) {
         return !!data.theirPastor;
       }
       return true;
@@ -191,7 +205,7 @@ export const copastorFormSchema = z
   )
   .refine(
     (data) => {
-      if (data.roles.includes(MemberRole.Pastor) && data.roles.includes(MemberRole.Disciple)) {
+      if (data.roles.includes(MemberRole.Pastor)) {
         return !!data.theirChurch;
       }
       return true;

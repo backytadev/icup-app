@@ -21,8 +21,8 @@ import { supervisorInfoColumns as columns } from '@/modules/supervisor/component
 
 import { type SupervisorResponse } from '@/modules/supervisor/interfaces/supervisor-response.interface';
 
-import { PageTitle } from '@/shared/components/page/PageTitle';
-import { SearchTitle } from '@/shared/components/page/SearchTitle';
+import { PageTitle } from '@/shared/components/page-header/PageTitle';
+import { SearchTitle } from '@/shared/components/page-header/SearchTitle';
 
 import { RecordOrder, RecordOrderNames } from '@/shared/enums/record-order.enum';
 import { formSearchGeneralSchema } from '@/shared/validations/form-search-general-schema';

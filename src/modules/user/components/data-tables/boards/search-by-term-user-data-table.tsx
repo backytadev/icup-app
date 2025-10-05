@@ -33,7 +33,7 @@ import { UserSearchType, UserSearchTypeNames } from '@/modules/user/enums/user-s
 import { UserSearchSelectOptionNames } from '@/modules/user/enums/user-search-select-option.enum';
 
 import { useUserStore } from '@/stores/user/user.store';
-import { LoadingSpinner } from '@/shared/components/spinner/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 
 import {
   Table,

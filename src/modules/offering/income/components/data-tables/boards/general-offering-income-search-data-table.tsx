@@ -40,7 +40,7 @@ import { OfferingIncomeResumeCard } from '@/modules/offering/income/components/c
 
 import { useOfferingIncomeStore } from '@/stores/offering-income/offering-income.store';
 
-import { LoadingSpinner } from '@/shared/components/spinner/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 import { type GeneralSearchForm } from '@/shared/interfaces/search-general-form.interface';
 import { timeStampFormatterToDDMMYY } from '@/shared/helpers/date-formatter-to-ddmmyyyy.helper';
 

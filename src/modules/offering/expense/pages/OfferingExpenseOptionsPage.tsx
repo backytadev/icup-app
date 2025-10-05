@@ -7,7 +7,7 @@ import { GiExpense } from 'react-icons/gi';
 import { RiDeleteBin2Fill } from 'react-icons/ri';
 import { FcClearFilters, FcSearch, FcSupport } from 'react-icons/fc';
 
-import { WhiteCard } from '@/shared/components/card/WhiteCard';
+import { WhiteCard } from '@/shared/components/cards/WhiteCard';
 
 export const OfferingExpenseOptionsPage = (): JSX.Element => {
   useEffect(() => {

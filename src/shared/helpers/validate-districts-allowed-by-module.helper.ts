@@ -6,7 +6,7 @@ import {
 } from '@/shared/helpers/allowed-districts-by-module.helper';
 import { DistrictNames } from '@/shared/enums/district.enum';
 
-interface DisabledDistrictsResult {
+export interface DisabledDistrictsResult {
   districtsDataResult: string[];
 }
 

@@ -25,8 +25,8 @@ import { GeneralOfferingIncomeSearchDataTable } from '@/modules/offering/income/
 
 import { type OfferingIncomeResponse } from '@/modules/offering/income/interfaces/offering-income-response.interface';
 
-import { PageTitle } from '@/shared/components/page/PageTitle';
-import { SearchTitle } from '@/shared/components/page/SearchTitle';
+import { PageTitle } from '@/shared/components/page-header/PageTitle';
+import { SearchTitle } from '@/shared/components/page-header/SearchTitle';
 
 import { type GeneralSearchForm } from '@/shared/interfaces/search-general-form.interface';
 import { formSearchGeneralSchema } from '@/shared/validations/form-search-general-schema';

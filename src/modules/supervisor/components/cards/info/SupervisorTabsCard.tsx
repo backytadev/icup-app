@@ -26,7 +26,7 @@ import {
   formatDateToLimaTime,
   formatDateToLimaDayMonthYear,
 } from '@/shared/helpers/format-date-to-lima';
-import { PopoverDataCard } from '@/shared/components/card/PopoverDataCard';
+import { PopoverDataCard } from '@/shared/components/cards/PopoverDataCard';
 import { getInitialFullNames } from '@/shared/helpers/get-full-names.helper';
 
 import {

@@ -33,7 +33,7 @@ import { type ChurchSearchFormByTerm } from '@/modules/church/interfaces/church-
 
 import { useChurchStore } from '@/stores/church/church.store';
 
-import { LoadingSpinner } from '@/shared/components/spinner/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 import { dateFormatterToDDMMYYYY } from '@/shared/helpers/date-formatter-to-ddmmyyyy.helper';
 
 import {

@@ -25,7 +25,8 @@ import { useMinistryCreationMutation } from '@/modules/ministry/hooks/useMinistr
 import { useMinistryCreationSubmitButtonLogic } from '@/modules/ministry/hooks/useMinistryCreationSubmitButtonLogic';
 
 import { cn } from '@/shared/lib/utils';
-import { PageTitle } from '@/shared/components/page/PageTitle';
+import { PageTitle } from '@/shared/components/page-header/PageTitle';
+import { PageSubTitle } from '@/shared/components/page-header/PageSubTitle';
 
 import {
   MinistryServiceTime,
@@ -152,15 +153,12 @@ export const MinistryCreatePage = (): JSX.Element => {
     <div className='animate-fadeInPage'>
       <PageTitle className='text-amber-500 dark:text-amber-400'>Modulo Ministerio</PageTitle>
 
-      <h1 className='text-left pb-[2px] pt-2 px-4 sm:px-5 2xl:px-10 font-sans font-bold text-green-500 text-[1.6rem] sm:text-[1.75rem] md:text-[1.85rem] lg:text-[1.9rem] xl:text-[2.1rem] 2xl:text-4xl'>
-        Crear un nuevo ministerio
-      </h1>
+      <PageSubTitle
+        subTitle='Crear un nuevo ministerio'
+        description='Por favor llena los siguientes datos para crear un nuevo ministerio.'
+      />
 
-      <p className='dark:text-slate-300 text-left font-sans font-bold pl-5 pr-6 sm:pl-7 2xl:px-14 text-[13.5px] md:text-[15px] xl:text-base'>
-        Por favor llena los siguientes datos para crear un nuevo ministerio.
-      </p>
-
-      <div className='flex flex-col items-center pb-8 gap-y-8 md:gap-y-8 px-5 py-4 sm:px-12 sm:py-8 2xl:px-[5rem] 2xl:py-8 max-h-full'>
+      <div className='flex flex-col items-center pb-8 px-5 py-4 sm:px-12 sm:py-4 2xl:px-[5rem] 2xl:py-8 max-h-full'>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(handleSubmit)}

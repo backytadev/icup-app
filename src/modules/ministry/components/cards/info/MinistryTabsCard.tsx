@@ -9,7 +9,7 @@ import {
   formatDateToLimaDayMonthYear,
 } from '@/shared/helpers/format-date-to-lima';
 import { RecordStatus } from '@/shared/enums/record-status.enum';
-import { PopoverDataCard } from '@/shared/components/card/PopoverDataCard';
+import { PopoverDataCard } from '@/shared/components/cards/PopoverDataCard';
 import { getInitialFullNames } from '@/shared/helpers/get-full-names.helper';
 
 import {

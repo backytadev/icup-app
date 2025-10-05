@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { FcBearish, FcBullish } from 'react-icons/fc';
 
-import { WhiteCard } from '@/shared/components/card/WhiteCard';
+import { WhiteCard } from '@/shared/components/cards/WhiteCard';
 
 export const OfferingOptionsPage = (): JSX.Element => {
   useEffect(() => {

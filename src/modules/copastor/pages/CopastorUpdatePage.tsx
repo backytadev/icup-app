@@ -48,8 +48,8 @@ import { RecordOrder, RecordOrderNames } from '@/shared/enums/record-order.enum'
 import { firstNamesFormatter, lastNamesFormatter } from '@/shared/helpers/names-formatter.helper';
 import { dateFormatterTermToTimestamp } from '@/shared/helpers/date-formatter-to-timestamp.helper';
 
-import { PageTitle } from '@/shared/components/page/PageTitle';
-import { SearchTitle } from '@/shared/components/page/SearchTitle';
+import { PageTitle } from '@/shared/components/page-header/PageTitle';
+import { SearchTitle } from '@/shared/components/page-header/SearchTitle';
 
 import {
   Form,

@@ -33,7 +33,7 @@ import { type PreacherQueryParams } from '@/modules/preacher/interfaces/preacher
 
 import { usePreacherStore } from '@/stores/preacher/preacher.store';
 
-import { LoadingSpinner } from '@/shared/components/spinner/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 import { type GeneralSearchForm } from '@/shared/interfaces/search-general-form.interface';
 
 import {

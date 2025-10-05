@@ -46,7 +46,7 @@ import {
   getOfferingsIncomeByTerm,
 } from '@/modules/offering/income/services/offering-income.service';
 
-import { LoadingSpinner } from '@/shared/components/spinner/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 import { dateFormatterToDDMMYYYY } from '@/shared/helpers/date-formatter-to-ddmmyyyy.helper';
 
 import { useOfferingIncomeStore } from '@/stores/offering-income/offering-income.store';

@@ -7,7 +7,7 @@ import { GiExpense } from 'react-icons/gi';
 import { FaBalanceScale } from 'react-icons/fa';
 import { FcConferenceCall, FcDonate, FcHome, FcRefresh } from 'react-icons/fc';
 
-import { WhiteCard } from '@/shared/components/card/WhiteCard';
+import { WhiteCard } from '@/shared/components/cards/WhiteCard';
 
 export const MetricsOptionsPage = (): JSX.Element => {
   useEffect(() => {

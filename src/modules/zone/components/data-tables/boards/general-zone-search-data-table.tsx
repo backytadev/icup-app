@@ -29,7 +29,7 @@ import { type ZoneQueryParams } from '@/modules/zone/interfaces/zone-query-param
 
 import { useZoneStore } from '@/stores/zone/zone.store';
 
-import { LoadingSpinner } from '@/shared/components/spinner/LoadingSpinner';
+import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 
 import { type GeneralSearchForm } from '@/shared/interfaces/search-general-form.interface';
 
