@@ -8,7 +8,7 @@ export const SupervisorFormSkeleton = (): JSX.Element => {
         <Skeleton className='ml-2 h-7 w-[18rem] md:w-[40rem]' />
       </div>
       <div>
-        <form className='w-full flex flex-col md:grid md:grid-cols-3 gap-x-10 gap-y-5 px-2 sm:px-12'>
+        <form className='w-full flex flex-col md:grid md:grid-cols-3 gap-x-10 gap-y-0 px-2 sm:px-12'>
           <div className='col-start-1 col-end-2'>
             <Skeleton className='h-5 w-44 mt-2' />
 
@@ -33,7 +33,7 @@ export const SupervisorFormSkeleton = (): JSX.Element => {
             </div>
 
             <div>
-              <Skeleton className='h-4 w-24 mt-7' />
+              <Skeleton className='h-4 w-24 mt-5' />
               <Skeleton className='h-8 w-full mt-2' />
               <Skeleton className='h-[10px] w-64 mt-2' />
               <Skeleton className='h-[10px] w-44 mt-2' />
@@ -45,22 +45,44 @@ export const SupervisorFormSkeleton = (): JSX.Element => {
             </div>
 
             <div>
-              <Skeleton className='h-4 w-24 mt-7' />
+              <Skeleton className='h-4 w-24 mt-5' />
               <Skeleton className='h-8 w-full mt-2' />
             </div>
 
             <div>
-              <Skeleton className='h-4 w-24 mt-7' />
+              <Skeleton className='h-4 w-24 mt-5' />
               <Skeleton className='h-8 w-full mt-2' />
               <Skeleton className='h-[10px] w-64 mt-2' />
             </div>
 
             <div>
-              <Skeleton className='h-4 w-24 mt-7' />
-              <Skeleton className='h-8 w-full mt-2' />
-              <Skeleton className='h-[10px] w-72 mt-2' />
-              <Skeleton className='h-[10px] w-64 mt-2' />
-              <Skeleton className='h-[10px] w-44 mt-2' />
+              <Skeleton className='h-5 w-44 mt-6' />
+              <div className='grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2'>
+                <div className='flex items-center gap-2 mt-3'>
+                  <Skeleton className='h-5 w-5 rounded-md' />
+                  <Skeleton className='h-3 w-32 rounded-md' />
+                </div>
+                <div className='flex items-center gap-2 mt-1'>
+                  <Skeleton className='h-5 w-5 rounded-md' />
+                  <Skeleton className='h-3 w-32 rounded-md' />
+                </div>
+                <div className='flex items-center gap-2 mt-1'>
+                  <Skeleton className='h-5 w-5 rounded-md' />
+                  <Skeleton className='h-3 w-32 rounded-md' />
+                </div>
+                <div className='flex items-center gap-2 mt-1'>
+                  <Skeleton className='h-5 w-5 rounded-md' />
+                  <Skeleton className='h-3 w-32 rounded-md' />
+                </div>
+                <div className='flex items-center gap-2 mt-1'>
+                  <Skeleton className='h-5 w-5 rounded-md' />
+                  <Skeleton className='h-3 w-32 rounded-md' />
+                </div>
+                <div className='flex items-center gap-2 mt-1'>
+                  <Skeleton className='h-5 w-5 rounded-md' />
+                  <Skeleton className='h-3 w-32 rounded-md' />
+                </div>
+              </div>
             </div>
           </div>
 
@@ -73,43 +95,51 @@ export const SupervisorFormSkeleton = (): JSX.Element => {
             </div>
 
             <div>
-              <Skeleton className='h-4 w-24 mt-6' />
+              <Skeleton className='h-4 w-24 mt-5' />
               <Skeleton className='h-8 w-full mt-2' />
             </div>
 
             <div>
-              <Skeleton className='h-4 w-24 mt-6' />
+              <Skeleton className='h-4 w-24 mt-5' />
               <Skeleton className='h-8 w-full mt-2' />
             </div>
 
             <div>
-              <Skeleton className='h-4 w-24 mt-6' />
+              <Skeleton className='h-4 w-24 mt-5' />
               <Skeleton className='h-8 w-full mt-2' />
             </div>
 
             <div>
-              <Skeleton className='h-4 w-24 mt-6' />
+              <Skeleton className='h-4 w-24 mt-5' />
               <Skeleton className='h-8 w-full mt-2' />
             </div>
 
             <div>
-              <Skeleton className='h-4 w-24 mt-6' />
+              <Skeleton className='h-4 w-24 mt-5' />
               <Skeleton className='h-8 w-full mt-2' />
             </div>
 
             <div>
-              <Skeleton className='h-4 w-24 mt-6' />
+              <Skeleton className='h-4 w-24 mt-5' />
               <Skeleton className='h-8 w-full mt-2' />
             </div>
 
             <div>
-              <Skeleton className='h-4 w-24 mt-6' />
+              <Skeleton className='h-4 w-24 mt-5' />
               <Skeleton className='h-8 w-full mt-2' />
             </div>
 
             <div>
-              <Skeleton className='h-4 w-24 mt-6' />
-              <Skeleton className='h-16 w-full mt-2' />
+              <Skeleton className='h-4 w-24 mt-5' />
+              <Skeleton className='h-20 w-full mt-2' />
+            </div>
+
+            <div>
+              <Skeleton className='h-4 w-24 mt-5' />
+              <Skeleton className='h-8 w-full mt-2' />
+              <Skeleton className='h-[10px] w-72 mt-2' />
+              <Skeleton className='h-[10px] w-64 mt-2' />
+              <Skeleton className='h-[10px] w-44 mt-2' />
             </div>
           </div>
 
@@ -180,8 +210,11 @@ export const SupervisorFormSkeleton = (): JSX.Element => {
               </div>
             </div>
 
-            <Skeleton className='h-5 w-44 mt-5' />
+            <hr className='my-4' />
+            <Skeleton className='h-20 w-full mb-10' />
+            <Skeleton className='h-20 w-full' />
 
+            {/* Relaciones */}
             <div>
               <Skeleton className='h-4 w-24 mt-5' />
               <Skeleton className='h-3 w-full mt-2' />

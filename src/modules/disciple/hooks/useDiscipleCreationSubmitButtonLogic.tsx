@@ -52,7 +52,6 @@ export const useDiscipleCreationSubmitButtonLogic = ({
 
   //* Effects
   useEffect(() => {
-    //? Enabled
     if (
       discipleCreationForm.formState.errors &&
       Object.values(discipleCreationForm.formState.errors).length > 0
@@ -61,21 +60,31 @@ export const useDiscipleCreationSubmitButtonLogic = ({
       setIsMessageErrorDisabled(true);
     }
 
+    //* Conditions for OnlyRelatedHierarchicalCover
     if (
-      !theirFamilyGroup &&
       relationType === RelationType.OnlyRelatedHierarchicalCover &&
       roles.includes(MemberRole.Disciple) &&
-      Object.values(discipleCreationForm.formState.errors).length === 0 &&
-      !isInputDisabled
+      !theirFamilyGroup &&
+      !isInputDisabled &&
+      Object.values(discipleCreationForm.formState.errors).length === 0
     ) {
       setIsSubmitButtonDisabled(true);
       setIsMessageErrorDisabled(true);
     }
 
     if (
-      roles.includes(MemberRole.Disciple) &&
+      relationType === RelationType.OnlyRelatedHierarchicalCover &&
+      theirFamilyGroup &&
       !isInputDisabled &&
-      Object.values(discipleCreationForm.formState.errors).length === 0 &&
+      roles.includes(MemberRole.Disciple) &&
+      Object.values(discipleCreationForm.formState.errors).length === 0
+    ) {
+      setIsSubmitButtonDisabled(false);
+      setIsMessageErrorDisabled(false);
+    }
+
+    //* Conditions for OnlyRelatedMinistries
+    if (
       ((!theirPastor &&
         relationType === RelationType.OnlyRelatedMinistries &&
         ministryBlocks?.every(
@@ -99,16 +108,32 @@ export const useDiscipleCreationSubmitButtonLogic = ({
               !item.ministryId ||
               !item.ministryType ||
               item.ministryRoles.length === 0
-          )))
+          ))) &&
+      roles.includes(MemberRole.Disciple) &&
+      Object.values(discipleCreationForm.formState.errors).length === 0 &&
+      !isInputDisabled
     ) {
       setIsSubmitButtonDisabled(true);
       setIsMessageErrorDisabled(true);
     }
 
     if (
+      relationType === RelationType.OnlyRelatedMinistries &&
       roles.includes(MemberRole.Disciple) &&
       Object.values(discipleCreationForm.formState.errors).length === 0 &&
+      theirPastor &&
       !isInputDisabled &&
+      ministryBlocks?.every(
+        (item) =>
+          item.churchId && item.ministryId && item.ministryType && item.ministryRoles.length > 0
+      )
+    ) {
+      setIsSubmitButtonDisabled(false);
+      setIsMessageErrorDisabled(false);
+    }
+
+    //* Conditions for RelatedBothMinistriesAndHierarchicalCover
+    if (
       ((!theirFamilyGroup &&
         relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover &&
         ministryBlocks?.every(
@@ -123,42 +148,19 @@ export const useDiscipleCreationSubmitButtonLogic = ({
               !item.ministryId ||
               !item.ministryType ||
               item.ministryRoles.length === 0
-          )))
+          ))) &&
+      roles.includes(MemberRole.Disciple) &&
+      Object.values(discipleCreationForm.formState.errors).length === 0 &&
+      !isInputDisabled
     ) {
       setIsSubmitButtonDisabled(true);
       setIsMessageErrorDisabled(true);
     }
 
     if (
-      theirFamilyGroup &&
-      !isInputDisabled &&
-      roles.includes(MemberRole.Disciple) &&
-      relationType === RelationType.OnlyRelatedHierarchicalCover &&
-      Object.values(discipleCreationForm.formState.errors).length === 0
-    ) {
-      setIsSubmitButtonDisabled(false);
-      setIsMessageErrorDisabled(false);
-    }
-
-    if (
-      theirPastor &&
-      relationType === RelationType.OnlyRelatedMinistries &&
-      roles.includes(MemberRole.Disciple) &&
-      Object.values(discipleCreationForm.formState.errors).length === 0 &&
-      !isInputDisabled &&
-      ministryBlocks?.every(
-        (item) =>
-          item.churchId && item.ministryId && item.ministryType && item.ministryRoles.length > 0
-      )
-    ) {
-      setIsSubmitButtonDisabled(false);
-      setIsMessageErrorDisabled(false);
-    }
-
-    if (
-      theirFamilyGroup &&
       relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover &&
       roles.includes(MemberRole.Disciple) &&
+      theirFamilyGroup &&
       Object.values(discipleCreationForm.formState.errors).length === 0 &&
       !isInputDisabled &&
       ministryBlocks?.every(

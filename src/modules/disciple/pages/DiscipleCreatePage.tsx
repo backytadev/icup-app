@@ -147,8 +147,6 @@ export const DiscipleCreatePage = (): JSX.Element => {
 
   //* Watchers
   const residenceDistrict = form.watch('residenceDistrict');
-  const theirFamilyGroup = form.watch('theirFamilyGroup');
-  const theirPastor = form.watch('theirPastor');
   const relationType = form.watch('relationType');
 
   useDiscipleCreationSubmitButtonLogic({
@@ -163,15 +161,15 @@ export const DiscipleCreatePage = (): JSX.Element => {
   //* Effects
   useEffect(() => {
     if (relationType === RelationType.OnlyRelatedHierarchicalCover) {
-      form.setValue('theirPastor', undefined);
+      form.setValue('theirPastor', '');
     }
     if (relationType === RelationType.OnlyRelatedMinistries) {
-      form.setValue('theirFamilyGroup', undefined);
+      form.setValue('theirFamilyGroup', '');
     }
     if (relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover) {
-      form.setValue('theirPastor', undefined);
+      form.setValue('theirPastor', '');
     }
-  }, [theirFamilyGroup, theirPastor, relationType]);
+  }, [relationType]);
 
   useEffect(() => {
     form.resetField('residenceUrbanSector', {
@@ -329,6 +327,7 @@ export const DiscipleCreatePage = (): JSX.Element => {
     <div className='animate-fadeInPage'>
       <PageTitle className='text-disciple-color'>Modulo Discípulo</PageTitle>
 
+      {/*  Generar page sub title con children ver si son los mismo estilos */}
       <h2 className='text-left whitespace-nowrap pb-[2px] pt-2 px-4 sm:px-5 2xl:px-10 font-sans font-bold text-green-500 text-[1.6rem] sm:text-[1.75rem] md:text-[1.85rem] lg:text-[1.9rem] xl:text-[2.1rem] 2xl:text-4xl'>
         Crear un nuevo discípulo
       </h2>
@@ -337,6 +336,7 @@ export const DiscipleCreatePage = (): JSX.Element => {
         Por favor llena los siguientes datos para crear un nuevo discípulo.
       </p>
 
+      {/*  tomar el form basico y pasarlo y hacer selects */}
       <div className='flex min-h-screen flex-col items-center justify-between px-6 py-4 sm:px-8 sm:py-6 lg:py-6 xl:px-14 2xl:px-36'>
         <Form {...form}>
           <form

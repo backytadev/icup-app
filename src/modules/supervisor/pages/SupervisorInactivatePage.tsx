@@ -99,7 +99,7 @@ const dataFictional: SupervisorResponse[] = [
       roles: [],
       ministries: [],
     },
-    isDirectRelationToPastor: false,
+    relationType: '',
     recordStatus: '',
     theirPastor: null,
     theirCopastor: null,

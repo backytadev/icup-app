@@ -3,7 +3,11 @@
 import { useEffect } from 'react';
 import { type UseFormReturn } from 'react-hook-form';
 
+import { RelationType } from '@/shared/enums/relation-type.enum';
 import { type MemberRole } from '@/shared/enums/member-role.enum';
+import { MinistryMemberBlock } from '@/shared/interfaces/ministry-member-block.interface';
+
+import { getSimpleMinistries } from '@/modules/ministry/services/ministry.service';
 import { type SupervisorResponse } from '@/modules/supervisor/interfaces/supervisor-response.interface';
 import { type SupervisorFormData } from '@/modules/supervisor/interfaces/supervisor-form-data.interface';
 
@@ -12,8 +16,7 @@ interface Options {
   data: SupervisorResponse | undefined;
   setIsLoadingData: React.Dispatch<React.SetStateAction<boolean>>;
   supervisorUpdateForm: UseFormReturn<SupervisorFormData, any, SupervisorFormData | undefined>;
-  setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsMessageErrorDisabled: React.Dispatch<React.SetStateAction<boolean>>;
+  setMinistryBlocks: React.Dispatch<React.SetStateAction<MinistryMemberBlock[]>>;
 }
 
 export const useSupervisorUpdateEffects = ({
@@ -21,12 +24,44 @@ export const useSupervisorUpdateEffects = ({
   data,
   setIsLoadingData,
   supervisorUpdateForm,
-  setIsSubmitButtonDisabled,
-  setIsMessageErrorDisabled,
+  setMinistryBlocks,
 }: Options): void => {
   const residenceDistrict = supervisorUpdateForm.watch('residenceDistrict');
-  const theirPastor = supervisorUpdateForm.watch('theirPastor');
-  const isDirectRelationToPastor = supervisorUpdateForm.watch('isDirectRelationToPastor');
+
+  const fetchMinistriesByChurch = async (churchId: string) => {
+    try {
+      const respData = await getSimpleMinistries({ isSimpleQuery: true, churchId });
+      return respData ?? [];
+    } catch (error) {
+      return [];
+    }
+  };
+
+  //* Set ministry blocks
+  useEffect(() => {
+    const loadMinistryBlocks = async () => {
+      if (data?.member.ministries && data.member.ministries.length > 0) {
+        const blocks = await Promise.all(
+          data.member.ministries.map(async (m) => {
+            const ministriesList = await fetchMinistriesByChurch(m.churchMinistryId ?? '');
+            return {
+              churchPopoverOpen: false,
+              ministryPopoverOpen: false,
+              churchId: m.churchMinistryId ?? '',
+              ministryId: m.id ?? '',
+              ministryRoles: m.ministryRoles,
+              ministries: ministriesList,
+              ministryType: m.ministryType,
+            };
+          })
+        );
+
+        setMinistryBlocks(blocks);
+      }
+    };
+
+    loadMinistryBlocks();
+  }, [data]);
 
   //* Set data
   useEffect(() => {
@@ -55,14 +90,16 @@ export const useSupervisorUpdateEffects = ({
     supervisorUpdateForm.setValue('residenceUrbanSector', data?.member?.residenceUrbanSector ?? '');
     supervisorUpdateForm.setValue('residenceAddress', data?.member?.residenceAddress ?? '');
     supervisorUpdateForm.setValue('referenceAddress', data?.member?.referenceAddress ?? '');
-    supervisorUpdateForm.setValue(
-      'isDirectRelationToPastor',
-      data?.isDirectRelationToPastor ?? undefined
-    );
     supervisorUpdateForm.setValue('roles', data?.member?.roles as MemberRole[]);
     supervisorUpdateForm.setValue('theirCopastor', data?.theirCopastor?.id ?? '');
-    supervisorUpdateForm.setValue('theirPastor', data?.theirPastor?.id ?? '');
     supervisorUpdateForm.setValue('recordStatus', data?.recordStatus);
+    supervisorUpdateForm.setValue('relationType', data?.relationType ?? '');
+    if (data?.relationType && data?.relationType === RelationType.OnlyRelatedMinistries) {
+      supervisorUpdateForm.setValue('theirPastorOnlyMinistries', data?.theirPastor?.id ?? '');
+    }
+    if (data?.relationType && data?.relationType === RelationType.RelatedDirectToPastor) {
+      supervisorUpdateForm.setValue('theirPastorRelationDirect', data?.theirPastor?.id ?? '');
+    }
 
     const timeoutId = setTimeout(() => {
       setIsLoadingData(false);
@@ -79,28 +116,6 @@ export const useSupervisorUpdateEffects = ({
       keepError: true,
     });
   }, [residenceDistrict]);
-
-  //* Controller direct relation to pastor
-  useEffect(() => {
-    if (isDirectRelationToPastor) {
-      supervisorUpdateForm.resetField('theirCopastor', {
-        keepError: true,
-      });
-    }
-
-    if (!isDirectRelationToPastor) {
-      supervisorUpdateForm.resetField('theirPastor', {
-        keepError: true,
-      });
-    }
-  }, [isDirectRelationToPastor]);
-
-  useEffect(() => {
-    if (isDirectRelationToPastor && !theirPastor) {
-      setIsSubmitButtonDisabled(true);
-      setIsMessageErrorDisabled(true);
-    }
-  }, [isDirectRelationToPastor]);
 
   //* Generate dynamic url
   useEffect(() => {

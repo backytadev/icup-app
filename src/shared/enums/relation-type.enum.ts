@@ -1,10 +1,12 @@
 export enum RelationType {
+  RelatedDirectToPastor = 'related_direct_pastor',
   OnlyRelatedHierarchicalCover = 'only_related_hierarchical_cover',
   OnlyRelatedMinistries = 'only_related_ministries',
   RelatedBothMinistriesAndHierarchicalCover = 'related_both_ministries_and_hierarchical_cover',
 }
 
 export const RelationTypeNames: Record<RelationType, string> = {
+  [RelationType.RelatedDirectToPastor]: 'Directa con pastor',
   [RelationType.OnlyRelatedHierarchicalCover]: 'Solo con cobertura jerárquica',
   [RelationType.OnlyRelatedMinistries]: 'Solo con ministerios',
   [RelationType.RelatedBothMinistriesAndHierarchicalCover]:
@@ -13,7 +15,7 @@ export const RelationTypeNames: Record<RelationType, string> = {
 
 type ModuleName = 'disciple' | 'preacher' | 'supervisor' | 'copastor';
 
-export const RelationTypeModuleNames: Record<ModuleName, Record<RelationType, string>> = {
+export const RelationTypeModuleNames: Record<ModuleName, Partial<Record<RelationType, string>>> = {
   disciple: {
     [RelationType.OnlyRelatedHierarchicalCover]: 'Solo con grupo familiar',
     [RelationType.OnlyRelatedMinistries]: 'Solo con ministerios',
@@ -25,6 +27,7 @@ export const RelationTypeModuleNames: Record<ModuleName, Record<RelationType, st
     [RelationType.RelatedBothMinistriesAndHierarchicalCover]: 'Con supervisor y ministerios',
   },
   supervisor: {
+    [RelationType.RelatedDirectToPastor]: 'Directa con pastor',
     [RelationType.OnlyRelatedHierarchicalCover]: 'Solo con copastor',
     [RelationType.OnlyRelatedMinistries]: 'Solo con ministerios',
     [RelationType.RelatedBothMinistriesAndHierarchicalCover]: 'Con copastor y ministerios',

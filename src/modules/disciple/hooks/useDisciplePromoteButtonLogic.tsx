@@ -125,9 +125,9 @@ export const useDisciplePromoteButtonLogic = ({
       roles: valuesFromForm[17],
       recordStatus: valuesFromForm[18],
       relationType: valuesFromForm[19],
-      theirPastor: valuesFromForm[20],
-      theirFamilyGroup: valuesFromForm[21],
-      theirSupervisor: valuesFromForm[22],
+      theirPastor: valuesFromForm[20] ?? '',
+      theirFamilyGroup: valuesFromForm[21] ?? '',
+      theirSupervisor: valuesFromForm[22] ?? '',
       theirMinistries: formatMinistriesData,
     };
 
@@ -170,9 +170,9 @@ export const useDisciplePromoteButtonLogic = ({
       currentValues[17],
       currentValues[18],
       currentValues[19],
-      currentValues[20],
-      currentValues[21],
-      currentValues[22],
+      currentValues[20] ?? '',
+      currentValues[21] ?? '',
+      currentValues[22] ?? '',
       formatMinistriesData,
     ];
 
@@ -217,6 +217,7 @@ export const useDisciplePromoteButtonLogic = ({
       setIsPromoteButtonDisabled(true);
     }
 
+    //* Conditions for Only related cover with ministries
     if (
       !ministriesEqual &&
       relationType === RelationType.OnlyRelatedHierarchicalCover &&
@@ -238,7 +239,7 @@ export const useDisciplePromoteButtonLogic = ({
     }
 
     if (
-      data?.relationType !== RelationType.OnlyRelatedHierarchicalCover &&
+      relationType !== RelationType.OnlyRelatedHierarchicalCover &&
       JSON.stringify({ ...fixedValues.slice(0, -1) }) !==
         JSON.stringify({ ...currentValues.slice(0, -1) }) &&
       recordStatus === 'active'
@@ -247,7 +248,7 @@ export const useDisciplePromoteButtonLogic = ({
     }
 
     if (
-      data?.relationType === RelationType.OnlyRelatedHierarchicalCover &&
+      relationType === RelationType.OnlyRelatedHierarchicalCover &&
       JSON.stringify({ ...fixedValues.slice(0, -1) }) ===
         JSON.stringify({ ...currentValues.slice(0, -1) }) &&
       recordStatus === 'active'
@@ -257,11 +258,9 @@ export const useDisciplePromoteButtonLogic = ({
 
     if (
       fixedMinistryBlocks.length !== formatMinistriesData.length &&
-      data?.relationType !== RelationType.OnlyRelatedHierarchicalCover &&
-      (JSON.stringify({ ...fixedValues.slice(0, -1) }) ===
-        JSON.stringify({ ...currentValues.slice(0, -1) }) ||
-        JSON.stringify({ ...fixedValues.slice(0, -1) }) ===
-          JSON.stringify({ ...currentValues.slice(0, -1) })) &&
+      relationType !== RelationType.OnlyRelatedHierarchicalCover &&
+      JSON.stringify({ ...fixedValues.slice(0, -1) }) ===
+        JSON.stringify({ ...currentValues.slice(0, -1) }) &&
       recordStatus === 'active'
     ) {
       setIsPromoteButtonDisabled(true);
@@ -269,12 +268,10 @@ export const useDisciplePromoteButtonLogic = ({
 
     if (
       fixedMinistryBlocks.length === formatMinistriesData.length &&
-      data?.relationType !== RelationType.OnlyRelatedHierarchicalCover &&
+      relationType !== RelationType.OnlyRelatedHierarchicalCover &&
       ministriesEqual &&
-      (JSON.stringify({ ...fixedValues.slice(0, -1) }) ===
-        JSON.stringify({ ...currentValues.slice(0, -1) }) ||
-        JSON.stringify({ ...fixedValues.slice(0, -1) }) ===
-          JSON.stringify({ ...currentValues.slice(0, -1) })) &&
+      JSON.stringify({ ...fixedValues.slice(0, -1) }) ===
+        JSON.stringify({ ...currentValues.slice(0, -1) }) &&
       recordStatus === 'active'
     ) {
       setIsPromoteButtonDisabled(false);
@@ -305,6 +302,7 @@ export const useDisciplePromoteButtonLogic = ({
     recordStatus,
     relationType,
     theirPastor,
+    fixedMinistryBlocks,
     ministryBlocks,
   ]);
 };

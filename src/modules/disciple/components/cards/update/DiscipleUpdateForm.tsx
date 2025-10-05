@@ -197,13 +197,13 @@ export const DiscipleUpdateForm = ({
 
   useEffect(() => {
     if (relationType === RelationType.OnlyRelatedHierarchicalCover) {
-      form.setValue('theirPastor', undefined);
+      form.setValue('theirPastor', '');
     }
     if (relationType === RelationType.OnlyRelatedMinistries) {
-      form.setValue('theirFamilyGroup', undefined);
+      form.setValue('theirFamilyGroup', '');
     }
     if (relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover) {
-      form.setValue('theirPastor', undefined);
+      form.setValue('theirPastor', '');
     }
   }, [relationType]);
 
@@ -236,7 +236,6 @@ export const DiscipleUpdateForm = ({
     isInputDisabled,
     setIsMessageErrorDisabled,
     setIsSubmitButtonDisabled,
-    isRelationSelectDisabled,
     ministryBlocks,
   });
 
@@ -1130,10 +1129,14 @@ export const DiscipleUpdateForm = ({
                         );
                       }}
                     />
+
                     <div>
-                      <legend className='font-bold col-start-1 col-end-3 text-[15px] sm:text-[16px]'>
-                        Relaciones
-                      </legend>
+                      {!isMessagePromoteDisabled && (
+                        <legend className='font-bold col-start-1 col-end-3 text-[15px] sm:text-[16px]'>
+                          Relaciones
+                        </legend>
+                      )}
+
                       {!isMessagePromoteDisabled &&
                         (relationType === RelationType.OnlyRelatedHierarchicalCover ||
                           relationType ===
@@ -1244,95 +1247,6 @@ export const DiscipleUpdateForm = ({
                         setChangedId={setChangedId}
                         changedId={changedId}
                       />
-
-                      {isPromoteButtonDisabled && isInputDisabled && !theirFamilyGroup && (
-                        <FormField
-                          control={form.control}
-                          name='theirSupervisor'
-                          render={({ field }) => {
-                            return (
-                              <FormItem className='mt-2'>
-                                <FormLabel className='text-[14px] md:text-[15px] font-bold'>
-                                  Supervisor
-                                </FormLabel>
-                                <FormDescription className='text-[13.5px] md:text-[14px]'>
-                                  Seleccione un supervisor para este predicador.
-                                </FormDescription>
-                                <Popover
-                                  open={isInputTheirSupervisorOpen}
-                                  onOpenChange={setIsInputTheirSupervisorOpen}
-                                >
-                                  <PopoverTrigger asChild>
-                                    <FormControl className='text-[14px] md:text-[14px]'>
-                                      <Button
-                                        disabled={isRelationSelectDisabled}
-                                        variant='outline'
-                                        role='combobox'
-                                        className={cn(
-                                          'w-full justify-between overflow-hidden',
-                                          !field.value && 'text-slate-500 font-normal text-[14px]'
-                                        )}
-                                      >
-                                        {field.value
-                                          ? `${supervisorsQuery?.data?.find((supervisor) => supervisor.id === field.value)?.member?.firstNames} ${supervisorsQuery?.data?.find((supervisor) => supervisor.id === field.value)?.member?.lastNames}`
-                                          : 'Busque y seleccione un supervisor'}
-                                        <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-5' />
-                                      </Button>
-                                    </FormControl>
-                                  </PopoverTrigger>
-                                  <PopoverContent align='center' className='w-auto px-4 py-2'>
-                                    <Command>
-                                      {supervisorsQuery?.data?.length &&
-                                      supervisorsQuery?.data?.length > 0 ? (
-                                        <>
-                                          <CommandInput
-                                            placeholder='Busque una supervisor...'
-                                            className='h-9 text-[14px]'
-                                          />
-                                          <CommandEmpty>Supervisor no encontrado.</CommandEmpty>
-                                          <CommandGroup className='max-h-[200px] h-auto'>
-                                            {supervisorsQuery?.data?.map((supervisor) => (
-                                              <CommandItem
-                                                className='text-[14px]'
-                                                value={getFullNames({
-                                                  firstNames: supervisor.member?.firstNames ?? '',
-                                                  lastNames: supervisor.member?.lastNames ?? '',
-                                                })}
-                                                key={supervisor.id}
-                                                onSelect={() => {
-                                                  form.setValue('theirSupervisor', supervisor.id);
-                                                  setIsInputTheirSupervisorOpen(false);
-                                                }}
-                                              >
-                                                {`${supervisor?.member?.firstNames} ${supervisor?.member?.lastNames}`}
-                                                <CheckIcon
-                                                  className={cn(
-                                                    'ml-auto h-4 w-4',
-                                                    supervisor?.id === field.value
-                                                      ? 'opacity-100'
-                                                      : 'opacity-0'
-                                                  )}
-                                                />
-                                              </CommandItem>
-                                            ))}
-                                          </CommandGroup>
-                                        </>
-                                      ) : (
-                                        supervisorsQuery?.data?.length === 0 && (
-                                          <p className='text-[13.5px] md:text-[14.5px] font-medium text-red-500 text-center'>
-                                            ❌No hay supervisores disponibles.
-                                          </p>
-                                        )
-                                      )}
-                                    </Command>
-                                  </PopoverContent>
-                                </Popover>
-                                <FormMessage className='text-[13px]' />
-                              </FormItem>
-                            );
-                          }}
-                        />
-                      )}
 
                       {relationType === RelationType.OnlyRelatedMinistries &&
                         !isMessagePromoteDisabled && (
@@ -1768,6 +1682,11 @@ export const DiscipleUpdateForm = ({
                     )}
 
                     {isMessagePromoteDisabled && (
+                      <legend className='font-bold col-start-1 col-end-3 text-[15px] sm:text-[16px]'>
+                        Nuevas Relaciones
+                      </legend>
+                    )}
+                    {isMessagePromoteDisabled && (
                       <span className='text-[14px] md:text-[14px] dark:text-yellow-500 text-amber-500 font-bold text-center'>
                         !SE HA PROMOVIDO CORRECTAMENTE! <br />
                         <span className='text-[14px] md:text-[14px]'>
@@ -1784,14 +1703,110 @@ export const DiscipleUpdateForm = ({
                       </span>
                     )}
 
+                    {isPromoteButtonDisabled && isInputDisabled && !theirFamilyGroup && (
+                      <FormField
+                        control={form.control}
+                        name='theirSupervisor'
+                        render={({ field }) => {
+                          return (
+                            <FormItem className='mt-2'>
+                              <FormLabel className='text-[14px] md:text-[15px] font-bold'>
+                                Supervisor
+                              </FormLabel>
+                              <FormDescription className='text-[13.5px] md:text-[14px]'>
+                                Seleccione un supervisor para este predicador.
+                              </FormDescription>
+                              <Popover
+                                open={isInputTheirSupervisorOpen}
+                                onOpenChange={setIsInputTheirSupervisorOpen}
+                              >
+                                <PopoverTrigger asChild>
+                                  <FormControl className='text-[14px] md:text-[14px]'>
+                                    <Button
+                                      disabled={isRelationSelectDisabled}
+                                      variant='outline'
+                                      role='combobox'
+                                      className={cn(
+                                        'w-full justify-between overflow-hidden',
+                                        !field.value && 'text-slate-500 font-normal text-[14px]'
+                                      )}
+                                    >
+                                      {field.value
+                                        ? `${supervisorsQuery?.data?.find((supervisor) => supervisor.id === field.value)?.member?.firstNames} ${supervisorsQuery?.data?.find((supervisor) => supervisor.id === field.value)?.member?.lastNames}`
+                                        : 'Busque y seleccione un supervisor'}
+                                      <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-5' />
+                                    </Button>
+                                  </FormControl>
+                                </PopoverTrigger>
+                                <PopoverContent align='center' className='w-auto px-4 py-2'>
+                                  <Command>
+                                    {supervisorsQuery?.data?.length &&
+                                    supervisorsQuery?.data?.length > 0 ? (
+                                      <>
+                                        <CommandInput
+                                          placeholder='Busque una supervisor...'
+                                          className='h-9 text-[14px]'
+                                        />
+                                        <CommandEmpty>Supervisor no encontrado.</CommandEmpty>
+                                        <CommandGroup className='max-h-[200px] h-auto'>
+                                          {supervisorsQuery?.data?.map((supervisor) => (
+                                            <CommandItem
+                                              className='text-[14px]'
+                                              value={getFullNames({
+                                                firstNames: supervisor.member?.firstNames ?? '',
+                                                lastNames: supervisor.member?.lastNames ?? '',
+                                              })}
+                                              key={supervisor.id}
+                                              onSelect={() => {
+                                                form.setValue('theirSupervisor', supervisor.id);
+                                                setIsInputTheirSupervisorOpen(false);
+                                              }}
+                                            >
+                                              {`${supervisor?.member?.firstNames} ${supervisor?.member?.lastNames}`}
+                                              <CheckIcon
+                                                className={cn(
+                                                  'ml-auto h-4 w-4',
+                                                  supervisor?.id === field.value
+                                                    ? 'opacity-100'
+                                                    : 'opacity-0'
+                                                )}
+                                              />
+                                            </CommandItem>
+                                          ))}
+                                        </CommandGroup>
+                                      </>
+                                    ) : (
+                                      supervisorsQuery?.data?.length === 0 && (
+                                        <p className='text-[13.5px] md:text-[14.5px] font-medium text-red-500 text-center'>
+                                          ❌No hay supervisores disponibles.
+                                        </p>
+                                      )
+                                    )}
+                                  </Command>
+                                </PopoverContent>
+                              </Popover>
+                              <FormMessage className='text-[13px]' />
+                            </FormItem>
+                          );
+                        }}
+                      />
+                    )}
+
                     {/* Relaciones  */}
 
                     {isPromoteButtonDisabled &&
                       !theirSupervisor &&
-                      !theirFamilyGroup &&
-                      isMessagePromoteDisabled && (
+                      form.getValues('roles').includes(MemberRole.Preacher) && (
                         <span className='-mt-2 text-[12.5px] md:text-[13px] font-bold text-center text-red-500'>
-                          ! Por favor asigna la nueva relación para los roles promovidos !
+                          Debes asignar la nueva relación antes de promover los roles
+                        </span>
+                      )}
+
+                    {isPromoteButtonDisabled &&
+                      theirSupervisor &&
+                      form.getValues('roles').includes(MemberRole.Preacher) && (
+                        <span className='-mt-2 text-[12.5px] md:text-[13px] font-bold text-center text-green-500'>
+                          Todo está listo, guarda los cambios para promover al Discípulo
                         </span>
                       )}
 

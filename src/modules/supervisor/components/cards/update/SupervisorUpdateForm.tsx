@@ -11,11 +11,11 @@ import { type z } from 'zod';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useForm } from 'react-hook-form';
-import { CalendarIcon } from 'lucide-react';
 import { useLocation } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
+import { CalendarIcon, ChevronDown, Plus, Trash } from 'lucide-react';
 
 import { GenderNames } from '@/shared/enums/gender.enum';
 import { CountryNames } from '@/shared/enums/country.enum';
@@ -25,6 +25,7 @@ import { DepartmentNames } from '@/shared/enums/department.enum';
 import { UrbanSectorNames } from '@/shared/enums/urban-sector.enum';
 import { MaritalStatusNames } from '@/shared/enums/marital-status.enum';
 import { MemberRole, MemberRoleNames } from '@/shared/enums/member-role.enum';
+import { RelationType, RelationTypeModuleNames } from '@/shared/enums/relation-type.enum';
 
 import { useSupervisorUpdateEffects } from '@/modules/supervisor/hooks/useSupervisorUpdateEffects';
 import { useSupervisorUpdateMutation } from '@/modules/supervisor/hooks/useSupervisorUpdateMutation';
@@ -37,14 +38,30 @@ import { SupervisorFormSkeleton } from '@/modules/supervisor/components/cards/up
 
 import { getSimplePastors } from '@/modules/pastor/services/pastor.service';
 
+import { getSimpleChurches } from '@/modules/church/services/church.service';
 import { getSimpleCopastors } from '@/modules/copastor/services/copastor.service';
+import { getSimpleMinistries } from '@/modules/ministry/services/ministry.service';
+import { MinistryType, MinistryTypeNames } from '@/modules/ministry/enums/ministry-type.enum';
 
 import { cn } from '@/shared/lib/utils';
 import { useRoleValidationByPath } from '@/shared/hooks/useRoleValidationByPath';
+import { MinistryMemberBlock } from '@/shared/interfaces/ministry-member-block.interface';
 
 import { getFullNames } from '@/shared/helpers/get-full-names.helper';
 import { validateDistrictsAllowedByModule } from '@/shared/helpers/validate-districts-allowed-by-module.helper';
 import { validateUrbanSectorsAllowedByDistrict } from '@/shared/helpers/validate-urban-sectors-allowed-by-district.helper';
+
+import {
+  MinistryMemberRole,
+  MinistryMemberRoleNames,
+  SearchTypesKidsMinistry,
+  SearchTypesYouthMinistry,
+  SearchTypesWorshipMinistry,
+  SearchTypesEvangelismMinistry,
+  SearchTypesDiscipleshipMinistry,
+  SearchTypesIntercessionMinistry,
+  SearchTypesTechnologyMinistry,
+} from '@/modules/ministry/enums/ministry-member-role.enum';
 
 import { AlertPromotionSupervisor } from '@/modules/supervisor/components/alerts/AlertPromotionSupervisor';
 import { AlertUpdateRelationSupervisor } from '@/modules/supervisor/components/alerts/AlertUpdateRelationSupervisor';
@@ -72,6 +89,11 @@ import {
   SelectContent,
   SelectTrigger,
 } from '@/shared/components/ui/select';
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from '@/shared/components/ui/collapsible';
 import { Input } from '@/shared/components/ui/input';
 import { Button } from '@/shared/components/ui/button';
 import { Checkbox } from '@/shared/components/ui/checkbox';
@@ -97,10 +119,14 @@ export const SupervisorUpdateForm = ({
   //* States
   const [isRelationSelectDisabled, setIsRelationSelectDisabled] = useState<boolean>(false);
   const [isInputTheirCopastorOpen, setIsInputTheirCopastorOpen] = useState<boolean>(false);
-  const [isInputTheirPastorOpen, setIsInputTheirPastorOpen] = useState<boolean>(false);
   const [isInputBirthDateOpen, setIsInputBirthDateOpen] = useState<boolean>(false);
   const [isInputConvertionDateOpen, setIsInputConvertionDateOpen] = useState<boolean>(false);
   const [isPromoteButtonDisabled, setIsPromoteButtonDisabled] = useState<boolean>(false);
+  const [isInputTheirPastorOpen, setIsInputTheirPastorOpen] = useState<boolean>(false);
+  const [isInputTheirPastorRelationDirectOpen, setIsInputTheirPastorRelationDirectOpen] =
+    useState<boolean>(false);
+  const [isInputTheirPastorOnlyMinistryOpen, setIsInputTheirPastorOnlyMinistryOpen] =
+    useState<boolean>(false);
 
   const [isInputDisabled, setIsInputDisabled] = useState<boolean>(false);
   const [isSubmitButtonDisabled, setIsSubmitButtonDisabled] = useState<boolean>(false);
@@ -111,6 +137,18 @@ export const SupervisorUpdateForm = ({
 
   const [changedId, setChangedId] = useState(data?.theirCopastor?.id);
   const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
+
+  const [ministryBlocks, setMinistryBlocks] = useState<MinistryMemberBlock[]>([
+    {
+      churchId: null,
+      ministryType: null,
+      ministryId: null,
+      ministryRoles: [],
+      churchPopoverOpen: false,
+      ministryPopoverOpen: false,
+      ministries: [],
+    },
+  ]);
 
   //* Hooks (external libraries)
   const { pathname } = useLocation();
@@ -138,18 +176,23 @@ export const SupervisorUpdateForm = ({
       residenceAddress: '',
       referenceAddress: '',
       roles: [MemberRole.Supervisor],
-      isDirectRelationToPastor: undefined,
+      relationType: '',
       recordStatus: '',
       theirCopastor: '',
       theirPastor: '',
+      theirPastorRelationDirect: '',
+      theirPastorOnlyMinistries: '',
+      theirMinistries: [],
     },
   });
 
   //* Watchers
   const residenceDistrict = form.watch('residenceDistrict');
+  const relationType = form.watch('relationType');
   const theirPastor = form.watch('theirPastor');
   const theirCopastor = form.watch('theirCopastor');
-  const isDirectRelationToPastor = form.watch('isDirectRelationToPastor');
+  const theirPastorOnlyMinistries = form.watch('theirPastorOnlyMinistries');
+  const theirPastorRelationDirect = form.watch('theirPastorRelationDirect');
 
   //* Effects
   useEffect(() => {
@@ -160,6 +203,24 @@ export const SupervisorUpdateForm = ({
     }
   }, [changedId]);
 
+  useEffect(() => {
+    if (relationType === RelationType.RelatedDirectToPastor) {
+      form.setValue('theirCopastor', '');
+      form.setValue('theirPastorOnlyMinistries', '');
+    }
+    if (relationType === RelationType.OnlyRelatedHierarchicalCover) {
+      form.setValue('theirPastorOnlyMinistries', '');
+      form.setValue('theirPastorRelationDirect', '');
+    }
+    if (relationType === RelationType.OnlyRelatedMinistries) {
+      form.setValue('theirCopastor', '');
+      form.setValue('theirPastorRelationDirect', '');
+    }
+    if (relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover) {
+      form.setValue('theirPastorOnlyMinistries', '');
+    }
+  }, [relationType]);
+
   //* Helpers
   const urbanSectorsValidation = validateUrbanSectorsAllowedByDistrict(residenceDistrict);
   const districtsValidation = validateDistrictsAllowedByModule(pathname);
@@ -169,9 +230,8 @@ export const SupervisorUpdateForm = ({
     id,
     data,
     setIsLoadingData,
+    setMinistryBlocks,
     supervisorUpdateForm: form,
-    setIsSubmitButtonDisabled,
-    setIsMessageErrorDisabled,
   });
 
   const { disabledRoles } = useRoleValidationByPath({
@@ -179,8 +239,10 @@ export const SupervisorUpdateForm = ({
   });
 
   useSupervisorPromoteButtonLogic({
+    data,
     supervisorUpdateForm: form,
     setIsPromoteButtonDisabled,
+    ministryBlocks,
   });
 
   useSupervisorUpdateSubmitButtonLogic({
@@ -188,7 +250,7 @@ export const SupervisorUpdateForm = ({
     isInputDisabled,
     setIsMessageErrorDisabled,
     setIsSubmitButtonDisabled,
-    isRelationSelectDisabled,
+    ministryBlocks,
   });
 
   const supervisorUpdateMutation = useSupervisorUpdateMutation({
@@ -212,9 +274,128 @@ export const SupervisorUpdateForm = ({
     retry: false,
   });
 
+  const queryChurches = useQuery({
+    queryKey: ['churches'],
+    queryFn: () => getSimpleChurches({ isSimpleQuery: true }),
+    retry: false,
+  });
+
+  const queryPastors = useQuery({
+    queryKey: ['pastors'],
+    queryFn: () => getSimplePastors({ isSimpleQuery: true }),
+    retry: false,
+  });
+
+  //* Functions for handler ministries
+  const addMinistryBlock = () => {
+    setMinistryBlocks([
+      ...ministryBlocks,
+      {
+        churchId: null,
+        ministryType: null,
+        ministryId: null,
+        ministryRoles: [],
+        ministries: [],
+        churchPopoverOpen: false,
+        ministryPopoverOpen: false,
+      },
+    ]);
+  };
+
+  const updateMinistryBlock = <K extends keyof MinistryMemberBlock>(
+    index: number,
+    field: K,
+    value: MinistryMemberBlock[K]
+  ) => {
+    const updatedBlocks = [...ministryBlocks];
+    updatedBlocks[index][field] = value;
+    setMinistryBlocks(updatedBlocks);
+  };
+
+  const toggleRoleInBlock = (index: number, role: string, isChecked: boolean) => {
+    setMinistryBlocks((prev) =>
+      prev.map((block, i) =>
+        i === index
+          ? {
+              ...block,
+              ministryRoles: isChecked
+                ? [...block.ministryRoles, role]
+                : block.ministryRoles.filter((r) => r !== role),
+            }
+          : block
+      )
+    );
+  };
+
+  const removeMinistryBlock = (indexToRemove: number) => {
+    setMinistryBlocks((prev) => prev.filter((_, i) => i !== indexToRemove));
+  };
+
+  const fetchMinistriesByChurch = async (churchId: string) => {
+    try {
+      const respData = await getSimpleMinistries({ isSimpleQuery: true, churchId });
+      return respData ?? [];
+    } catch (error) {
+      return [];
+    }
+  };
+
+  const handleSelectChurch = async (index: number, churchId: string) => {
+    const ministries = await fetchMinistriesByChurch(churchId);
+
+    const filterMinistriesByType = ministries.filter(
+      (ministry) => ministry.ministryType === ministryBlocks[index].ministryType
+    );
+
+    setMinistryBlocks((prev) =>
+      prev.map((block, i) =>
+        i === index
+          ? { ...block, churchId, ministryId: null, ministries: filterMinistriesByType }
+          : block
+      )
+    );
+  };
+
+  useEffect(() => {
+    if (
+      (relationType === RelationType.OnlyRelatedHierarchicalCover ||
+        relationType === RelationType.RelatedDirectToPastor) &&
+      ministryBlocks.length > 0
+    ) {
+      setMinistryBlocks([
+        {
+          churchId: null,
+          ministryType: null,
+          ministryId: null,
+          ministryRoles: [],
+          churchPopoverOpen: false,
+          ministryPopoverOpen: false,
+          ministries: [],
+        },
+      ]);
+    }
+  }, [relationType]);
+
   //* Form handler
   const handleSubmit = (formData: z.infer<typeof supervisorFormSchema>): void => {
-    supervisorUpdateMutation.mutate({ id, formData });
+    const ministriesData = ministryBlocks.map((ministryData) => {
+      return {
+        ministryId: ministryData.ministryId,
+        ministryRoles: ministryData.ministryRoles,
+      };
+    });
+
+    supervisorUpdateMutation.mutate({
+      id: id,
+      formData: {
+        ...formData,
+        theirMinistries: ministriesData.some(
+          (item) => !item.ministryId || item.ministryRoles?.length === 0
+        )
+          ? []
+          : ministriesData,
+      },
+    });
   };
 
   return (
@@ -516,54 +697,69 @@ export const SupervisorUpdateForm = ({
 
                     <FormField
                       control={form.control}
-                      name='recordStatus'
-                      render={({ field }) => {
-                        return (
-                          <FormItem className='mt-2'>
-                            <FormLabel className='text-[14px]'>Estado</FormLabel>
-                            <Select
-                              disabled={isInputDisabled}
-                              value={field.value}
-                              onValueChange={field.onChange}
-                            >
-                              <FormControl className='text-[14px]'>
-                                <SelectTrigger>
-                                  {field.value === 'active' ? (
-                                    <SelectValue placeholder='Activo' />
-                                  ) : (
-                                    <SelectValue placeholder='Inactivo' />
-                                  )}
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem className='text-[14px]' value='active'>
-                                  Activo
-                                </SelectItem>
-                                <SelectItem className='text-[14px]' value='inactive'>
-                                  Inactivo
-                                </SelectItem>
-                              </SelectContent>
-                            </Select>
-                            {form.getValues('recordStatus') === 'active' && (
-                              <FormDescription className='pl-2 text-[12.5px] xl:text-[13px] font-bold'>
-                                *El registro esta <span className='text-green-500'>Activo</span>,
-                                para colocarla como <span className='text-red-500'>Inactivo</span>{' '}
-                                debe inactivar el registro desde el modulo{' '}
-                                <span className='font-bold text-red-500'>
-                                  Inactivar Supervisor.
-                                </span>
-                              </FormDescription>
+                      name='roles'
+                      render={() => (
+                        <FormItem>
+                          <div className='mb-2'>
+                            <FormLabel className='font-bold text-[15px] md:text-[16px]'>
+                              Roles de Membresía
+                            </FormLabel>
+                          </div>
+                          <div className='grid grid-cols-2 sm:grid-cols-2 gap-x-6 gap-y-2'>
+                            {Object.values(MemberRole).map(
+                              (role) =>
+                                (role === MemberRole.Pastor ||
+                                  role === MemberRole.Copastor ||
+                                  role === MemberRole.Supervisor ||
+                                  role === MemberRole.Preacher ||
+                                  role === MemberRole.Treasurer ||
+                                  role === MemberRole.Disciple) && (
+                                  <FormField
+                                    key={role}
+                                    control={form.control}
+                                    name='roles'
+                                    render={({ field }) => {
+                                      const isDisabled = disabledRoles?.includes(role);
+                                      return (
+                                        <FormItem
+                                          key={role}
+                                          className='flex flex-row cursor-pointer items-center space-x-3 space-y-0'
+                                        >
+                                          <FormControl className='text-[14px] md:text-[14px]'>
+                                            <Checkbox
+                                              checked={field.value?.includes(role)}
+                                              disabled={isDisabled || isInputDisabled}
+                                              onCheckedChange={(checked) => {
+                                                let updatedRoles: MemberRole[] = [];
+                                                checked
+                                                  ? (updatedRoles = field.value
+                                                      ? [...field.value, role]
+                                                      : [role])
+                                                  : (updatedRoles =
+                                                      field.value?.filter(
+                                                        (value) => value !== role
+                                                      ) ?? []);
+
+                                                field.onChange(updatedRoles);
+                                              }}
+                                              className={
+                                                isDisabled || isInputDisabled ? 'bg-slate-500' : ''
+                                              }
+                                            />
+                                          </FormControl>
+                                          <FormLabel className='text-[14px] cursor-pointer font-normal'>
+                                            {MemberRoleNames[role]}
+                                          </FormLabel>
+                                        </FormItem>
+                                      );
+                                    }}
+                                  />
+                                )
                             )}
-                            {form.getValues('recordStatus') === 'inactive' && (
-                              <FormDescription className='pl-2 text-[12.5px] xl:text-[13px] font-bold'>
-                                * El registro esta <span className='text-red-500 '>Inactivo</span>,
-                                puede modificar el estado eligiendo otra opción.
-                              </FormDescription>
-                            )}
-                            <FormMessage className='text-[13px]' />
-                          </FormItem>
-                        );
-                      }}
+                          </div>
+                          <FormMessage className='text-[13px]' />
+                        </FormItem>
+                      )}
                     />
                   </div>
 
@@ -846,405 +1042,922 @@ export const SupervisorUpdateForm = ({
                         );
                       }}
                     />
+
+                    <FormField
+                      control={form.control}
+                      name='recordStatus'
+                      render={({ field }) => {
+                        return (
+                          <FormItem className='mt-2'>
+                            <FormLabel className='text-[14px]'>Estado</FormLabel>
+                            <Select
+                              disabled={isInputDisabled}
+                              value={field.value}
+                              onValueChange={field.onChange}
+                            >
+                              <FormControl className='text-[14px]'>
+                                <SelectTrigger>
+                                  {field.value === 'active' ? (
+                                    <SelectValue placeholder='Activo' />
+                                  ) : (
+                                    <SelectValue placeholder='Inactivo' />
+                                  )}
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectItem className='text-[14px]' value='active'>
+                                  Activo
+                                </SelectItem>
+                                <SelectItem className='text-[14px]' value='inactive'>
+                                  Inactivo
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                            {form.getValues('recordStatus') === 'active' && (
+                              <FormDescription className='pl-2 text-[12.5px] xl:text-[13px] font-bold'>
+                                *El registro esta <span className='text-green-500'>Activo</span>,
+                                para colocarla como <span className='text-red-500'>Inactivo</span>{' '}
+                                debe inactivar el registro desde el modulo{' '}
+                                <span className='font-bold text-red-500'>
+                                  Inactivar Supervisor.
+                                </span>
+                              </FormDescription>
+                            )}
+                            {form.getValues('recordStatus') === 'inactive' && (
+                              <FormDescription className='pl-2 text-[12.5px] xl:text-[13px] font-bold'>
+                                * El registro esta <span className='text-red-500 '>Inactivo</span>,
+                                puede modificar el estado eligiendo otra opción.
+                              </FormDescription>
+                            )}
+                            <FormMessage className='text-[13px]' />
+                          </FormItem>
+                        );
+                      }}
+                    />
                   </div>
 
                   <div className='sm:col-start-3 sm:col-end-4 flex flex-col gap-4'>
-                    <FormField
-                      control={form.control}
-                      name='roles'
-                      render={() => (
-                        <FormItem>
-                          <div className='mb-2'>
-                            <FormLabel className='font-bold text-[15px] md:text-[16px]'>
-                              Roles de Membresía
-                            </FormLabel>
-                          </div>
-                          {Object.values(MemberRole).map(
-                            (role) =>
-                              (role === MemberRole.Pastor ||
-                                role === MemberRole.Copastor ||
-                                role === MemberRole.Supervisor ||
-                                role === MemberRole.Preacher ||
-                                role === MemberRole.Treasurer ||
-                                role === MemberRole.Disciple) && (
-                                <FormField
-                                  key={role}
-                                  control={form.control}
-                                  name='roles'
-                                  render={({ field }) => {
-                                    const isDisabled = disabledRoles?.includes(role);
-                                    return (
-                                      <FormItem
-                                        key={role}
-                                        className='flex flex-row cursor-pointer items-center space-x-3 space-y-0'
-                                      >
-                                        <FormControl className='text-[14px] md:text-[14px]'>
-                                          <Checkbox
-                                            checked={field.value?.includes(role)}
-                                            disabled={isDisabled || isInputDisabled}
-                                            onCheckedChange={(checked) => {
-                                              let updatedRoles: MemberRole[] = [];
-                                              checked
-                                                ? (updatedRoles = field.value
-                                                    ? [...field.value, role]
-                                                    : [role])
-                                                : (updatedRoles =
-                                                    field.value?.filter(
-                                                      (value) => value !== role
-                                                    ) ?? []);
-
-                                              field.onChange(updatedRoles);
-                                            }}
-                                            className={
-                                              isDisabled || isInputDisabled ? 'bg-slate-500' : ''
-                                            }
-                                          />
-                                        </FormControl>
-                                        <FormLabel className='text-[14px] cursor-pointer font-normal'>
-                                          {MemberRoleNames[role]}
-                                        </FormLabel>
-                                      </FormItem>
-                                    );
-                                  }}
-                                />
-                              )
-                          )}
-                          <FormMessage className='text-[13px]' />
-                        </FormItem>
-                      )}
-                    />
+                    <span className='font-bold text-[15px] sm:text-[16px]'>
+                      Roles / Ministerios
+                    </span>
 
                     <FormField
                       control={form.control}
-                      name='roles'
-                      render={() => (
-                        <FormItem>
-                          <div className='mb-2'>
-                            <FormLabel className='font-bold text-[15px] md:text-[16px]'>
-                              Roles Ministeriales
+                      name='relationType'
+                      render={({ field }) => {
+                        return (
+                          <FormItem>
+                            <FormLabel className='text-[14px] font-bold'>
+                              Tipo de Relación
                             </FormLabel>
-                          </div>
-                          {Object.values(MemberRole).map(
-                            (role) =>
-                              role !== MemberRole.Pastor &&
-                              role !== MemberRole.Copastor &&
-                              role !== MemberRole.Supervisor &&
-                              role !== MemberRole.Preacher &&
-                              role !== MemberRole.Treasurer &&
-                              role !== MemberRole.Disciple &&
-                              role !== MemberRole.Presbyter &&
-                              role !== MemberRole.KidsMinistryLeader &&
-                              role !== MemberRole.DiscipleshipMinistryLeader &&
-                              role !== MemberRole.KidsMinistryMember &&
-                              role !== MemberRole.YouthMinistryLeader &&
-                              role !== MemberRole.YouthMinistryMember &&
-                              role !== MemberRole.TechnologyMinistryMember && (
-                                <FormField
-                                  key={role}
-                                  control={form.control}
-                                  name='roles'
-                                  render={({ field }) => {
-                                    const isDisabled = disabledRoles?.includes(role);
-                                    return (
-                                      <FormItem
-                                        key={role}
-                                        className='flex flex-row cursor-pointer items-center space-x-3 space-y-0'
-                                      >
-                                        <FormControl className='text-[14px] md:text-[14px]'>
-                                          <Checkbox
-                                            checked={field.value?.includes(role)}
-                                            disabled={isDisabled || isInputDisabled}
-                                            onCheckedChange={(checked) => {
-                                              let updatedRoles: MemberRole[] = [];
-                                              checked
-                                                ? (updatedRoles = field.value
-                                                    ? [...field.value, role]
-                                                    : [role])
-                                                : (updatedRoles =
-                                                    field.value?.filter(
-                                                      (value) => value !== role
-                                                    ) ?? []);
-
-                                              field.onChange(updatedRoles);
-                                            }}
-                                            className={
-                                              isDisabled || isInputDisabled ? 'bg-slate-500' : ''
-                                            }
-                                          />
-                                        </FormControl>
-                                        <FormLabel className='text-[14px] cursor-pointer font-normal'>
-                                          {MemberRoleNames[role]}
-                                        </FormLabel>
-                                      </FormItem>
-                                    );
-                                  }}
-                                />
-                              )
-                          )}
-                          <FormMessage className='text-[13px]' />
-                        </FormItem>
-                      )}
-                    />
-
-                    {isMessagePromoteDisabled && (
-                      <span className='text-[14px] md:text-[14px] dar:text-yellow-500 text-amber-500 font-bold text-center'>
-                        !SE HA PROMOVIDO CORRECTAMENTE! <br />
-                        <span className='text-[14px] md:text-[14px]'>
-                          {form.getValues('roles').includes(MemberRole.Copastor) &&
-                            !data?.member?.roles.includes(MemberRole.Treasurer) && (
-                              <div>
-                                <span className='text-red-500 text-center inline-block'>
-                                  Roles anteriores: Supervisor
-                                </span>
-                                <br />
-                                <span className='text-green-500 text-center inline-block'>
-                                  Roles nuevos: Co-Pastor
-                                </span>
-                              </div>
-                            )}
-                          {form.getValues('roles').includes(MemberRole.Copastor) &&
-                            data?.member?.roles.includes(MemberRole.Treasurer) && (
-                              <div>
-                                <span className='text-red-500 text-center inline-block'>
-                                  Roles anteriores: Supervisor - Tesorero
-                                </span>
-                                <br />
-                                <span className='text-green-500 text-center inline-block'>
-                                  Roles nuevos: Co-Pastor
-                                </span>
-                              </div>
-                            )}
-                        </span>
-                      </span>
-                    )}
-
-                    {/* Relaciones  */}
-                    <div>
-                      <legend className='col-start-1 col-end-3 font-bold text-[15px] md:text-[16px]'>
-                        Relaciones
-                      </legend>
-                      <FormField
-                        control={form.control}
-                        name='isDirectRelationToPastor'
-                        render={({ field }) => (
-                          <FormItem className='flex flex-row gap-2 items-center px-1 py-3 h-[2.5rem]'>
-                            <FormControl className='text-[14px] md:text-[14px]'>
-                              <Checkbox
-                                className={cn(isInputDisabled && 'bg-slate-500')}
-                                disabled={isInputDisabled}
-                                checked={field?.value}
-                                onCheckedChange={(checked) => {
-                                  field.onChange(checked);
-                                }}
-                              />
-                            </FormControl>
-                            <div className='space-y-1 leading-none'>
-                              <FormLabel className='text-[14px] cursor-pointer md:text-[14px]'>
-                                ¿Este registro sera relacionado directamente con un Pastor?
-                              </FormLabel>
-                            </div>
+                            <Select
+                              onValueChange={field.onChange}
+                              value={field.value}
+                              disabled={isInputDisabled}
+                            >
+                              <FormControl className='text-[14px] md:text-[14px]'>
+                                <SelectTrigger>
+                                  {field.value ? (
+                                    <SelectValue placeholder='Selecciona el tipo de relación' />
+                                  ) : (
+                                    'Selecciona el tipo de relación'
+                                  )}
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                {Object.entries(RelationTypeModuleNames['supervisor']).map(
+                                  ([key, value]) => (
+                                    <SelectItem className={`text-[14px]`} key={key} value={key}>
+                                      {value}
+                                    </SelectItem>
+                                  )
+                                )}
+                              </SelectContent>
+                            </Select>
+                            <FormMessage className='text-[13px]' />
                           </FormItem>
+                        );
+                      }}
+                    />
+
+                    <div className='sm:col-start-3 sm:col-end-4 flex flex-col gap-4'>
+                      {/* Relaciones  */}
+                      <div>
+                        {!isMessagePromoteDisabled && (
+                          <legend className='font-bold col-start-1 col-end-3 text-[15px] sm:text-[16px]'>
+                            Relaciones
+                          </legend>
                         )}
-                      />
 
-                      {!isMessagePromoteDisabled && !isDirectRelationToPastor && (
-                        <FormField
-                          control={form.control}
-                          name='theirCopastor'
-                          render={({ field }) => {
-                            return (
-                              <FormItem className='mt-3'>
-                                <FormLabel className='text-[14px] md:text-[15px] font-bold'>
-                                  Co-Pastor
-                                </FormLabel>
-                                <FormDescription className='text-[13.5px] md:text-[14px]'>
-                                  Asigna el Co-Pastor responsable para este Supervisor.
-                                </FormDescription>
-                                <Popover
-                                  open={isInputTheirCopastorOpen}
-                                  onOpenChange={setIsInputTheirCopastorOpen}
-                                >
-                                  <PopoverTrigger asChild>
-                                    <FormControl className='text-[14px] md:text-[14px]'>
-                                      <Button
-                                        disabled={isRelationSelectDisabled}
-                                        variant='outline'
-                                        role='combobox'
-                                        className={cn(
-                                          'w-full justify-between overflow-hidden',
-                                          !field.value && 'text-slate-500 font-normal text-[14px]'
-                                        )}
-                                      >
-                                        {field.value
-                                          ? `${copastorsQuery?.data?.find((copastor) => copastor.id === field.value)?.member?.firstNames} ${copastorsQuery?.data?.find((pastor) => pastor.id === field.value)?.member?.lastNames}`
-                                          : 'Busque y seleccione un co-pastor'}
-                                        <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-5' />
-                                      </Button>
-                                    </FormControl>
-                                  </PopoverTrigger>
-                                  <PopoverContent align='center' className='w-auto px-4 py-2'>
-                                    <Command>
-                                      {copastorsQuery?.data?.length &&
-                                      copastorsQuery?.data?.length > 0 ? (
-                                        <>
-                                          <CommandInput
-                                            placeholder='Busque un co-pastor...'
-                                            className='h-9 text-[14px]'
-                                          />
-                                          <CommandEmpty>Co-Pastor no encontrado.</CommandEmpty>
-                                          <CommandGroup className='max-h-[200px] h-auto'>
-                                            {copastorsQuery?.data?.map((copastor) => (
-                                              <CommandItem
-                                                className='text-[14px]'
-                                                value={getFullNames({
-                                                  firstNames: copastor.member?.firstNames ?? '',
-                                                  lastNames: copastor.member?.lastNames ?? '',
-                                                })}
-                                                key={copastor.id}
-                                                onSelect={() => {
-                                                  form.setValue('theirCopastor', copastor.id);
-                                                  setIsInputTheirCopastorOpen(false);
-                                                  setChangedId(copastor.id);
-                                                }}
+                        {!isMessagePromoteDisabled &&
+                          (relationType === RelationType.OnlyRelatedHierarchicalCover ||
+                            relationType ===
+                              RelationType.RelatedBothMinistriesAndHierarchicalCover) && (
+                            <FormField
+                              control={form.control}
+                              name='theirCopastor'
+                              render={({ field }) => {
+                                return (
+                                  <FormItem className='mt-3 mb-5'>
+                                    <FormLabel className='text-[14px] md:text-[15px] font-bold'>
+                                      Co-Pastor
+                                    </FormLabel>
+                                    <FormDescription className='text-[13.5px] md:text-[14px]'>
+                                      Asigna el Co-Pastor responsable para este Supervisor.
+                                    </FormDescription>
+                                    <Popover
+                                      open={isInputTheirCopastorOpen}
+                                      onOpenChange={setIsInputTheirCopastorOpen}
+                                    >
+                                      <PopoverTrigger asChild>
+                                        <FormControl className='text-[14px] md:text-[14px]'>
+                                          <Button
+                                            disabled={isRelationSelectDisabled}
+                                            variant='outline'
+                                            role='combobox'
+                                            className={cn(
+                                              'w-full justify-between overflow-hidden',
+                                              !field.value &&
+                                                'text-slate-500 font-normal text-[14px]'
+                                            )}
+                                          >
+                                            {field.value
+                                              ? `${copastorsQuery?.data?.find((copastor) => copastor.id === field.value)?.member?.firstNames} ${copastorsQuery?.data?.find((pastor) => pastor.id === field.value)?.member?.lastNames}`
+                                              : 'Busque y seleccione un co-pastor'}
+                                            <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-5' />
+                                          </Button>
+                                        </FormControl>
+                                      </PopoverTrigger>
+                                      <PopoverContent align='center' className='w-auto px-4 py-2'>
+                                        <Command>
+                                          {copastorsQuery?.data?.length &&
+                                          copastorsQuery?.data?.length > 0 ? (
+                                            <>
+                                              <CommandInput
+                                                placeholder='Busque un co-pastor...'
+                                                className='h-9 text-[14px]'
+                                              />
+                                              <CommandEmpty>Co-Pastor no encontrado.</CommandEmpty>
+                                              <CommandGroup className='max-h-[200px] h-auto'>
+                                                {copastorsQuery?.data?.map((copastor) => (
+                                                  <CommandItem
+                                                    className='text-[14px]'
+                                                    value={getFullNames({
+                                                      firstNames: copastor.member?.firstNames ?? '',
+                                                      lastNames: copastor.member?.lastNames ?? '',
+                                                    })}
+                                                    key={copastor.id}
+                                                    onSelect={() => {
+                                                      form.setValue('theirCopastor', copastor.id);
+                                                      setIsInputTheirCopastorOpen(false);
+                                                      setChangedId(copastor.id);
+                                                    }}
+                                                  >
+                                                    {`${copastor?.member?.firstNames} ${copastor?.member?.lastNames}`}
+                                                    <CheckIcon
+                                                      className={cn(
+                                                        'ml-auto h-4 w-4',
+                                                        copastor?.id === field.value
+                                                          ? 'opacity-100'
+                                                          : 'opacity-0'
+                                                      )}
+                                                    />
+                                                  </CommandItem>
+                                                ))}
+                                              </CommandGroup>
+                                            </>
+                                          ) : (
+                                            copastorsQuery?.data?.length === 0 && (
+                                              <p className='text-[13.5px] md:text-[14.5px] font-medium text-red-500 text-center'>
+                                                ❌No hay co-pastores disponibles.
+                                              </p>
+                                            )
+                                          )}
+                                        </Command>
+                                      </PopoverContent>
+                                    </Popover>
+                                    <FormMessage className='text-[13px]' />
+                                  </FormItem>
+                                );
+                              }}
+                            />
+                          )}
+
+                        {relationType === RelationType.OnlyRelatedMinistries &&
+                          !isMessagePromoteDisabled && (
+                            <FormField
+                              control={form.control}
+                              name='theirPastorOnlyMinistries'
+                              render={({ field }) => {
+                                return (
+                                  <FormItem className='mt-3 mb-5'>
+                                    <FormLabel className='text-[14.5px] md:text-[15px] font-bold'>
+                                      Pastor (Solo Ministerios)
+                                    </FormLabel>
+                                    <FormDescription className='text-[13.5px] md:text-[14px]'>
+                                      Asigna el Pastor responsable para este Co-Pastor.
+                                    </FormDescription>
+                                    <Popover
+                                      open={isInputTheirPastorOnlyMinistryOpen}
+                                      onOpenChange={setIsInputTheirPastorOnlyMinistryOpen}
+                                    >
+                                      <PopoverTrigger asChild>
+                                        <FormControl className='text-[14px] md:text-[14px]'>
+                                          <Button
+                                            disabled={isInputDisabled}
+                                            variant='outline'
+                                            role='combobox'
+                                            className={cn(
+                                              'w-full justify-between overflow-hidden',
+                                              !field.value &&
+                                                'text-slate-500 font-normal text-[14px]'
+                                            )}
+                                          >
+                                            {field.value
+                                              ? `${queryPastors?.data?.find((pastor) => pastor.id === field.value)?.member?.firstNames} ${queryPastors?.data?.find((pastor) => pastor.id === field.value)?.member?.lastNames}`
+                                              : 'Busque y seleccione un pastor'}
+                                            <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-5' />
+                                          </Button>
+                                        </FormControl>
+                                      </PopoverTrigger>
+                                      <PopoverContent align='center' className='w-auto px-4 py-2'>
+                                        <Command>
+                                          {queryPastors?.data?.length &&
+                                          queryPastors?.data?.length > 0 ? (
+                                            <>
+                                              <CommandInput
+                                                placeholder='Busque un pastor'
+                                                className='h-9 text-[14px]'
+                                              />
+                                              <CommandEmpty>Pastor no encontrado.</CommandEmpty>
+                                              <CommandGroup className='max-h-[200px] h-auto'>
+                                                {queryPastors?.data?.map((pastor) => (
+                                                  <CommandItem
+                                                    className='text-[14px]'
+                                                    value={getFullNames({
+                                                      firstNames: pastor.member?.firstNames ?? '',
+                                                      lastNames: pastor.member?.lastNames ?? '',
+                                                    })}
+                                                    key={pastor.id}
+                                                    onSelect={() => {
+                                                      form.setValue(
+                                                        'theirPastorOnlyMinistries',
+                                                        pastor?.id
+                                                      );
+                                                      setIsInputTheirPastorOnlyMinistryOpen(false);
+                                                    }}
+                                                  >
+                                                    {`${pastor?.member?.firstNames} ${pastor?.member?.lastNames}`}
+                                                    <CheckIcon
+                                                      className={cn(
+                                                        'ml-auto h-4 w-4',
+                                                        pastor?.id === field.value
+                                                          ? 'opacity-100'
+                                                          : 'opacity-0'
+                                                      )}
+                                                    />
+                                                  </CommandItem>
+                                                ))}
+                                              </CommandGroup>
+                                            </>
+                                          ) : (
+                                            queryPastors?.data?.length === 0 && (
+                                              <p className='text-[13.5px] md:text-[14.5px] font-medium text-red-500 text-center'>
+                                                ❌No hay pastores disponibles.
+                                              </p>
+                                            )
+                                          )}
+                                        </Command>
+                                      </PopoverContent>
+                                    </Popover>
+                                    <FormMessage className='text-[13px]' />
+                                  </FormItem>
+                                );
+                              }}
+                            />
+                          )}
+
+                        {relationType === RelationType.RelatedDirectToPastor &&
+                          !isMessagePromoteDisabled && (
+                            <FormField
+                              control={form.control}
+                              name='theirPastorRelationDirect'
+                              render={({ field }) => {
+                                return (
+                                  <FormItem className='mt-2'>
+                                    <FormLabel className='text-[14px] md:text-[15px] font-bold'>
+                                      Pastor (Relación Directa)
+                                    </FormLabel>
+                                    <FormDescription className='text-[13.5px] md:text-[14px]'>
+                                      Asigna el Pastor responsable para este Supervisor.
+                                    </FormDescription>
+                                    <Popover
+                                      open={isInputTheirPastorRelationDirectOpen}
+                                      onOpenChange={setIsInputTheirPastorRelationDirectOpen}
+                                    >
+                                      <PopoverTrigger asChild>
+                                        <FormControl className='text-[14px] md:text-[14px]'>
+                                          <Button
+                                            disabled={isRelationSelectDisabled}
+                                            variant='outline'
+                                            role='combobox'
+                                            className={cn(
+                                              'w-full justify-between overflow-hidden',
+                                              !field.value &&
+                                                'text-slate-500 font-normal text-[14px]'
+                                            )}
+                                          >
+                                            {field.value
+                                              ? `${pastorsQuery?.data?.find((pastor) => pastor.id === field.value)?.member?.firstNames} ${pastorsQuery?.data?.find((pastor) => pastor.id === field.value)?.member?.lastNames}`
+                                              : 'Busque y seleccione un pastor'}
+                                            <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-5' />
+                                          </Button>
+                                        </FormControl>
+                                      </PopoverTrigger>
+                                      <PopoverContent align='center' className='w-auto px-4 py-2'>
+                                        <Command>
+                                          {pastorsQuery?.data?.length &&
+                                          pastorsQuery?.data?.length > 0 ? (
+                                            <>
+                                              <CommandInput
+                                                placeholder='Busque una pastor...'
+                                                className='h-9 text-[14px]'
+                                              />
+                                              <CommandEmpty>Pastor no encontrado.</CommandEmpty>
+                                              <CommandGroup className='max-h-[200px] h-auto'>
+                                                {pastorsQuery?.data?.map((pastor) => (
+                                                  <CommandItem
+                                                    className='text-[14px]'
+                                                    value={getFullNames({
+                                                      firstNames: pastor.member?.firstNames ?? '',
+                                                      lastNames: pastor.member?.lastNames ?? '',
+                                                    })}
+                                                    key={pastor.id}
+                                                    onSelect={() => {
+                                                      form.setValue(
+                                                        'theirPastorRelationDirect',
+                                                        pastor.id
+                                                      );
+                                                      setIsInputTheirPastorRelationDirectOpen(
+                                                        false
+                                                      );
+                                                    }}
+                                                  >
+                                                    {`${pastor?.member?.firstNames} ${pastor?.member?.lastNames}`}
+                                                    <CheckIcon
+                                                      className={cn(
+                                                        'ml-auto h-4 w-4',
+                                                        pastor?.id === field.value
+                                                          ? 'opacity-100'
+                                                          : 'opacity-0'
+                                                      )}
+                                                    />
+                                                  </CommandItem>
+                                                ))}
+                                              </CommandGroup>
+                                            </>
+                                          ) : (
+                                            pastorsQuery?.data?.length === 0 && (
+                                              <p className='text-[13.5px] md:text-[14.5px] font-medium text-red-500 text-center'>
+                                                ❌No hay pastores disponibles.
+                                              </p>
+                                            )
+                                          )}
+                                        </Command>
+                                      </PopoverContent>
+                                    </Popover>
+                                    <FormMessage className='text-[13px]' />
+                                  </FormItem>
+                                );
+                              }}
+                            />
+                          )}
+
+                        {(relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover ||
+                          relationType === RelationType.OnlyRelatedMinistries) && (
+                          <div className='w-full border-t border-gray-300 pt-4 flex flex-col space-y-6 sm:col-start-1 sm:col-end-3'>
+                            <div className='w-full flex items-center justify-between border-b border-gray-300 pb-4'>
+                              <h3 className='text-[16px] font-bold text-black dark:text-gray-100'>
+                                Agregar Ministerios
+                              </h3>
+
+                              <Button
+                                type='button'
+                                variant='ghost'
+                                disabled={isInputDisabled}
+                                onClick={addMinistryBlock}
+                                className={cn(
+                                  'flex items-center gap-2 text-[14px] px-4 py-2 border border-blue-500 rounded-xl bg-gradient-to-r from-blue-400 via-blue-500 to-blue-600 text-white hover:text-blue-100 hover:from-blue-500 hover:via-blue-600 hover:to-blue-700 transition-colors shadow-sm hover:shadow-md'
+                                )}
+                              >
+                                <Plus className='w-4 h-4' />
+                              </Button>
+                            </div>
+
+                            {ministryBlocks.map((block, index) => {
+                              const selectedChurch = queryChurches?.data?.find(
+                                (c) => c.id === block.churchId
+                              );
+                              const selectedMinistry = block.ministries?.find(
+                                (m) => m.id === block.ministryId
+                              );
+                              const summary = `${MinistryTypeNames[block.ministryType as MinistryType] ?? '—'} • ${selectedChurch?.abbreviatedChurchName ?? 'Iglesia no seleccionada'} • ${selectedMinistry?.customMinistryName ?? 'Ministerio no seleccionado'}`;
+
+                              return (
+                                <Collapsible key={index} className='border rounded-lg bg-white/5'>
+                                  <div className='flex items-center justify-between px-4 py-3'>
+                                    <div className='flex flex-col'>
+                                      <span className='text-md font-medium pb-1'>
+                                        Ministerio {index + 1}
+                                      </span>
+                                      <span className='text-[12.5px] text-muted-foreground truncate text-wrap'>
+                                        {summary}
+                                      </span>
+                                    </div>
+
+                                    <div className='flex items-center gap-3'>
+                                      <CollapsibleTrigger asChild>
+                                        <Button
+                                          className='text-[15px] md:text-base font-semibold tracking-wide mb-1 px-2 bg-slate-100 text-black dark:bg-slate-800 dark:text-white 
+                                    hover:bg-slate-200 dark:hover:bg-slate-700 w-full justify-between [&[data-state=open]>svg]:rotate-180'
+                                        >
+                                          <ChevronDown className='h-4 w-4 transition-transform duration-300' />
+                                        </Button>
+                                      </CollapsibleTrigger>
+                                    </div>
+                                  </div>
+
+                                  <CollapsibleContent className='px-4 pb-4 pt-2 data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp overflow-hidden'>
+                                    <div key={index} className='w-full flex flex-col space-y-4'>
+                                      <div className='grid grid-cols-1 md:grid-cols-1 gap-2'>
+                                        {/* TIPO DE MINISTERIO */}
+                                        <div className='flex flex-col'>
+                                          <label className='text-[14px] md:text-[14px] font-bold mb-2'>
+                                            Tipo de Ministerio
+                                          </label>
+                                          <Select
+                                            value={block.ministryType ?? ''}
+                                            onValueChange={(value) => {
+                                              updateMinistryBlock(index, 'ministryType', value);
+                                              updateMinistryBlock(index, 'ministryRoles', []);
+                                              updateMinistryBlock(index, 'churchId', '');
+                                            }}
+                                            disabled={isInputDisabled}
+                                          >
+                                            <SelectTrigger className='h-10 text-sm'>
+                                              {block.ministryType ? (
+                                                <SelectValue placeholder='Selecciona el tipo de ministerio' />
+                                              ) : (
+                                                'Selecciona el tipo de ministerio'
+                                              )}
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                              {Object.entries(MinistryTypeNames).map(
+                                                ([key, value]) => (
+                                                  <SelectItem key={key} value={key}>
+                                                    {value}
+                                                  </SelectItem>
+                                                )
+                                              )}
+                                            </SelectContent>
+                                          </Select>
+                                        </div>
+
+                                        {/* IGLESIA */}
+                                        <div className='flex flex-col'>
+                                          <label className='text-[14px] md:text-[14px] font-bold mb-2'>
+                                            Iglesia
+                                          </label>
+                                          <Popover
+                                            open={block.churchPopoverOpen}
+                                            onOpenChange={(open) =>
+                                              updateMinistryBlock(index, 'churchPopoverOpen', open)
+                                            }
+                                          >
+                                            <PopoverTrigger asChild>
+                                              <Button
+                                                disabled={!block.ministryType || isInputDisabled}
+                                                variant='outline'
+                                                role='combobox'
+                                                className='w-full h-10 justify-between text-sm'
                                               >
-                                                {`${copastor?.member?.firstNames} ${copastor?.member?.lastNames}`}
-                                                <CheckIcon
-                                                  className={cn(
-                                                    'ml-auto h-4 w-4',
-                                                    copastor?.id === field.value
-                                                      ? 'opacity-100'
-                                                      : 'opacity-0'
-                                                  )}
-                                                />
-                                              </CommandItem>
-                                            ))}
-                                          </CommandGroup>
-                                        </>
-                                      ) : (
-                                        copastorsQuery?.data?.length === 0 && (
-                                          <p className='text-[13.5px] md:text-[14.5px] font-medium text-red-500 text-center'>
-                                            ❌No hay co-pastores disponibles.
-                                          </p>
-                                        )
-                                      )}
-                                    </Command>
-                                  </PopoverContent>
-                                </Popover>
-                                <FormMessage className='text-[13px]' />
-                              </FormItem>
-                            );
-                          }}
-                        />
-                      )}
+                                                {block.churchId
+                                                  ? queryChurches?.data?.find(
+                                                      (church) => church.id === block.churchId
+                                                    )?.abbreviatedChurchName
+                                                  : 'Seleccione una iglesia'}
+                                                <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+                                              </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent
+                                              align='center'
+                                              className='w-[300px] p-4'
+                                            >
+                                              <Command>
+                                                {queryChurches?.data &&
+                                                queryChurches?.data?.length > 0 ? (
+                                                  <>
+                                                    <CommandInput
+                                                      placeholder='Busque una iglesia'
+                                                      className='h-9 text-[14px]'
+                                                    />
+                                                    <CommandEmpty>
+                                                      Iglesia no encontrada.
+                                                    </CommandEmpty>
+                                                    <CommandGroup className='max-h-[200px] h-auto'>
+                                                      {queryChurches?.data?.map((church) => (
+                                                        <CommandItem
+                                                          key={church.id}
+                                                          value={church.abbreviatedChurchName}
+                                                          className='text-[14px]'
+                                                          onSelect={() => {
+                                                            updateMinistryBlock(
+                                                              index,
+                                                              'churchId',
+                                                              church.id
+                                                            );
+                                                            updateMinistryBlock(
+                                                              index,
+                                                              'churchPopoverOpen',
+                                                              !open
+                                                            );
+                                                            handleSelectChurch(index, church.id);
+                                                          }}
+                                                        >
+                                                          {church?.abbreviatedChurchName}
+                                                          <CheckIcon
+                                                            className={cn(
+                                                              'ml-auto h-4 w-4',
+                                                              church.id ===
+                                                                ministryBlocks[index].churchId
+                                                                ? 'opacity-100'
+                                                                : 'opacity-0'
+                                                            )}
+                                                          />
+                                                        </CommandItem>
+                                                      ))}
+                                                    </CommandGroup>
+                                                  </>
+                                                ) : (
+                                                  queryChurches?.data?.length === 0 && (
+                                                    <p className='text-[13.5px] md:text-[14.5px] font-medium text-red-500 text-center'>
+                                                      ❌ No hay iglesias disponibles.
+                                                    </p>
+                                                  )
+                                                )}
+                                              </Command>
+                                            </PopoverContent>
+                                          </Popover>
+                                        </div>
 
-                      <AlertUpdateRelationSupervisor
-                        data={data}
-                        isAlertDialogOpen={isAlertDialogOpen}
-                        setIsAlertDialogOpen={setIsAlertDialogOpen}
-                        copastorsQuery={copastorsQuery}
-                        supervisorUpdateForm={form}
-                        setChangedId={setChangedId}
-                        changedId={changedId}
-                      />
-
-                      {((isPromoteButtonDisabled && isInputDisabled && !theirCopastor) ||
-                        isDirectRelationToPastor) && (
-                        <FormField
-                          control={form.control}
-                          name='theirPastor'
-                          render={({ field }) => {
-                            return (
-                              <FormItem className='mt-2'>
-                                <FormLabel className='text-[14px] md:text-[15px] font-bold'>
-                                  Pastor
-                                </FormLabel>
-                                <FormDescription className='text-[13.5px] md:text-[14px]'>
-                                  Asigna el Pastor responsable para este Supervisor.
-                                </FormDescription>
-                                <Popover
-                                  open={isInputTheirPastorOpen}
-                                  onOpenChange={setIsInputTheirPastorOpen}
-                                >
-                                  <PopoverTrigger asChild>
-                                    <FormControl className='text-[14px] md:text-[14px]'>
-                                      <Button
-                                        disabled={isRelationSelectDisabled}
-                                        variant='outline'
-                                        role='combobox'
-                                        className={cn(
-                                          'w-full justify-between overflow-hidden',
-                                          !field.value && 'text-slate-500 font-normal text-[14px]'
-                                        )}
-                                      >
-                                        {field.value
-                                          ? `${pastorsQuery?.data?.find((pastor) => pastor.id === field.value)?.member?.firstNames} ${pastorsQuery?.data?.find((pastor) => pastor.id === field.value)?.member?.lastNames}`
-                                          : 'Busque y seleccione un pastor'}
-                                        <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-5' />
-                                      </Button>
-                                    </FormControl>
-                                  </PopoverTrigger>
-                                  <PopoverContent align='center' className='w-auto px-4 py-2'>
-                                    <Command>
-                                      {pastorsQuery?.data?.length &&
-                                      pastorsQuery?.data?.length > 0 ? (
-                                        <>
-                                          <CommandInput
-                                            placeholder='Busque una pastor...'
-                                            className='h-9 text-[14px]'
-                                          />
-                                          <CommandEmpty>Pastor no encontrado.</CommandEmpty>
-                                          <CommandGroup className='max-h-[200px] h-auto'>
-                                            {pastorsQuery?.data?.map((pastor) => (
-                                              <CommandItem
-                                                className='text-[14px]'
-                                                value={getFullNames({
-                                                  firstNames: pastor.member?.firstNames ?? '',
-                                                  lastNames: pastor.member?.lastNames ?? '',
-                                                })}
-                                                key={pastor.id}
-                                                onSelect={() => {
-                                                  form.setValue('theirPastor', pastor.id);
-                                                  setIsInputTheirPastorOpen(false);
-                                                }}
+                                        {/* MINISTERIO */}
+                                        <div className='flex flex-col'>
+                                          <label className='text-[14px] md:text-[14px] font-bold mb-2'>
+                                            Ministerio
+                                          </label>
+                                          <Popover
+                                            open={block.ministryPopoverOpen}
+                                            onOpenChange={(open) =>
+                                              updateMinistryBlock(
+                                                index,
+                                                'ministryPopoverOpen',
+                                                open
+                                              )
+                                            }
+                                          >
+                                            <PopoverTrigger asChild>
+                                              <Button
+                                                disabled={
+                                                  !block.churchId ||
+                                                  !block.ministryType ||
+                                                  isInputDisabled
+                                                }
+                                                variant='outline'
+                                                role='combobox'
+                                                className='w-full h-10 justify-between text-sm'
                                               >
-                                                {`${pastor?.member?.firstNames} ${pastor?.member?.lastNames}`}
-                                                <CheckIcon
-                                                  className={cn(
-                                                    'ml-auto h-4 w-4',
-                                                    pastor?.id === field.value
-                                                      ? 'opacity-100'
-                                                      : 'opacity-0'
-                                                  )}
-                                                />
-                                              </CommandItem>
-                                            ))}
-                                          </CommandGroup>
-                                        </>
-                                      ) : (
-                                        pastorsQuery?.data?.length === 0 && (
-                                          <p className='text-[13.5px] md:text-[14.5px] font-medium text-red-500 text-center'>
-                                            ❌No hay pastores disponibles.
-                                          </p>
-                                        )
-                                      )}
-                                    </Command>
-                                  </PopoverContent>
-                                </Popover>
-                                <FormMessage className='text-[13px]' />
-                              </FormItem>
-                            );
-                          }}
+                                                {block.ministryId
+                                                  ? block.ministries?.find(
+                                                      (ministry) => ministry.id === block.ministryId
+                                                    )?.customMinistryName
+                                                  : 'Seleccione un ministerio'}
+                                                <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-50' />
+                                              </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent
+                                              align='center'
+                                              className='w-[300px] p-4'
+                                            >
+                                              <Command>
+                                                {block.ministries &&
+                                                block.ministries?.length > 0 ? (
+                                                  <>
+                                                    <CommandInput
+                                                      placeholder='Busque un ministerio'
+                                                      className='h-9 text-[14px]'
+                                                    />
+                                                    <CommandEmpty>
+                                                      Ministerio no encontrado.
+                                                    </CommandEmpty>
+                                                    <CommandGroup className='max-h-[200px] h-auto'>
+                                                      {block.ministries?.map((ministry) => (
+                                                        <CommandItem
+                                                          key={ministry.id}
+                                                          value={ministry?.customMinistryName}
+                                                          className='text-[14px]'
+                                                          onSelect={() => {
+                                                            updateMinistryBlock(
+                                                              index,
+                                                              'ministryId',
+                                                              ministry.id
+                                                            );
+                                                            updateMinistryBlock(
+                                                              index,
+                                                              'ministryPopoverOpen',
+                                                              !open
+                                                            );
+                                                          }}
+                                                        >
+                                                          {ministry?.customMinistryName}
+                                                          <CheckIcon
+                                                            className={cn(
+                                                              'ml-auto h-4 w-4',
+                                                              ministry.id ===
+                                                                ministryBlocks[index].ministryId
+                                                                ? 'opacity-100'
+                                                                : 'opacity-0'
+                                                            )}
+                                                          />
+                                                        </CommandItem>
+                                                      ))}
+                                                    </CommandGroup>
+                                                  </>
+                                                ) : (
+                                                  block.ministries?.length === 0 && (
+                                                    <p className='text-[13.5px] md:text-[14.5px] font-medium text-red-500 text-center'>
+                                                      ❌ No hay ministerios disponibles.
+                                                    </p>
+                                                  )
+                                                )}
+                                              </Command>
+                                            </PopoverContent>
+                                          </Popover>
+                                        </div>
+                                      </div>
+
+                                      {/* ROLES DE MINISTERIO */}
+                                      <div className='flex flex-col'>
+                                        <label className='text-[14px] font-bold mb-2'>
+                                          Roles de Ministerio
+                                        </label>
+                                        <div className='flex justify-between items-center gap-x-1'>
+                                          <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 gap-x-4 gap-y-1'>
+                                            {Object.values(
+                                              block.ministryType === MinistryType.KidsMinistry
+                                                ? SearchTypesKidsMinistry
+                                                : block.ministryType === MinistryType.YouthMinistry
+                                                  ? SearchTypesYouthMinistry
+                                                  : block.ministryType ===
+                                                      MinistryType.DiscipleshipMinistry
+                                                    ? SearchTypesDiscipleshipMinistry
+                                                    : block.ministryType ===
+                                                        MinistryType.EvangelismMinistry
+                                                      ? SearchTypesEvangelismMinistry
+                                                      : block.ministryType ===
+                                                          MinistryType.IntercessionMinistry
+                                                        ? SearchTypesIntercessionMinistry
+                                                        : block.ministryType ===
+                                                            MinistryType.TechnologyMinistry
+                                                          ? SearchTypesTechnologyMinistry
+                                                          : SearchTypesWorshipMinistry
+                                            ).map((role) => {
+                                              const isSelected = block.ministryRoles.includes(role);
+                                              const isAnySelected = block.ministryRoles.length > 0;
+                                              const isDisabled =
+                                                (!isSelected && isAnySelected) ||
+                                                isInputDisabled ||
+                                                !block.churchId ||
+                                                !block.ministryType ||
+                                                !block.ministryId;
+                                              const checkboxId = `role-${index}-${role}`;
+
+                                              return (
+                                                <div
+                                                  key={role}
+                                                  className='flex items-center space-x-2'
+                                                >
+                                                  <Checkbox
+                                                    id={checkboxId}
+                                                    disabled={isDisabled}
+                                                    checked={isSelected}
+                                                    onCheckedChange={(checked) =>
+                                                      toggleRoleInBlock(index, role, !!checked)
+                                                    }
+                                                    className={cn(isDisabled ? 'bg-slate-500' : '')}
+                                                  />
+                                                  <label
+                                                    htmlFor={checkboxId}
+                                                    className='text-sm cursor-pointer font-normal'
+                                                  >
+                                                    {
+                                                      MinistryMemberRoleNames[
+                                                        role as MinistryMemberRole
+                                                      ]
+                                                    }
+                                                  </label>
+                                                </div>
+                                              );
+                                            })}
+                                          </div>
+
+                                          <Button
+                                            type='button'
+                                            variant='ghost'
+                                            disabled={isInputDisabled}
+                                            onClick={() => removeMinistryBlock(index)}
+                                            className={cn(
+                                              'flex items-center gap-2 text-[14px] px-4 py-2 border border-red-500 rounded-xl bg-gradient-to-r from-red-400 via-red-500 to-red-600 text-white hover:text-red-100 hover:from-red-500 hover:via-red-600 hover:to-red-700 transition-colors shadow-sm hover:shadow-md'
+                                            )}
+                                          >
+                                            <Trash className='w-4 h-4' />
+                                          </Button>
+                                        </div>
+                                      </div>
+
+                                      <div className='border-b border-gray-300 my-4' />
+                                    </div>
+                                  </CollapsibleContent>
+                                </Collapsible>
+                              );
+                            })}
+                          </div>
+                        )}
+
+                        {isMessagePromoteDisabled && (
+                          <legend className='font-bold col-start-1 col-end-3 text-[15px] sm:text-[16px] my-4'>
+                            Nuevas Relaciones
+                          </legend>
+                        )}
+
+                        {isMessagePromoteDisabled && (
+                          <p className='text-[14px] md:text-[14px] dar:text-yellow-500 text-amber-500 font-bold text-center'>
+                            !SE HA PROMOVIDO CORRECTAMENTE! <br />
+                            <span className='text-[14px] md:text-[14px]'>
+                              {form.getValues('roles').includes(MemberRole.Copastor) &&
+                                !data?.member?.roles.includes(MemberRole.Treasurer) && (
+                                  <div>
+                                    <span className='text-red-500 text-center inline-block'>
+                                      Roles anteriores: Supervisor
+                                    </span>
+                                    <br />
+                                    <span className='text-green-500 text-center inline-block'>
+                                      Roles nuevos: Co-Pastor
+                                    </span>
+                                  </div>
+                                )}
+                              {form.getValues('roles').includes(MemberRole.Copastor) &&
+                                data?.member?.roles.includes(MemberRole.Treasurer) && (
+                                  <div>
+                                    <span className='text-red-500 text-center inline-block'>
+                                      Roles anteriores: Supervisor - Tesorero
+                                    </span>
+                                    <br />
+                                    <span className='text-green-500 text-center inline-block'>
+                                      Roles nuevos: Co-Pastor
+                                    </span>
+                                  </div>
+                                )}
+                            </span>
+                          </p>
+                        )}
+
+                        <AlertUpdateRelationSupervisor
+                          data={data}
+                          isAlertDialogOpen={isAlertDialogOpen}
+                          setIsAlertDialogOpen={setIsAlertDialogOpen}
+                          copastorsQuery={copastorsQuery}
+                          supervisorUpdateForm={form}
+                          setChangedId={setChangedId}
+                          changedId={changedId}
                         />
-                      )}
+
+                        {/* Only for raise level */}
+                        {isPromoteButtonDisabled && isInputDisabled && (
+                          <FormField
+                            control={form.control}
+                            name='theirPastor'
+                            render={({ field }) => {
+                              return (
+                                <FormItem className='mt-2'>
+                                  <FormLabel className='text-[14px] md:text-[15px] font-bold'>
+                                    Pastor
+                                  </FormLabel>
+                                  <FormDescription className='text-[13.5px] md:text-[14px]'>
+                                    Asigna el Pastor responsable para este Co-Pastor.
+                                  </FormDescription>
+                                  <Popover
+                                    open={isInputTheirPastorOpen}
+                                    onOpenChange={setIsInputTheirPastorOpen}
+                                  >
+                                    <PopoverTrigger asChild>
+                                      <FormControl className='text-[14px] md:text-[14px]'>
+                                        <Button
+                                          disabled={isRelationSelectDisabled}
+                                          variant='outline'
+                                          role='combobox'
+                                          className={cn(
+                                            'w-full justify-between overflow-hidden',
+                                            !field.value && 'text-slate-500 font-normal text-[14px]'
+                                          )}
+                                        >
+                                          {field.value
+                                            ? `${
+                                                pastorsQuery?.data?.find(
+                                                  (pastor) => pastor.id === field.value
+                                                )?.member?.firstNames
+                                              } ${pastorsQuery?.data?.find((pastor) => pastor.id === field.value)?.member?.lastNames}`
+                                            : 'Busque y seleccione un pastor'}
+                                          <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-5' />
+                                        </Button>
+                                      </FormControl>
+                                    </PopoverTrigger>
+                                    <PopoverContent align='center' className='w-auto px-4 py-2'>
+                                      <Command>
+                                        {pastorsQuery?.data?.length &&
+                                        pastorsQuery?.data?.length > 0 ? (
+                                          <>
+                                            <CommandInput
+                                              placeholder='Busque una pastor...'
+                                              className='h-9 text-[14px]'
+                                            />
+                                            <CommandEmpty>Pastor no encontrado.</CommandEmpty>
+                                            <CommandGroup className='max-h-[200px] h-auto'>
+                                              {pastorsQuery?.data?.map((pastor) => (
+                                                <CommandItem
+                                                  className='text-[14px]'
+                                                  value={getFullNames({
+                                                    firstNames: pastor.member?.firstNames ?? '',
+                                                    lastNames: pastor.member?.lastNames ?? '',
+                                                  })}
+                                                  key={pastor.id}
+                                                  onSelect={() => {
+                                                    form.setValue('theirPastor', pastor.id);
+                                                    setIsInputTheirPastorOpen(false);
+                                                  }}
+                                                >
+                                                  {`${pastor?.member?.firstNames} ${pastor?.member?.lastNames}`}
+                                                  <CheckIcon
+                                                    className={cn(
+                                                      'ml-auto h-4 w-4',
+                                                      pastor?.id === field.value
+                                                        ? 'opacity-100'
+                                                        : 'opacity-0'
+                                                    )}
+                                                  />
+                                                </CommandItem>
+                                              ))}
+                                            </CommandGroup>
+                                          </>
+                                        ) : (
+                                          pastorsQuery?.data?.length === 0 && (
+                                            <p className='text-[13.5px] md:text-[14.5px] font-medium text-red-500 text-center'>
+                                              ❌No hay pastores disponibles.
+                                            </p>
+                                          )
+                                        )}
+                                      </Command>
+                                    </PopoverContent>
+                                  </Popover>
+                                  <FormMessage className='text-[13px]' />
+                                </FormItem>
+                              );
+                            }}
+                          />
+                        )}
+                      </div>
                     </div>
 
                     {isPromoteButtonDisabled &&
                       !theirCopastor &&
+                      !theirPastorOnlyMinistries &&
+                      !theirPastorRelationDirect &&
                       !theirPastor &&
                       form.getValues('roles').includes(MemberRole.Copastor) &&
                       !data?.member?.roles.includes(MemberRole.Treasurer) && (
-                        <span className='mt-2 text-[12.5px] md:text-[13px] font-bold text-center text-red-500'>
-                          ! Por favor asigna la nueva relación para los roles promovidos !
+                        <span className='mt-0 text-[12.5px] md:text-[13px] font-bold text-center text-red-500'>
+                          Debes asignar la nueva relación antes de promover los roles
+                        </span>
+                      )}
+
+                    {isPromoteButtonDisabled &&
+                      !theirCopastor &&
+                      !theirPastorOnlyMinistries &&
+                      !theirPastorRelationDirect &&
+                      theirPastor &&
+                      form.getValues('roles').includes(MemberRole.Copastor) &&
+                      !data?.member?.roles.includes(MemberRole.Treasurer) && (
+                        <span className='mt-0 text-[12.5px] md:text-[13px] font-bold text-center text-green-500'>
+                          Todo está listo, guarda los cambios para promover al Supervisor
                         </span>
                       )}
 

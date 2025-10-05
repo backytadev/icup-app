@@ -58,7 +58,6 @@ export const usePreacherUpdateSubmitButtonLogic = ({
 
   //* Effects
   useEffect(() => {
-    //? Enabled
     if (
       preacherUpdateForm.formState.errors &&
       Object.values(preacherUpdateForm.formState.errors).length > 0
@@ -67,6 +66,7 @@ export const usePreacherUpdateSubmitButtonLogic = ({
       setIsMessageErrorDisabled(true);
     }
 
+    //* Conditions only raise level
     if (!isDirectRelationToPastor && roles.includes(MemberRole.Supervisor) && !theirCopastor) {
       setIsSubmitButtonDisabled(true);
       setIsMessageErrorDisabled(true);
@@ -82,6 +82,29 @@ export const usePreacherUpdateSubmitButtonLogic = ({
     }
 
     if (
+      !isDirectRelationToPastor &&
+      theirCopastor &&
+      roles.includes(MemberRole.Supervisor) &&
+      Object.values(preacherUpdateForm.formState.errors).length === 0 &&
+      !isRelationSelectDisabled
+    ) {
+      setIsSubmitButtonDisabled(false);
+      setIsMessageErrorDisabled(false);
+    }
+
+    if (
+      isDirectRelationToPastor &&
+      roles.includes(MemberRole.Supervisor) &&
+      theirPastorRelationDirect &&
+      Object.values(preacherUpdateForm.formState.errors).length === 0 &&
+      !isRelationSelectDisabled
+    ) {
+      setIsSubmitButtonDisabled(false);
+      setIsMessageErrorDisabled(false);
+    }
+
+    //* Conditions for OnlyRelatedHierarchicalCover
+    if (
       roles.includes(MemberRole.Preacher) &&
       !roles.includes(MemberRole.Supervisor) &&
       relationType === RelationType.OnlyRelatedHierarchicalCover &&
@@ -91,6 +114,19 @@ export const usePreacherUpdateSubmitButtonLogic = ({
       setIsMessageErrorDisabled(true);
     }
 
+    if (
+      roles.includes(MemberRole.Preacher) &&
+      !roles.includes(MemberRole.Supervisor) &&
+      !isInputDisabled &&
+      theirSupervisor &&
+      relationType === RelationType.OnlyRelatedHierarchicalCover &&
+      Object.values(preacherUpdateForm.formState.errors).length === 0
+    ) {
+      setIsSubmitButtonDisabled(false);
+      setIsMessageErrorDisabled(false);
+    }
+
+    //* Conditions for OnlyRelatedMinistries
     if (
       roles.includes(MemberRole.Preacher) &&
       !roles.includes(MemberRole.Supervisor) &&
@@ -124,6 +160,23 @@ export const usePreacherUpdateSubmitButtonLogic = ({
     if (
       roles.includes(MemberRole.Preacher) &&
       !roles.includes(MemberRole.Supervisor) &&
+      theirPastorOnlyMinistries &&
+      !isInputDisabled &&
+      relationType === RelationType.OnlyRelatedMinistries &&
+      ministryBlocks?.every(
+        (item) =>
+          item.churchId && item.ministryId && item.ministryType && item.ministryRoles.length > 0
+      ) &&
+      Object.values(preacherUpdateForm.formState.errors).length === 0
+    ) {
+      setIsSubmitButtonDisabled(false);
+      setIsMessageErrorDisabled(false);
+    }
+
+    //* Conditions for RelatedBothMinistriesAndHierarchicalCover
+    if (
+      roles.includes(MemberRole.Preacher) &&
+      !roles.includes(MemberRole.Supervisor) &&
       !isInputDisabled &&
       ((theirSupervisor &&
         relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover &&
@@ -147,50 +200,6 @@ export const usePreacherUpdateSubmitButtonLogic = ({
     }
 
     if (
-      roles.includes(MemberRole.Supervisor) &&
-      !roles.includes(MemberRole.Preacher) &&
-      !theirCopastor
-    ) {
-      setIsSubmitButtonDisabled(true);
-      setIsMessageErrorDisabled(true);
-    }
-
-    //? Disabled
-    if (
-      !isDirectRelationToPastor &&
-      theirCopastor &&
-      roles.includes(MemberRole.Supervisor) &&
-      Object.values(preacherUpdateForm.formState.errors).length === 0 &&
-      !isRelationSelectDisabled
-    ) {
-      setIsSubmitButtonDisabled(false);
-      setIsMessageErrorDisabled(false);
-    }
-
-    if (
-      isDirectRelationToPastor &&
-      roles.includes(MemberRole.Supervisor) &&
-      theirPastorRelationDirect &&
-      Object.values(preacherUpdateForm.formState.errors).length === 0 &&
-      !isRelationSelectDisabled
-    ) {
-      setIsSubmitButtonDisabled(false);
-      setIsMessageErrorDisabled(false);
-    }
-
-    if (
-      roles.includes(MemberRole.Preacher) &&
-      !roles.includes(MemberRole.Supervisor) &&
-      !isInputDisabled &&
-      theirSupervisor &&
-      relationType === RelationType.OnlyRelatedHierarchicalCover &&
-      Object.values(preacherUpdateForm.formState.errors).length === 0
-    ) {
-      setIsSubmitButtonDisabled(false);
-      setIsMessageErrorDisabled(false);
-    }
-
-    if (
       roles.includes(MemberRole.Preacher) &&
       !roles.includes(MemberRole.Supervisor) &&
       !isInputDisabled &&
@@ -201,32 +210,6 @@ export const usePreacherUpdateSubmitButtonLogic = ({
           item.churchId && item.ministryId && item.ministryType && item.ministryRoles.length > 0
       ) &&
       Object.values(preacherUpdateForm.formState.errors).length === 0
-    ) {
-      setIsSubmitButtonDisabled(false);
-      setIsMessageErrorDisabled(false);
-    }
-
-    if (
-      roles.includes(MemberRole.Preacher) &&
-      !roles.includes(MemberRole.Supervisor) &&
-      theirPastorOnlyMinistries &&
-      !isInputDisabled &&
-      relationType === RelationType.OnlyRelatedMinistries &&
-      ministryBlocks?.every(
-        (item) =>
-          item.churchId && item.ministryId && item.ministryType && item.ministryRoles.length > 0
-      ) &&
-      Object.values(preacherUpdateForm.formState.errors).length === 0
-    ) {
-      setIsSubmitButtonDisabled(false);
-      setIsMessageErrorDisabled(false);
-    }
-
-    if (
-      roles.includes(MemberRole.Supervisor) &&
-      theirCopastor &&
-      Object.values(preacherUpdateForm.formState.errors).length === 0 &&
-      !isRelationSelectDisabled
     ) {
       setIsSubmitButtonDisabled(false);
       setIsMessageErrorDisabled(false);

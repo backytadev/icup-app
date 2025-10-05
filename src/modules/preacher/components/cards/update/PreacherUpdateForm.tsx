@@ -120,10 +120,13 @@ export const PreacherUpdateForm = ({
   const [isRelationSelectDisabled, setIsRelationSelectDisabled] = useState<boolean>(false);
   const [isInputTheirSupervisorOpen, setIsInputTheirSupervisorOpen] = useState<boolean>(false);
   const [isInputTheirCopastorOpen, setIsInputTheirCopastorOpen] = useState<boolean>(false);
-  const [isInputTheirPastorOpen, setIsInputTheirPastorOpen] = useState<boolean>(false);
   const [isInputBirthDateOpen, setIsInputBirthDateOpen] = useState<boolean>(false);
   const [isInputConvertionDateOpen, setIsInputConvertionDateOpen] = useState<boolean>(false);
   const [isPromoteButtonDisabled, setIsPromoteButtonDisabled] = useState<boolean>(false);
+  const [isInputTheirPastorOnlyMinistryOpen, setIsInputTheirPastorOnlyMinistryOpen] =
+    useState<boolean>(false);
+  const [isInputTheirPastorRelationDirectOpen, setIsInputTheirPastorRelationDirectOpen] =
+    useState<boolean>(false);
 
   const [isInputDisabled, setIsInputDisabled] = useState<boolean>(false);
   const [isCheckBoxDisabled, setIsCheckBoxDisabled] = useState<boolean>(false);
@@ -132,9 +135,9 @@ export const PreacherUpdateForm = ({
   const [isMessagePromoteDisabled, setIsMessagePromoteDisabled] = useState<boolean>(false);
 
   const [isLoadingData, setIsLoadingData] = useState(true);
+  const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
 
   const [changedId, setChangedId] = useState(data?.theirSupervisor?.id);
-  const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false);
   const [ministryBlocks, setMinistryBlocks] = useState<MinistryMemberBlock[]>([
     {
       churchId: null,
@@ -183,10 +186,9 @@ export const PreacherUpdateForm = ({
   });
 
   //* Watchers
-  const residenceDistric = form.watch('residenceDistrict');
+  const residenceDistrict = form.watch('residenceDistrict');
   const theirCopastor = form.watch('theirCopastor');
-  const theirSupervisor = form.watch('theirSupervisor');
-  const theirPastorOnlyMinistries = form.watch('theirPastorOnlyMinistries');
+  const theirPastorRelationDirect = form.watch('theirPastorRelationDirect');
   const isDirectRelationToPastor = form.watch('isDirectRelationToPastor');
   const relationType = form.watch('relationType');
 
@@ -201,18 +203,18 @@ export const PreacherUpdateForm = ({
 
   useEffect(() => {
     if (relationType === RelationType.OnlyRelatedHierarchicalCover) {
-      form.setValue('theirPastorOnlyMinistries', undefined);
+      form.setValue('theirPastorOnlyMinistries', '');
     }
     if (relationType === RelationType.OnlyRelatedMinistries) {
-      form.setValue('theirSupervisor', undefined);
+      form.setValue('theirSupervisor', '');
     }
     if (relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover) {
-      form.setValue('theirPastorOnlyMinistries', undefined);
+      form.setValue('theirPastorOnlyMinistries', '');
     }
   }, [relationType]);
 
   //* Helpers
-  const urbanSectorsValidation = validateUrbanSectorsAllowedByDistrict(residenceDistric);
+  const urbanSectorsValidation = validateUrbanSectorsAllowedByDistrict(residenceDistrict);
   const districtsValidation = validateDistrictsAllowedByModule(pathname);
 
   //* Custom Hooks
@@ -977,7 +979,7 @@ export const PreacherUpdateForm = ({
                               <SelectContent>
                                 {Object.entries(UrbanSectorNames).map(([key, value]) => (
                                   <SelectItem
-                                    className={`text-[14px] ${(urbanSectorsValidation?.urbanSectorsDataResult?.includes(value) ?? !residenceDistric) ? 'hidden' : ''}`}
+                                    className={`text-[14px] ${(urbanSectorsValidation?.urbanSectorsDataResult?.includes(value) ?? !residenceDistrict) ? 'hidden' : ''}`}
                                     key={key}
                                     value={key}
                                   >
@@ -1135,44 +1137,14 @@ export const PreacherUpdateForm = ({
                     />
 
                     <div className='sm:col-start-3 sm:col-end-4 flex flex-col gap-4'>
-                      {isMessagePromoteDisabled && (
-                        <span className='text-[14px] md:text-[14px] dark:text-yellow-500 text-amber-500 font-bold text-center'>
-                          !SE HA PROMOVIDO CORRECTAMENTE! <br />
-                          <span className='text-[14px] md:text-[14px]'>
-                            {form.getValues('roles').includes(MemberRole.Supervisor) &&
-                              !form.getValues('roles').includes(MemberRole.Treasurer) && (
-                                <div>
-                                  <span className='text-red-500 text-center inline-block'>
-                                    Roles anteriores: Predicador
-                                  </span>
-                                  <br />
-                                  <span className='text-green-500  text-center inline-block'>
-                                    Roles nuevos: Supervisor
-                                  </span>
-                                </div>
-                              )}
-
-                            {form.getValues('roles').includes(MemberRole.Supervisor) &&
-                              form.getValues('roles').includes(MemberRole.Treasurer) && (
-                                <div>
-                                  <span className='text-red-500  text-center inline-block'>
-                                    Roles anteriores: Predicador - Tesorero
-                                  </span>
-                                  <br />
-                                  <span className='text-green-500  text-center inline-block'>
-                                    Roles nuevos: Supervisor - Tesorero
-                                  </span>
-                                </div>
-                              )}
-                          </span>
-                        </span>
-                      )}
-
                       {/* Relaciones  */}
                       <div>
-                        <legend className='font-bold col-start-1 col-end-3 text-[15px] md:text-[16px]'>
-                          Relaciones
-                        </legend>
+                        {!isMessagePromoteDisabled && (
+                          <legend className='font-bold col-start-1 col-end-3 text-[15px] md:text-[16px]'>
+                            Relaciones
+                          </legend>
+                        )}
+
                         {!isMessagePromoteDisabled &&
                           (relationType === RelationType.OnlyRelatedHierarchicalCover ||
                             relationType ===
@@ -1271,8 +1243,8 @@ export const PreacherUpdateForm = ({
                                       Asigna el Pastor responsable para este Co-Pastor.
                                     </FormDescription>
                                     <Popover
-                                      open={isInputTheirPastorOpen}
-                                      onOpenChange={setIsInputTheirPastorOpen}
+                                      open={isInputTheirPastorOnlyMinistryOpen}
+                                      onOpenChange={setIsInputTheirPastorOnlyMinistryOpen}
                                     >
                                       <PopoverTrigger asChild>
                                         <FormControl className='text-[14px] md:text-[14px]'>
@@ -1317,7 +1289,7 @@ export const PreacherUpdateForm = ({
                                                         'theirPastorOnlyMinistries',
                                                         pastor?.id
                                                       );
-                                                      setIsInputTheirPastorOpen(false);
+                                                      setIsInputTheirPastorOnlyMinistryOpen(false);
                                                     }}
                                                   >
                                                     {`${pastor?.member?.firstNames} ${pastor?.member?.lastNames}`}
@@ -1710,6 +1682,45 @@ export const PreacherUpdateForm = ({
                           </div>
                         )}
 
+                        {isMessagePromoteDisabled && (
+                          <legend className='font-bold col-start-1 col-end-3 text-[15px] sm:text-[16px] my-4'>
+                            Nuevas Relaciones
+                          </legend>
+                        )}
+
+                        {isMessagePromoteDisabled && (
+                          <p className='text-[14px] md:text-[14px] dark:text-yellow-500 text-amber-500 font-bold text-center mx-auto'>
+                            !SE HA PROMOVIDO CORRECTAMENTE! <br />
+                            <span className='text-[14px] md:text-[14px]'>
+                              {form.getValues('roles').includes(MemberRole.Supervisor) &&
+                                !form.getValues('roles').includes(MemberRole.Treasurer) && (
+                                  <div>
+                                    <span className='text-red-500 text-center inline-block'>
+                                      Roles anteriores: Predicador
+                                    </span>
+                                    <br />
+                                    <span className='text-green-500  text-center inline-block'>
+                                      Roles nuevos: Supervisor
+                                    </span>
+                                  </div>
+                                )}
+
+                              {form.getValues('roles').includes(MemberRole.Supervisor) &&
+                                form.getValues('roles').includes(MemberRole.Treasurer) && (
+                                  <div>
+                                    <span className='text-red-500  text-center inline-block'>
+                                      Roles anteriores: Predicador - Tesorero
+                                    </span>
+                                    <br />
+                                    <span className='text-green-500  text-center inline-block'>
+                                      Roles nuevos: Supervisor - Tesorero
+                                    </span>
+                                  </div>
+                                )}
+                            </span>
+                          </p>
+                        )}
+
                         <AlertUpdateRelationPreacher
                           data={data}
                           isAlertDialogOpen={isAlertDialogOpen}
@@ -1853,8 +1864,8 @@ export const PreacherUpdateForm = ({
                                     Asigna el Pastor responsable para este Supervisor.
                                   </FormDescription>
                                   <Popover
-                                    open={isInputTheirPastorOpen}
-                                    onOpenChange={setIsInputTheirPastorOpen}
+                                    open={isInputTheirPastorRelationDirectOpen}
+                                    onOpenChange={setIsInputTheirPastorRelationDirectOpen}
                                   >
                                     <PopoverTrigger asChild>
                                       <FormControl className='text-[14px] md:text-[14px]'>
@@ -1898,7 +1909,7 @@ export const PreacherUpdateForm = ({
                                                       'theirPastorRelationDirect',
                                                       pastor.id
                                                     );
-                                                    setIsInputTheirPastorOpen(false);
+                                                    setIsInputTheirPastorRelationDirectOpen(false);
                                                   }}
                                                 >
                                                   {`${pastor?.member?.firstNames} ${pastor?.member?.lastNames}`}
@@ -1930,17 +1941,25 @@ export const PreacherUpdateForm = ({
                             }}
                           />
                         )}
-                      </div>
 
-                      {isPromoteButtonDisabled &&
-                        !theirSupervisor &&
-                        !theirCopastor &&
-                        !theirPastorOnlyMinistries &&
-                        isMessagePromoteDisabled && (
-                          <span className='mt-2text-[12.5px] md:text-[13px] font-bold text-center text-red-500'>
-                            ! Por favor asigna la nueva relación para los roles promovidos !
-                          </span>
-                        )}
+                        {isPromoteButtonDisabled &&
+                          ((isDirectRelationToPastor && !theirPastorRelationDirect) ||
+                            (!isDirectRelationToPastor && !theirCopastor)) &&
+                          form.getValues('roles').includes(MemberRole.Supervisor) && (
+                            <p className='mt-2 text-[12.5px] md:text-[13px] font-bold text-center text-red-500 w-full'>
+                              Debes asignar la nueva relación antes de promover los roles
+                            </p>
+                          )}
+
+                        {isPromoteButtonDisabled &&
+                          ((isDirectRelationToPastor && theirPastorRelationDirect) ||
+                            (!isDirectRelationToPastor && theirCopastor)) &&
+                          form.getValues('roles').includes(MemberRole.Supervisor) && (
+                            <p className='mt-2 text-[12.5px] md:text-[13px] font-bold text-center text-green-500'>
+                              Todo está listo, guarda los cambios para promover al Predicador
+                            </p>
+                          )}
+                      </div>
 
                       <AlertPromotionPreacher
                         isPromoteButtonDisabled={isPromoteButtonDisabled}
