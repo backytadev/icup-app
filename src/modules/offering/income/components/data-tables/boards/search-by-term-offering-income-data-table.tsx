@@ -81,7 +81,9 @@ export function SearchByTermOfferingIncomeDataTable<TData, TValue>({
   const [rowSelection, setRowSelection] = useState({});
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+    copastorOrPreacher: false,
+  });
 
   const isFiltersSearchByTermDisabled = useOfferingIncomeStore(
     (state) => state.isFiltersSearchByTermDisabled
@@ -423,15 +425,17 @@ export function SearchByTermOfferingIncomeDataTable<TData, TValue>({
                 onChange={(event) => table.getColumn('subType')?.setFilterValue(event.target.value)}
                 className='text-[14px] lg:text-[14px] w-full col-start-1 col-end-2 row-start-1 row-end-2'
               />
+
               <Input
                 disabled={isDisabledButton}
-                placeholder='Categoría...'
-                value={(table.getColumn('category')?.getFilterValue() as string) ?? ''}
+                placeholder='Buscar por co-pastor o predicador...'
+                value={(table.getColumn('copastorOrPreacher')?.getFilterValue() as string) ?? ''}
                 onChange={(event) =>
-                  table.getColumn('category')?.setFilterValue(event.target.value)
+                  table.getColumn('copastorOrPreacher')?.setFilterValue(event.target.value)
                 }
-                className='col-start-2 col-end-3 row-start-1 row-end-2 text-[14px] lg:text-[14px] w-full'
+                className='text-[14px] lg:text-[14px] w-full col-start-1 col-end-2 row-start-1 row-end-2'
               />
+
               <Button
                 disabled={isDisabledButton}
                 variant='ghost'

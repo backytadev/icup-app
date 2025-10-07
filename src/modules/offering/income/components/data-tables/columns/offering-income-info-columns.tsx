@@ -16,6 +16,7 @@ import { OfferingIncomeCreationSubTypeNames } from '@/modules/offering/income/en
 import { getInitialFullNames } from '@/shared/helpers/get-full-names.helper';
 import { formatDateToLimaDayMonthYear } from '@/shared/helpers/format-date-to-lima';
 import { CurrencyTypeNames } from '@/modules/offering/shared/enums/currency-type.enum';
+import { filterByZoneOrLeader } from '@/modules/offering/income/helpers/filter-by-preacher-supervisor';
 
 import {
   Collapsible,
@@ -255,6 +256,14 @@ export const offeringIncomeInfoColumns: Array<ColumnDef<OfferingIncomeColumns, a
         </Button>
       );
     },
+  },
+  {
+    id: 'copastorOrPreacher',
+    header: 'Copastor / Predicador',
+    accessorFn: (row) => row.zone?.zoneName || row.familyGroup?.familyGroupName || '—',
+    filterFn: filterByZoneOrLeader,
+    enableColumnFilter: true,
+    enableHiding: true,
   },
   {
     id: 'showInfo',

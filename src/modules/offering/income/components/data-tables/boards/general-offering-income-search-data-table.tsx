@@ -71,7 +71,9 @@ export function GeneralOfferingIncomeSearchDataTable<TData, TValue>({
   const [rowSelection, setRowSelection] = useState({});
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
+  const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({
+    copastorOrPreacher: false,
+  });
 
   const isFiltersSearchGeneralDisabled = useOfferingIncomeStore(
     (state) => state.isFiltersSearchGeneralDisabled
@@ -102,6 +104,7 @@ export function GeneralOfferingIncomeSearchDataTable<TData, TValue>({
     setDataSearchGeneralResponse(query.data);
   }, [query?.isFetching]);
 
+  console.log(translatedData);
   useEffect(() => {
     if (query.error?.message && query.error?.message !== 'Unauthorized') {
       toast.error(query?.error?.message, {
@@ -255,10 +258,10 @@ export function GeneralOfferingIncomeSearchDataTable<TData, TValue>({
 
               <Input
                 disabled={isDisabledButton}
-                placeholder='Categoría...'
-                value={(table.getColumn('category')?.getFilterValue() as string) ?? ''}
+                placeholder='Buscar por co-pastor o predicador...'
+                value={(table.getColumn('copastorOrPreacher')?.getFilterValue() as string) ?? ''}
                 onChange={(event) =>
-                  table.getColumn('category')?.setFilterValue(event.target.value)
+                  table.getColumn('copastorOrPreacher')?.setFilterValue(event.target.value)
                 }
                 className='text-[14px] lg:text-[14px] w-full col-start-1 col-end-2 row-start-1 row-end-2'
               />
