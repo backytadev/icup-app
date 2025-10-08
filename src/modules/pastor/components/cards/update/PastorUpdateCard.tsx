@@ -4,7 +4,7 @@ import { useMediaQuery } from '@react-hook/media-query';
 
 import { GiArchiveRegister } from 'react-icons/gi';
 
-import { usePastorStore } from '@/stores/pastor/pastor.store';
+import { usePastorStore } from '@/modules/pastor/stores/pastor.store';
 import { PastorUpdateForm } from '@/modules/pastor/components/cards/update/PastorUpdateForm';
 
 import {

@@ -2,7 +2,7 @@
 
 import { isAxiosError } from 'axios';
 
-import { icupApi } from '@/api/icupApi';
+import { icupApi } from '@/core/api/icupApi';
 
 import { RecordOrder } from '@/shared/enums/record-order.enum';
 
@@ -655,8 +655,6 @@ export const getOfferingIncomeReportByTerm = async ({
 }: OfferingIncomeQueryParams): Promise<boolean> => {
   let newTerm: string | undefined = '';
 
-  console.log(searchType, searchSubType);
-
   const termMapping: Partial<
     Record<OfferingIncomeSearchSubType | OfferingIncomeSearchType, string | undefined>
   > = {
@@ -682,8 +680,6 @@ export const getOfferingIncomeReportByTerm = async ({
   newTerm =
     termMapping[searchSubType as OfferingIncomeSearchSubType] ??
     termMapping[searchType as OfferingIncomeSearchType];
-
-  console.log(newTerm);
 
   try {
     if (!all) {

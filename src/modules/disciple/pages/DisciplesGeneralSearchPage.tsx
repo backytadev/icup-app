@@ -13,7 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { cn } from '@/shared/lib/utils';
 
-import { useDiscipleStore } from '@/stores/disciple/disciple.store';
+import { useDiscipleStore } from '@/modules/disciple/stores/disciple.store';
 import { getSimpleChurches } from '@/modules/church/services/church.service';
 
 import { discipleInfoColumns as columns } from '@/modules/disciple/components/data-tables/columns/disciple-info-columns';

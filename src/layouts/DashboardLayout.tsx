@@ -6,8 +6,8 @@ import { Navigate, Outlet } from 'react-router-dom';
 
 import { useAuthStore } from '@/stores/auth/auth.store';
 
-import { SideMenu } from '@/shared/components/side-menu/SideMenu';
-import { ToggleLayout } from '@/shared/components/toggle-theme/ToggleLayout';
+import { ToggleLayout } from '@/core/theme/ToggleLayout';
+import { SidebarCompact } from '@/core/layout/sidebar/SidebarCompact';
 import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 
 export const DashboardLayout = (): JSX.Element | null => {
@@ -26,7 +26,7 @@ export const DashboardLayout = (): JSX.Element | null => {
     return (
       <div className='light:bg-slate-500 w-full h-auto antialiased light:text-slate-900 selection:bg-blue-900 selection:text-white'>
         <div className='flex flex-col md:flex-row md:relative md:w-full md:min-h-full relative'>
-          <SideMenu />
+          <SidebarCompact />
           <div className='w-full px-4 py-0 relative'>
             <ToggleLayout />
             <Outlet />

@@ -13,7 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { cn } from '@/shared/lib/utils';
 
-import { useSupervisorStore } from '@/stores/supervisor/supervisor.store';
+import { useSupervisorStore } from '@/modules/supervisor/stores/supervisor.store';
 import { getSimpleChurches } from '@/modules/church/services/church.service';
 
 import { GeneralSupervisorSearchDataTable } from '@/modules/supervisor/components/data-tables/boards/general-supervisor-search-data-table';

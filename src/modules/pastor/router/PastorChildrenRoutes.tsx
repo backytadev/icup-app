@@ -12,9 +12,18 @@ const LazyPastorsGeneralSearchPage = lazy(
 );
 const PastorCreatePage = lazy(() => import('@/modules/pastor/pages/PastorCreatePage'));
 const LazyPastorUpdatePage = lazy(() => import('@/modules/pastor/pages/PastorUpdatePage'));
+const LazyPastorOptionsPage = lazy(() => import('@/modules/pastor/pages/PastorOptionsPage'));
 const LazyPastorInactivatePage = lazy(() => import('@/modules/pastor/pages/PastorInactivatePage'));
 
 export const PastorChildrenRoutes = [
+  {
+    index: true,
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <LazyPastorOptionsPage />
+      </Suspense>
+    ),
+  },
   {
     path: 'create',
     element: (

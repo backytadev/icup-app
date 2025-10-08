@@ -9,10 +9,19 @@ const LazyZonesGeneralSearchPage = lazy(
 );
 const LazyZoneCreatePage = lazy(() => import('@/modules/zone/pages/ZoneCreatePage'));
 const LazyZoneUpdatePage = lazy(() => import('@/modules/zone/pages/ZoneUpdatePage'));
+const LazyZoneOptionsPage = lazy(() => import('@/modules/zone/pages/ZoneOptionsPage'));
 const LazyZoneInactivatePage = lazy(() => import('@/modules/zone/pages/ZoneInactivatePage'));
 const LazyZonesSearchPageByTerm = lazy(() => import('@/modules/zone/pages/ZonesSearchPageByTerm'));
 
 export const ZoneChildrenRoutes = [
+  {
+    index: true,
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <LazyZoneOptionsPage />
+      </Suspense>
+    ),
+  },
   {
     path: 'create',
     element: (

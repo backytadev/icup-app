@@ -2,7 +2,7 @@
 
 import { isAxiosError } from 'axios';
 
-import { icupApi } from '@/api/icupApi';
+import { icupApi } from '@/core/api/icupApi';
 
 import { type OfferingExpenseResponse } from '@/modules/offering/expense/interfaces/offering-expense-response.interface';
 import { type OfferingExpenseFormData } from '@/modules/offering/expense/interfaces/offering-expense-form-data.interface';

@@ -10,7 +10,7 @@ import { useForm } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useMinistryStore } from '@/stores/ministry/ministry.store';
+import { useMinistryStore } from '@/modules/ministry/stores/ministry.store';
 
 import { MinistryResponse } from '@/modules/ministry/interfaces/ministry-response.interface';
 import { ministryInfoColumns as columns } from '@/modules/ministry/components/data-tables/columns/ministry-info-columns';

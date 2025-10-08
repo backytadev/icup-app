@@ -2,7 +2,7 @@
 
 import { isAxiosError } from 'axios';
 
-import { icupApi } from '@/api/icupApi';
+import { icupApi } from '@/core/api/icupApi';
 
 import { DashboardSearchType } from '@/modules/dashboard/enums/dashboard-search-type.enum';
 import { type FamilyGroupResponse } from '@/modules/family-group/interfaces/family-group-response.interface';

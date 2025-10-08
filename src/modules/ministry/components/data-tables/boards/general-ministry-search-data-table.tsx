@@ -31,7 +31,7 @@ import {
 } from '@/modules/ministry/services/ministry.service';
 import { type MinistryQueryParams } from '@/modules/ministry/interfaces/ministry-query-params.interface';
 
-import { useMinistryStore } from '@/stores/ministry/ministry.store';
+import { useMinistryStore } from '@/modules/ministry/stores/ministry.store';
 
 import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 import { type GeneralSearchForm } from '@/shared/interfaces/search-general-form.interface';

@@ -14,7 +14,7 @@ import { CalendarIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { usePastorStore } from '@/stores/pastor/pastor.store';
+import { usePastorStore } from '@/modules/pastor/stores/pastor.store';
 
 import { getSimpleChurches } from '@/modules/church/services/church.service';
 

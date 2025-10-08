@@ -13,9 +13,18 @@ const LazyChurchesGeneralSearchPage = lazy(
 );
 const LazyChurchCreatePage = lazy(() => import('@/modules/church/pages/ChurchCreatePage'));
 const LazyChurchUpdatePage = lazy(() => import('@/modules/church/pages/ChurchUpdatePage'));
+const LazyChurchOptionsPage = lazy(() => import('@/modules/church/pages/ChurchOptionsPage'));
 const LazyChurchInactivatePage = lazy(() => import('@/modules/church/pages/ChurchInactivatePage'));
 
 export const ChurchChildrenRoutes: RouteObject[] = [
+  {
+    index: true,
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <LazyChurchOptionsPage />
+      </Suspense>
+    ),
+  },
   {
     path: 'create',
     element: (

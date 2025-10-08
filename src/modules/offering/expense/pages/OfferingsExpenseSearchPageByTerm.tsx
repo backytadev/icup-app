@@ -15,7 +15,7 @@ import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMediaQuery } from '@react-hook/media-query';
 
-import { useOfferingExpenseStore } from '@/stores/offering-expense/offering-expenses.store';
+import { useOfferingExpenseStore } from '@/modules/offering/expense/stores/offering-expenses.store';
 
 import {
   OfferingExpenseSearchType,

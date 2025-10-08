@@ -12,7 +12,7 @@ interface Props {
   subTitle: string;
 }
 
-export const SideMenuItem = ({ href, Icon, title, subTitle }: Props): JSX.Element => {
+export const SidebarDrawerItem = ({ href, Icon, title, subTitle }: Props): JSX.Element => {
   return (
     <SheetClose asChild>
       <NavLink key={href} to={href} end>

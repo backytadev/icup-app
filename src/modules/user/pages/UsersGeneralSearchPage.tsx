@@ -10,7 +10,7 @@ import { Toaster } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useUserStore } from '@/stores/user/user.store';
+import { useUserStore } from '@/modules/user/stores/user.store';
 
 import { type UserResponse } from '@/modules/user/interfaces/user-response.interface';
 import { userInfoColumns as columns } from '@/modules/user/components/data-tables/columns/user-info-columns';

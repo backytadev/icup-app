@@ -15,8 +15,17 @@ const LazyPreachersGeneralSearchPage = lazy(
 );
 const LazyPreacherUpdatePage = lazy(() => import('@/modules/preacher/pages/PreacherUpdatePage'));
 const LazyPreacherCreatePage = lazy(() => import('@/modules/preacher/pages/PreacherCreatePage'));
+const LazyPreacherOptionsPage = lazy(() => import('@/modules/preacher/pages/PreacherOptionsPage'));
 
 export const PreacherChildrenRoutes = [
+  {
+    index: true,
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <LazyPreacherOptionsPage />
+      </Suspense>
+    ),
+  },
   {
     path: 'create',
     element: (

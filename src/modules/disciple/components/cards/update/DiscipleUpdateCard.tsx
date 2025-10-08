@@ -3,7 +3,7 @@ import { useRef, useState, useCallback, useMemo } from 'react';
 import { GiArchiveRegister } from 'react-icons/gi';
 import { useMediaQuery } from '@react-hook/media-query';
 
-import { useDiscipleStore } from '@/stores/disciple/disciple.store';
+import { useDiscipleStore } from '@/modules/disciple/stores/disciple.store';
 
 import { DiscipleUpdateForm } from '@/modules/disciple/components/cards/update/DiscipleUpdateForm';
 

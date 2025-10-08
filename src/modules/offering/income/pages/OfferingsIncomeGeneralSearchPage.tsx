@@ -18,7 +18,7 @@ import { endOfWeek, format, startOfWeek } from 'date-fns';
 import { cn } from '@/shared/lib/utils';
 
 import { getSimpleChurches } from '@/modules/church/services/church.service';
-import { useOfferingIncomeStore } from '@/stores/offering-income/offering-income.store';
+import { useOfferingIncomeStore } from '@/modules/offering/income/stores/offering-income.store';
 
 import { offeringIncomeInfoColumns as columns } from '@/modules/offering/income/components/data-tables/columns/offering-income-info-columns';
 import { GeneralOfferingIncomeSearchDataTable } from '@/modules/offering/income/components/data-tables/boards/general-offering-income-search-data-table';

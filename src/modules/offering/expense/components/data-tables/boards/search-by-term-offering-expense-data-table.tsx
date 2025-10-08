@@ -25,7 +25,7 @@ import {
   type ColumnFiltersState,
 } from '@tanstack/react-table';
 
-import { useOfferingExpenseStore } from '@/stores/offering-expense/offering-expenses.store';
+import { useOfferingExpenseStore } from '@/modules/offering/expense/stores/offering-expenses.store';
 
 import {
   getOfferingExpensesReportByTerm,

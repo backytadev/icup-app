@@ -13,7 +13,7 @@ interface Props {
   subTitle: string;
 }
 
-export const SideMenuItemIcons = ({ href, Icon }: Props): JSX.Element => {
+export const SidebarCompactItem = ({ href, Icon }: Props): JSX.Element => {
   const { pathname } = useLocation();
 
   return (

@@ -13,7 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { cn } from '@/shared/lib/utils';
 
-import { useCopastorStore } from '@/stores/copastor/copastor.store';
+import { useCopastorStore } from '@/modules/copastor/stores/copastor.store';
 
 import { type CopastorResponse } from '@/modules/copastor/interfaces/copastor-response.interface';
 

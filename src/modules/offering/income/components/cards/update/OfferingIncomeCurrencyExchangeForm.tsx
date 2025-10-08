@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { cn } from '@/shared/lib/utils';
-import { useOfferingIncomeStore } from '@/stores/offering-income/offering-income.store';
+import { useOfferingIncomeStore } from '@/modules/offering/income/stores/offering-income.store';
 
 import {
   ExchangeCurrencyTypes,

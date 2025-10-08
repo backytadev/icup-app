@@ -31,7 +31,7 @@ import {
 import { type ChurchQueryParams } from '@/modules/church/interfaces/church-query-params.interface';
 import { type ChurchSearchFormByTerm } from '@/modules/church/interfaces/church-search-form-by-term.interface';
 
-import { useChurchStore } from '@/stores/church/church.store';
+import { useChurchStore } from '@/modules/church/stores/church.store';
 
 import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 import { dateFormatterToDDMMYYYY } from '@/shared/helpers/date-formatter-to-ddmmyyyy.helper';

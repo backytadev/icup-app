@@ -39,7 +39,7 @@ import {
   getFamilyGroupsReportByTerm,
 } from '@/modules/family-group/services/family-group.service';
 
-import { useFamilyGroupStore } from '@/stores/family-group/family-group.store';
+import { useFamilyGroupStore } from '@/modules/family-group/stores/family-group.store';
 
 import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 

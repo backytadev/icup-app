@@ -24,7 +24,7 @@ import {
   type ColumnFiltersState,
 } from '@tanstack/react-table';
 
-import { usePreacherStore } from '@/stores/preacher/preacher.store';
+import { usePreacherStore } from '@/modules/preacher/stores/preacher.store';
 
 import {
   PreacherSearchType,

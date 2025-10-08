@@ -5,7 +5,7 @@ import { useRef, useState, useCallback, useMemo } from 'react';
 import { GiArchiveRegister } from 'react-icons/gi';
 import { useMediaQuery } from '@react-hook/media-query';
 
-import { useOfferingExpenseStore } from '@/stores/offering-expense/offering-expenses.store';
+import { useOfferingExpenseStore } from '@/modules/offering/expense/stores/offering-expenses.store';
 
 import { OfferingExpenseFormUpdate } from '@/modules/offering/expense/components/cards/update/OfferingExpenseFormUpdate';
 

@@ -25,7 +25,7 @@ import {
   type ColumnFiltersState,
 } from '@tanstack/react-table';
 
-import { useDiscipleStore } from '@/stores/disciple/disciple.store';
+import { useDiscipleStore } from '@/modules/disciple/stores/disciple.store';
 
 import {
   getDisciples,

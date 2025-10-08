@@ -21,12 +21,12 @@ interface Props {
   item: MenuBarItem;
 }
 
-export const MenuBarTooltip = ({ children, item }: Props): JSX.Element => {
+export const SidebarTooltip = ({ children, item }: Props): JSX.Element => {
   return (
-    <TooltipProvider>
+    <TooltipProvider delayDuration={150}>
       <Tooltip>
         <TooltipTrigger>{children}</TooltipTrigger>
-        <TooltipContent>
+        <TooltipContent side='right' align='center'>
           <p key={item.title}>{item.title}</p>
         </TooltipContent>
       </Tooltip>

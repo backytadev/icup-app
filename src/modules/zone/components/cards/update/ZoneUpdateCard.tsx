@@ -3,7 +3,7 @@ import { useRef, useState, useCallback, useMemo } from 'react';
 import { GiArchiveRegister } from 'react-icons/gi';
 import { useMediaQuery } from '@react-hook/media-query';
 
-import { useZoneStore } from '@/stores/zone/zone.store';
+import { useZoneStore } from '@/modules/zone/stores/zone.store';
 import { ZoneUpdateForm } from '@/modules/zone/components/cards/update/ZoneUpdateForm';
 
 import { Button } from '@/shared/components/ui/button';

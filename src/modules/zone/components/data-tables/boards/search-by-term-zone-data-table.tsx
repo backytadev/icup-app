@@ -31,7 +31,7 @@ import { type ZoneSearchFormByTerm } from '@/modules/zone/interfaces/zone-search
 import { ZoneSearchType, ZoneSearchTypeNames } from '@/modules/zone/enums/zone-search-type.enum';
 import { ZoneSearchSelectOptionNames } from '@/modules/zone/enums/zone-search-select-option.enum';
 
-import { useZoneStore } from '@/stores/zone/zone.store';
+import { useZoneStore } from '@/modules/zone/stores/zone.store';
 
 import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 

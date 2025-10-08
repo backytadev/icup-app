@@ -15,7 +15,7 @@ import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMediaQuery } from '@react-hook/media-query';
 
-import { useOfferingIncomeStore } from '@/stores/offering-income/offering-income.store';
+import { useOfferingIncomeStore } from '@/modules/offering/income/stores/offering-income.store';
 
 import { getSimpleChurches } from '@/modules/church/services/church.service';
 

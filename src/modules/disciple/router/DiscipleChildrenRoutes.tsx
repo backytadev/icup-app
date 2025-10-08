@@ -15,8 +15,17 @@ const LazyDisciplesGeneralSearchPage = lazy(
 );
 const LazyDiscipleCreatePage = lazy(() => import('@/modules/disciple/pages/DiscipleCreatePage'));
 const LazyDiscipleUpdatePage = lazy(() => import('@/modules/disciple/pages/DiscipleUpdatePage'));
+const LazyDiscipleOptionsPage = lazy(() => import('@/modules/disciple/pages/DiscipleOptionsPage'));
 
 export const DiscipleChildrenRoutes = [
+  {
+    index: true,
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <LazyDiscipleOptionsPage />
+      </Suspense>
+    ),
+  },
   {
     path: 'create',
     element: (

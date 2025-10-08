@@ -5,7 +5,7 @@ import { useMediaQuery } from '@react-hook/media-query';
 
 import { BsFillPersonVcardFill } from 'react-icons/bs';
 
-import { usePastorStore } from '@/stores/pastor/pastor.store';
+import { usePastorStore } from '@/modules/pastor/stores/pastor.store';
 import { PastorTabsCard } from '@/modules/pastor/components/cards/info/PastorTabsCard';
 
 import { cn } from '@/shared/lib/utils';

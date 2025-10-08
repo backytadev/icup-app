@@ -39,7 +39,7 @@ import {
   getCopastorsReportByTerm,
 } from '@/modules/copastor/services/copastor.service';
 
-import { useCopastorStore } from '@/stores/copastor/copastor.store';
+import { useCopastorStore } from '@/modules/copastor/stores/copastor.store';
 
 import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 import { dateFormatterToDDMMYYYY } from '@/shared/helpers/date-formatter-to-ddmmyyyy.helper';

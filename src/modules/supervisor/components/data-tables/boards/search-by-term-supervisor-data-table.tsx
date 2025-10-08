@@ -39,7 +39,7 @@ import {
   getSupervisorsReportByTerm,
 } from '@/modules/supervisor/services/supervisor.service';
 
-import { useSupervisorStore } from '@/stores/supervisor/supervisor.store';
+import { useSupervisorStore } from '@/modules/supervisor/stores/supervisor.store';
 
 import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 import { dateFormatterToDDMMYYYY } from '@/shared/helpers/date-formatter-to-ddmmyyyy.helper';

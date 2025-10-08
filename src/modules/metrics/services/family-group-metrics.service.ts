@@ -2,7 +2,7 @@
 
 import { isAxiosError } from 'axios';
 
-import { icupApi } from '@/api/icupApi';
+import { icupApi } from '@/core/api/icupApi';
 
 import { type MetricQueryParams } from '@/modules/metrics/interfaces/shared/metric-query-params.interface';
 

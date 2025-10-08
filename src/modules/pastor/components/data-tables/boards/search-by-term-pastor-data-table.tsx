@@ -34,7 +34,7 @@ import { getPastorsByTerm, getPastorsReportByTerm } from '@/modules/pastor/servi
 import { type PastorQueryParams } from '@/modules/pastor/interfaces/pastor-query-params.interface';
 import { type PastorSearchFormByTerm } from '@/modules/pastor/interfaces/pastor-search-form-by-term.interface';
 
-import { usePastorStore } from '@/stores/pastor/pastor.store';
+import { usePastorStore } from '@/modules/pastor/stores/pastor.store';
 
 import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 import { dateFormatterToDDMMYYYY } from '@/shared/helpers/date-formatter-to-ddmmyyyy.helper';

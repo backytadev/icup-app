@@ -5,7 +5,7 @@ import { useMediaQuery } from '@react-hook/media-query';
 
 import { FamilyGroupPreacherExchangeUpdateForm } from '@/modules/family-group/components/cards/update/FamilyGroupPreacherExchangeUpdateForm';
 
-import { useFamilyGroupStore } from '@/stores/family-group/family-group.store';
+import { useFamilyGroupStore } from '@/modules/family-group/stores/family-group.store';
 
 import {
   Dialog,

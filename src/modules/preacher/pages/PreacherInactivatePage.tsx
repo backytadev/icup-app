@@ -13,7 +13,7 @@ import { CalendarIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { usePreacherStore } from '@/stores/preacher/preacher.store';
+import { usePreacherStore } from '@/modules/preacher/stores/preacher.store';
 
 import { getSimpleChurches } from '@/modules/church/services/church.service';
 

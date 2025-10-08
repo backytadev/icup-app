@@ -28,7 +28,7 @@ import {
 import { getChurches, getGeneralChurchesReport } from '@/modules/church/services/church.service';
 import { type ChurchQueryParams } from '@/modules/church/interfaces/church-query-params.interface';
 
-import { useChurchStore } from '@/stores/church/church.store';
+import { useChurchStore } from '@/modules/church/stores/church.store';
 
 import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 import { type GeneralSearchForm } from '@/shared/interfaces/search-general-form.interface';

@@ -2,7 +2,7 @@
 
 import { isAxiosError } from 'axios';
 
-import { icupApi } from '@/api/icupApi';
+import { icupApi } from '@/core/api/icupApi';
 import { RecordOrder } from '@/shared/enums/record-order.enum';
 
 import { MinistrySearchType } from '@/modules/ministry/enums/ministry-search-type.enum';

@@ -49,7 +49,7 @@ import {
 import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 import { dateFormatterToDDMMYYYY } from '@/shared/helpers/date-formatter-to-ddmmyyyy.helper';
 
-import { useOfferingIncomeStore } from '@/stores/offering-income/offering-income.store';
+import { useOfferingIncomeStore } from '@/modules/offering/income/stores/offering-income.store';
 
 import {
   Table,

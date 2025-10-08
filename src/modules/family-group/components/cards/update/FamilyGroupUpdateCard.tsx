@@ -3,7 +3,7 @@ import { useRef, useState, useCallback, useMemo } from 'react';
 import { GiArchiveRegister } from 'react-icons/gi';
 import { useMediaQuery } from '@react-hook/media-query';
 
-import { useFamilyGroupStore } from '@/stores/family-group/family-group.store';
+import { useFamilyGroupStore } from '@/modules/family-group/stores/family-group.store';
 import { FamilyGroupUpdateForm } from '@/modules/family-group/components/cards/update/FamilyGroupUpdateForm';
 
 import {

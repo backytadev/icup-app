@@ -1,4 +1,4 @@
-import './SideMenu.css';
+import './sidebar.css';
 
 import { FcExport } from 'react-icons/fc';
 
@@ -6,12 +6,12 @@ import { menuItems } from '@/shared/data/menu-items-data';
 
 import { useAuthStore } from '@/stores/auth/auth.store';
 
-import { ToggleNavBar } from '@/shared/components/toggle-theme/ToggleNavBar';
-import { MenuBarTooltip } from '@/shared/components/side-menu/MenuBarTooltip';
-import { DropdownMenuLeft } from '@/shared/components/dropdown-menu/DropdownMenuLeft';
-import { SideMenuItemIcons } from '@/shared/components/side-menu/SideMenuItemIcons';
+import { ToggleNavBar } from '@/core/theme/ToggleNavBar';
+import { SidebarTooltip } from '@/core/layout/sidebar/SidebarTooltip';
+import { SidebarDrawer } from '@/core/layout/sidebar/SidebarDrawer';
+import { SidebarCompactItem } from '@/core/layout/sidebar/SidebarCompactItem';
 
-export const SideMenu = (): JSX.Element => {
+export const SidebarCompact = (): JSX.Element => {
   const logoutUser = useAuthStore((state) => state.logoutUser);
 
   return (
@@ -42,7 +42,7 @@ export const SideMenu = (): JSX.Element => {
         {/* Button */}
         <div className='flex gap-3 pr-1'>
           <ToggleNavBar />
-          <DropdownMenuLeft />
+          <SidebarDrawer />
         </div>
       </div>
 
@@ -50,9 +50,9 @@ export const SideMenu = (): JSX.Element => {
       <nav id='menu' className='w-full px-8 py-4 md:flex md:flex-col gap-y-[1rem] hidden'>
         <div className='flex flex-col gap-y-1 justify-center items-left'>
           {menuItems.map((item) => (
-            <MenuBarTooltip key={item.href} item={item}>
-              <SideMenuItemIcons key={item.href} {...item} />
-            </MenuBarTooltip>
+            <SidebarTooltip key={item.href} item={item}>
+              <SidebarCompactItem key={item.href} {...item} />
+            </SidebarTooltip>
           ))}
         </div>
 

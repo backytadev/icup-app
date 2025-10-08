@@ -3,8 +3,7 @@
 import { Navigate, Outlet } from 'react-router-dom';
 
 import { useAuthStore } from '@/stores/auth/auth.store';
-
-import { ToggleLayoutLogin } from '@/shared/components/toggle-theme/ToggleLayoutLogin';
+import { ToggleLayoutLogin } from '@/core/theme/ToggleLayoutLogin';
 
 export const AuthLayout = (): JSX.Element => {
   //* States

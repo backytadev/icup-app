@@ -5,7 +5,7 @@ import { useMediaQuery } from '@react-hook/media-query';
 
 import { UserUpdateForm } from '@/modules/user/components/cards/update/UserUpdateFom';
 
-import { useUserStore } from '@/stores/user/user.store';
+import { useUserStore } from '@/modules/user/stores/user.store';
 
 import {
   Dialog,

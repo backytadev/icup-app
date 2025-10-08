@@ -11,7 +11,7 @@ import { ChevronDown } from 'lucide-react';
 import { useAuthStore } from '@/stores/auth/auth.store';
 
 import { menuItems } from '@/shared/data/menu-items-data';
-import { SideMenuItem } from '@/shared/components/side-menu/SideMenuItem';
+import { SidebarDrawerItem } from '@/core/layout/sidebar/SidebarDrawerItem';
 
 import { UserRole, UserRoleNames } from '@/modules/user/enums/user-role.enum';
 
@@ -24,7 +24,7 @@ import { Button } from '@/shared/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/shared/components/ui/avatar';
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from '@/shared/components/ui/sheet';
 
-export function DropdownMenuLeft(): JSX.Element {
+export function SidebarDrawer(): JSX.Element {
   const logoutUser = useAuthStore((state) => state.logoutUser);
   const userNames = useAuthStore((state) => state.user?.firstNames ?? 'No User');
   const userLastNames = useAuthStore((state) => state.user?.lastNames ?? 'No User');
@@ -202,7 +202,7 @@ export function DropdownMenuLeft(): JSX.Element {
         <nav id='menu' className='w-full px-10 flex flex-col items-center py-2 gap-y-[.5rem]'>
           <div className='flex flex-col gap-y-1 md:gap-y-0'>
             {menuItems.map((item) => (
-              <SideMenuItem key={item.href} {...item} />
+              <SidebarDrawerItem key={item.href} {...item} />
             ))}
           </div>
 

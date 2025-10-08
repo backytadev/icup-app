@@ -25,7 +25,7 @@ import {
   type ColumnFiltersState,
 } from '@tanstack/react-table';
 
-import { useUserStore } from '@/stores/user/user.store';
+import { useUserStore } from '@/modules/user/stores/user.store';
 
 import { getGeneralUsersReport, getUsers } from '@/modules/user/services/user.service';
 import { type UserQueryParams } from '@/modules/user/interfaces/user-query-params.interface';

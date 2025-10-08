@@ -13,7 +13,7 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { CalendarIcon } from 'lucide-react';
 
-import { useChurchStore } from '@/stores/church/church.store';
+import { useChurchStore } from '@/modules/church/stores/church.store';
 
 import { churchInfoColumns as columns } from '@/modules/church/components/data-tables/columns/church-info-columns';
 import { SearchByTermChurchDataTable } from '@/modules/church/components/data-tables/boards/search-by-term-church-data-table';

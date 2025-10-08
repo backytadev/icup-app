@@ -32,7 +32,7 @@ import { type UserRole, UserRoleNames } from '@/modules/user/enums/user-role.enu
 import { UserSearchType, UserSearchTypeNames } from '@/modules/user/enums/user-search-type.enum';
 import { UserSearchSelectOptionNames } from '@/modules/user/enums/user-search-select-option.enum';
 
-import { useUserStore } from '@/stores/user/user.store';
+import { useUserStore } from '@/modules/user/stores/user.store';
 import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 
 import {

@@ -5,7 +5,7 @@ import { useMediaQuery } from '@react-hook/media-query';
 
 import { ZoneSupervisorExchangeUpdateForm } from '@/modules/zone/components/cards/update/ZoneSupervisorExchangeUpdateForm';
 
-import { useZoneStore } from '@/stores/zone/zone.store';
+import { useZoneStore } from '@/modules/zone/stores/zone.store';
 
 import {
   Dialog,

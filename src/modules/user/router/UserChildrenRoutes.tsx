@@ -9,10 +9,19 @@ const LazyUsersGeneralSearchPage = lazy(
 );
 const LazyUserCreatePage = lazy(() => import('@/modules/user/pages/UserCreatePage'));
 const LazyUserUpdatePage = lazy(() => import('@/modules/user/pages/UserUpdatePage'));
+const LazyUserOptionsPage = lazy(() => import('@/modules/user/pages/UserOptionsPage'));
 const LazyUserInactivatePage = lazy(() => import('@/modules/user/pages/UserInactivatePage'));
 const LazyUsersSearchPageByTerm = lazy(() => import('@/modules/user/pages/UsersSearchPageByTerm'));
 
 export const UserChildrenRoutes = [
+  {
+    path: 'create',
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <LazyUserOptionsPage />
+      </Suspense>
+    ),
+  },
   {
     path: 'create',
     element: (

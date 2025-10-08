@@ -6,7 +6,7 @@ import { useMediaQuery } from '@react-hook/media-query';
 
 import { MinistryTabsCard } from '@/modules/ministry/components/cards/info/MinistryTabsCard';
 
-import { useMinistryStore } from '@/stores/ministry/ministry.store';
+import { useMinistryStore } from '@/modules/ministry/stores/ministry.store';
 
 import { cn } from '@/shared/lib/utils';
 

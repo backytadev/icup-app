@@ -2,7 +2,7 @@
 
 import { isAxiosError } from 'axios';
 
-import { icupApi } from '@/api/icupApi';
+import { icupApi } from '@/core/api/icupApi';
 
 import { UserSearchType } from '@/modules/user/enums/user-search-type.enum';
 import { type UserResponse } from '@/modules/user/interfaces/user-response.interface';

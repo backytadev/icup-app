@@ -12,7 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { cn } from '@/shared/lib/utils';
 
-import { useFamilyGroupStore } from '@/stores/family-group/family-group.store';
+import { useFamilyGroupStore } from '@/modules/family-group/stores/family-group.store';
 import { getSimpleChurches } from '@/modules/church/services/church.service';
 
 import { familyGroupInfoColumns as columns } from '@/modules/family-group/components/data-tables/columns/family-group-info-columns';

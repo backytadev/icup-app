@@ -6,7 +6,7 @@ import { useMediaQuery } from '@react-hook/media-query';
 import { BsFillPersonVcardFill } from 'react-icons/bs';
 
 import { cn } from '@/shared/lib/utils';
-import { useCopastorStore } from '@/stores/copastor/copastor.store';
+import { useCopastorStore } from '@/modules/copastor/stores/copastor.store';
 
 import { CopastorTabsCard } from '@/modules/copastor/components/cards/info/CopastorTabsCard';
 

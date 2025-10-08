@@ -19,8 +19,19 @@ const LazySupervisorsSearchPageByTerm = lazy(
 const LazySupervisorsGeneralSearchPage = lazy(
   () => import('@/modules/supervisor/pages/SupervisorsGeneralSearchPage')
 );
+const LazySupervisorOptionsPage = lazy(
+  () => import('@/modules/supervisor/pages/SupervisorOptionsPage')
+);
 
 export const SupervisorChildrenRoutes = [
+  {
+    index: true,
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <LazySupervisorOptionsPage />
+      </Suspense>
+    ),
+  },
   {
     path: 'create',
     element: (

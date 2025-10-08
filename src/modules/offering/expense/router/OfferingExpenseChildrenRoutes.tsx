@@ -19,8 +19,19 @@ const LazyOfferingsExpenseSearchPageByTerm = lazy(
 const LazyOfferingsExpenseGeneralSearchPage = lazy(
   () => import('@/modules/offering/expense/pages/OfferingsExpenseGeneralSearchPage')
 );
+const LazyOfferingExpenseOptionsPage = lazy(
+  () => import('@/modules/offering/expense/pages/OfferingExpenseOptionsPage')
+);
 
 export const OfferingExpenseChildrenRoutes = [
+  {
+    index: true,
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <LazyOfferingExpenseOptionsPage />
+      </Suspense>
+    ),
+  },
   {
     path: 'create',
     element: (

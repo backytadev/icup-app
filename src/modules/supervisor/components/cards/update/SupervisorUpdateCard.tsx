@@ -3,7 +3,7 @@ import { useRef, useState, useCallback, useMemo } from 'react';
 import { GiArchiveRegister } from 'react-icons/gi';
 import { useMediaQuery } from '@react-hook/media-query';
 
-import { useSupervisorStore } from '@/stores/supervisor/supervisor.store';
+import { useSupervisorStore } from '@/modules/supervisor/stores/supervisor.store';
 
 import { SupervisorUpdateForm } from '@/modules/supervisor/components/cards/update/SupervisorUpdateForm';
 

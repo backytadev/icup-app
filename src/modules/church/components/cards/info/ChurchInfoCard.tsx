@@ -6,7 +6,7 @@ import { useMediaQuery } from '@react-hook/media-query';
 
 import { ChurchTabsCard } from '@/modules/church/components/cards/info/ChurchTabsCard';
 
-import { useChurchStore } from '@/stores/church/church.store';
+import { useChurchStore } from '@/modules/church/stores/church.store';
 
 import { cn } from '@/shared/lib/utils';
 

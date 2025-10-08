@@ -31,7 +31,7 @@ import {
 import { type MinistryQueryParams } from '@/modules/ministry/interfaces/ministry-query-params.interface';
 import { type MinistrySearchFormByTerm } from '@/modules/ministry/interfaces/ministry-search-form-by-term.interface';
 
-import { useMinistryStore } from '@/stores/ministry/ministry.store';
+import { useMinistryStore } from '@/modules/ministry/stores/ministry.store';
 
 import { getSimpleChurches } from '@/modules/church/services/church.service';
 

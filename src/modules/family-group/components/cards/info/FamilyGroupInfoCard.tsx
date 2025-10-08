@@ -6,7 +6,7 @@ import { useMediaQuery } from '@react-hook/media-query';
 
 import { cn } from '@/shared/lib/utils';
 
-import { useFamilyGroupStore } from '@/stores/family-group/family-group.store';
+import { useFamilyGroupStore } from '@/modules/family-group/stores/family-group.store';
 import { FamilyGroupTabsCard } from '@/modules/family-group/components/cards/info/FamilyGroupTabsCard';
 
 import { Button } from '@/shared/components/ui/button';

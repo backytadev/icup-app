@@ -5,7 +5,7 @@ import { BsFillPersonVcardFill } from 'react-icons/bs';
 import { useMediaQuery } from '@react-hook/media-query';
 
 import { cn } from '@/shared/lib/utils';
-import { useOfferingExpenseStore } from '@/stores/offering-expense/offering-expenses.store';
+import { useOfferingExpenseStore } from '@/modules/offering/expense/stores/offering-expenses.store';
 
 import { OfferingExpenseTabsCard } from '@/modules/offering/expense/components/cards/info/OfferingExpenseTabsCard';
 

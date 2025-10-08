@@ -31,7 +31,7 @@ import {
 } from '@/modules/preacher/services/preacher.service';
 import { type PreacherQueryParams } from '@/modules/preacher/interfaces/preacher-query-params.interface';
 
-import { usePreacherStore } from '@/stores/preacher/preacher.store';
+import { usePreacherStore } from '@/modules/preacher/stores/preacher.store';
 
 import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 import { type GeneralSearchForm } from '@/shared/interfaces/search-general-form.interface';

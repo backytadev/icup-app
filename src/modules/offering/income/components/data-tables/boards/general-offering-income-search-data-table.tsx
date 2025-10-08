@@ -38,7 +38,7 @@ import { type OfferingIncomeQueryParams } from '@/modules/offering/income/interf
 
 import { OfferingIncomeResumeCard } from '@/modules/offering/income/components/cards/summary/OfferingIncomeSummaryCard';
 
-import { useOfferingIncomeStore } from '@/stores/offering-income/offering-income.store';
+import { useOfferingIncomeStore } from '@/modules/offering/income/stores/offering-income.store';
 
 import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 import { type GeneralSearchForm } from '@/shared/interfaces/search-general-form.interface';
@@ -104,7 +104,6 @@ export function GeneralOfferingIncomeSearchDataTable<TData, TValue>({
     setDataSearchGeneralResponse(query.data);
   }, [query?.isFetching]);
 
-  console.log(translatedData);
   useEffect(() => {
     if (query.error?.message && query.error?.message !== 'Unauthorized') {
       toast.error(query?.error?.message, {

@@ -14,7 +14,7 @@ import { CalendarIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useDiscipleStore } from '@/stores/disciple/disciple.store';
+import { useDiscipleStore } from '@/modules/disciple/stores/disciple.store';
 
 import { getSimpleChurches } from '@/modules/church/services/church.service';
 

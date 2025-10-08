@@ -15,8 +15,17 @@ const LazyFinancialBalanceComparisonMetrics = lazy(
 );
 const LazyMemberMetrics = lazy(() => import('@/modules/metrics/pages/MemberMetrics'));
 const LazyFamilyGroupMetrics = lazy(() => import('@/modules/metrics/pages/FamilyGroupMetrics'));
+const LazyMetricsOptionsPage = lazy(() => import('@/modules/metrics/pages/MetricsOptionsPage'));
 
 export const MetricsChildrenRoutes = [
+  {
+    index: true,
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <LazyMetricsOptionsPage />
+      </Suspense>
+    ),
+  },
   {
     path: 'member',
     element: (

@@ -19,8 +19,19 @@ const LazyOfferingsIncomeSearchPageByTerm = lazy(
 const LazyOfferingsIncomeGeneralSearchPage = lazy(
   () => import('@/modules/offering/income/pages/OfferingsIncomeGeneralSearchPage')
 );
+const LazyOfferingIncomeOptionsPage = lazy(
+  () => import('@/modules/offering/income/pages/OfferingIncomeOptionsPage')
+);
 
 export const OfferingIncomeChildrenRoutes = [
+  {
+    index: true,
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <LazyOfferingIncomeOptionsPage />
+      </Suspense>
+    ),
+  },
   {
     path: 'create',
     element: (

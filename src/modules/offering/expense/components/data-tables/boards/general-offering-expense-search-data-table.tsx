@@ -26,7 +26,7 @@ import {
   type ColumnFiltersState,
 } from '@tanstack/react-table';
 
-import { useOfferingExpenseStore } from '@/stores/offering-expense/offering-expenses.store';
+import { useOfferingExpenseStore } from '@/modules/offering/expense/stores/offering-expenses.store';
 
 import { OfferingExpenseSearchTypeNames } from '@/modules/offering/expense/enums/offering-expense-search-type.enum';
 import { OfferingExpenseSearchSubTypeNames } from '@/modules/offering/expense/enums/offering-expense-search-sub-type.enum';

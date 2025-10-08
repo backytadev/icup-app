@@ -25,7 +25,7 @@ import {
   type ColumnFiltersState,
 } from '@tanstack/react-table';
 
-import { usePastorStore } from '@/stores/pastor/pastor.store';
+import { usePastorStore } from '@/modules/pastor/stores/pastor.store';
 
 import { getGeneralPastorsReport, getPastors } from '@/modules/pastor/services/pastor.service';
 import { type PastorQueryParams } from '@/modules/pastor/interfaces/pastor-query-params.interface';

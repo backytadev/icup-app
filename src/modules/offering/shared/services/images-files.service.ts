@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 import { isAxiosError } from 'axios';
-import { icupApi } from '@/api/icupApi';
+import { icupApi } from '@/core/api/icupApi';
 
 import { type OfferingFileType } from '@/modules/offering/shared/enums/offering-file-type.enum';
 import { type UploadImageResponse } from '@/modules/offering/shared/interfaces/upload-images-response';

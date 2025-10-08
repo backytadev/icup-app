@@ -13,7 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 
 import { cn } from '@/shared/lib/utils';
 
-import { usePreacherStore } from '@/stores/preacher/preacher.store';
+import { usePreacherStore } from '@/modules/preacher/stores/preacher.store';
 import { getSimpleChurches } from '@/modules/church/services/church.service';
 
 import { preacherInfoColumns as columns } from '@/modules/preacher/components/data-tables/columns/preacher-info-columns';

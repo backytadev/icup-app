@@ -15,8 +15,17 @@ const LazyCopastorsGeneralSearchPage = lazy(
 );
 const LazyCopastorUpdatePage = lazy(() => import('@/modules/copastor/pages/CopastorUpdatePage'));
 const LazyCopastorCreatePage = lazy(() => import('@/modules/copastor/pages/CopastorCreatePage'));
+const LazyCopastorOptionsPage = lazy(() => import('@/modules/copastor/pages/CopastorOptionsPage'));
 
 export const CopastorChildrenRoutes = [
+  {
+    index: true,
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <LazyCopastorOptionsPage />
+      </Suspense>
+    ),
+  },
   {
     path: 'create',
     element: (

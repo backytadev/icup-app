@@ -1,5 +1,5 @@
-import { ThemeProvider } from '@/shared/components/toggle-theme/theme-provider';
 import { Outlet } from 'react-router-dom';
+import { ThemeProvider } from '@/core/theme/theme-provider';
 
 export const Root = (): JSX.Element => {
   return (

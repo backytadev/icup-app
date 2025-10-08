@@ -9,7 +9,7 @@ import { Toaster } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { useChurchStore } from '@/stores/church/church.store';
+import { useChurchStore } from '@/modules/church/stores/church.store';
 
 import { type ChurchResponse } from '@/modules/church/interfaces/church-response.interface';
 import { churchInfoColumns as columns } from '@/modules/church/components/data-tables/columns/church-info-columns';

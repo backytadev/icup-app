@@ -3,7 +3,7 @@
 
 import { AxiosError } from 'axios';
 
-import { icupApi } from '@/api/icupApi';
+import { icupApi } from '@/core/api/icupApi';
 import { type UserRole } from '@/modules/user/enums/user-role.enum';
 
 export interface LoginResponse {

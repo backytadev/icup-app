@@ -31,7 +31,7 @@ import {
 } from '@/modules/supervisor/services/supervisor.service';
 import { type SupervisorQueryParams } from '@/modules/supervisor/interfaces/supervisor-query-params.interface';
 
-import { useSupervisorStore } from '@/stores/supervisor/supervisor.store';
+import { useSupervisorStore } from '@/modules/supervisor/stores/supervisor.store';
 
 import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 

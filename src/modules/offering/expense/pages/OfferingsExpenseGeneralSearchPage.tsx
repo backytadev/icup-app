@@ -18,7 +18,7 @@ import { endOfMonth, format, startOfMonth } from 'date-fns';
 import { cn } from '@/shared/lib/utils';
 
 import { getSimpleChurches } from '@/modules/church/services/church.service';
-import { useOfferingExpenseStore } from '@/stores/offering-expense/offering-expenses.store';
+import { useOfferingExpenseStore } from '@/modules/offering/expense/stores/offering-expenses.store';
 
 import { offeringExpenseInfoColumns as columns } from '@/modules/offering/expense/components/data-tables/columns/offering-expense-info-columns';
 import { GeneralOfferingExpenseSearchDataTable } from '@/modules/offering/expense/components/data-tables/boards/general-offering-expense-search-data-table';

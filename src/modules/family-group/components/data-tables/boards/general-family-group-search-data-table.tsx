@@ -31,7 +31,7 @@ import {
 } from '@/modules/family-group/services/family-group.service';
 import { type FamilyGroupQueryParams } from '@/modules/family-group/interfaces/family-group-query-params.interface';
 
-import { useFamilyGroupStore } from '@/stores/family-group/family-group.store';
+import { useFamilyGroupStore } from '@/modules/family-group/stores/family-group.store';
 
 import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 import { type GeneralSearchForm } from '@/shared/interfaces/search-general-form.interface';

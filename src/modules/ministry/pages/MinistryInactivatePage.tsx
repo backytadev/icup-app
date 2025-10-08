@@ -14,7 +14,7 @@ import { es } from 'date-fns/locale';
 import { CalendarIcon } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 
-import { useMinistryStore } from '@/stores/ministry/ministry.store';
+import { useMinistryStore } from '@/modules/ministry/stores/ministry.store';
 
 import { ministryInactivateColumns as columns } from '@/modules/ministry/components/data-tables/columns/ministry-inactivate-columns';
 import { SearchByTermMinistryDataTable } from '@/modules/ministry/components/data-tables/boards/search-by-term-ministry-data-table';

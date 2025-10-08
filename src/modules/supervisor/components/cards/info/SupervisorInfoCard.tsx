@@ -6,7 +6,7 @@ import { useMediaQuery } from '@react-hook/media-query';
 
 import { cn } from '@/shared/lib/utils';
 
-import { useSupervisorStore } from '@/stores/supervisor/supervisor.store';
+import { useSupervisorStore } from '@/modules/supervisor/stores/supervisor.store';
 
 import { SupervisorTabsCard } from '@/modules/supervisor/components/cards/info/SupervisorTabsCard';
 

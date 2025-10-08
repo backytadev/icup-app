@@ -25,7 +25,7 @@ import {
   type ColumnFiltersState,
 } from '@tanstack/react-table';
 
-import { useCopastorStore } from '@/stores/copastor/copastor.store';
+import { useCopastorStore } from '@/modules/copastor/stores/copastor.store';
 
 import {
   getCopastors,

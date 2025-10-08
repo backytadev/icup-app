@@ -6,7 +6,7 @@ import { useMediaQuery } from '@react-hook/media-query';
 import { cn } from '@/shared/lib/utils';
 import { BsFillPersonVcardFill } from 'react-icons/bs';
 
-import { useZoneStore } from '@/stores/zone/zone.store';
+import { useZoneStore } from '@/modules/zone/stores/zone.store';
 
 import { ZoneTabsCard } from '@/modules/zone/components/cards/info/ZoneTabsCard';
 

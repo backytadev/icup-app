@@ -19,8 +19,19 @@ const LazyFamilyGroupsSearchPageByTerm = lazy(
 const LazyFamilyGroupsGeneralSearchPage = lazy(
   () => import('@/modules/family-group/pages/FamilyGroupsGeneralSearchPage')
 );
+const LazyFamilyGroupOptionsPage = lazy(
+  () => import('@/modules/family-group/pages/FamilyGroupOptionsPage')
+);
 
 export const FamilyGroupChildrenRoutes = [
+  {
+    index: true,
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <LazyFamilyGroupOptionsPage />
+      </Suspense>
+    ),
+  },
   {
     path: 'create',
     element: (

@@ -27,7 +27,7 @@ import {
 import { getGeneralZonesReport, getZones } from '@/modules/zone/services/zone.service';
 import { type ZoneQueryParams } from '@/modules/zone/interfaces/zone-query-params.interface';
 
-import { useZoneStore } from '@/stores/zone/zone.store';
+import { useZoneStore } from '@/modules/zone/stores/zone.store';
 
 import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 

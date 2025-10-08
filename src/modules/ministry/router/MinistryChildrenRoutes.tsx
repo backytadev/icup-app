@@ -13,11 +13,20 @@ const LazyMinistriesGeneralSearchPage = lazy(
 );
 const LazyMinistryCreatePage = lazy(() => import('@/modules/ministry/pages/MinistryCreatePage'));
 const LazyMinistryUpdatePage = lazy(() => import('@/modules/ministry/pages/MinistryUpdatePage'));
+const LazyMinistryOptionsPage = lazy(() => import('@/modules/ministry/pages/MinistryOptionsPage'));
 const LazyMinistryInactivatePage = lazy(
   () => import('@/modules/ministry/pages/MinistryInactivatePage')
 );
 
 export const MinistryChildrenRoutes: RouteObject[] = [
+  {
+    index: true,
+    element: (
+      <Suspense fallback={<LoadingSpinner />}>
+        <LazyMinistryOptionsPage />
+      </Suspense>
+    ),
+  },
   {
     path: 'create',
     element: (
