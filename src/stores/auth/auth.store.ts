@@ -41,7 +41,10 @@ export const storeApi: StateCreator<AuthState> = (set) => ({
     const session = localStorage.getItem('auth-storage');
 
     const parsed = JSON.parse(session ?? '');
+    console.log(parsed);
+
     const token = parsed.state?.token;
+    console.log(token);
 
     if (!token) {
       set({ status: 'unauthorized', token: undefined, user: undefined });
