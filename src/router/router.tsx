@@ -55,6 +55,9 @@ const LazyOfferingOptionsPage = lazy(
   () => import('@/modules/offering/shared/pages/OfferingOptionsPage')
 );
 
+//  todo: poner titulos a los search de ofrenda
+// todo: rutas privadas ver backend y front
+
 //? Browser router
 export const router = createBrowserRouter([
   {
