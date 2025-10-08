@@ -1,17 +1,23 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 
+import { useEffect } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 
 import { useAuthStore } from '@/stores/auth/auth.store';
 import { ToggleLayoutLogin } from '@/core/theme/ToggleLayoutLogin';
+import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 
 export const AuthLayout = (): JSX.Element => {
   //* States
   const authStatus = useAuthStore((state) => state.status);
+  const revalidateToken = useAuthStore((state) => state.verifyTokenExists);
 
-  if (authStatus === 'authorized') {
-    return <Navigate to='/dashboard' />;
-  }
+  useEffect(() => {
+    revalidateToken();
+  }, []);
+
+  if (authStatus === 'pending') return <LoadingSpinner />;
+  if (authStatus === 'authorized') return <Navigate to='/dashboard' replace />;
 
   return (
     <div className='animate-fadeIn'>

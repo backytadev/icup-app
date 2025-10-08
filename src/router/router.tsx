@@ -55,9 +55,6 @@ const LazyOfferingOptionsPage = lazy(
   () => import('@/modules/offering/shared/pages/OfferingOptionsPage')
 );
 
-//  todo: poner titulos a los search de ofrenda
-// todo: rutas privadas ver backend y front
-
 //? Browser router
 export const router = createBrowserRouter([
   {
@@ -68,9 +65,6 @@ export const router = createBrowserRouter([
         index: true,
         element: <Navigate to='/auth/login' replace />,
       },
-
-      //* Auth
-      { path: 'auth', element: <AuthLayout />, children: AuthChildrenRoutes },
 
       //* Protected
       {
@@ -84,10 +78,6 @@ export const router = createBrowserRouter([
               </LazyElement>
             ),
             children: [
-              {
-                index: true,
-                element: <Navigate to='dashboard' replace />,
-              },
               {
                 path: 'dashboard',
                 element: (
@@ -173,6 +163,9 @@ export const router = createBrowserRouter([
         ),
         children: OfferingExpenseChildrenRoutes,
       },
+
+      //* Auth
+      { path: 'auth', element: <AuthLayout />, children: AuthChildrenRoutes },
     ],
   },
   {

@@ -12,6 +12,7 @@ export interface AuthState {
 
   loginUser: (email: string, password: string) => Promise<void>;
   logoutUser: () => void;
+  verifyTokenExists: () => Promise<void>;
   setAccessToken: (data: { accessToken: string }) => void;
 }
 
@@ -34,6 +35,18 @@ export const storeApi: StateCreator<AuthState> = (set) => ({
 
   logoutUser: () => {
     set({ status: 'unauthorized', token: undefined, user: undefined });
+  },
+
+  verifyTokenExists: async () => {
+    const session = localStorage.getItem('auth-storage');
+
+    const parsed = JSON.parse(session ?? '');
+    const token = parsed.state?.token;
+
+    if (!token) {
+      set({ status: 'unauthorized', token: undefined, user: undefined });
+      return;
+    }
   },
 
   setAccessToken: (data) => {
