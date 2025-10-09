@@ -188,7 +188,7 @@ export const LoginPage = (): JSX.Element => {
                         <Input
                           disabled={isInputDisabled}
                           placeholder='Escribe tu contraseña'
-                          autoComplete='new-password'
+                          autoComplete='current-password'
                           type={showPassword ? 'text' : 'password'}
                           {...field}
                         />

@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/promise-function-async */
 
-import { lazy, Suspense } from 'react';
-import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
+import { lazy } from 'react';
+import { RouteObject } from 'react-router-dom';
+import { LazyElement } from '@/shared/components/lazy/LazyElements';
 
 //! Lazy load children routes
 const LazyOfferingIncomeMetrics = lazy(
@@ -17,53 +18,53 @@ const LazyMemberMetrics = lazy(() => import('@/modules/metrics/pages/MemberMetri
 const LazyFamilyGroupMetrics = lazy(() => import('@/modules/metrics/pages/FamilyGroupMetrics'));
 const LazyMetricsOptionsPage = lazy(() => import('@/modules/metrics/pages/MetricsOptionsPage'));
 
-export const MetricsChildrenRoutes = [
+export const MetricsChildrenRoutes: RouteObject[] = [
   {
     index: true,
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyMetricsOptionsPage />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'member',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyMemberMetrics />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'family-group',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyFamilyGroupMetrics />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'offering-income',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyOfferingIncomeMetrics />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'offering-expense',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyOfferingExpenseMetrics />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'offering-comparative',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyFinancialBalanceComparisonMetrics />
-      </Suspense>
+      </LazyElement>
     ),
   },
 ];

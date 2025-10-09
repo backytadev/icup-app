@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/promise-function-async */
 
-import { lazy, Suspense } from 'react';
-import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
+import { lazy } from 'react';
+import { RouteObject } from 'react-router-dom';
+import { LazyElement } from '@/shared/components/lazy/LazyElements';
 
 //! Lazy load children routes
 const LazyPastorsSearchPageByTerm = lazy(
@@ -15,53 +16,53 @@ const LazyPastorUpdatePage = lazy(() => import('@/modules/pastor/pages/PastorUpd
 const LazyPastorOptionsPage = lazy(() => import('@/modules/pastor/pages/PastorOptionsPage'));
 const LazyPastorInactivatePage = lazy(() => import('@/modules/pastor/pages/PastorInactivatePage'));
 
-export const PastorChildrenRoutes = [
+export const PastorChildrenRoutes: RouteObject[] = [
   {
     index: true,
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyPastorOptionsPage />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'create',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <PastorCreatePage />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'general-search',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyPastorsGeneralSearchPage />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'search-by-term',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyPastorsSearchPageByTerm />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'update',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyPastorUpdatePage />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'inactivate',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyPastorInactivatePage />
-      </Suspense>
+      </LazyElement>
     ),
   },
 ];

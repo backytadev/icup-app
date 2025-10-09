@@ -1,15 +1,13 @@
 /* eslint-disable @typescript-eslint/return-await */
 /* eslint-disable @typescript-eslint/promise-function-async */
 
-import { lazy, Suspense } from 'react';
+import { lazy } from 'react';
 
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 
 import { Root } from '../Root';
 
 import { AuthLayout } from '@/layouts/AuthLayout';
-
-import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 
 //? Routers by module
 //* Members
@@ -37,8 +35,8 @@ import { UserChildrenRoutes } from '@/modules/user/router/UserChildrenRoutes';
 
 //* Auth
 import { AuthChildrenRoutes } from '@/modules/auth/router/AuthChildrenRoutes';
-import { LazyElement } from '@/router/helpers/LazyElements';
-import { ProtectedRoute } from '@/ProtectedRoute';
+import { LazyElement } from '@/shared/components/lazy/LazyElements';
+import { ProtectedRoute } from '@/core/router/ProtectedRoute';
 
 //! Lazy Load (Pages)
 //* NotFound page
@@ -126,9 +124,9 @@ export const router = createBrowserRouter([
               {
                 path: 'offerings',
                 element: (
-                  <Suspense fallback={<LoadingSpinner />}>
+                  <LazyElement>
                     <LazyOfferingOptionsPage />
-                  </Suspense>
+                  </LazyElement>
                 ),
               },
               {
@@ -148,18 +146,18 @@ export const router = createBrowserRouter([
       {
         path: '/offerings/income',
         element: (
-          <Suspense fallback={<LoadingSpinner />}>
+          <LazyElement>
             <LazyDashboardLayout />
-          </Suspense>
+          </LazyElement>
         ),
         children: OfferingIncomeChildrenRoutes,
       },
       {
         path: 'offerings/expenses',
         element: (
-          <Suspense fallback={<LoadingSpinner />}>
+          <LazyElement>
             <LazyDashboardLayout />
-          </Suspense>
+          </LazyElement>
         ),
         children: OfferingExpenseChildrenRoutes,
       },
@@ -171,17 +169,17 @@ export const router = createBrowserRouter([
   {
     path: '*',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyRedirectIfMatch />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: '/404',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyNotFoundPage />,
-      </Suspense>
+      </LazyElement>
     ),
   },
 ]);

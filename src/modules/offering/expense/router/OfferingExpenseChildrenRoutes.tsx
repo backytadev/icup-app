@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/promise-function-async */
 
-import { lazy, Suspense } from 'react';
-import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
+import { lazy } from 'react';
+import { RouteObject } from 'react-router-dom';
+import { LazyElement } from '@/shared/components/lazy/LazyElements';
 
 //! Lazy load children routes
 const LazyOfferingExpenseCreatePage = lazy(
@@ -23,53 +24,53 @@ const LazyOfferingExpenseOptionsPage = lazy(
   () => import('@/modules/offering/expense/pages/OfferingExpenseOptionsPage')
 );
 
-export const OfferingExpenseChildrenRoutes = [
+export const OfferingExpenseChildrenRoutes: RouteObject[] = [
   {
     index: true,
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyOfferingExpenseOptionsPage />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'create',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyOfferingExpenseCreatePage />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'general-search',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyOfferingsExpenseGeneralSearchPage />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'search-by-term',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyOfferingsExpenseSearchPageByTerm />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'update',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyOfferingExpenseUpdatePage />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'inactivate',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyOfferingExpenseInactivatePage />
-      </Suspense>
+      </LazyElement>
     ),
   },
 ];

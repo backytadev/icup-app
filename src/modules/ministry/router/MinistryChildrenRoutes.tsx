@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/promise-function-async */
 
-import { lazy, Suspense } from 'react';
+import { lazy } from 'react';
 import { type RouteObject } from 'react-router-dom';
-import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
+import { LazyElement } from '@/shared/components/lazy/LazyElements';
 
 //! Lazy load children routes
 const LazyMinistriesSearchPageByTerm = lazy(
@@ -22,49 +22,49 @@ export const MinistryChildrenRoutes: RouteObject[] = [
   {
     index: true,
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyMinistryOptionsPage />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'create',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyMinistryCreatePage />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'general-search',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyMinistriesGeneralSearchPage />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'search-by-term',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyMinistriesSearchPageByTerm />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'update',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyMinistryUpdatePage />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'inactivate',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyMinistryInactivatePage />
-      </Suspense>
+      </LazyElement>
     ),
   },
 ];

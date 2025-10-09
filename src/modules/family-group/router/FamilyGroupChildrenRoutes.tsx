@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/promise-function-async */
 
-import { lazy, Suspense } from 'react';
-import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
+import { lazy } from 'react';
+import { RouteObject } from 'react-router-dom';
+import { LazyElement } from '@/shared/components/lazy/LazyElements';
 
 //! Lazy load children routes
 const LazyFamilyGroupCreatePage = lazy(
@@ -23,53 +24,53 @@ const LazyFamilyGroupOptionsPage = lazy(
   () => import('@/modules/family-group/pages/FamilyGroupOptionsPage')
 );
 
-export const FamilyGroupChildrenRoutes = [
+export const FamilyGroupChildrenRoutes: RouteObject[] = [
   {
     index: true,
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyFamilyGroupOptionsPage />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'create',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyFamilyGroupCreatePage />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'general-search',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyFamilyGroupsGeneralSearchPage />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'search-by-term',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyFamilyGroupsSearchPageByTerm />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'update',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyFamilyGroupUpdatePage />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'inactivate',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyFamilyGroupInactivatePage />
-      </Suspense>
+      </LazyElement>
     ),
   },
 ];

@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/promise-function-async */
 
-import { lazy, Suspense } from 'react';
-import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
+import { lazy } from 'react';
+import { RouteObject } from 'react-router-dom';
+import { LazyElement } from '@/shared/components/lazy/LazyElements';
 
 //! Lazy load children routes
 const LazyOfferingIncomeCreatePage = lazy(
@@ -23,53 +24,53 @@ const LazyOfferingIncomeOptionsPage = lazy(
   () => import('@/modules/offering/income/pages/OfferingIncomeOptionsPage')
 );
 
-export const OfferingIncomeChildrenRoutes = [
+export const OfferingIncomeChildrenRoutes: RouteObject[] = [
   {
     index: true,
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyOfferingIncomeOptionsPage />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'create',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyOfferingIncomeCreatePage />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'general-search',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyOfferingsIncomeGeneralSearchPage />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'search-by-term',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyOfferingsIncomeSearchPageByTerm />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'update',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyOfferingIncomeUpdatePage />
-      </Suspense>
+      </LazyElement>
     ),
   },
   {
     path: 'inactivate',
     element: (
-      <Suspense fallback={<LoadingSpinner />}>
+      <LazyElement>
         <LazyOfferingIncomeInactivatePage />
-      </Suspense>
+      </LazyElement>
     ),
   },
 ];
