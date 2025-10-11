@@ -47,7 +47,7 @@ export const setupAuthInterceptor = (api: AxiosInstance) => {
           });
 
           setTimeout(() => {
-            logoutUser;
+            logoutUser();
           }, 1500);
         }
       }

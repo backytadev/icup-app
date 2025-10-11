@@ -75,12 +75,6 @@ export const useAuthStore = create<AuthState>()(
   devtools(
     persist(storeApi, {
       name: 'auth-storage',
-      onRehydrateStorage: () => (state) => {
-        setTimeout(() => {
-          state?.logoutUser?.();
-          state!.status = 'pending';
-        }, 0);
-      },
     })
   )
 );
