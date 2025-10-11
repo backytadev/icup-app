@@ -8,6 +8,9 @@ import { createBrowserRouter, Navigate } from 'react-router-dom';
 import { Root } from '../Root';
 
 import { AuthLayout } from '@/layouts/AuthLayout';
+import { ProtectedRoute } from '@/core/router/ProtectedRoute';
+import { RoleProtectedRoute } from '@/core/router/RoleProtectedRoute';
+import { LazyElement } from '@/shared/components/lazy/LazyElements';
 
 //? Routers by module
 //* Members
@@ -31,12 +34,11 @@ import { OfferingExpenseChildrenRoutes } from '@/modules/offering/expense/router
 import { MetricsChildrenRoutes } from '@/modules/metrics/router/MetricsChildrenRoutes';
 
 //* Users
+import { UserRole } from '@/modules/user/enums/user-role.enum';
 import { UserChildrenRoutes } from '@/modules/user/router/UserChildrenRoutes';
 
 //* Auth
 import { AuthChildrenRoutes } from '@/modules/auth/router/AuthChildrenRoutes';
-import { LazyElement } from '@/shared/components/lazy/LazyElements';
-import { ProtectedRoute } from '@/core/router/ProtectedRoute';
 
 //! Lazy Load (Pages)
 //* NotFound page
@@ -108,7 +110,6 @@ export const router = createBrowserRouter([
                 path: 'preachers',
                 children: PreacherChildrenRoutes,
               },
-
               {
                 path: 'disciples',
                 children: DiscipleChildrenRoutes,
@@ -124,9 +125,18 @@ export const router = createBrowserRouter([
               {
                 path: 'offerings',
                 element: (
-                  <LazyElement>
-                    <LazyOfferingOptionsPage />
-                  </LazyElement>
+                  <RoleProtectedRoute
+                    allowedRoles={[
+                      UserRole.SuperUser,
+                      UserRole.TreasurerUser,
+                      UserRole.AdminUser,
+                      UserRole.User,
+                    ]}
+                  >
+                    <LazyElement>
+                      <LazyOfferingOptionsPage />
+                    </LazyElement>
+                  </RoleProtectedRoute>
                 ),
               },
               {
@@ -135,6 +145,7 @@ export const router = createBrowserRouter([
               },
               {
                 path: 'users',
+                element: <RoleProtectedRoute allowedRoles={[UserRole.SuperUser]} />,
                 children: UserChildrenRoutes,
               },
             ],
@@ -146,18 +157,36 @@ export const router = createBrowserRouter([
       {
         path: '/offerings/income',
         element: (
-          <LazyElement>
-            <LazyDashboardLayout />
-          </LazyElement>
+          <RoleProtectedRoute
+            allowedRoles={[
+              UserRole.SuperUser,
+              UserRole.TreasurerUser,
+              UserRole.AdminUser,
+              UserRole.User,
+            ]}
+          >
+            <LazyElement>
+              <LazyDashboardLayout />
+            </LazyElement>
+          </RoleProtectedRoute>
         ),
         children: OfferingIncomeChildrenRoutes,
       },
       {
         path: 'offerings/expenses',
         element: (
-          <LazyElement>
-            <LazyDashboardLayout />
-          </LazyElement>
+          <RoleProtectedRoute
+            allowedRoles={[
+              UserRole.SuperUser,
+              UserRole.TreasurerUser,
+              UserRole.AdminUser,
+              UserRole.User,
+            ]}
+          >
+            <LazyElement>
+              <LazyDashboardLayout />
+            </LazyElement>
+          </RoleProtectedRoute>
         ),
         children: OfferingExpenseChildrenRoutes,
       },

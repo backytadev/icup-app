@@ -193,11 +193,11 @@ export const LoginPage = (): JSX.Element => {
                           {...field}
                         />
                         <button
-                          className='absolute right-2 top-3 z-10'
                           type='button'
                           onClick={toggleShowPassword}
+                          className='absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-white focus:outline-none'
                         >
-                          {showPassword ? <FaEyeSlash /> : <FaEye />}
+                          {showPassword ? <FaEyeSlash size={18} /> : <FaEye size={18} />}
                         </button>
                       </div>
                     </FormControl>

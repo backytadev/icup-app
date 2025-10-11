@@ -10,7 +10,7 @@ interface Props {
   href: string;
   Icon: IconType;
   title: string;
-  subTitle: string;
+  subTitle?: string;
 }
 
 export const SidebarCompactItem = ({ href, Icon }: Props): JSX.Element => {

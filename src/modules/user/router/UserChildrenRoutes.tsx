@@ -16,7 +16,7 @@ const LazyUsersSearchPageByTerm = lazy(() => import('@/modules/user/pages/UsersS
 
 export const UserChildrenRoutes: RouteObject[] = [
   {
-    path: 'create',
+    index: true,
     element: (
       <LazyElement>
         <LazyUserOptionsPage />

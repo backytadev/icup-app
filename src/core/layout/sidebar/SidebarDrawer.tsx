@@ -5,8 +5,8 @@
 import { useState } from 'react';
 
 import { cn } from '@/shared/lib/utils';
-import { FcExport } from 'react-icons/fc';
-import { ChevronDown } from 'lucide-react';
+import { FcConferenceCall, FcExport } from 'react-icons/fc';
+import { ChevronDown, ChevronRight } from 'lucide-react';
 
 import { useAuthStore } from '@/stores/auth/auth.store';
 
@@ -30,9 +30,31 @@ export function SidebarDrawer(): JSX.Element {
   const userLastNames = useAuthStore((state) => state.user?.lastNames ?? 'No User');
   const gender = useAuthStore((state) => state.user?.gender ?? undefined);
   const roles = useAuthStore((state) => state.user?.roles ?? undefined);
+  const userInfo = useAuthStore((state) => state.user ?? undefined);
 
   const [isOpen, setIsOpen] = useState(false);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
+
+  const [openMembership, setOpenMembership] = useState(false);
+
+  const filteredItems = menuItems.filter((item) =>
+    item.allowedRoles.some((role) => userInfo?.roles?.includes(role))
+  );
+
+  const membershipPaths = [
+    '/churches',
+    '/pastors',
+    '/copastors',
+    '/supervisors',
+    '/preachers',
+    '/family-groups',
+    '/disciples',
+    '/zones',
+    '/ministries',
+  ];
+
+  const membershipItems = filteredItems.filter((i) => membershipPaths.includes(i.href));
+  const otherItems = filteredItems.filter((i) => !membershipPaths.includes(i.href));
 
   return (
     <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
@@ -177,17 +199,18 @@ export function SidebarDrawer(): JSX.Element {
                   <li className='text-[13px] md:text-[14px]'>Generación de reportes.</li>
                 </ul>
 
-                <p className='text-[13px] md:text-[14px] ml-2 text-amber-500'>Usuarios:</p>
-                <ul className='ml-8 font-medium text-white list-disc'>
-                  {(roles?.includes(UserRole.AdminUser) || roles?.includes(UserRole.SuperUser)) && (
-                    <li className='text-[13px] md:text-[14px]'>
-                      Creación, actualización e inactivación.
-                    </li>
-                  )}
-                  <li className='text-[13px] md:text-[14px]'>Búsqueda general y detallada.</li>
-                  <li className='text-[13px] md:text-[14px]'>Generación de reportes.</li>
-                </ul>
-
+                {roles?.includes(UserRole.SuperUser) && (
+                  <>
+                    <p className='text-[13px] md:text-[14px] ml-2 text-amber-500'>Usuarios:</p>
+                    <ul className='ml-8 font-medium text-white list-disc'>
+                      <li className='text-[13px] md:text-[14px]'>
+                        Creación, actualización e inactivación.
+                      </li>
+                      <li className='text-[13px] md:text-[14px]'>Búsqueda general y detallada.</li>
+                      <li className='text-[13px] md:text-[14px]'>Generación de reportes.</li>
+                    </ul>
+                  </>
+                )}
                 <p className='text-[13px] md:text-[14px] ml-2 text-amber-500'>
                   Métricas y Estadísticas:
                 </p>
@@ -201,10 +224,79 @@ export function SidebarDrawer(): JSX.Element {
 
         <nav id='menu' className='w-full px-10 flex flex-col items-center py-2 gap-y-[.5rem]'>
           <div className='flex flex-col gap-y-1 md:gap-y-0'>
-            {menuItems.map((item) => (
-              <SidebarDrawerItem key={item.href} {...item} />
-            ))}
+            {otherItems.map((item) =>
+              item.href === '/dashboard' ? <SidebarDrawerItem key={item.href} {...item} /> : null
+            )}
           </div>
+
+          {membershipItems.length > 0 && (
+            <Collapsible
+              open={openMembership}
+              onOpenChange={setOpenMembership}
+              className={cn('w-[225px] text-left', !openMembership && 'collapsible-item')}
+            >
+              <CollapsibleTrigger asChild>
+                <button
+                  className={cn(
+                    'w-full flex items-center justify-between px-3 py-2 rounded-lg transition-all duration-200',
+                    'focus:outline-none focus:ring-2 focus:ring-gray-500/40',
+                    openMembership
+                      ? 'bg-slate-700 text-white shadow-md'
+                      : 'hover:bg-slate-200 dark:hover:bg-slate-800 hover:shadow-md'
+                  )}
+                >
+                  <div className='flex items-center gap-3'>
+                    <FcConferenceCall className='text-[1.9rem]' />
+                    <div className='flex flex-col items-start'>
+                      <p
+                        className={cn(
+                          'text-[17px] font-bold',
+                          openMembership ? 'text-white' : 'text-slate-900 dark:text-white'
+                        )}
+                      >
+                        Membresía
+                      </p>
+                      <p
+                        className={cn(
+                          'text-[15px]',
+                          openMembership ? 'text-white/90' : 'text-slate-700 dark:text-white/80'
+                        )}
+                      >
+                        Control Membresía
+                      </p>
+                    </div>
+                  </div>
+
+                  <ChevronRight
+                    className={cn(
+                      'w-4 h-4 transition-transform duration-300',
+                      openMembership ? 'rotate-90 text-white' : 'text-slate-500 dark:text-slate-400'
+                    )}
+                  />
+                </button>
+              </CollapsibleTrigger>
+
+              <CollapsibleContent className='overflow-hidden pl-5 border-l border-slate-300 dark:border-slate-700 mt-1 transition-all duration-300 data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp'>
+                <div className='flex flex-col gap-y-1 mt-1'>
+                  {membershipItems.map((sub) => (
+                    <SidebarDrawerItem
+                      key={sub.href}
+                      href={sub.href}
+                      Icon={sub.Icon}
+                      title={sub.title}
+                      subTitle={sub.subTitle}
+                    />
+                  ))}
+                </div>
+              </CollapsibleContent>
+            </Collapsible>
+          )}
+
+          {otherItems.map((item) =>
+            item.href === '/offerings' || item.href === '/metrics' || item.href === '/users' ? (
+              <SidebarDrawerItem key={item.href} {...item} />
+            ) : null
+          )}
 
           {/* Logout */}
           <a onClick={logoutUser} className='flex w-full cursor-pointer text-center justify-center'>

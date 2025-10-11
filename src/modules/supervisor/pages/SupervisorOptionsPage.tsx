@@ -7,9 +7,18 @@ import { NavLink } from 'react-router-dom';
 import { RiDeleteBin2Fill } from 'react-icons/ri';
 import { FcBusinessman, FcClearFilters, FcSearch, FcSupport } from 'react-icons/fc';
 
+import { useAuthStore } from '@/stores/auth/auth.store';
 import { WhiteCard } from '@/shared/components/cards/WhiteCard';
+import { UserRole } from '@/modules/user/enums/user-role.enum';
 
 export const SupervisorOptionsPage = (): JSX.Element => {
+  const user = useAuthStore((state) => state.user);
+
+  const allowedFullAccessRoles = [UserRole.SuperUser, UserRole.AdminUser];
+  const userRoles = user?.roles ?? [];
+
+  const hasFullAccess = userRoles.some((role) => allowedFullAccessRoles.includes(role as UserRole));
+
   useEffect(() => {
     document.title = 'Modulo Supervisor - IcupApp';
   }, []);
@@ -27,11 +36,14 @@ export const SupervisorOptionsPage = (): JSX.Element => {
       <div className='w-full pt-6 pb-10 px-[2rem] sm:px-[7rem] md:px-[4rem] lg:px-[3rem] xl:px-[3rem] 2xl:px-[4rem] grid gap-8 md:gap-6 2xl:gap-4 grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 lg:grid-rows-3 2xl:grid-rows-3 h-auto lg:h-[58rem] xl:min-h-screen'>
         <NavLink
           key='/supervisors/create'
-          to='/supervisors/create'
+          to={hasFullAccess ? '/supervisors/create' : '#'}
+          onClick={(e) => {
+            if (!hasFullAccess) e.preventDefault();
+          }}
           end
           className='row-start-1 row-end-2 md:row-start-1 md:row-end-2 md:col-start-1 md:col-end-2 lg:row-start-1 lg:row-end-3 lg:col-start-1 lg:col-end-2 xl:row-start-1 xl:row-end-2 xl:col-start-1 xl:col-end-2 2xl:row-start-1 2xl:row-end-4 2xl:col-start-1 2xl:col-end-2'
         >
-          <WhiteCard className='md:h-[11rem]' centered>
+          <WhiteCard disabled={!hasFullAccess} className='md:h-[11rem]' centered>
             <FcBusinessman className='text-[4rem] sm:text-[5rem] md:text-[6rem]' />
             <h2 className='text-green-500 font-bold text-[22px] sm:text-2xl lg:text-3xl xl:text-4xl'>
               Registrar Supervisor
@@ -78,11 +90,14 @@ export const SupervisorOptionsPage = (): JSX.Element => {
 
         <NavLink
           key='/supervisors/update'
-          to='/supervisors/update'
+          to={hasFullAccess ? '/supervisors/update' : '#'}
+          onClick={(e) => {
+            if (!hasFullAccess) e.preventDefault();
+          }}
           end
           className='row-start-4 row-end-5 lg:h-full lg:row-start-2 lg:row-end-3 lg:col-start-2 lg:col-end-3 xl:row-start-3 xl:row-end-4 xl:col-start-1 xl:col-end-2 2xl:row-start-1 2xl:row-end-4 2xl:col-start-3 2xl:col-end-4'
         >
-          <WhiteCard className='h-[10.5rem] md:h-[11rem]' centered>
+          <WhiteCard disabled={!hasFullAccess} className='h-[10.5rem] md:h-[11rem]' centered>
             <FcSupport className='text-[4rem] sm:text-[5rem] md:text-[6rem]' />
             <h2 className='text-orange-500 font-bold text-[22px] sm:text-2xl lg:text-3xl xl:text-4xl'>
               Actualizar Supervisor
@@ -95,11 +110,14 @@ export const SupervisorOptionsPage = (): JSX.Element => {
 
         <NavLink
           key='/supervisors/inactivate'
-          to='/supervisors/inactivate'
+          to={hasFullAccess ? '/supervisors/inactivate' : '#'}
+          onClick={(e) => {
+            if (!hasFullAccess) e.preventDefault();
+          }}
           end
           className='row-start-5 row-end-6 lg:row-start-3 lg:row-end-4 lg:col-start-2 lg:col-end-3 xl:row-start-3 xl:row-end-4 xl:col-start-2 xl:col-end-3 2xl:row-start-1 2xl:row-end-4 2xl:col-start-4 2xl:col-end-5'
         >
-          <WhiteCard className='md:h-[11rem]' centered>
+          <WhiteCard disabled={!hasFullAccess} className='md:h-[11rem]' centered>
             <RiDeleteBin2Fill className='text-[4rem] sm:text-[5rem] md:text-[6rem] text-red-500' />
             <h2 className='text-red-500 font-bold text-[22px] sm:text-2xl lg:text-3xl xl:text-4xl'>
               Inactivar Supervisor

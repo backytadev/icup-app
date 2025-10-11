@@ -7,9 +7,18 @@ import { GiExpense } from 'react-icons/gi';
 import { RiDeleteBin2Fill } from 'react-icons/ri';
 import { FcClearFilters, FcSearch, FcSupport } from 'react-icons/fc';
 
+import { useAuthStore } from '@/stores/auth/auth.store';
 import { WhiteCard } from '@/shared/components/cards/WhiteCard';
+import { UserRole } from '@/modules/user/enums/user-role.enum';
 
 export const OfferingExpenseOptionsPage = (): JSX.Element => {
+  const user = useAuthStore((state) => state.user);
+
+  const allowedFullAccessRoles = [UserRole.SuperUser, UserRole.TreasurerUser];
+  const userRoles = user?.roles ?? [];
+
+  const hasFullAccess = userRoles.some((role) => allowedFullAccessRoles.includes(role as UserRole));
+
   useEffect(() => {
     document.title = 'Modulo Ofrenda - IcupApp';
   }, []);
@@ -27,11 +36,14 @@ export const OfferingExpenseOptionsPage = (): JSX.Element => {
       <div className='w-full pt-6 pb-10 px-[2rem] sm:px-[7rem] md:px-[4rem] lg:px-[3rem] xl:px-[3rem] 2xl:px-[4rem] grid gap-8 md:gap-6 2xl:gap-4 grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 lg:grid-rows-3 2xl:grid-rows-3 h-auto lg:h-[58rem] xl:min-h-screen'>
         <NavLink
           key='/offerings/expenses/create'
-          to='/offerings/expenses/create'
+          to={hasFullAccess ? '/offerings/expenses/create' : '#'}
+          onClick={(e) => {
+            if (!hasFullAccess) e.preventDefault();
+          }}
           end
           className='row-start-1 row-end-2 md:row-start-1 md:row-end-2 md:col-start-1 md:col-end-2 lg:row-start-1 lg:row-end-3 lg:col-start-1 lg:col-end-2 xl:row-start-1 xl:row-end-2 xl:col-start-1 xl:col-end-2 2xl:row-start-1 2xl:row-end-4 2xl:col-start-1 2xl:col-end-2'
         >
-          <WhiteCard className='h-[10.5rem] md-h-auto' centered>
+          <WhiteCard disabled={!hasFullAccess} className='h-[10.5rem] md-h-auto' centered>
             <GiExpense className='text-[4.3rem] sm:text-[5rem] md:text-[7rem] text-amber-500' />
             <h2 className='text-green-500 font-bold text-[22px] sm:text-2xl lg:text-3xl xl:text-4xl'>
               Registrar Salida
@@ -78,11 +90,14 @@ export const OfferingExpenseOptionsPage = (): JSX.Element => {
 
         <NavLink
           key='/offerings/expenses/update'
-          to='/offerings/expenses/update'
+          to={hasFullAccess ? '/offerings/expenses/update' : '#'}
+          onClick={(e) => {
+            if (!hasFullAccess) e.preventDefault();
+          }}
           end
           className='row-start-4 row-end-5 lg:h-full lg:row-start-2 lg:row-end-3 lg:col-start-2 lg:col-end-3 xl:row-start-3 xl:row-end-4 xl:col-start-1 xl:col-end-2 2xl:row-start-1 2xl:row-end-4 2xl:col-start-3 2xl:col-end-4'
         >
-          <WhiteCard centered>
+          <WhiteCard disabled={!hasFullAccess} centered>
             <FcSupport className='text-[4rem] sm:text-[5rem] md:text-[6rem]' />
             <h2 className='text-orange-500 font-bold text-[22px] sm:text-2xl lg:text-3xl xl:text-4xl'>
               Actualizar Salida
@@ -95,11 +110,14 @@ export const OfferingExpenseOptionsPage = (): JSX.Element => {
 
         <NavLink
           key='/offerings/expenses/inactivate'
-          to='/offerings/expenses/inactivate'
+          to={hasFullAccess ? '/offerings/expenses/inactivate' : '#'}
+          onClick={(e) => {
+            if (!hasFullAccess) e.preventDefault();
+          }}
           end
           className='row-start-5 row-end-6 lg:row-start-3 lg:row-end-4 lg:col-start-2 lg:col-end-3 xl:row-start-3 xl:row-end-4 xl:col-start-2 xl:col-end-3 2xl:row-start-1 2xl:row-end-4 2xl:col-start-4 2xl:col-end-5'
         >
-          <WhiteCard centered>
+          <WhiteCard disabled={!hasFullAccess} centered>
             <RiDeleteBin2Fill className='text-[4rem] sm:text-[5rem] md:text-[6rem] text-red-500' />
             <h2 className='text-red-500 font-bold text-[22px] sm:text-2xl lg:text-3xl xl:text-4xl'>
               Inactivar Salida

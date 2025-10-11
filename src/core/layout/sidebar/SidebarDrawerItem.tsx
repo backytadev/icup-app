@@ -15,7 +15,7 @@ interface Props {
 export const SidebarDrawerItem = ({ href, Icon, title, subTitle }: Props): JSX.Element => {
   return (
     <SheetClose asChild>
-      <NavLink key={href} to={href} end>
+      <NavLink key={href} to={href} end className='w-[220px]'>
         <div className='pr-1'>
           <Icon className='text-[28px] text-slate-300' />
         </div>

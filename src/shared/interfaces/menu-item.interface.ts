@@ -1,3 +1,4 @@
+import { UserRole } from '@/modules/user/enums/user-role.enum';
 import { type IconType } from 'react-icons';
 
 export interface MenuItem {
@@ -5,4 +6,5 @@ export interface MenuItem {
   subTitle: string;
   href: string;
   Icon: IconType;
+  allowedRoles: UserRole[];
 }
