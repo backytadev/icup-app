@@ -20,37 +20,39 @@ export const setupAuthInterceptor = (api: AxiosInstance) => {
   //* Interceptors (read zustand storage)
   // Any request that passes through the API executes the interceptor
   icupApi.interceptors.request.use(async (config) => {
-    const token = useAuthStore.getState().token;
+    const { token, status, logoutUser } = useAuthStore.getState();
 
-    if (token) {
-      if (isTokenExpiringSoon(token)) {
-        try {
-          const { data } = await api.get<{ accessToken: string }>(
-            `${import.meta.env.VITE_API_URL}/auth/renew-token`,
-            {
-              withCredentials: true,
-            }
-          );
+    if (status !== 'authorized' || !token) {
+      return config;
+    }
 
-          if (data.accessToken) {
-            useAuthStore.getState().setAccessToken(data);
-            config.headers.Authorization = `Bearer ${data.accessToken}`;
+    if (isTokenExpiringSoon(token)) {
+      try {
+        const { data } = await api.get<{ accessToken: string }>(
+          `${import.meta.env.VITE_API_URL}/auth/renew-token`,
+          {
+            withCredentials: true,
           }
-        } catch (error) {
-          if (error instanceof AxiosError) {
-            toast.error(error.response?.data.message, {
-              position: 'top-center',
-              className: 'justify-center',
-            });
+        );
 
-            setTimeout(() => {
-              useAuthStore.getState().logoutUser();
-            }, 2000);
-          }
+        if (data.accessToken) {
+          useAuthStore.getState().setAccessToken(data);
+          config.headers.Authorization = `Bearer ${data.accessToken}`;
         }
-      } else {
-        config.headers.Authorization = `Bearer ${token}`;
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          toast.error(error.response?.data.message, {
+            position: 'top-center',
+            className: 'justify-center',
+          });
+
+          setTimeout(() => {
+            logoutUser;
+          }, 1500);
+        }
       }
+    } else {
+      config.headers.Authorization = `Bearer ${token}`;
     }
 
     return config;

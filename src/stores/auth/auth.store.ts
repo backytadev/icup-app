@@ -4,6 +4,7 @@ import { devtools, persist } from 'zustand/middleware';
 import { AuthService } from '@/modules/auth/services/auth.service';
 import { type AuthStatus } from '@/modules/auth/types/auth-status.type';
 import { type User } from '@/modules/user/interfaces/user-form-data.interface';
+import { jwtDecode } from 'jwt-decode';
 
 export interface AuthState {
   status: AuthStatus;
@@ -38,14 +39,26 @@ export const storeApi: StateCreator<AuthState> = (set) => ({
   },
 
   verifyTokenExists: async () => {
-    const session = localStorage.getItem('auth-storage');
+    try {
+      const session = localStorage.getItem('auth-storage');
+      if (!session) throw new Error('No session found');
 
-    const parsed = JSON.parse(session ?? '');
-    const token = parsed.state?.token;
+      const parsed = JSON.parse(session);
+      const token = parsed?.state?.token;
 
-    if (!token) {
+      if (!token) throw new Error('No token found');
+
+      const decoded: any = jwtDecode(token);
+      const now = Date.now() / 1000;
+
+      if (decoded.exp < now) {
+        throw new Error('Token expired');
+      }
+
+      set({ status: 'authorized', token });
+    } catch (error) {
       set({ status: 'unauthorized', token: undefined, user: undefined });
-      return;
+      localStorage.removeItem('auth-storage');
     }
   },
 
@@ -59,5 +72,15 @@ export const storeApi: StateCreator<AuthState> = (set) => ({
 });
 
 export const useAuthStore = create<AuthState>()(
-  devtools(persist(storeApi, { name: 'auth-storage' }))
+  devtools(
+    persist(storeApi, {
+      name: 'auth-storage',
+      onRehydrateStorage: () => (state) => {
+        setTimeout(() => {
+          state?.logoutUser?.();
+          state!.status = 'pending';
+        }, 0);
+      },
+    })
+  )
 );
