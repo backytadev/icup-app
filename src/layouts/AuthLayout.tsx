@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-floating-promises */
 
-import { useEffect, useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 
 import { useAuthStore } from '@/stores/auth/auth.store';
@@ -10,20 +9,9 @@ import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 export const AuthLayout = (): JSX.Element => {
   //* States
   const authStatus = useAuthStore((state) => state.status);
-  const verifyTokenExists = useAuthStore((state) => state.verifyTokenExists);
 
-  const [initialized, setInitialized] = useState(false);
-
-  useEffect(() => {
-    const init = async () => {
-      await verifyTokenExists();
-      setInitialized(true);
-    };
-    init();
-  }, []);
-
-  if (!initialized || authStatus === 'pending') return <LoadingSpinner />;
-  if (initialized && authStatus === 'authorized') return <Navigate to='/dashboard' replace />;
+  if (authStatus === 'pending') return <LoadingSpinner />;
+  if (authStatus === 'authorized') return <Navigate to='/dashboard' replace />;
 
   return (
     <div className='animate-fadeIn'>

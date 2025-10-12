@@ -14,29 +14,20 @@ export const DashboardLayout = (): JSX.Element | null => {
   //* States
   const authStatus = useAuthStore((state) => state.status);
 
-  if (authStatus === 'pending') {
-    return <LoadingSpinner />;
-  }
+  if (authStatus === 'pending') return <LoadingSpinner />;
+  if (authStatus === 'unauthorized') return <Navigate to='/auth/login' replace />;
 
-  if (authStatus === 'unauthorized') {
-    return <Navigate to='/auth/login' replace />;
-  }
-
-  if (authStatus === 'authorized') {
-    return (
-      <div className='light:bg-slate-500 w-full h-auto antialiased light:text-slate-900 selection:bg-blue-900 selection:text-white'>
-        <div className='flex flex-col md:flex-row md:relative md:w-full md:min-h-full relative'>
-          <SidebarCompact />
-          <div className='w-full px-4 py-0 relative'>
-            <ToggleLayout />
-            <Outlet />
-          </div>
+  return (
+    <div className='light:bg-slate-500 w-full h-auto antialiased light:text-slate-900 selection:bg-blue-900 selection:text-white'>
+      <div className='flex flex-col md:flex-row md:relative md:w-full md:min-h-full relative'>
+        <SidebarCompact />
+        <div className='w-full px-4 py-0 relative'>
+          <ToggleLayout />
+          <Outlet />
         </div>
       </div>
-    );
-  }
-
-  return null;
+    </div>
+  );
 };
 
 export default DashboardLayout;

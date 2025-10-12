@@ -4,11 +4,8 @@ import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 
 export const ProtectedRoute = () => {
   const authStatus = useAuthStore((state) => state.status);
-  const authToken = useAuthStore((state) => state.token);
-  const user = useAuthStore((state) => state.user);
 
-  if (authToken && user && authStatus === 'pending') return <LoadingSpinner />;
-  if (!authToken && !user) return <Navigate to='/auth/login' replace />;
+  if (authStatus === 'pending') return <LoadingSpinner />;
   if (authStatus === 'unauthorized') return <Navigate to='/auth/login' replace />;
 
   return <Outlet />;
