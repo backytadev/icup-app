@@ -8,7 +8,7 @@ import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 
 import './index.css';
 import { router } from './router/router';
-import { AppInitializer } from './AppInitializer';
+import { AppInitializer } from '@/core/router/AppInitializer';
 
 const client = new QueryClient();
 

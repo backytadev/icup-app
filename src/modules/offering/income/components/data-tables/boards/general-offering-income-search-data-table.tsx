@@ -246,33 +246,41 @@ export function GeneralOfferingIncomeSearchDataTable<TData, TValue>({
             </div>
           </div>
           <div className='lg:pb-8 grid grid-cols-2 gap-4 lg:flex lg:items-center py-4 md:py-6 lg:py-4 lg:gap-3'>
-            <div className='flex w-full col-span-2 gap-2 md:gap-3 md:row-start-1 md:row-end-2'>
-              <Input
-                disabled={isDisabledButton}
-                placeholder='Sub-tipo...'
-                value={(table.getColumn('subType')?.getFilterValue() as string) ?? ''}
-                onChange={(event) => table.getColumn('subType')?.setFilterValue(event.target.value)}
-                className='col-start-2 col-end-3 row-start-1 row-end-2 text-[14px] lg:text-[14px] w-full'
-              />
+            <div className='flex w-full flex-col md:flex-row col-span-2 gap-2 md:gap-3 md:row-start-1 md:row-end-2 border-b-2 md:border-none'>
+              <div className='flex flex-col w-full'>
+                <label className='text-[13px] text-slate-600 dark:text-slate-300 font-medium mb-1'>
+                  Buscar por sub-tipo
+                </label>
+                <Input
+                  disabled={isDisabledButton}
+                  placeholder='Sub-tipo...'
+                  value={(table.getColumn('subType')?.getFilterValue() as string) ?? ''}
+                  onChange={(event) =>
+                    table.getColumn('subType')?.setFilterValue(event.target.value)
+                  }
+                  className='text-[14px] lg:text-[14px] w-full'
+                />
+              </div>
 
-              <Input
-                disabled={isDisabledButton}
-                placeholder='Buscar por co-pastor o predicador...'
-                value={(table.getColumn('copastorOrPreacher')?.getFilterValue() as string) ?? ''}
-                onChange={(event) =>
-                  table.getColumn('copastorOrPreacher')?.setFilterValue(event.target.value)
-                }
-                className='text-[14px] lg:text-[14px] w-full col-start-1 col-end-2 row-start-1 row-end-2'
-              />
+              <div className='flex flex-col w-full'>
+                <label className='text-[13px] text-slate-600 dark:text-slate-300 font-medium mb-1'>
+                  Buscar por co-pastor o predicador
+                </label>
+                <Input
+                  disabled={isDisabledButton}
+                  placeholder='Buscar por co-pastor o predicador...'
+                  value={(table.getColumn('copastorOrPreacher')?.getFilterValue() as string) ?? ''}
+                  onChange={(event) =>
+                    table.getColumn('copastorOrPreacher')?.setFilterValue(event.target.value)
+                  }
+                  className='text-[14px] lg:text-[14px] w-full'
+                />
+              </div>
 
               <Button
                 disabled={isDisabledButton}
                 variant='ghost'
-                className='w-[15%] col-start-2 col-end-3 row-start-2 row-end-3 m-auto text-[14px] lg:text-[14px] h-full md:w-[5rem] px-4 py-2 border-1 border-red-500 bg-gradient-to-r from-red-400 via-red-500 to-red-600 text-white hover:text-red-100 hover:from-red-500 hover:via-red-600 hover:to-red-700 dark:from-red-600 dark:via-red-700 dark:to-red-800 dark:text-gray-100 dark:hover:text-gray-200 dark:hover:from-red-700 dark:hover:via-red-800 dark:hover:to-red-900'
-                onClick={() => {
-                  table.getColumn('subType')?.setFilterValue('');
-                  table.getColumn('category')?.setFilterValue('');
-                }}
+                className='mt-1.5 md:mt-6 lg:mt-5 mb-4 w-full md:w-auto md:h-auto lg:h-auto px-4 py-2 border-1 border-red-500 bg-gradient-to-r from-red-400 via-red-500 to-red-600 text-white hover:text-red-100 hover:from-red-500 hover:via-red-600 hover:to-red-700  dark:from-red-600 dark:via-red-700 dark:to-red-800 dark:text-gray-100  dark:hover:text-gray-200 dark:hover:from-red-700 dark:hover:via-red-800  dark:hover:to-red-900'
               >
                 <Trash />
               </Button>
@@ -281,7 +289,7 @@ export function GeneralOfferingIncomeSearchDataTable<TData, TValue>({
             <Button
               disabled={isDisabledButton}
               variant='ghost'
-              className='col-start-1 col-end-3 row-start-2 row-end-3 md:row-start-1 md:row-end-2 md:col-start-3 w-full m-auto text-[14px] lg:text-[14px] h-full md:w-[15rem] px-4 py-2 border-1 border-green-500 bg-gradient-to-r from-green-400 via-green-500 to-green-600 text-white hover:text-green-100 hover:from-green-500 hover:via-green-600 hover:to-green-700 dark:from-green-600 dark:via-green-700 dark:to-green-800 dark:text-gray-100 dark:hover:text-gray-200 dark:hover:from-green-700 dark:hover:via-green-800 dark:hover:to-green-900'
+              className='col-start-1 col-end-3 row-start-2 row-end-3 md:row-start-1 md:row-end-2 md:col-start-3 w-full m-auto text-[14px] lg:text-[14px] md:h-auto lg:h-full md:w-[15rem] px-4 md:py-2.5 border-1 border-green-500 bg-gradient-to-r from-green-400 via-green-500 to-green-600 text-white hover:text-green-100 hover:from-green-500 hover:via-green-600 hover:to-green-700 dark:from-green-600 dark:via-green-700 dark:to-green-800 dark:text-gray-100 dark:hover:text-gray-200 dark:hover:from-green-700 dark:hover:via-green-800 dark:hover:to-green-900'
               onClick={() => {
                 setIsFiltersSearchGeneralDisabled(true);
                 table.getColumn('subType')?.setFilterValue('');

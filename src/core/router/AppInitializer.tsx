@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useAuthStore } from '@/stores/auth/auth.store';
-import { AppLoadingSpinner } from './shared/components/spinners/AppLoadingSpinner';
+import { AppLoadingSpinner } from '@/shared/components/spinners/AppLoadingSpinner';
 
 export const AppInitializer = ({ children }: { children: React.ReactNode }) => {
   const verifyTokenExists = useAuthStore((state) => state.verifyTokenExists);

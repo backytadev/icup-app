@@ -251,15 +251,15 @@ export function SidebarDrawer(): JSX.Element {
                       <p
                         className={cn(
                           'text-[17px] font-bold',
-                          openMembership ? 'text-white' : 'text-slate-900 dark:text-white'
+                          openMembership ? 'text-white' : 'text-white'
                         )}
                       >
                         Membresía
                       </p>
                       <p
                         className={cn(
-                          'text-[15px]',
-                          openMembership ? 'text-white/90' : 'text-slate-700 dark:text-white/80'
+                          'text-[15px] hidden md:block',
+                          openMembership ? 'text-white/90' : 'text-white/80'
                         )}
                       >
                         Control Membresía

@@ -5,11 +5,11 @@ import { lazy } from 'react';
 
 import { createBrowserRouter, Navigate } from 'react-router-dom';
 
-import { Root } from '../Root';
-
-import { AuthLayout } from '@/layouts/AuthLayout';
+import { Root } from '@/core/router/Root';
 import { ProtectedRoute } from '@/core/router/ProtectedRoute';
 import { RoleProtectedRoute } from '@/core/router/RoleProtectedRoute';
+
+import { AuthLayout } from '@/layouts/AuthLayout';
 import { LazyElement } from '@/shared/components/lazy/LazyElements';
 
 //? Routers by module

@@ -133,7 +133,7 @@ export const OfferingExpenseTabsCard = ({
             </div>
 
             <div className='space-y-1 col-start-1 col-end-4'>
-              <Label className='text-[14px] md:text-[15px]'>Imágenes adjuntas</Label>
+              <Label className='text-[14px] md:text-[15px]'>Archivos multimedia</Label>
               <div className='px-2 text-green-600 w-full overflow-x-auto'>
                 <ul className='pl-2 flex gap-x-5 gap-y-2 list-disc w-fit flex-wrap overflow-hidden'>
                   {data?.imageUrls?.length !== undefined && data?.imageUrls?.length > 0 ? (
@@ -142,12 +142,12 @@ export const OfferingExpenseTabsCard = ({
                       return (
                         <li key={image} className='w-auto overflow-hidden text-ellipsis'>
                           <a
-                            className='block text-green-600 max-w-[40vw] overflow-hidden text-ellipsis whitespace-nowrap'
+                            className='block text-green-600 max-w-full md:max-w-[40vw] overflow-hidden text-ellipsis whitespace-nowrap'
                             href={image}
                             target='_blank'
                             rel='noopener noreferrer'
                           >
-                            <p className='underline underline-offset-2 font-medium truncate max-w-[40vw] flex items-center gap-x-2'>
+                            <p className='underline underline-offset-2 font-medium truncate max-w-full md:max-w-[40vw] flex items-center gap-x-2'>
                               <FileText className='w-4 h-4 text-green-600 shrink-0' />
                               <span>{name ?? `Boleta ${index + 1}`}</span>
                             </p>

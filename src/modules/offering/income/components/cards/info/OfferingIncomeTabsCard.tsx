@@ -153,7 +153,7 @@ export const OfferingIncomeTabsCard = ({ data, id }: OfferingIncomeTabsCardProps
               </CardDescription>
             </div>
 
-            <div className='space-y-1'>
+            <div className='space-y-1 col-start-1 col-end-3'>
               <Label className='text-[14px] md:text-[15px]'>Código de recibo</Label>
               <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
                 {data?.receiptCode ? data?.receiptCode : '-'}
@@ -168,12 +168,12 @@ export const OfferingIncomeTabsCard = ({ data, id }: OfferingIncomeTabsCardProps
                     data?.imageUrls?.map((image, index) => (
                       <li key={image} className='w-auto overflow-hidden text-ellipsis'>
                         <a
-                          className='block text-green-600 max-w-[40vw] overflow-hidden text-ellipsis whitespace-nowrap'
+                          className='block text-green-600 max-w-full md:max-w-[40vw] overflow-hidden text-ellipsis whitespace-nowrap'
                           href={image}
                           target='_blank'
                           rel='noopener noreferrer'
                         >
-                          <p className='underline underline-offset-2 font-medium truncate max-w-[40vw] flex items-center gap-x-2'>
+                          <p className='underline underline-offset-2 font-medium truncate max-w-full md:max-w-[40vw] flex items-center gap-x-2 w-full'>
                             <FileText className='w-4 h-4 text-green-600 shrink-0' />
                             <span>{data?.receiptCode ?? `Boleta ${index + 1}`}</span>
                           </p>
