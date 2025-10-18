@@ -29,13 +29,13 @@ import { validateDistrictsAllowedByModule } from '@/shared/helpers/validate-dist
 import { validateUrbanSectorsAllowedByDistrict } from '@/shared/helpers/validate-urban-sectors-allowed-by-district.helper';
 
 import { useMinistryBlocks } from '@/shared/hooks/useMinistryBlocks';
-import { BasicMemberForm } from '@/shared/components/forms/BasicMemberForm';
+import { BasicMemberCreateForm } from '@/shared/components/forms/BasicMemberCreateForm';
 
-import { PastorSelect } from '@/shared/components/selects/PastorSelect';
-import { CopastorSelect } from '@/shared/components/selects/CopastorSelect';
-import { MinistryMemberForm } from '@/shared/components/forms/MinistryMemberForm';
-import { RelationTypeSelect } from '@/shared/components/selects/RelationTypeSelect';
+import { PastorsSelect } from '@/shared/components/selects/PastorsSelect';
+import { CopastorsSelect } from '@/shared/components/selects/CopastorsSelect';
 import { RoleMemberCheckBox } from '@/shared/components/selects/RoleMemberCheckBox';
+import { RelationTypesSelect } from '@/shared/components/selects/RelationTypesSelect';
+import { MinistryMemberCreateForm } from '@/shared/components/forms/MinistryMemberCreateForm';
 
 import { Country } from '@/shared/enums/country.enum';
 import { Province } from '@/shared/enums/province.enum';
@@ -243,7 +243,7 @@ export const SupervisorCreatePage = (): JSX.Element => {
             className='w-full flex flex-col gap-y-6 md:grid md:grid-cols-2 md:gap-y-8 md:gap-x-10'
           >
             {/* Basic Form */}
-            <BasicMemberForm
+            <BasicMemberCreateForm
               form={form as any}
               isInputDisabled={isInputDisabled}
               isInputBirthDateOpen={isInputBirthDateOpen}
@@ -270,7 +270,7 @@ export const SupervisorCreatePage = (): JSX.Element => {
                 Relaciones
               </legend>
 
-              <RelationTypeSelect
+              <RelationTypesSelect
                 form={form as any}
                 isInputDisabled={isInputDisabled}
                 moduleName='supervisor'
@@ -278,7 +278,7 @@ export const SupervisorCreatePage = (): JSX.Element => {
 
               {(relationType === RelationType.OnlyRelatedHierarchicalCover ||
                 relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover) && (
-                <CopastorSelect
+                <CopastorsSelect
                   form={form as any}
                   isInputDisabled={isInputDisabled}
                   isInputTheirCopastorOpen={isInputTheirCopastorOpen}
@@ -288,7 +288,7 @@ export const SupervisorCreatePage = (): JSX.Element => {
               )}
 
               {relationType === RelationType.RelatedDirectToPastor && (
-                <PastorSelect
+                <PastorsSelect
                   form={form as any}
                   isInputDisabled={isInputDisabled}
                   isInputTheirPastorOpen={isInputTheirPastorRelationDirectOpen}
@@ -299,7 +299,7 @@ export const SupervisorCreatePage = (): JSX.Element => {
               )}
 
               {relationType === RelationType.OnlyRelatedMinistries && (
-                <PastorSelect
+                <PastorsSelect
                   form={form as any}
                   isInputDisabled={isInputDisabled}
                   isInputTheirPastorOpen={isInputTheirPastorOnlyMinistryOpen}
@@ -314,7 +314,7 @@ export const SupervisorCreatePage = (): JSX.Element => {
             {(relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover ||
               relationType === RelationType.OnlyRelatedMinistries) && (
               <div className='w-full border-t border-gray-300 pt-4 flex flex-col space-y-6 sm:col-start-1 sm:col-end-3'>
-                <MinistryMemberForm
+                <MinistryMemberCreateForm
                   isInputDisabled={isInputDisabled}
                   addMinistryBlock={addMinistryBlock}
                   ministryBlocks={ministryBlocks}
@@ -337,7 +337,7 @@ export const SupervisorCreatePage = (): JSX.Element => {
                   !item.ministryType ||
                   item.ministryRoles.length === 0
               )) ? (
-                <p className='mt-0 -mb-4 md:-mt-5 md:col-start-1 md:col-end-3 md:row-start-4 md:row-end-5 mx-auto md:w-[100%] lg:w-[80%] text-center text-red-500 text-[12.5px] md:text-[13px] font-bold'>
+              <p className='mt-0 -mb-4 md:-mt-5 md:col-start-1 md:col-end-3 md:row-start-4 md:row-end-5 mx-auto md:w-[100%] lg:w-[80%] text-center text-red-500 text-[12.5px] md:text-[13px] font-bold'>
                 ❌ Datos incompletos, completa todos los campos para crear el registro.
               </p>
             ) : (
@@ -345,7 +345,6 @@ export const SupervisorCreatePage = (): JSX.Element => {
                 ¡Campos completados correctamente!
               </p>
             )}
-
 
             {/* Submit button */}
             <div className='md:mt-2 lg:mt-2 col-start-1 col-end-3 row-start-4 row-end-5 w-full md:w-[20rem] md:m-auto'>

@@ -10,17 +10,22 @@ import { Checkbox } from '@/shared/components/ui/checkbox';
 import { MemberRole, MemberRoleNames } from '@/shared/enums/member-role.enum';
 
 import { MemberUseFormReturn } from '@/shared/interfaces/member-form-data';
+import { cn } from '@/shared/lib/utils';
 
 interface RoleMemberCheckBoxProps {
   form: MemberUseFormReturn;
   isInputDisabled: boolean;
   disabledRoles?: MemberRole[] | undefined;
+  showSubtitles?: boolean;
+  className?: string;
 }
 
 export const RoleMemberCheckBox = ({
   form,
   disabledRoles,
   isInputDisabled,
+  showSubtitles,
+  className,
 }: RoleMemberCheckBoxProps): JSX.Element => {
   return (
     <FormField
@@ -28,13 +33,15 @@ export const RoleMemberCheckBox = ({
       name='roles'
       render={() => (
         <FormItem>
-          <div className='mb-4'>
+          <div className={cn('mb-4', className)}>
             <FormLabel className='font-bold text-[16px] sm:text-[18px]'>
               Roles de Membresía
             </FormLabel>
-            <FormDescription className='font-medium'>
-              Asigna los roles de membresía correspondientes para este registro.
-            </FormDescription>
+            {showSubtitles && (
+              <FormDescription className='font-medium'>
+                Asigna los roles de membresía correspondientes para este registro.
+              </FormDescription>
+            )}
           </div>
           <div className='grid  grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4'>
             {Object.values(MemberRole).map(

@@ -242,7 +242,7 @@ export function SidebarDrawer(): JSX.Element {
                     'focus:outline-none focus:ring-2 focus:ring-gray-500/40',
                     openMembership
                       ? 'bg-slate-700 text-white shadow-md'
-                      : 'hover:bg-slate-200 dark:hover:bg-slate-800 hover:shadow-md'
+                      : 'hover:bg-slate-800 hover:shadow-md'
                   )}
                 >
                   <div className='flex items-center gap-3'>

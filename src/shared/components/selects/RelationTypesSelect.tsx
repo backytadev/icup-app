@@ -17,17 +17,19 @@ import {
 } from '@/shared/components/ui/select';
 import { ModuleName, RelationTypeModuleNames } from '@/shared/enums/relation-type.enum';
 
-export interface RelationTypeSelectProps {
+export interface RelationTypesSelectProps {
   form: MemberUseFormReturn;
   isInputDisabled: boolean;
   moduleName: ModuleName;
+  showSubtitles?: boolean;
 }
 
-export const RelationTypeSelect = ({
+export const RelationTypesSelect = ({
   form,
   isInputDisabled,
   moduleName,
-}: RelationTypeSelectProps) => {
+  showSubtitles = true,
+}: RelationTypesSelectProps) => {
   return (
     <FormField
       control={form.control}
@@ -38,9 +40,11 @@ export const RelationTypeSelect = ({
             <FormLabel className='text-[14.5px] md:text-[15px] font-bold'>
               Tipo de Relación
             </FormLabel>
-            <FormDescription className='text-[13.5px] md:text-[14px]'>
-              Selecciona el tipo de relación que tendrá el discípulo.
-            </FormDescription>
+            {showSubtitles && (
+              <FormDescription className='text-[13.5px] md:text-[14px]'>
+                Selecciona el tipo de relación que tendrá el discípulo.
+              </FormDescription>
+            )}
             <Select onValueChange={field.onChange} value={field.value} disabled={isInputDisabled}>
               <FormControl className='text-[14px] md:text-[14px]'>
                 <SelectTrigger>

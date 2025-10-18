@@ -21,37 +21,36 @@ import {
 import { Button } from '@/shared/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
 
-import { getFullNames } from '@/shared/helpers/get-full-names.helper';
 import { MemberUseFormReturn } from '@/shared/interfaces/member-form-data';
-import { CopastorResponse } from '@/modules/copastor/interfaces/copastor-response.interface';
+import { ChurchResponse } from '@/modules/church/interfaces/church-response.interface';
 
-export interface CopastorSelectProps {
+export interface ChurchesSelectProps {
   form: MemberUseFormReturn;
-  isInputTheirCopastorOpen: boolean;
-  setIsInputTheirCopastorOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  isInputTheirChurchOpen: boolean;
+  setIsInputTheirChurchOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isInputDisabled: boolean;
-  queryCopastors: UseQueryResult<CopastorResponse[], Error>;
+  queryChurches: UseQueryResult<ChurchResponse[], Error>;
 }
 
-export const CopastorSelect = ({
+export const ChurchesSelect = ({
   form,
   isInputDisabled,
-  isInputTheirCopastorOpen,
-  setIsInputTheirCopastorOpen,
-  queryCopastors,
-}: CopastorSelectProps) => {
+  isInputTheirChurchOpen,
+  setIsInputTheirChurchOpen,
+  queryChurches,
+}: ChurchesSelectProps) => {
   return (
     <FormField
       control={form.control}
-      name='theirCopastor'
+      name='theirChurch'
       render={({ field }) => {
         return (
           <FormItem className='mt-3'>
-            <FormLabel className='text-[14.5px] md:text-[15px] font-bold'>Co-Pastor</FormLabel>
+            <FormLabel className='text-[14.5px] md:text-[15px] font-bold'>Iglesia</FormLabel>
             <FormDescription className='text-[13.5px] md:text-[14px]'>
-              Selecciona y asigna un Co-Pastor .
+              Selecciona y asigna una Iglesia.
             </FormDescription>
-            <Popover open={isInputTheirCopastorOpen} onOpenChange={setIsInputTheirCopastorOpen}>
+            <Popover open={isInputTheirChurchOpen} onOpenChange={setIsInputTheirChurchOpen}>
               <PopoverTrigger asChild>
                 <FormControl className='text-[14px] md:text-[14px]'>
                   <Button
@@ -59,46 +58,40 @@ export const CopastorSelect = ({
                     variant='outline'
                     role='combobox'
                     className={cn(
-                      'text-[14px] w-full justify-between overflow-hidden',
+                      'w-full justify-between overflow-hidden',
                       !field.value && 'text-slate-500 font-normal text-[14px]'
                     )}
                   >
                     {field.value
-                      ? `${queryCopastors.data?.find((copastor) => copastor.id === field.value)?.member?.firstNames} 
-                      ${queryCopastors.data?.find((copastor) => copastor.id === field.value)?.member?.lastNames}`
-                      : 'Busque y seleccione un co-pastor'}
+                      ? queryChurches?.data?.find((church) => church.id === field.value)
+                          ?.abbreviatedChurchName
+                      : 'Busque y seleccione una iglesia'}
                     <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-5' />
                   </Button>
                 </FormControl>
               </PopoverTrigger>
               <PopoverContent align='center' className='w-auto px-4 py-2'>
                 <Command>
-                  {queryCopastors?.data?.length && queryCopastors?.data?.length > 0 ? (
+                  {queryChurches?.data?.length && queryChurches?.data?.length > 0 ? (
                     <>
-                      <CommandInput
-                        placeholder='Busque un co-pastor...'
-                        className='h-9 text-[14px]'
-                      />
-                      <CommandEmpty>Co-Pastor no encontrado.</CommandEmpty>
+                      <CommandInput placeholder='Busque una iglesia' className='h-9 text-[14px]' />
+                      <CommandEmpty>Iglesia no encontrada.</CommandEmpty>
                       <CommandGroup className='max-h-[200px] h-auto'>
-                        {queryCopastors.data?.map((copastor) => (
+                        {queryChurches?.data?.map((church) => (
                           <CommandItem
                             className='text-[14px]'
-                            value={getFullNames({
-                              firstNames: copastor.member?.firstNames ?? '',
-                              lastNames: copastor.member?.lastNames ?? '',
-                            })}
-                            key={copastor.id}
+                            value={church.abbreviatedChurchName}
+                            key={church.id}
                             onSelect={() => {
-                              form.setValue('theirCopastor', copastor.id);
-                              setIsInputTheirCopastorOpen(false);
+                              form.setValue('theirChurch', church?.id);
+                              setIsInputTheirChurchOpen(false);
                             }}
                           >
-                            {`${copastor?.member?.firstNames} ${copastor?.member?.lastNames}`}
+                            {church?.abbreviatedChurchName}
                             <CheckIcon
                               className={cn(
                                 'ml-auto h-4 w-4',
-                                copastor?.id === field.value ? 'opacity-100' : 'opacity-0'
+                                church?.id === field.value ? 'opacity-100' : 'opacity-0'
                               )}
                             />
                           </CommandItem>
@@ -106,9 +99,9 @@ export const CopastorSelect = ({
                       </CommandGroup>
                     </>
                   ) : (
-                    queryCopastors?.data?.length === 0 && (
+                    queryChurches?.data?.length === 0 && (
                       <p className='text-[13.5px] md:text-[14.5px] font-medium text-red-500 text-center'>
-                        ❌No hay co-pastores disponibles.
+                        ❌No hay iglesias disponibles.
                       </p>
                     )
                   )}

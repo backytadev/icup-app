@@ -26,23 +26,25 @@ import { getFullNames } from '@/shared/helpers/get-full-names.helper';
 import { PastorResponse } from '@/modules/pastor/interfaces/pastor-response.interface';
 import { MemberFormData, MemberUseFormReturn } from '@/shared/interfaces/member-form-data';
 
-export interface PastorSelectProps {
+export interface PastorsSelectProps {
   form: MemberUseFormReturn;
   isInputTheirPastorOpen: boolean;
   setIsInputTheirPastorOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  isInputDisabled: boolean;
+  isInputDisabled?: boolean;
+  isRelationSelectDisabled?: boolean;
   queryPastors: UseQueryResult<PastorResponse[], Error>;
   fieldName: Path<MemberFormData>;
 }
 
-export const PastorSelect = ({
+export const PastorsSelect = ({
   form,
   isInputDisabled,
   isInputTheirPastorOpen,
   setIsInputTheirPastorOpen,
   queryPastors,
   fieldName,
-}: PastorSelectProps) => {
+  isRelationSelectDisabled,
+}: PastorsSelectProps) => {
   return (
     <FormField
       control={form.control}
@@ -58,7 +60,7 @@ export const PastorSelect = ({
               <PopoverTrigger asChild>
                 <FormControl className='text-[14px] md:text-[14px]'>
                   <Button
-                    disabled={isInputDisabled}
+                    disabled={isInputDisabled || isRelationSelectDisabled}
                     variant='outline'
                     role='combobox'
                     className={cn(

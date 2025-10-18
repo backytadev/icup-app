@@ -28,12 +28,12 @@ import { useMinistryBlocks } from '@/shared/hooks/useMinistryBlocks';
 import { useRoleValidationByPath } from '@/shared/hooks/useRoleValidationByPath';
 import { MinistryMemberBlock } from '@/shared/interfaces/ministry-member-block.interface';
 
-import { BasicMemberForm } from '@/shared/components/forms/BasicMemberForm';
-import { MinistryMemberForm } from '@/shared/components/forms/MinistryMemberForm';
+import { BasicMemberCreateForm } from '@/shared/components/forms/BasicMemberCreateForm';
+import { MinistryMemberCreateForm } from '@/shared/components/forms/MinistryMemberCreateForm';
 
-import { ChurchSelect } from '@/shared/components/selects/ChurchSelect';
+import { ChurchesSelect } from '@/shared/components/selects/ChurchesSelect';
 import { RoleMemberCheckBox } from '@/shared/components/selects/RoleMemberCheckBox';
-import { RelationTypeSelect } from '@/shared/components/selects/RelationTypeSelect';
+import { RelationTypesSelect } from '@/shared/components/selects/RelationTypesSelect';
 
 import { validateDistrictsAllowedByModule } from '@/shared/helpers/validate-districts-allowed-by-module.helper';
 import { validateUrbanSectorsAllowedByDistrict } from '@/shared/helpers/validate-urban-sectors-allowed-by-district.helper';
@@ -210,7 +210,7 @@ export const PastorCreatePage = (): JSX.Element => {
             className='w-full flex flex-col gap-y-6 md:grid md:grid-cols-2 md:gap-y-8 md:gap-x-10'
           >
             {/* Basic Form */}
-            <BasicMemberForm
+            <BasicMemberCreateForm
               form={form as any}
               isInputDisabled={isInputDisabled}
               isInputBirthDateOpen={isInputBirthDateOpen}
@@ -237,7 +237,7 @@ export const PastorCreatePage = (): JSX.Element => {
                 Relaciones
               </legend>
 
-              <RelationTypeSelect
+              <RelationTypesSelect
                 form={form as any}
                 isInputDisabled={isInputDisabled}
                 moduleName='pastor'
@@ -245,7 +245,7 @@ export const PastorCreatePage = (): JSX.Element => {
 
               {(relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover ||
                 relationType === RelationType.OnlyRelatedHierarchicalCover) && (
-                <ChurchSelect
+                <ChurchesSelect
                   form={form as any}
                   isInputDisabled={isInputDisabled}
                   isInputTheirChurchOpen={isInputTheirChurchOpen}
@@ -258,7 +258,7 @@ export const PastorCreatePage = (): JSX.Element => {
             {/* Ministries */}
             {relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover && (
               <div className='w-full border-t border-gray-300 pt-4 flex flex-col space-y-6 sm:col-start-1 sm:col-end-3'>
-                <MinistryMemberForm
+                <MinistryMemberCreateForm
                   isInputDisabled={isInputDisabled}
                   addMinistryBlock={addMinistryBlock}
                   ministryBlocks={ministryBlocks}

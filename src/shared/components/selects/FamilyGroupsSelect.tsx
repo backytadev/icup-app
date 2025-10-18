@@ -26,21 +26,23 @@ import { getInitialFullNames } from '@/shared/helpers/get-full-names.helper';
 import { getCodeAndNameFamilyGroup } from '@/shared/helpers/get-code-and-name-family-group.helper';
 import { FamilyGroupResponse } from '@/modules/family-group/interfaces/family-group-response.interface';
 
-export interface FamilyGroupSelectProps {
+export interface FamilyGroupsSelectProps {
   form: MemberUseFormReturn;
   isInputTheirFamilyGroupOpen: boolean;
   setIsInputTheirFamilyGroupOpen: React.Dispatch<React.SetStateAction<boolean>>;
   isInputDisabled: boolean;
   queryFamilyGroups: UseQueryResult<FamilyGroupResponse[], Error>;
+  setChangedId?: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
-export const FamilyGroupSelect = ({
+export const FamilyGroupsSelect = ({
   form,
   isInputDisabled,
   isInputTheirFamilyGroupOpen,
   setIsInputTheirFamilyGroupOpen,
   queryFamilyGroups,
-}: FamilyGroupSelectProps) => {
+  setChangedId,
+}: FamilyGroupsSelectProps) => {
   return (
     <FormField
       control={form.control}
@@ -107,6 +109,7 @@ export const FamilyGroupSelect = ({
                             onSelect={() => {
                               form.setValue('theirFamilyGroup', familyGroup?.id);
                               setIsInputTheirFamilyGroupOpen(false);
+                              setChangedId && setChangedId(familyGroup.id);
                             }}
                           >
                             {`${familyGroup?.familyGroupName} (${familyGroup?.familyGroupCode}) ~ ${getInitialFullNames(

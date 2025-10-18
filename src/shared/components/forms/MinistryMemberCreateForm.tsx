@@ -37,7 +37,7 @@ import { Button } from '@/shared/components/ui/button';
 import { Checkbox } from '@/shared/components/ui/checkbox';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
 
-export interface MinistryMemberFormProps {
+export interface MinistryMemberCreateFormProps {
   isInputDisabled: boolean;
   addMinistryBlock: () => void;
   ministryBlocks: MinistryMemberBlock[];
@@ -52,7 +52,7 @@ export interface MinistryMemberFormProps {
   removeMinistryBlock: (indexToRemove: number) => void;
 }
 
-export const MinistryMemberForm = ({
+export const MinistryMemberCreateForm = ({
   isInputDisabled,
   addMinistryBlock,
   ministryBlocks,
@@ -61,7 +61,7 @@ export const MinistryMemberForm = ({
   handleSelectChurch,
   toggleRoleInBlock,
   removeMinistryBlock,
-}: MinistryMemberFormProps) => {
+}: MinistryMemberCreateFormProps) => {
   return (
     <>
       <div className='w-full flex items-center justify-between border-b border-gray-300 pb-4'>

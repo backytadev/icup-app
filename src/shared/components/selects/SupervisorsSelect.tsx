@@ -25,21 +25,25 @@ import { getFullNames } from '@/shared/helpers/get-full-names.helper';
 import { MemberUseFormReturn } from '@/shared/interfaces/member-form-data';
 import { SupervisorResponse } from '@/modules/supervisor/interfaces/supervisor-response.interface';
 
-export interface SupervisorSelectProps {
+export interface SupervisorsSelectProps {
   form: MemberUseFormReturn;
   isInputTheirSupervisorOpen: boolean;
   setIsInputTheirSupervisorOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  isInputDisabled: boolean;
+  isInputDisabled?: boolean;
+  isRelationSelectDisabled?: boolean;
   querySupervisors: UseQueryResult<SupervisorResponse[], Error>;
+  setChangedId?: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
-export const SupervisorSelect = ({
+export const SupervisorsSelect = ({
   form,
   isInputDisabled,
   isInputTheirSupervisorOpen,
   setIsInputTheirSupervisorOpen,
   querySupervisors,
-}: SupervisorSelectProps) => {
+  isRelationSelectDisabled,
+  setChangedId,
+}: SupervisorsSelectProps) => {
   return (
     <FormField
       control={form.control}
@@ -55,7 +59,7 @@ export const SupervisorSelect = ({
               <PopoverTrigger asChild>
                 <FormControl className='text-[14px] md:text-[14px]'>
                   <Button
-                    disabled={isInputDisabled}
+                    disabled={isInputDisabled || isRelationSelectDisabled}
                     variant='outline'
                     role='combobox'
                     className={cn(
@@ -92,6 +96,7 @@ export const SupervisorSelect = ({
                             onSelect={() => {
                               form.setValue('theirSupervisor', supervisor.id);
                               setIsInputTheirSupervisorOpen(false);
+                              setChangedId && setChangedId(supervisor.id);
                             }}
                           >
                             {`${supervisor?.member?.firstNames} ${supervisor?.member?.lastNames}`}

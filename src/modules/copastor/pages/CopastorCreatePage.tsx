@@ -23,11 +23,11 @@ import { PageSubTitle } from '@/shared/components/page-header/PageSubTitle';
 import { useRoleValidationByPath } from '@/shared/hooks/useRoleValidationByPath';
 import { MinistryMemberBlock } from '@/shared/interfaces/ministry-member-block.interface';
 
-import { PastorSelect } from '@/shared/components/selects/PastorSelect';
-import { BasicMemberForm } from '@/shared/components/forms/BasicMemberForm';
-import { MinistryMemberForm } from '@/shared/components/forms/MinistryMemberForm';
+import { PastorsSelect } from '@/shared/components/selects/PastorsSelect';
 import { RoleMemberCheckBox } from '@/shared/components/selects/RoleMemberCheckBox';
-import { RelationTypeSelect } from '@/shared/components/selects/RelationTypeSelect';
+import { RelationTypesSelect } from '@/shared/components/selects/RelationTypesSelect';
+import { BasicMemberCreateForm } from '@/shared/components/forms/BasicMemberCreateForm';
+import { MinistryMemberCreateForm } from '@/shared/components/forms/MinistryMemberCreateForm';
 
 import { Country } from '@/shared/enums/country.enum';
 import { Province } from '@/shared/enums/province.enum';
@@ -219,7 +219,7 @@ export const CopastorCreatePage = (): JSX.Element => {
             className='w-full flex flex-col gap-y-6 md:grid md:grid-cols-2 md:gap-y-8 md:gap-x-10'
           >
             {/* Basic Form */}
-            <BasicMemberForm
+            <BasicMemberCreateForm
               form={form as any}
               isInputDisabled={isInputDisabled}
               isInputBirthDateOpen={isInputBirthDateOpen}
@@ -246,7 +246,7 @@ export const CopastorCreatePage = (): JSX.Element => {
                 Relaciones
               </legend>
 
-              <RelationTypeSelect
+              <RelationTypesSelect
                 form={form as any}
                 isInputDisabled={isInputDisabled}
                 moduleName='copastor'
@@ -254,7 +254,7 @@ export const CopastorCreatePage = (): JSX.Element => {
 
               {(relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover ||
                 relationType === RelationType.OnlyRelatedHierarchicalCover) && (
-                <PastorSelect
+                <PastorsSelect
                   form={form as any}
                   isInputDisabled={isInputDisabled}
                   isInputTheirPastorOpen={isInputTheirPastorOpen}
@@ -268,7 +268,7 @@ export const CopastorCreatePage = (): JSX.Element => {
             {/* Ministries */}
             {relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover && (
               <div className='w-full border-t border-gray-300 pt-4 flex flex-col space-y-6 sm:col-start-1 sm:col-end-3'>
-                <MinistryMemberForm
+                <MinistryMemberCreateForm
                   isInputDisabled={isInputDisabled}
                   addMinistryBlock={addMinistryBlock}
                   ministryBlocks={ministryBlocks}
