@@ -6,6 +6,8 @@ import { useEffect } from 'react';
 import { type UseFormReturn } from 'react-hook-form';
 
 import { MemberRole } from '@/shared/enums/member-role.enum';
+import { RelationType } from '@/shared/enums/relation-type.enum';
+import { MinistryMemberBlock } from '@/shared/interfaces/ministry-member-block.interface';
 import { type CopastorFormData } from '@/modules/copastor/interfaces/copastor-form-data.interface';
 
 interface Options {
@@ -14,6 +16,7 @@ interface Options {
   setIsMessageErrorDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   isInputDisabled: boolean;
   isRelationSelectDisabled: boolean;
+  ministryBlocks: MinistryMemberBlock[];
 }
 
 export const useCopastorUpdateSubmitButtonLogic = ({
@@ -22,6 +25,7 @@ export const useCopastorUpdateSubmitButtonLogic = ({
   setIsSubmitButtonDisabled,
   isRelationSelectDisabled,
   setIsMessageErrorDisabled,
+  ministryBlocks,
 }: Options): void => {
   //* Watchers
   const firstNames = copastorUpdateForm.watch('firstNames');
@@ -43,6 +47,7 @@ export const useCopastorUpdateSubmitButtonLogic = ({
   const referenceAddress = copastorUpdateForm.watch('referenceAddress');
   const roles = copastorUpdateForm.watch('roles');
   const recordStatus = copastorUpdateForm.watch('recordStatus');
+  const relationType = copastorUpdateForm.watch('relationType');
 
   const theirPastor = copastorUpdateForm.watch('theirPastor');
   const theirChurch = copastorUpdateForm.watch('theirChurch');
@@ -57,6 +62,7 @@ export const useCopastorUpdateSubmitButtonLogic = ({
       setIsMessageErrorDisabled(true);
     }
 
+    //* Conditions only raise level
     if (
       roles.includes(MemberRole.Copastor) &&
       theirPastor &&
@@ -82,6 +88,71 @@ export const useCopastorUpdateSubmitButtonLogic = ({
       theirChurch &&
       Object.values(copastorUpdateForm.formState.errors).length === 0 &&
       !isRelationSelectDisabled
+    ) {
+      setIsSubmitButtonDisabled(false);
+      setIsMessageErrorDisabled(false);
+    }
+
+    //* Conditions for OnlyRelatedHierarchicalCover
+    if (
+      roles.includes(MemberRole.Disciple) &&
+      !roles.includes(MemberRole.Preacher) &&
+      relationType === RelationType.OnlyRelatedHierarchicalCover &&
+      !theirPastor
+    ) {
+      setIsSubmitButtonDisabled(true);
+      setIsMessageErrorDisabled(true);
+    }
+
+    if (
+      roles.includes(MemberRole.Disciple) &&
+      !roles.includes(MemberRole.Preacher) &&
+      !isInputDisabled &&
+      theirPastor &&
+      relationType === RelationType.OnlyRelatedHierarchicalCover &&
+      Object.values(copastorUpdateForm.formState.errors).length === 0
+    ) {
+      setIsSubmitButtonDisabled(false);
+      setIsMessageErrorDisabled(false);
+    }
+
+    //* Conditions for RelatedBothMinistriesAndHierarchicalCover
+    if (
+      roles.includes(MemberRole.Disciple) &&
+      !roles.includes(MemberRole.Preacher) &&
+      !isInputDisabled &&
+      ((theirPastor &&
+        relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover &&
+        ministryBlocks?.some(
+          (item) =>
+            !item.churchId ||
+            !item.ministryId ||
+            !item.ministryType ||
+            item.ministryRoles.length === 0
+        )) ||
+        (!theirPastor &&
+          relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover &&
+          ministryBlocks?.every(
+            (item) =>
+              item.churchId && item.ministryId && item.ministryType && item.ministryRoles.length > 0
+          ))) &&
+      Object.values(copastorUpdateForm.formState.errors).length === 0
+    ) {
+      setIsSubmitButtonDisabled(true);
+      setIsMessageErrorDisabled(true);
+    }
+
+    if (
+      roles.includes(MemberRole.Disciple) &&
+      !roles.includes(MemberRole.Preacher) &&
+      !isInputDisabled &&
+      theirPastor &&
+      relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover &&
+      ministryBlocks?.every(
+        (item) =>
+          item.churchId && item.ministryId && item.ministryType && item.ministryRoles.length > 0
+      ) &&
+      Object.values(copastorUpdateForm.formState.errors).length === 0
     ) {
       setIsSubmitButtonDisabled(false);
       setIsMessageErrorDisabled(false);

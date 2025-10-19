@@ -133,6 +133,7 @@ export const DiscipleUpdateForm = ({
   const theirSupervisor = form.watch('theirSupervisor');
   const theirFamilyGroup = form.watch('theirFamilyGroup');
   const relationType = form.watch('relationType');
+  const roles = form.watch('roles');
 
   //* Effects
   useEffect(() => {
@@ -305,6 +306,7 @@ export const DiscipleUpdateForm = ({
                     districtsValidation={districtsValidation}
                     urbanSectorsValidation={urbanSectorsValidation}
                     disabledRoles={disabledRoles}
+                    moduleName='Discípulo'
                   />
 
                   {/* Third Block */}
@@ -322,7 +324,6 @@ export const DiscipleUpdateForm = ({
                     />
 
                     {/* Relations */}
-
                     {!isMessagePromoteDisabled && (
                       <legend className='font-bold col-start-1 col-end-3 text-[15px] sm:text-[16px]'>
                         Relaciones
@@ -340,6 +341,7 @@ export const DiscipleUpdateForm = ({
                           setIsInputTheirFamilyGroupOpen={setIsInputTheirFamilyGroupOpen}
                           queryFamilyGroups={familyGroupsQuery}
                           setChangedId={setChangedId}
+                          className='mt-0'
                         />
                       )}
 
@@ -362,10 +364,11 @@ export const DiscipleUpdateForm = ({
                           setIsInputTheirPastorOpen={setIsInputTheirPastorOpen}
                           queryPastors={queryPastors}
                           fieldName='theirPastor'
+                          className='mt-0'
                         />
                       )}
 
-                    {/*  Ministry Blocks */}
+                    {/* Ministries of member */}
                     {(relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover ||
                       relationType === RelationType.OnlyRelatedMinistries) && (
                       <div className='w-full border-t border-gray-300 pt-4 flex flex-col space-y-6'>
@@ -422,17 +425,18 @@ export const DiscipleUpdateForm = ({
                       </span>
                     )}
 
-                    {/* Selects if direct relation or not */}
+                    {/* Select new relations */}
                     {isPromoteButtonDisabled &&
                       isInputDisabled &&
                       !theirFamilyGroup &&
-                      relationType !== RelationType.OnlyRelatedMinistries && (
+                      roles.includes(MemberRole.Preacher) && (
                         <SupervisorsSelect
                           form={form as any}
                           isRelationSelectDisabled={isRelationSelectDisabled}
                           isInputTheirSupervisorOpen={isInputTheirSupervisorOpen}
                           setIsInputTheirSupervisorOpen={setIsInputTheirSupervisorOpen}
                           querySupervisors={supervisorsQuery}
+                          className='mt-0'
                         />
                       )}
 
@@ -467,7 +471,7 @@ export const DiscipleUpdateForm = ({
                       <p className='text-red-500 text-[13.5px] md:text-[14px] font-bold mb-2'>
                         Consideraciones
                       </p>
-                      <p className='text-[12.5px] md:text-[13px] mb-2 font-medium '>
+                      <p className='text-[12.5px] md:text-[13px] mb-2 font-medium'>
                         ❌ Mientras estés en modo de edición y los datos cambien no podrás promover
                         de cargo.{' '}
                       </p>

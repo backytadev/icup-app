@@ -26,6 +26,7 @@ export interface CopastorResponse {
   familyGroups?: FamilyGroup[];
   disciples?: Disciple[];
   recordStatus: string;
+  relationType: string;
   theirPastor?: TheirPastor | null;
   theirChurch?: TheirChurch | null;
 }

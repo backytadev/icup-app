@@ -19,9 +19,9 @@ export interface CopastorFormData {
   residenceUrbanSector: string;
   residenceAddress: string;
   referenceAddress: string;
-  relationType: string;
   roles: MemberRole[];
   recordStatus?: string | undefined;
+  relationType: string;
   theirPastor?: string | undefined;
   theirChurch?: string | undefined;
   theirMinistries?: MinistryAssignment[] | undefined;

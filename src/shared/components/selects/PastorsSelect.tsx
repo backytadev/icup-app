@@ -34,6 +34,8 @@ export interface PastorsSelectProps {
   isRelationSelectDisabled?: boolean;
   queryPastors: UseQueryResult<PastorResponse[], Error>;
   fieldName: Path<MemberFormData>;
+  className?: string;
+  setChangedId?: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
 export const PastorsSelect = ({
@@ -44,6 +46,8 @@ export const PastorsSelect = ({
   queryPastors,
   fieldName,
   isRelationSelectDisabled,
+  className,
+  setChangedId,
 }: PastorsSelectProps) => {
   return (
     <FormField
@@ -51,7 +55,7 @@ export const PastorsSelect = ({
       name={fieldName}
       render={({ field }) => {
         return (
-          <FormItem className='mt-3'>
+          <FormItem className={cn('mt-3', className)}>
             <FormLabel className='text-[14.5px] md:text-[15px] font-bold'>Pastor</FormLabel>
             <FormDescription className='text-[13.5px] md:text-[14px]'>
               Selecciona y asigna un Pastor.
@@ -93,6 +97,7 @@ export const PastorsSelect = ({
                             key={pastor.id}
                             onSelect={() => {
                               form.setValue(fieldName, pastor?.id);
+                              setChangedId && setChangedId(pastor?.id);
                               setIsInputTheirPastorOpen(false);
                             }}
                           >

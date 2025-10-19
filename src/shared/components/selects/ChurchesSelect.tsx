@@ -27,17 +27,23 @@ import { ChurchResponse } from '@/modules/church/interfaces/church-response.inte
 export interface ChurchesSelectProps {
   form: MemberUseFormReturn;
   isInputTheirChurchOpen: boolean;
+  isRelationSelectDisabled?: boolean;
   setIsInputTheirChurchOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  isInputDisabled: boolean;
+  isInputDisabled?: boolean;
   queryChurches: UseQueryResult<ChurchResponse[], Error>;
+  setChangedId?: React.Dispatch<React.SetStateAction<string | undefined>>;
+  className?: string;
 }
 
 export const ChurchesSelect = ({
   form,
   isInputDisabled,
+  isRelationSelectDisabled,
   isInputTheirChurchOpen,
   setIsInputTheirChurchOpen,
   queryChurches,
+  setChangedId,
+  className,
 }: ChurchesSelectProps) => {
   return (
     <FormField
@@ -45,7 +51,7 @@ export const ChurchesSelect = ({
       name='theirChurch'
       render={({ field }) => {
         return (
-          <FormItem className='mt-3'>
+          <FormItem className={cn('mt-3', className)}>
             <FormLabel className='text-[14.5px] md:text-[15px] font-bold'>Iglesia</FormLabel>
             <FormDescription className='text-[13.5px] md:text-[14px]'>
               Selecciona y asigna una Iglesia.
@@ -54,7 +60,7 @@ export const ChurchesSelect = ({
               <PopoverTrigger asChild>
                 <FormControl className='text-[14px] md:text-[14px]'>
                   <Button
-                    disabled={isInputDisabled}
+                    disabled={isInputDisabled || isRelationSelectDisabled}
                     variant='outline'
                     role='combobox'
                     className={cn(
@@ -84,6 +90,7 @@ export const ChurchesSelect = ({
                             key={church.id}
                             onSelect={() => {
                               form.setValue('theirChurch', church?.id);
+                              setChangedId && setChangedId(church?.id);
                               setIsInputTheirChurchOpen(false);
                             }}
                           >

@@ -6,17 +6,21 @@ import { useEffect } from 'react';
 import { type UseFormReturn } from 'react-hook-form';
 
 import { MemberRole } from '@/shared/enums/member-role.enum';
+import { RelationType } from '@/shared/enums/relation-type.enum';
 import { type CopastorFormData } from '@/modules/copastor/interfaces/copastor-form-data.interface';
+import { MinistryMemberBlock } from '@/shared/interfaces/ministry-member-block.interface';
 
 interface Options {
   copastorCreationForm: UseFormReturn<CopastorFormData, any, CopastorFormData | undefined>;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMessageErrorDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   isInputDisabled: boolean;
+  ministryBlocks: MinistryMemberBlock[];
 }
 
 export const useCopastorCreationSubmitButtonLogic = ({
   copastorCreationForm,
+  ministryBlocks,
   setIsSubmitButtonDisabled,
   setIsMessageErrorDisabled,
   isInputDisabled,
@@ -41,6 +45,7 @@ export const useCopastorCreationSubmitButtonLogic = ({
   const roles = copastorCreationForm.watch('roles');
   const referenceAddress = copastorCreationForm.watch('referenceAddress');
   const theirPastor = copastorCreationForm.watch('theirPastor');
+  const relationType = copastorCreationForm.watch('relationType');
 
   //* Effects
   useEffect(() => {
@@ -52,11 +57,64 @@ export const useCopastorCreationSubmitButtonLogic = ({
       setIsMessageErrorDisabled(true);
     }
 
+    //* Conditions for OnlyRelatedHierarchicalCover
     if (
+      relationType === RelationType.OnlyRelatedHierarchicalCover &&
+      roles.includes(MemberRole.Disciple) &&
+      !theirPastor &&
+      !isInputDisabled &&
+      Object.values(copastorCreationForm.formState.errors).length === 0
+    ) {
+      setIsSubmitButtonDisabled(true);
+      setIsMessageErrorDisabled(true);
+    }
+
+    if (
+      relationType === RelationType.OnlyRelatedHierarchicalCover &&
       theirPastor &&
-      roles.includes(MemberRole.Copastor) &&
+      !isInputDisabled &&
+      roles.includes(MemberRole.Disciple) &&
+      Object.values(copastorCreationForm.formState.errors).length === 0
+    ) {
+      setIsSubmitButtonDisabled(false);
+      setIsMessageErrorDisabled(false);
+    }
+
+    //* Conditions for RelatedBothMinistriesAndHierarchicalCover
+    if (
+      ((!theirPastor &&
+        relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover &&
+        ministryBlocks?.every(
+          (item) =>
+            item.churchId && item.ministryId && item.ministryType && item.ministryRoles.length > 0
+        )) ||
+        (theirPastor &&
+          relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover &&
+          ministryBlocks?.some(
+            (item) =>
+              !item.churchId ||
+              !item.ministryId ||
+              !item.ministryType ||
+              item.ministryRoles.length === 0
+          ))) &&
+      roles.includes(MemberRole.Disciple) &&
       Object.values(copastorCreationForm.formState.errors).length === 0 &&
       !isInputDisabled
+    ) {
+      setIsSubmitButtonDisabled(true);
+      setIsMessageErrorDisabled(true);
+    }
+
+    if (
+      relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover &&
+      roles.includes(MemberRole.Disciple) &&
+      theirPastor &&
+      Object.values(copastorCreationForm.formState.errors).length === 0 &&
+      !isInputDisabled &&
+      ministryBlocks?.every(
+        (item) =>
+          item.churchId && item.ministryId && item.ministryType && item.ministryRoles.length > 0
+      )
     ) {
       setIsSubmitButtonDisabled(false);
       setIsMessageErrorDisabled(false);
@@ -78,7 +136,6 @@ export const useCopastorCreationSubmitButtonLogic = ({
       !residenceUrbanSector ||
       !residenceAddress ||
       !referenceAddress ||
-      !theirPastor ||
       roles.length === 0
     ) {
       setIsSubmitButtonDisabled(true);
@@ -105,6 +162,7 @@ export const useCopastorCreationSubmitButtonLogic = ({
     referenceAddress,
     theirPastor,
     roles,
+    ministryBlocks,
   ]);
 
   useEffect(() => {

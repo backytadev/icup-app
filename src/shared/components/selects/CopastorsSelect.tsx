@@ -32,6 +32,8 @@ export interface CopastorsSelectProps {
   isInputDisabled?: boolean;
   isRelationSelectDisabled?: boolean;
   queryCopastors: UseQueryResult<CopastorResponse[], Error>;
+  setChangedId?: React.Dispatch<React.SetStateAction<string | undefined>>;
+  className?: string;
 }
 
 export const CopastorsSelect = ({
@@ -41,6 +43,8 @@ export const CopastorsSelect = ({
   setIsInputTheirCopastorOpen,
   queryCopastors,
   isRelationSelectDisabled,
+  setChangedId,
+  className,
 }: CopastorsSelectProps) => {
   return (
     <FormField
@@ -48,7 +52,7 @@ export const CopastorsSelect = ({
       name='theirCopastor'
       render={({ field }) => {
         return (
-          <FormItem className='mt-3'>
+          <FormItem className={cn('mt-3', className)}>
             <FormLabel className='text-[14.5px] md:text-[15px] font-bold'>Co-Pastor</FormLabel>
             <FormDescription className='text-[13.5px] md:text-[14px]'>
               Selecciona y asigna un Co-Pastor .
@@ -93,6 +97,7 @@ export const CopastorsSelect = ({
                             key={copastor.id}
                             onSelect={() => {
                               form.setValue('theirCopastor', copastor.id);
+                              setChangedId && setChangedId(copastor.id);
                               setIsInputTheirCopastorOpen(false);
                             }}
                           >

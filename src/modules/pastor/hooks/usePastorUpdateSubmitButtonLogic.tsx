@@ -8,12 +8,15 @@ import { type UseFormReturn } from 'react-hook-form';
 
 import { MemberRole } from '@/shared/enums/member-role.enum';
 import { type PastorFormData } from '@/modules/pastor/interfaces/pastor-form-data.interface';
+import { MinistryMemberBlock } from '@/shared/interfaces/ministry-member-block.interface';
+import { RelationType } from '@/shared/enums/relation-type.enum';
 
 interface Options {
   pastorUpdateForm: UseFormReturn<PastorFormData, any, PastorFormData | undefined>;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMessageErrorDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   isInputDisabled: boolean;
+  ministryBlocks: MinistryMemberBlock[];
 }
 
 export const usePastorUpdateSubmitButtonLogic = ({
@@ -21,6 +24,7 @@ export const usePastorUpdateSubmitButtonLogic = ({
   setIsSubmitButtonDisabled,
   setIsMessageErrorDisabled,
   isInputDisabled,
+  ministryBlocks,
 }: Options): void => {
   //* Watchers
   const firstNames = pastorUpdateForm.watch('firstNames');
@@ -41,6 +45,7 @@ export const usePastorUpdateSubmitButtonLogic = ({
   const residenceAddress = pastorUpdateForm.watch('residenceAddress');
   const referenceAddress = pastorUpdateForm.watch('referenceAddress');
   const roles = pastorUpdateForm.watch('roles');
+  const relationType = pastorUpdateForm.watch('relationType');
   const recordStatus = pastorUpdateForm.watch('recordStatus');
   const theirChurch = pastorUpdateForm.watch('theirChurch');
 
@@ -64,6 +69,71 @@ export const usePastorUpdateSubmitButtonLogic = ({
       setIsMessageErrorDisabled(false);
     }
 
+    //* Conditions for OnlyRelatedHierarchicalCover
+    if (
+      roles.includes(MemberRole.Disciple) &&
+      !roles.includes(MemberRole.Preacher) &&
+      relationType === RelationType.OnlyRelatedHierarchicalCover &&
+      !theirChurch
+    ) {
+      setIsSubmitButtonDisabled(true);
+      setIsMessageErrorDisabled(true);
+    }
+
+    if (
+      roles.includes(MemberRole.Disciple) &&
+      !roles.includes(MemberRole.Preacher) &&
+      !isInputDisabled &&
+      theirChurch &&
+      relationType === RelationType.OnlyRelatedHierarchicalCover &&
+      Object.values(pastorUpdateForm.formState.errors).length === 0
+    ) {
+      setIsSubmitButtonDisabled(false);
+      setIsMessageErrorDisabled(false);
+    }
+
+    //* Conditions for RelatedBothMinistriesAndHierarchicalCover
+    if (
+      roles.includes(MemberRole.Disciple) &&
+      !roles.includes(MemberRole.Preacher) &&
+      !isInputDisabled &&
+      ((theirChurch &&
+        relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover &&
+        ministryBlocks?.some(
+          (item) =>
+            !item.churchId ||
+            !item.ministryId ||
+            !item.ministryType ||
+            item.ministryRoles.length === 0
+        )) ||
+        (!theirChurch &&
+          relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover &&
+          ministryBlocks?.every(
+            (item) =>
+              item.churchId && item.ministryId && item.ministryType && item.ministryRoles.length > 0
+          ))) &&
+      Object.values(pastorUpdateForm.formState.errors).length === 0
+    ) {
+      setIsSubmitButtonDisabled(true);
+      setIsMessageErrorDisabled(true);
+    }
+
+    if (
+      roles.includes(MemberRole.Disciple) &&
+      !roles.includes(MemberRole.Preacher) &&
+      !isInputDisabled &&
+      theirChurch &&
+      relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover &&
+      ministryBlocks?.every(
+        (item) =>
+          item.churchId && item.ministryId && item.ministryType && item.ministryRoles.length > 0
+      ) &&
+      Object.values(pastorUpdateForm.formState.errors).length === 0
+    ) {
+      setIsSubmitButtonDisabled(false);
+      setIsMessageErrorDisabled(false);
+    }
+
     if (
       !firstNames ||
       !lastNames ||
@@ -79,7 +149,6 @@ export const usePastorUpdateSubmitButtonLogic = ({
       !residenceUrbanSector ||
       !residenceAddress ||
       !referenceAddress ||
-      !theirChurch ||
       roles.length === 0
     ) {
       setIsSubmitButtonDisabled(true);

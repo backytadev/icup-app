@@ -28,6 +28,7 @@ export interface PastorResponse {
   familyGroups?: FamilyGroup[];
   disciples?: Disciple[];
   ministries?: Ministry[];
+  relationType: string;
   recordStatus: string;
   theirChurch?: TheirChurch | null;
 }

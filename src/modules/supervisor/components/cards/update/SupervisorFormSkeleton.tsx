@@ -4,7 +4,7 @@ import { Skeleton } from '@/shared/components/ui/skeleton';
 export const SupervisorFormSkeleton = (): JSX.Element => {
   return (
     <CardContent className='py-3 px-2 md:px-4'>
-      <div className='dark:text-slate-300 text-slate-500 font-bold text-[16px] mt-2 mb-5 pl-0 md:pl-4'>
+      <div className='dark:text-slate-300 text-slate-500 font-bold text-[16px] mb-4 pl-0 md:pl-4'>
         <Skeleton className='ml-2 h-7 w-[18rem] md:w-[40rem]' />
       </div>
       <div>
@@ -58,27 +58,27 @@ export const SupervisorFormSkeleton = (): JSX.Element => {
             <div>
               <Skeleton className='h-5 w-44 mt-6' />
               <div className='grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-2'>
-                <div className='flex items-center gap-2 mt-3'>
+                <div className='md:flex md:items-center md:gap-2 mt-3'>
                   <Skeleton className='h-5 w-5 rounded-md' />
                   <Skeleton className='h-3 w-32 rounded-md' />
                 </div>
-                <div className='flex items-center gap-2 mt-1'>
+                <div className='md:flex md:items-center md:gap-2 mt-1'>
                   <Skeleton className='h-5 w-5 rounded-md' />
                   <Skeleton className='h-3 w-32 rounded-md' />
                 </div>
-                <div className='flex items-center gap-2 mt-1'>
+                <div className='md:flex md:items-center md:gap-2 mt-1'>
                   <Skeleton className='h-5 w-5 rounded-md' />
                   <Skeleton className='h-3 w-32 rounded-md' />
                 </div>
-                <div className='flex items-center gap-2 mt-1'>
+                <div className='md:flex md:items-center md:gap-2 mt-1'>
                   <Skeleton className='h-5 w-5 rounded-md' />
                   <Skeleton className='h-3 w-32 rounded-md' />
                 </div>
-                <div className='flex items-center gap-2 mt-1'>
+                <div className='md:flex md:items-center md:gap-2 mt-1'>
                   <Skeleton className='h-5 w-5 rounded-md' />
                   <Skeleton className='h-3 w-32 rounded-md' />
                 </div>
-                <div className='flex items-center gap-2 mt-1'>
+                <div className='md:flex md:items-center md:gap-2 mt-1'>
                   <Skeleton className='h-5 w-5 rounded-md' />
                   <Skeleton className='h-3 w-32 rounded-md' />
                 </div>
@@ -146,68 +146,18 @@ export const SupervisorFormSkeleton = (): JSX.Element => {
           <div className='col-start-3 col-end-4'>
             <Skeleton className='h-5 w-44 mt-2' />
 
-            <div>
-              <div className='md:flex md:items-center md:gap-2 mt-4'>
-                <Skeleton className='h-5 w-5 rounded-md' />
-                <Skeleton className='h-3 w-32 rounded-md' />
-              </div>
-              <div className='md:flex md:items-center md:gap-2 mt-2'>
-                <Skeleton className='h-5 w-5 rounded-md' />
-                <Skeleton className='h-3 w-32 rounded-md' />
-              </div>
-              <div className='md:flex md:items-center md:gap-2 mt-2'>
-                <Skeleton className='h-5 w-5 rounded-md' />
-                <Skeleton className='h-3 w-32 rounded-md' />
-              </div>
-              <div className='md:flex md:items-center md:gap-2 mt-2'>
-                <Skeleton className='h-5 w-5 rounded-md' />
-                <Skeleton className='h-3 w-32 rounded-md' />
-              </div>
-              <div className='md:flex md:items-center md:gap-2 mt-2'>
-                <Skeleton className='h-5 w-5 rounded-md' />
-                <Skeleton className='h-3 w-32 rounded-md' />
-              </div>
-              <div className='md:flex md:items-center md:gap-2 mt-2'>
-                <Skeleton className='h-5 w-5 rounded-md' />
-                <Skeleton className='h-3 w-32 rounded-md' />
+            <div className='md:flex md:flex-row md:gap-2 mt-6'>
+              <Skeleton className='h-5 w-5 rounded-md' />
+              <div className='md:flex md:flex-col md:gap-2'>
+                <Skeleton className='h-5 w-64' />
+                <Skeleton className='pl-4 h-5 w-32' />
               </div>
             </div>
 
-            <Skeleton className='h-5 w-44 mt-5' />
-
-            <div>
-              <div className='md:flex md:items-center md:gap-2 mt-4'>
-                <Skeleton className='h-5 w-5 rounded-md' />
-                <Skeleton className='h-3 w-32 rounded-md' />
-              </div>
-              <div className='md:flex md:items-center md:gap-2 mt-2'>
-                <Skeleton className='h-5 w-5 rounded-md' />
-                <Skeleton className='h-3 w-32 rounded-md' />
-              </div>
-              <div className='md:flex md:items-center md:gap-2 mt-2'>
-                <Skeleton className='h-5 w-5 rounded-md' />
-                <Skeleton className='h-3 w-32 rounded-md' />
-              </div>
-              <div className='md:flex md:items-center md:gap-2 mt-2'>
-                <Skeleton className='h-5 w-5 rounded-md' />
-                <Skeleton className='h-3 w-32 rounded-md' />
-              </div>
-              <div className='md:flex md:items-center md:gap-2 mt-2'>
-                <Skeleton className='h-5 w-5 rounded-md' />
-                <Skeleton className='h-3 w-32 rounded-md' />
-              </div>
-              <div className='md:flex md:items-center md:gap-2 mt-2'>
-                <Skeleton className='h-5 w-5 rounded-md' />
-                <Skeleton className='h-3 w-32 rounded-md' />
-              </div>
-              <div className='md:flex md:items-center md:gap-2 mt-2'>
-                <Skeleton className='h-5 w-5 rounded-md' />
-                <Skeleton className='h-3 w-32 rounded-md' />
-              </div>
-              <div className='md:flex md:items-center md:gap-2 mt-2'>
-                <Skeleton className='h-5 w-5 rounded-md' />
-                <Skeleton className='h-3 w-32 rounded-md' />
-              </div>
+            <hr className='my-4' />
+            <div className='md:flex md:flex-row md:gap-6 md:items-center'>
+              <Skeleton className='h-5 w-64' />
+              <Skeleton className='h-10 w-10 rounded-md' />
             </div>
 
             <hr className='my-4' />
@@ -232,8 +182,8 @@ export const SupervisorFormSkeleton = (): JSX.Element => {
             </div>
           </div>
 
-          <div className='sm:col-start-2 w-full mt-2'>
-            <Skeleton className='h-10 w-full mt-2' />
+          <div className='sm:col-start-2 w-full'>
+            <Skeleton className='h-10 w-full mt-5' />
             <div className='md:flex md:flex-col md:justify-center md:items-center mt-1'>
               <Skeleton className='text-center h-4 w-64 mt-2' />
               <Skeleton className='text-center h-4 w-60 mt-2' />

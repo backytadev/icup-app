@@ -94,6 +94,7 @@ const dataFictional: PastorResponse[] = [
       ministries: [],
       roles: [],
     },
+    relationType: '',
     recordStatus: '',
     theirChurch: null,
   },

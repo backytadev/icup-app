@@ -18,5 +18,6 @@ export enum CopastorFieldNames {
   ReferenceAddress = 'referenceAddress',
   Roles = 'roles',
   RecordStatus = 'recordStatus',
+  RelationType = 'relationType',
   TheirPastor = 'theirPastor',
 }

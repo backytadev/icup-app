@@ -98,13 +98,6 @@ export const PastorCreatePage = (): JSX.Element => {
   const relationType = form.watch('relationType');
   const residenceDistrict = form.watch('residenceDistrict');
 
-  usePastorCreationSubmitButtonLogic({
-    pastorCreationForm: form,
-    isInputDisabled,
-    setIsMessageErrorDisabled,
-    setIsSubmitButtonDisabled,
-  });
-
   //* Effects
   useEffect(() => {
     form.resetField('residenceUrbanSector', {
@@ -158,6 +151,14 @@ export const PastorCreatePage = (): JSX.Element => {
     pastorCreationForm: form,
     setIsInputDisabled,
     setIsSubmitButtonDisabled,
+  });
+
+  usePastorCreationSubmitButtonLogic({
+    pastorCreationForm: form,
+    isInputDisabled,
+    setIsMessageErrorDisabled,
+    setIsSubmitButtonDisabled,
+    ministryBlocks,
   });
 
   const {

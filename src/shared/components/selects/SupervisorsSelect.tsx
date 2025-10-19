@@ -33,6 +33,7 @@ export interface SupervisorsSelectProps {
   isRelationSelectDisabled?: boolean;
   querySupervisors: UseQueryResult<SupervisorResponse[], Error>;
   setChangedId?: React.Dispatch<React.SetStateAction<string | undefined>>;
+  className?: string;
 }
 
 export const SupervisorsSelect = ({
@@ -43,6 +44,7 @@ export const SupervisorsSelect = ({
   querySupervisors,
   isRelationSelectDisabled,
   setChangedId,
+  className,
 }: SupervisorsSelectProps) => {
   return (
     <FormField
@@ -50,7 +52,7 @@ export const SupervisorsSelect = ({
       name='theirSupervisor'
       render={({ field }) => {
         return (
-          <FormItem className='mt-3'>
+          <FormItem className={cn('mt-3', className)}>
             <FormLabel className='text-[14.5px] md:text-[15px] font-bold'>Supervisor</FormLabel>
             <FormDescription className='text-[13.5px] md:text-[14px]'>
               Selecciona y asigna un Supervisor.
@@ -95,8 +97,8 @@ export const SupervisorsSelect = ({
                             key={supervisor.id}
                             onSelect={() => {
                               form.setValue('theirSupervisor', supervisor.id);
-                              setIsInputTheirSupervisorOpen(false);
                               setChangedId && setChangedId(supervisor.id);
+                              setIsInputTheirSupervisorOpen(false);
                             }}
                           >
                             {`${supervisor?.member?.firstNames} ${supervisor?.member?.lastNames}`}

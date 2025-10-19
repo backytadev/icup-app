@@ -33,6 +33,7 @@ export interface FamilyGroupsSelectProps {
   isInputDisabled: boolean;
   queryFamilyGroups: UseQueryResult<FamilyGroupResponse[], Error>;
   setChangedId?: React.Dispatch<React.SetStateAction<string | undefined>>;
+  className?: string;
 }
 
 export const FamilyGroupsSelect = ({
@@ -42,6 +43,7 @@ export const FamilyGroupsSelect = ({
   setIsInputTheirFamilyGroupOpen,
   queryFamilyGroups,
   setChangedId,
+  className,
 }: FamilyGroupsSelectProps) => {
   return (
     <FormField
@@ -49,7 +51,7 @@ export const FamilyGroupsSelect = ({
       name='theirFamilyGroup'
       render={({ field }) => {
         return (
-          <FormItem className='mt-3'>
+          <FormItem className={cn('mt-3', className)}>
             <FormLabel className='text-[14.5px] md:text-[15px] font-bold'>Grupo Familiar</FormLabel>
             <FormDescription className='text-[13.5px] md:text-[14px]'>
               Selecciona y asigna el Grupo Familiar.
@@ -108,8 +110,8 @@ export const FamilyGroupsSelect = ({
                             key={familyGroup.id}
                             onSelect={() => {
                               form.setValue('theirFamilyGroup', familyGroup?.id);
-                              setIsInputTheirFamilyGroupOpen(false);
                               setChangedId && setChangedId(familyGroup.id);
+                              setIsInputTheirFamilyGroupOpen(false);
                             }}
                           >
                             {`${familyGroup?.familyGroupName} (${familyGroup?.familyGroupCode}) ~ ${getInitialFullNames(

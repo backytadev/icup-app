@@ -6,11 +6,14 @@ import { type UseFormReturn } from 'react-hook-form';
 import { type MemberRole } from '@/shared/enums/member-role.enum';
 import { type CopastorResponse } from '@/modules/copastor/interfaces/copastor-response.interface';
 import { type CopastorFormData } from '@/modules/copastor/interfaces/copastor-form-data.interface';
+import { getSimpleMinistries } from '@/modules/ministry/services/ministry.service';
+import { MinistryMemberBlock } from '@/shared/interfaces/ministry-member-block.interface';
 
 interface Options {
   id: string;
   data: CopastorResponse | undefined;
   setIsLoadingData: React.Dispatch<React.SetStateAction<boolean>>;
+  setMinistryBlocks: React.Dispatch<React.SetStateAction<MinistryMemberBlock[]>>;
   copastorUpdateForm: UseFormReturn<CopastorFormData, any, CopastorFormData | undefined>;
 }
 
@@ -18,9 +21,45 @@ export const useCopastorUpdateEffects = ({
   id,
   data,
   setIsLoadingData,
+  setMinistryBlocks,
   copastorUpdateForm,
 }: Options): void => {
   const residenceDistrict = copastorUpdateForm.watch('residenceDistrict');
+
+  const fetchMinistriesByChurch = async (churchId: string) => {
+    try {
+      const respData = await getSimpleMinistries({ isSimpleQuery: true, churchId });
+      return respData ?? [];
+    } catch (error) {
+      return [];
+    }
+  };
+
+  //* Set ministry blocks
+  useEffect(() => {
+    const loadMinistryBlocks = async () => {
+      if (data?.member.ministries && data.member.ministries.length > 0) {
+        const blocks = await Promise.all(
+          data.member.ministries.map(async (m) => {
+            const ministriesList = await fetchMinistriesByChurch(m.churchMinistryId ?? '');
+            return {
+              churchPopoverOpen: false,
+              ministryPopoverOpen: false,
+              churchId: m.churchMinistryId ?? '',
+              ministryId: m.id ?? '',
+              ministryRoles: m.ministryRoles,
+              ministries: ministriesList,
+              ministryType: m.ministryType,
+            };
+          })
+        );
+
+        setMinistryBlocks(blocks);
+      }
+    };
+
+    loadMinistryBlocks();
+  }, [data]);
 
   //* Set data
   useEffect(() => {
@@ -50,6 +89,7 @@ export const useCopastorUpdateEffects = ({
     copastorUpdateForm.setValue('residenceAddress', data?.member?.residenceAddress ?? '');
     copastorUpdateForm.setValue('referenceAddress', data?.member?.referenceAddress ?? '');
     copastorUpdateForm.setValue('roles', data?.member?.roles as MemberRole[]);
+    copastorUpdateForm.setValue('relationType', data?.relationType ?? '');
     copastorUpdateForm.setValue('theirPastor', data?.theirPastor?.id);
     copastorUpdateForm.setValue('recordStatus', data?.recordStatus);
 

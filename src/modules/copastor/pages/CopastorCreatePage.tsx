@@ -66,9 +66,6 @@ export const CopastorCreatePage = (): JSX.Element => {
   //* Library hooks
   const { pathname } = useLocation();
 
-  // todo: revisar el flujo de todo al momento de actualizar y subir de nivel desde disciple hasta pastor.
-  // todo: revisar en especial el flujo de preacher cuando se cambia de supervisor como afecta a las casas.
-
   //* Form
   const form = useForm<z.infer<typeof copastorFormSchema>>({
     mode: 'onChange',
@@ -155,6 +152,7 @@ export const CopastorCreatePage = (): JSX.Element => {
     isInputDisabled,
     setIsMessageErrorDisabled,
     setIsSubmitButtonDisabled,
+    ministryBlocks,
   });
 
   const copastorCreationMutation = useCopastorCreationMutation({

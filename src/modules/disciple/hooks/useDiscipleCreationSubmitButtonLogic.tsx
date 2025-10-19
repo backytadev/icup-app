@@ -14,7 +14,6 @@ interface Options {
   discipleCreationForm: UseFormReturn<DiscipleFormData, any, DiscipleFormData | undefined>;
   setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMessageErrorDisabled: React.Dispatch<React.SetStateAction<boolean>>;
-  setMinistryBlocks: React.Dispatch<React.SetStateAction<MinistryMemberBlock[]>>;
   ministryBlocks: MinistryMemberBlock[];
   isInputDisabled: boolean;
 }
@@ -22,7 +21,6 @@ interface Options {
 export const useDiscipleCreationSubmitButtonLogic = ({
   isInputDisabled,
   ministryBlocks,
-  setMinistryBlocks,
   discipleCreationForm,
   setIsSubmitButtonDisabled,
   setIsMessageErrorDisabled,
@@ -217,7 +215,6 @@ export const useDiscipleCreationSubmitButtonLogic = ({
     roles,
     relationType,
     ministryBlocks,
-    setMinistryBlocks,
   ]);
 
   useEffect(() => {

@@ -140,6 +140,7 @@ export const PreacherUpdateForm = ({
   const theirPastorRelationDirect = form.watch('theirPastorRelationDirect');
   const isDirectRelationToPastor = form.watch('isDirectRelationToPastor');
   const relationType = form.watch('relationType');
+  const roles = form.watch('roles');
 
   //* Effects
   useEffect(() => {
@@ -314,6 +315,7 @@ export const PreacherUpdateForm = ({
                     districtsValidation={districtsValidation}
                     urbanSectorsValidation={urbanSectorsValidation}
                     disabledRoles={disabledRoles}
+                    moduleName='Predicador'
                   />
 
                   {/* Third Block */}
@@ -331,7 +333,6 @@ export const PreacherUpdateForm = ({
                     />
 
                     {/* Relaciones  */}
-
                     {!isMessagePromoteDisabled && (
                       <legend className='font-bold col-start-1 col-end-3 text-[15px] md:text-[16px]'>
                         Relaciones
@@ -344,11 +345,12 @@ export const PreacherUpdateForm = ({
                           RelationType.RelatedBothMinistriesAndHierarchicalCover) && (
                         <SupervisorsSelect
                           form={form as any}
-                          isRelationSelectDisabled={isRelationSelectDisabled}
+                          isInputDisabled={isInputDisabled}
                           isInputTheirSupervisorOpen={isInputTheirSupervisorOpen}
                           setIsInputTheirSupervisorOpen={setIsInputTheirSupervisorOpen}
                           querySupervisors={supervisorsQuery}
                           setChangedId={setChangedId}
+                          className='mt-0'
                         />
                       )}
 
@@ -361,6 +363,7 @@ export const PreacherUpdateForm = ({
                           setIsInputTheirPastorOpen={setIsInputTheirPastorOnlyMinistryOpen}
                           queryPastors={queryPastors}
                           fieldName='theirPastorOnlyMinistries'
+                          className='mt-0'
                         />
                       )}
 
@@ -374,6 +377,7 @@ export const PreacherUpdateForm = ({
                       changedId={changedId}
                     />
 
+                    {/* Ministries of member */}
                     {(relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover ||
                       relationType === RelationType.OnlyRelatedMinistries) && (
                       <div className='w-full border-t border-gray-300 pt-4 flex flex-col space-y-6'>
@@ -405,7 +409,7 @@ export const PreacherUpdateForm = ({
                       </Alert>
                     )}
 
-                    {/* New Relations Promote */}
+                    {/* Raise level according case */}
                     {isMessagePromoteDisabled && (
                       <legend className='font-bold col-start-1 col-end-3 text-[15px] sm:text-[16px] my-4'>
                         Nuevas Relaciones
@@ -446,7 +450,7 @@ export const PreacherUpdateForm = ({
                       </p>
                     )}
 
-                    {/* Selects if direct relation or not */}
+                    {/* Select new relations */}
                     {isPromoteButtonDisabled && isInputDisabled && isMessagePromoteDisabled && (
                       <FormField
                         control={form.control}
@@ -476,7 +480,7 @@ export const PreacherUpdateForm = ({
                     {isPromoteButtonDisabled &&
                       isInputDisabled &&
                       !isDirectRelationToPastor &&
-                      isMessagePromoteDisabled && (
+                      roles.includes(MemberRole.Supervisor) && (
                         <CopastorsSelect
                           form={form}
                           isInputTheirCopastorOpen={isInputTheirCopastorOpen}
@@ -486,16 +490,19 @@ export const PreacherUpdateForm = ({
                         />
                       )}
 
-                    {isPromoteButtonDisabled && isInputDisabled && isDirectRelationToPastor && (
-                      <PastorsSelect
-                        form={form}
-                        isInputTheirPastorOpen={isInputTheirPastorRelationDirectOpen}
-                        setIsInputTheirPastorOpen={setIsInputTheirPastorRelationDirectOpen}
-                        isRelationSelectDisabled={isRelationSelectDisabled}
-                        queryPastors={queryPastors}
-                        fieldName='theirPastorRelationDirect'
-                      />
-                    )}
+                    {isPromoteButtonDisabled &&
+                      isInputDisabled &&
+                      isDirectRelationToPastor &&
+                      roles.includes(MemberRole.Supervisor) && (
+                        <PastorsSelect
+                          form={form}
+                          isInputTheirPastorOpen={isInputTheirPastorRelationDirectOpen}
+                          setIsInputTheirPastorOpen={setIsInputTheirPastorRelationDirectOpen}
+                          isRelationSelectDisabled={isRelationSelectDisabled}
+                          queryPastors={queryPastors}
+                          fieldName='theirPastorRelationDirect'
+                        />
+                      )}
 
                     {/* Alert messages ok - missing */}
                     {isPromoteButtonDisabled &&

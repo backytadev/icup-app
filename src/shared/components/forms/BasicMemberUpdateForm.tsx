@@ -38,6 +38,7 @@ export interface BasicMemberUpdateFormProps {
   districtsValidation: DisabledDistrictsResult | undefined;
   urbanSectorsValidation: DisabledUrbanSectorsResult | undefined;
   disabledRoles: MemberRole[] | undefined;
+  moduleName: string;
 }
 
 export const BasicMemberUpdateForm = ({
@@ -51,6 +52,7 @@ export const BasicMemberUpdateForm = ({
   districtsValidation,
   urbanSectorsValidation,
   disabledRoles,
+  moduleName,
 }: BasicMemberUpdateFormProps): JSX.Element => {
   return (
     <>
@@ -306,11 +308,7 @@ export const BasicMemberUpdateForm = ({
           }}
         />
 
-        <RecordStatusSelect
-          form={form}
-          isInputDisabled={isInputDisabled}
-          moduleName={'Discípulo'}
-        />
+        <RecordStatusSelect form={form} isInputDisabled={isInputDisabled} moduleName={moduleName} />
       </div>
     </>
   );
