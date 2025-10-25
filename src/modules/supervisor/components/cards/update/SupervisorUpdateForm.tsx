@@ -507,6 +507,7 @@ export const SupervisorUpdateForm = ({
                       setIsPromoteButtonDisabled={setIsPromoteButtonDisabled}
                       setIsMessagePromoteDisabled={setIsMessagePromoteDisabled}
                       supervisorUpdateForm={form}
+                      isInputDisabled={isInputDisabled}
                     />
 
                     <div>

@@ -294,5 +294,6 @@ export const useCopastorPromoteButtonLogic = ({
     roles,
     theirPastor,
     recordStatus,
+    ministryBlocks,
   ]);
 };

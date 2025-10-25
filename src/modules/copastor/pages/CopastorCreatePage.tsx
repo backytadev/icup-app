@@ -299,7 +299,7 @@ export const CopastorCreatePage = (): JSX.Element => {
             )}
 
             {/* Submit button */}
-            <div className='md:mt-3 lg:mt-2 col-start-1 col-end-3 row-start-3 row-end-4 w-full md:w-[20rem] md:m-auto'>
+            <div className='md:mt-2 lg:mt-2 col-start-1 col-end-3 row-start-4 row-end-5 w-full md:w-[20rem] md:m-auto'>
               <Toaster position='top-center' richColors />
               <Button
                 disabled={isSubmitButtonDisabled}

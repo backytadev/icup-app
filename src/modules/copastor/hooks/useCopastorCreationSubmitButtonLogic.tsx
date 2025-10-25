@@ -60,7 +60,7 @@ export const useCopastorCreationSubmitButtonLogic = ({
     //* Conditions for OnlyRelatedHierarchicalCover
     if (
       relationType === RelationType.OnlyRelatedHierarchicalCover &&
-      roles.includes(MemberRole.Disciple) &&
+      roles.includes(MemberRole.Copastor) &&
       !theirPastor &&
       !isInputDisabled &&
       Object.values(copastorCreationForm.formState.errors).length === 0
@@ -73,7 +73,7 @@ export const useCopastorCreationSubmitButtonLogic = ({
       relationType === RelationType.OnlyRelatedHierarchicalCover &&
       theirPastor &&
       !isInputDisabled &&
-      roles.includes(MemberRole.Disciple) &&
+      roles.includes(MemberRole.Copastor) &&
       Object.values(copastorCreationForm.formState.errors).length === 0
     ) {
       setIsSubmitButtonDisabled(false);
@@ -97,7 +97,7 @@ export const useCopastorCreationSubmitButtonLogic = ({
               !item.ministryType ||
               item.ministryRoles.length === 0
           ))) &&
-      roles.includes(MemberRole.Disciple) &&
+      roles.includes(MemberRole.Copastor) &&
       Object.values(copastorCreationForm.formState.errors).length === 0 &&
       !isInputDisabled
     ) {
@@ -107,7 +107,7 @@ export const useCopastorCreationSubmitButtonLogic = ({
 
     if (
       relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover &&
-      roles.includes(MemberRole.Disciple) &&
+      roles.includes(MemberRole.Copastor) &&
       theirPastor &&
       Object.values(copastorCreationForm.formState.errors).length === 0 &&
       !isInputDisabled &&

@@ -529,6 +529,7 @@ export const PreacherUpdateForm = ({
                       setIsPromoteButtonDisabled={setIsPromoteButtonDisabled}
                       setIsMessagePromoteDisabled={setIsMessagePromoteDisabled}
                       preacherUpdateForm={form}
+                      isInputDisabled={isInputDisabled}
                     />
 
                     {/* Considerations */}

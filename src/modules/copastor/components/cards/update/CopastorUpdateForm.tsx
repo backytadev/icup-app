@@ -411,6 +411,7 @@ export const CopastorUpdateForm = ({
                           isInputTheirChurchOpen={isInputTheirChurchOpen}
                           setIsInputTheirChurchOpen={setIsInputTheirChurchOpen}
                           queryChurches={churchesQuery}
+                          className='mt-0'
                         />
                       )}
 
@@ -427,7 +428,7 @@ export const CopastorUpdateForm = ({
                       theirChurch &&
                       form.getValues('roles').includes(MemberRole.Pastor) && (
                         <span className='-mt-2 text-[12.5px] md:text-[13px] font-bold text-center text-green-500'>
-                          Todo está listo, guarda los cambios para promover al Discípulo
+                          Todo está listo, guarda los cambios para promover al Co-Pastor
                         </span>
                       )}
 
@@ -437,6 +438,7 @@ export const CopastorUpdateForm = ({
                       setIsPromoteButtonDisabled={setIsPromoteButtonDisabled}
                       setIsMessagePromoteDisabled={setIsMessagePromoteDisabled}
                       copastorUpdateForm={form}
+                      isInputDisabled={isInputDisabled}
                     />
 
                     {/* Considerations */}

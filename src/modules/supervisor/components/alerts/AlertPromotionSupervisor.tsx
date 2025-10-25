@@ -18,6 +18,7 @@ import { useSupervisorRolePromotionHandler } from '@/modules/supervisor/hooks/us
 
 export interface AlertPromotionSupervisorProps {
   isPromoteButtonDisabled: boolean;
+  isInputDisabled: boolean;
   setIsInputDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsPromoteButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
   setIsMessagePromoteDisabled: React.Dispatch<React.SetStateAction<boolean>>;
@@ -30,13 +31,14 @@ export const AlertPromotionSupervisor = ({
   setIsPromoteButtonDisabled,
   setIsMessagePromoteDisabled,
   supervisorUpdateForm,
+  isInputDisabled,
 }: AlertPromotionSupervisorProps) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
         <Button
           type='button'
-          disabled={isPromoteButtonDisabled}
+          disabled={isPromoteButtonDisabled || isInputDisabled}
           className='w-full text-[14px]  disabled:bg-slate-500 disabled:text-white bg-yellow-400 text-yellow-700 hover:text-white hover:bg-yellow-500'
         >
           Promover de cargo
