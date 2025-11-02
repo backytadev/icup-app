@@ -278,3 +278,41 @@ export const getFinancialBalanceComparativeMetricsReport = async ({
     throw new Error('Ocurrió un error inesperado, hable con el administrador');
   }
 };
+
+//? VIEW SUMMARIES
+//* Balance Summary
+interface ViewBalanceSummaryQueryParams {
+  year: string;
+  startMonth: string;
+  endMonth: string;
+  churchId: string;
+  currency: string;
+}
+
+export const getFinancialBalanceSummaryReport = async ({
+  year,
+  churchId,
+  startMonth,
+  endMonth,
+  currency,
+}: ViewBalanceSummaryQueryParams): Promise<any[]> => {
+  try {
+    const { data } = await icupApi<any[]>('/metrics/view-balance-summary', {
+      params: {
+        churchId,
+        year,
+        startMonth,
+        endMonth,
+        currency,
+      },
+    });
+
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
+
+    throw new Error('Ocurrió un error inesperado, hable con el administrador');
+  }
+};

@@ -132,6 +132,8 @@ export const FinancialBalanceComparativeReportForm = ({
 
   //* Form handler
   const handleSubmit = (): void => {
+    setIsInputDisabled(true);
+    setIsSubmitButtonDisabled(true);
     generateReportQuery.refetch();
   };
 
@@ -419,14 +421,6 @@ export const FinancialBalanceComparativeReportForm = ({
                       generateReportQuery.isFetching &&
                         'bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-200 cursor-not-allowed animate-pulse'
                     )}
-                    onClick={() => {
-                      setTimeout(() => {
-                        if (Object.keys(form.formState.errors).length === 0) {
-                          setIsInputDisabled(true);
-                          setIsSubmitButtonDisabled(true);
-                        }
-                      }, 100);
-                    }}
                   >
                     <FaRegFilePdf
                       className={cn(

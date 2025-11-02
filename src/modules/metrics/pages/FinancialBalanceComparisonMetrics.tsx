@@ -19,6 +19,8 @@ import { ComparativeOfferingExpensesAnalysisCardBySubType } from '@/modules/metr
 import { OfferingComparativeAnalysisCardByIncomeAndExpenses } from '@/modules/metrics/components/financial-balance-comparative/charts/OfferingComparativeAnalysisCardByIncomeAndExpenses';
 import { OfferingExpensesAndOfferingIncomeComparativeProportionCard } from '@/modules/metrics/components/financial-balance-comparative/charts/OfferingExpensesAndOfferingIncomeComparativeProportionCard';
 
+import { ViewFinancialBalanceSummary } from '@/modules/metrics/components/financial-balance-comparative/views/ViewFinancialBalanceSummary';
+
 export const FinancialBalanceComparisonMetrics = (): JSX.Element => {
   //* States
   const [churchId, setChurchId] = useState<string | undefined>(undefined);
@@ -58,6 +60,8 @@ export const FinancialBalanceComparisonMetrics = (): JSX.Element => {
         <SelectChurch data={data} churchId={churchId} setChurchId={setChurchId} />
 
         <FinancialBalanceComparativeReportFormCard churchId={churchId} />
+
+        <ViewFinancialBalanceSummary churchId={churchId ?? ''} />
       </div>
 
       {!churchId ? (
