@@ -54,6 +54,7 @@ export function buildScaledData(items: any[], valueKey: string, baseColor: strin
 
     return {
       name: it.month,
+      currency: it.currency,
       value: Number(it[valueKey]) || 0,
       fill,
     };

@@ -32,7 +32,7 @@ import { generateYearOptions } from '@/shared/helpers/generate-year-options.help
 
 interface ChartPieDonutProps {
   title: string;
-  data: { name: string; value: number; fill: string }[];
+  data: { name: string; value: number; fill: string; currency: string }[];
   valueLabel: string;
   strokeColor: string;
 }
@@ -45,7 +45,7 @@ function ChartPieDonut({ title, data, valueLabel, strokeColor }: ChartPieDonutPr
       <CardHeader className='items-center pb-0'>
         <CardTitle
           className={cn(
-            'text-center text-3xl font-bold',
+            'text-center text-4xl font-bold',
             valueLabel === 'Ingresos' && 'text-green-500 dark:text-green-400',
             valueLabel === 'Egresos' && 'text-red-500 dark:text-red-400',
             valueLabel === 'Saldo' && 'text-amber-500 dark:text-amber-400'
@@ -56,15 +56,18 @@ function ChartPieDonut({ title, data, valueLabel, strokeColor }: ChartPieDonutPr
       </CardHeader>
 
       <CardContent className='flex-1 pb-0'>
-        <ChartContainer config={{}} className='mx-auto aspect-square max-h-[300px]'>
+        <ChartContainer config={{}} className='mx-auto aspect-square max-h-[380px]'>
           <PieChart>
-            <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent className='text-[16px]' hideLabel />}
+            />
 
             <Pie
               data={data}
               dataKey='value'
               nameKey='name'
-              innerRadius={75}
+              innerRadius={100}
               stroke={strokeColor}
               strokeWidth={1}
             >
@@ -79,16 +82,23 @@ function ChartPieDonut({ title, data, valueLabel, strokeColor }: ChartPieDonutPr
                         dominantBaseline='middle'
                       >
                         <tspan
-                          className='text-3xl font-bold fill-foreground'
+                          className='text-4xl font-bold fill-foreground'
                           x={viewBox.cx}
                           y={viewBox.cy}
                         >
                           {Math.round(total).toLocaleString('es-PE')}
                         </tspan>
                         <tspan
-                          className='text-muted-foreground text-[15px] font-medium'
+                          className='text-muted-foreground text-[16px] font-medium'
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 24}
+                        >
+                          {`${data[0].currency}`}
+                        </tspan>
+                        <tspan
+                          className='text-muted-foreground text-[20px] font-medium'
+                          x={viewBox.cx}
+                          y={(viewBox.cy || 0) + 50}
                         >
                           {valueLabel}
                         </tspan>
@@ -211,7 +221,7 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
         <DialogContent
           className={cn(
             'max-w-[100vw] h-[100vh] p-0 overflow-y-auto py-10',
-            'dark:bg-slate-950 bg-slate-50 flex flex-col items-center'
+            'dark:bg-slate-950 bg-slate-50 flex flex-col justify-evenly items-center'
           )}
         >
           <DialogHeader className='space-y-4 text-center'>
@@ -403,7 +413,7 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
                 Anterior
               </Button>
 
-              <p className='text-slate-300 font-semibold text-3xl tracking-wide'>
+              <p className='dark:text-slate-300 text-slate-600 font-bold text-3xl tracking-wide'>
                 {page === 1 && 'Resumen General'}
                 {page === 2 && 'Ingresos'}
                 {page === 3 && 'Salidas'}
@@ -433,7 +443,7 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
 
           {/*  Cards de Balance  */}
           {balanceSummaryQuery.data && !balanceSummaryQuery.isLoading && (
-            <div className='w-full max-w-full flex flex-col gap-12 px-10 mt-8'>
+            <div className='w-full max-w-full flex flex-col gap-12 px-10 mt-6'>
               {page === 1 && (
                 <>
                   <div className='grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-8'>
@@ -501,7 +511,7 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
                   </div>
 
                   {/* Charts */}
-                  <div className='grid grid-cols-1 md:grid-cols-3 gap-8 mt-10'>
+                  <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
                     <ChartPieDonut
                       title='Ingresos por Mes'
                       data={incomeData ?? []}
