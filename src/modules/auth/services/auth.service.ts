@@ -5,6 +5,7 @@ import { AxiosError } from 'axios';
 
 import { icupApi } from '@/core/api/icupApi';
 import { type UserRole } from '@/modules/user/enums/user-role.enum';
+import { ChurchResponse } from '@/modules/church/interfaces/church-response.interface';
 
 export interface LoginResponse {
   id: string;
@@ -15,12 +16,21 @@ export interface LoginResponse {
   roles: UserRole[];
   status: string;
   token: string;
+  churches: ChurchResponse[];
 }
 
 export class AuthService {
-  static login = async (email: string, password: string): Promise<LoginResponse> => {
+  static login = async (
+    email: string,
+    password: string,
+    userName: string
+  ): Promise<LoginResponse> => {
     try {
-      const { data } = await icupApi.post<LoginResponse>('/auth/login', { email, password });
+      const { data } = await icupApi.post<LoginResponse>('/auth/login', {
+        email,
+        password,
+        userName,
+      });
 
       return data;
     } catch (error) {

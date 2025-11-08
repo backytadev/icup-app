@@ -97,7 +97,7 @@ export const UserPasswordUpdateForm = ({
 
   //* Custom hooks
   useUserUpdatePasswordSubmitButtonLogic({
-    userPasswordUpdateForm: form,
+    userPasswordUpdateForm: form as any,
     setIsSubmitButtonDisabled,
     setIsMessageErrorDisabled,
     setIsMessageErrorPasswordDisabled,

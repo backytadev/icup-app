@@ -1,7 +1,7 @@
 export interface UserPasswordUpdateFormData {
   currentPassword: string;
   newPassword: string;
-  newPasswordConfirm?: string | undefined;
+  newPasswordConfirm?: string;
 }
 
 export type UserPasswordUpdateFormDataKeys =

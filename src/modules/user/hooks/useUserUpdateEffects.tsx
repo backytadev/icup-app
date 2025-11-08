@@ -26,8 +26,13 @@ export const useUserUpdateEffects = ({
     userUpdateForm.setValue('firstNames', data?.firstNames ?? '');
     userUpdateForm.setValue('lastNames', data?.lastNames ?? '');
     userUpdateForm.setValue('gender', data?.gender ?? '');
+    userUpdateForm.setValue('userName', data?.userName ?? '');
     userUpdateForm.setValue('email', data?.email ?? '');
     userUpdateForm.setValue('roles', data?.roles as UserRole[]);
+    userUpdateForm.setValue(
+      'churches',
+      data?.churches.map((c) => (typeof c === 'string' ? c : c.id)) as string[]
+    );
     userUpdateForm.setValue('recordStatus', data?.recordStatus);
 
     const timeoutId = setTimeout(() => {

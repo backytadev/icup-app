@@ -86,7 +86,7 @@ export const LoginPage = (): JSX.Element => {
   //* Form handler
   const handleSubmit = async (values: z.infer<typeof loginSchema>): Promise<void> => {
     try {
-      await loginUser(values.email, values.password);
+      await loginUser(values.email, values.password, values.email);
       navigate('/dashboard');
     } catch (error) {
       if (error instanceof AxiosError) {
@@ -157,13 +157,12 @@ export const LoginPage = (): JSX.Element => {
                 return (
                   <FormItem>
                     <FormLabel className='text-[14px] md:text-[14.5px] font-me'>
-                      Correo Electrónico
+                      Usuario o Correo Electrónico
                     </FormLabel>
                     <FormControl className='text-[14px] md:text-[14px]'>
                       <Input
                         disabled={isInputDisabled}
-                        placeholder='Ejem: maria@google.com'
-                        type='email'
+                        placeholder='Ejem: maria12 | maria@google.com '
                         autoComplete='username'
                         {...field}
                       />

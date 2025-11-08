@@ -5,8 +5,11 @@ import { useState } from 'react';
 
 import { type z } from 'zod';
 
+import { CheckIcon } from 'lucide-react';
 import { useForm } from 'react-hook-form';
+import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { CaretSortIcon } from '@radix-ui/react-icons';
 
 import { useUserUpdateEffects } from '@/modules/user/hooks/useUserUpdateEffects';
 import { useUserUpdateMutation } from '@/modules/user/hooks/useUserUpdateMutation';
@@ -20,6 +23,8 @@ import { UserRoleNames, UserRole } from '@/modules/user/enums/user-role.enum';
 
 import { cn } from '@/shared/lib/utils';
 import { GenderNames } from '@/shared/enums/gender.enum';
+
+import { getSimpleChurches } from '@/modules/church/services/church.service';
 
 import {
   Form,
@@ -37,11 +42,19 @@ import {
   SelectTrigger,
   SelectContent,
 } from '@/shared/components/ui/select';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+} from '@/shared/components/ui/command';
 import { Input } from '@/shared/components/ui/input';
 import { Button } from '@/shared/components/ui/button';
 import { Checkbox } from '@/shared/components/ui/checkbox';
 import { Card, CardContent } from '@/shared/components/ui/card';
 import { Tabs, TabsContent } from '@/shared/components/ui/tabs';
+import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
 
 interface UserFormUpdateProps {
   id: string;
@@ -57,10 +70,11 @@ export const UserUpdateForm = ({
   data,
 }: UserFormUpdateProps): JSX.Element => {
   //* States
+  const [isLoadingData, setIsLoadingData] = useState(true);
   const [isInputDisabled, setIsInputDisabled] = useState<boolean>(false);
   const [isSubmitButtonDisabled, setIsSubmitButtonDisabled] = useState<boolean>(true);
   const [isMessageErrorDisabled, setIsMessageErrorDisabled] = useState<boolean>(true);
-  const [isLoadingData, setIsLoadingData] = useState(true);
+  const [isInputTheirChurchOpen, setIsInputTheirChurchOpen] = useState<boolean>(false);
 
   //* Form
   const form = useForm<z.infer<typeof userFormSchema>>({
@@ -72,6 +86,7 @@ export const UserUpdateForm = ({
       gender: '',
       email: '',
       roles: [],
+      churches: [],
       recordStatus: '',
     },
   });
@@ -81,11 +96,11 @@ export const UserUpdateForm = ({
     id,
     data,
     setIsLoadingData,
-    userUpdateForm: form,
+    userUpdateForm: form as any,
   });
 
   useUserUpdateSubmitButtonLogic({
-    userUpdateForm: form,
+    userUpdateForm: form as any,
     setIsSubmitButtonDisabled,
     setIsMessageErrorDisabled,
     isInputDisabled,
@@ -98,16 +113,28 @@ export const UserUpdateForm = ({
     setIsSubmitButtonDisabled,
   });
 
+  //* Queries
+  const queryChurches = useQuery({
+    queryKey: ['churches'],
+    queryFn: () => getSimpleChurches({ isSimpleQuery: true }),
+    retry: false,
+  });
+
   //* Form handler
   const handleSubmit = (formData: z.infer<typeof userFormSchema>): void => {
+    setIsInputDisabled(true);
+    setIsSubmitButtonDisabled(true);
+
     userUpdateMutation.mutate({
       id,
       formData: {
         firstNames: formData.firstNames,
         lastNames: formData.lastNames,
+        userName: formData.userName,
         gender: formData.gender,
         email: formData.email,
         roles: formData.roles,
+        churches: formData.churches ?? [],
         recordStatus: formData.recordStatus,
       },
     });
@@ -140,104 +167,216 @@ export const UserUpdateForm = ({
                   <FormField
                     control={form.control}
                     name='firstNames'
-                    render={({ field }) => {
-                      return (
-                        <FormItem className='xl:w-[24rem]'>
-                          <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                            Nombres
-                          </FormLabel>
-                          <FormControl className='text-[14px] md:text-[14px]'>
-                            <Input
-                              disabled={isInputDisabled}
-                              placeholder='Nombres del usuario'
-                              type='text'
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage className='text-[13px]' />
-                        </FormItem>
-                      );
-                    }}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
+                          Nombres
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            disabled={isInputDisabled}
+                            placeholder='Nombres del usuario'
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className='text-[13px]' />
+                      </FormItem>
+                    )}
                   />
 
                   <FormField
                     control={form.control}
                     name='lastNames'
-                    render={({ field }) => {
-                      return (
-                        <FormItem>
-                          <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                            Apellidos
-                          </FormLabel>
-                          <FormControl className='text-[14px] md:text-[14px]'>
-                            <Input
-                              disabled={isInputDisabled}
-                              placeholder='Apellidos del usuario'
-                              type='text'
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormMessage className='text-[13px]' />
-                        </FormItem>
-                      );
-                    }}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
+                          Apellidos
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            disabled={isInputDisabled}
+                            placeholder='Apellidos del usuario'
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className='text-[13px]' />
+                      </FormItem>
+                    )}
                   />
 
                   <FormField
                     control={form.control}
                     name='gender'
-                    render={({ field }) => {
-                      return (
-                        <FormItem>
-                          <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                            Género
-                          </FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            value={field.value}
-                            disabled={isInputDisabled}
-                          >
-                            <FormControl className='text-[14px] md:text-[14px]'>
-                              <SelectTrigger>
-                                {field.value ? (
-                                  <SelectValue placeholder='Selecciona el tipo de género' />
-                                ) : (
-                                  'Selecciona el tipo de género'
-                                )}
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {Object.entries(GenderNames).map(([key, value]) => (
-                                <SelectItem className={`text-[14px]`} key={key} value={key}>
-                                  {value}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage className='text-[13px]' />
-                        </FormItem>
-                      );
-                    }}
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
+                          Género
+                        </FormLabel>
+                        <Select
+                          onValueChange={field.onChange}
+                          value={field.value}
+                          disabled={isInputDisabled}
+                        >
+                          <FormControl>
+                            <SelectTrigger>
+                              {field.value ? (
+                                <SelectValue placeholder='Selecciona el tipo de género' />
+                              ) : (
+                                'Selecciona el tipo de género'
+                              )}
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {Object.entries(GenderNames).map(([key, value]) => (
+                              <SelectItem key={key} value={key}>
+                                {value}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage className='text-[13px]' />
+                      </FormItem>
+                    )}
                   />
 
                   <FormField
                     control={form.control}
                     name='email'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
+                          Correo Electrónico
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            disabled={isInputDisabled}
+                            placeholder='Dirección de correo electrónico'
+                            type='email'
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className='text-[13px]' />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name='userName'
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
+                          Usuario
+                        </FormLabel>
+                        <FormControl>
+                          <Input
+                            disabled={isInputDisabled}
+                            placeholder='Nombre de usuario'
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className='text-[13px]' />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name='churches'
                     render={({ field }) => {
+                      const selected = field.value || [];
+
+                      const toggle = (id: string) => {
+                        if (selected.includes(id)) {
+                          form.setValue(
+                            'churches',
+                            selected.filter((v) => v !== id)
+                          );
+                        } else {
+                          form.setValue('churches', [...selected, id]);
+                        }
+                      };
+
                       return (
                         <FormItem>
-                          <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                            Correo Electrónico
+                          <FormLabel className='text-[14.5px] md:text-[15px] font-bold'>
+                            Iglesias
                           </FormLabel>
-                          <FormControl className='text-[14px] md:text-[14px]'>
-                            <Input
-                              disabled={isInputDisabled}
-                              placeholder='Dirección de correo electrónico'
-                              type='email'
-                              autoComplete='username'
-                              {...field}
-                            />
-                          </FormControl>
+                          <Popover
+                            open={isInputTheirChurchOpen}
+                            onOpenChange={setIsInputTheirChurchOpen}
+                          >
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant='outline'
+                                  disabled={isInputDisabled}
+                                  className='w-full justify-between overflow-hidden'
+                                >
+                                  <div className='flex flex-wrap gap-1'>
+                                    {selected.length === 0 && (
+                                      <span className='text-slate-500'>
+                                        Busque y seleccione iglesias
+                                      </span>
+                                    )}
+
+                                    {selected?.map((id) => {
+                                      const ch = queryChurches?.data?.find((x) => x.id === id);
+                                      if (!ch) return null;
+
+                                      return (
+                                        <span
+                                          key={id}
+                                          className='text-xs bg-muted px-2 py-0.5 rounded-full border flex items-center gap-1 max-w-[10rem] truncate'
+                                        >
+                                          {ch.abbreviatedChurchName}
+                                        </span>
+                                      );
+                                    })}
+                                  </div>
+
+                                  <CaretSortIcon className='ml-2 h-4 w-4 opacity-50' />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+
+                            <PopoverContent align='center' className='w-auto px-4 py-2'>
+                              <Command>
+                                {queryChurches?.data?.length ? (
+                                  <>
+                                    <CommandInput placeholder='Buscar iglesia' className='h-9' />
+                                    <CommandEmpty>Iglesia no encontrada.</CommandEmpty>
+
+                                    <CommandGroup className='max-h-[200px] overflow-auto'>
+                                      {queryChurches?.data?.map((church) => {
+                                        const checked = selected.includes(church.id);
+
+                                        return (
+                                          <CommandItem
+                                            key={church.id}
+                                            onSelect={() => toggle(church.id)}
+                                            className='cursor-pointer'
+                                          >
+                                            <div className='flex items-center gap-2 w-full'>
+                                              <input type='checkbox' readOnly checked={checked} />
+                                              <span className='flex-1'>
+                                                {church.abbreviatedChurchName}
+                                              </span>
+                                              {checked && <CheckIcon className='h-4 w-4' />}
+                                            </div>
+                                          </CommandItem>
+                                        );
+                                      })}
+                                    </CommandGroup>
+                                  </>
+                                ) : (
+                                  <p className='text-red-500 text-center'>
+                                    ❌ No hay iglesias disponibles.
+                                  </p>
+                                )}
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
                           <FormMessage className='text-[13px]' />
                         </FormItem>
                       );
@@ -291,7 +430,7 @@ export const UserUpdateForm = ({
                     control={form.control}
                     name='roles'
                     render={() => (
-                      <FormItem className='md:col-start-1 md:col-end-2 md:row-start-3 md:row-end-4 mb-3 md:mb-0'>
+                      <FormItem className='md:col-start-1 md:col-end-2 md:row-start-4 md:row-end-5 mb-3 md:mb-0'>
                         <div className='mb-4'>
                           <FormLabel className='text-[14px] sm:text-[15px] lg:text-[17px] font-bold'>
                             Roles
@@ -361,14 +500,6 @@ export const UserUpdateForm = ({
                         userUpdateMutation?.isPending &&
                           'bg-emerald-500 hover:bg-emerald-500 disabled:opacity-100 disabled:md:text-[15px] text-white'
                       )}
-                      onClick={() => {
-                        setTimeout(() => {
-                          if (Object.keys(form.formState.errors).length === 0) {
-                            setIsInputDisabled(true);
-                            setIsSubmitButtonDisabled(true);
-                          }
-                        }, 100);
-                      }}
                     >
                       {userUpdateMutation?.isPending ? 'Procesando...' : 'Guardar cambios'}
                     </Button>

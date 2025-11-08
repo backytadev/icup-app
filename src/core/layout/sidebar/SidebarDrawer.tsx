@@ -97,16 +97,16 @@ export function SidebarDrawer(): JSX.Element {
         </Button>
       </SheetTrigger>
 
-      <SheetContent side={'left'} className='h-full w-[20rem] md:h-full md:w-full md:py-6'>
+      <SheetContent side={'left'} className='h-full w-[18rem] md:h-full md:w-full md:py-6'>
         <SheetHeader>
           <div id='logo' className='py-1 text-center'>
             <div className='inline-flex gap-x-6 items-center justify-center'>
-              <h1 className='text-[1.85rem] font-bold font-dancing-script italic text-white'>
+              <h1 className='-ml-1 text-[1.85rem] font-bold font-dancing-script italic text-white'>
                 ICUP - APP
               </h1>
               <span>
                 <img
-                  className='bg-white rounded-full w-[3rem] h-[3rem] md:w-[4.5rem] md:h-[4.5rem] text-white'
+                  className='bg-white rounded-full -ml-0.5 w-[2.8rem] h-[2.8rem] md:w-[4.5rem] md:h-[4.5rem] text-white'
                   src='/images/logo.webp'
                   alt='logo-iglesia'
                 />
@@ -141,9 +141,9 @@ export function SidebarDrawer(): JSX.Element {
             </div>
 
             {/* Their Roles */}
-            <p className='text-[14px] md:text-[15px] ml-6 text-left font-bold text-sky-500'>
+            <p className='text-[14px] md:text-[15px] ml-2 md:ml-6 text-left font-bold text-sky-500'>
               <span>Roles:</span>
-              <span className='text-[13px] md:text-[14px] text-white font-medium pl-2 '>
+              <span className='text-[13px] md:text-[14px] text-white font-medium pl-2'>
                 {roles?.map((role) => UserRoleNames[role]).join(' - ')}
               </span>
             </p>
@@ -152,7 +152,7 @@ export function SidebarDrawer(): JSX.Element {
             <Collapsible
               open={isOpen}
               onOpenChange={setIsOpen}
-              className='text-[15px] ml-6 text-left font-bold text-green-500'
+              className='text-[15px] ml-2 md:ml-6 text-left font-bold text-green-500'
             >
               <div className='flex items-center justify-between'>
                 <p className='text-[14px] md:text-[15px]'>Accesos permitidos</p>

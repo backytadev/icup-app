@@ -8,6 +8,17 @@ import { RecordStatus } from '@/shared/enums/record-status.enum';
 
 import { UserRole } from '@/modules/user/enums/user-role.enum';
 
+const strongPassword = z
+  .string()
+  .regex(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,15}$/,
+    'La contraseña no cumple con los requisitos mínimos'
+  );
+
+const numericPassword = z
+  .string()
+  .regex(/^[0-9]{4,15}$/, 'La contraseña numérica debe tener entre 4 y 15 dígitos');
+
 export const userFormSchema = z
   .object({
     firstNames: z
@@ -30,23 +41,17 @@ export const userFormSchema = z
         message: 'El género es requerido.',
       }),
 
-    email: z.string().email({ message: 'E-mail invalido.' }),
-
-    password: z
+    userName: z
       .string()
-      .regex(
-        new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])[A-Za-z\\d!@#$%^&*]{8,15}$'),
-        'La contraseña no cumple con los requisitos mínimos'
-      )
+      .min(3, { message: 'El campo debe contener al menos 3 carácter.' })
+      .max(20, { message: 'El campo debe contener máximo 20 caracteres' })
       .optional(),
 
-    passwordConfirm: z
-      .string()
-      .regex(
-        new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])[A-Za-z\\d!@#$%^&*]{8,15}$'),
-        'La contraseña no cumple con los requisitos mínimos'
-      )
-      .optional(),
+    email: z.string().email({ message: 'E-mail invalido.' }).optional(),
+
+    password: z.union([strongPassword, numericPassword]).optional(),
+
+    passwordConfirm: z.union([strongPassword, numericPassword]).optional(),
 
     roles: z
       .array(z.nativeEnum(UserRole), {
@@ -63,6 +68,10 @@ export const userFormSchema = z
         })
       )
       .optional(),
+
+    churches: z.array(z.string(), {
+      required_error: 'Debes seleccionar al menos una iglesia.',
+    }),
   })
   .refine(
     (data) => {

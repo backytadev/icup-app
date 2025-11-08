@@ -48,10 +48,12 @@ import { Checkbox } from '@/shared/components/ui/checkbox';
 const dataFictional: UserResponse[] = [
   {
     id: '',
+    userName: '',
     firstNames: '',
     lastNames: '',
     gender: '',
     email: '',
+    churches: [],
     roles: [],
     recordStatus: '',
   },

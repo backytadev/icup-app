@@ -11,7 +11,7 @@ export interface AuthState {
   token?: string;
   user?: User;
 
-  loginUser: (email: string, password: string) => Promise<void>;
+  loginUser: (email: string, password: string, userName: string) => Promise<void>;
   logoutUser: () => void;
   verifyTokenExists: () => Promise<void>;
   setAccessToken: (data: { accessToken: string }) => void;
@@ -22,9 +22,9 @@ export const storeApi: StateCreator<AuthState> = (set) => ({
   token: undefined,
   user: undefined,
 
-  loginUser: async (email: string, password: string) => {
+  loginUser: async (email: string, password: string, userName: string) => {
     try {
-      const { token, ...user } = await AuthService.login(email, password);
+      const { token, ...user } = await AuthService.login(email, password, userName);
 
       set({ status: 'authorized', token, user });
     } catch (error) {

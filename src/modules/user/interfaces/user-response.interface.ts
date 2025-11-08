@@ -1,7 +1,9 @@
+import { ChurchResponse } from '@/modules/church/interfaces/church-response.interface';
 import { type CreatedBy, type UpdatedBy } from '@/shared/interfaces/relations-response.interface';
 
 export interface UserResponse {
   id: string;
+  userName: string;
   firstNames: string;
   lastNames: string;
   gender: string;
@@ -14,4 +16,5 @@ export interface UserResponse {
   inactivationCategory?: string;
   inactivationReason?: string;
   recordStatus: string;
+  churches: string[] | ChurchResponse[];
 }

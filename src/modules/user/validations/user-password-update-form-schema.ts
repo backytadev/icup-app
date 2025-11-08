@@ -4,29 +4,22 @@
 
 import * as z from 'zod';
 
+const strongPassword = z
+  .string()
+  .regex(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,15}$/,
+    'La contraseña no cumple con los requisitos mínimos'
+  );
+
+const numericPassword = z
+  .string()
+  .regex(/^[0-9]{4,15}$/, 'La contraseña numérica debe tener entre 4 y 15 dígitos');
+
 export const userUpdatePasswordFormSchema = z
   .object({
-    currentPassword: z
-      .string()
-      .regex(
-        new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])[A-Za-z\\d!@#$%^&*]{8,15}$'),
-        'La contraseña no cumple con los requisitos mínimos'
-      ),
-
-    newPassword: z
-      .string()
-      .regex(
-        new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])[A-Za-z\\d!@#$%^&*]{8,15}$'),
-        'La contraseña no cumple con los requisitos mínimos'
-      ),
-
-    newPasswordConfirm: z
-      .string()
-      .regex(
-        new RegExp('^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*])[A-Za-z\\d!@#$%^&*]{8,15}$'),
-        'La contraseña no cumple con los requisitos mínimos'
-      )
-      .optional(),
+    currentPassword: z.union([strongPassword, numericPassword]),
+    newPassword: z.union([strongPassword, numericPassword]),
+    newPasswordConfirm: z.union([strongPassword, numericPassword]),
   })
   .refine(
     (data) => {
