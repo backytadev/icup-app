@@ -70,6 +70,9 @@ export enum OfferingExpenseSearchSubType {
   AudioVisualSupplies = 'audio_visual_supplies',
   SafetyEquipment = 'safety_equipment',
   FirstAidSupplies = 'first_aid_supplies',
+  EvangelismMaterials = 'evangelism_materials',
+  LibraryMaterials = 'library_materials',
+  MinistryMaterials = 'ministry_materials',
 
   //* Planing Events Expenses
   AdvertisingAndEventPromotion = 'advertising_and_event_promotion',
@@ -169,6 +172,9 @@ export const OfferingExpenseSearchSubTypeNames: Record<OfferingExpenseSearchSubT
   [OfferingExpenseSearchSubType.AudioVisualSupplies]: 'Utensilios de audio y video ',
   [OfferingExpenseSearchSubType.SafetyEquipment]: 'Utensilios de seguridad.',
   [OfferingExpenseSearchSubType.FirstAidSupplies]: 'Insumos y utensilios de primeros auxilios',
+  [OfferingExpenseSearchSubType.EvangelismMaterials]: 'Materiales de evangelismo',
+  [OfferingExpenseSearchSubType.LibraryMaterials]: 'Materiales para biblioteca (Biblias y libros)',
+  [OfferingExpenseSearchSubType.MinistryMaterials]: 'Materiales para ministerios',
 
   // Planing Events Expenses
   [OfferingExpenseSearchSubType.AdvertisingAndEventPromotion]: 'Publicidad y promoción de eventos',
@@ -388,6 +394,9 @@ export enum SubTypeOfferingExpenseSearchBySuppliesExpenses {
   AudioVisualSupplies = 'audio_visual_supplies',
   SafetyEquipment = 'safety_equipment',
   FirstAidSupplies = 'first_aid_supplies',
+  EvangelismMaterials = 'evangelism_materials',
+  LibraryMaterials = 'library_materials',
+  MinistryMaterials = 'ministry_materials',
 }
 
 export const SubTypeNamesOfferingExpenseSearchBySuppliesExpenses: Record<
@@ -413,6 +422,10 @@ export const SubTypeNamesOfferingExpenseSearchBySuppliesExpenses: Record<
   [SubTypeOfferingExpenseSearchBySuppliesExpenses.SafetyEquipment]: 'Utensilios de seguridad.',
   [SubTypeOfferingExpenseSearchBySuppliesExpenses.FirstAidSupplies]:
     'Insumos y utensilios de primeros auxilios',
+  [SubTypeOfferingExpenseSearchBySuppliesExpenses.EvangelismMaterials]: 'Materiales de evangelismo',
+  [SubTypeOfferingExpenseSearchBySuppliesExpenses.LibraryMaterials]:
+    'Materiales para biblioteca (Biblias y libros)',
+  [SubTypeOfferingExpenseSearchBySuppliesExpenses.MinistryMaterials]: 'Materiales para ministerios',
 };
 
 //* Planing Events Expenses

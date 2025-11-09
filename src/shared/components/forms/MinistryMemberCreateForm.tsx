@@ -261,7 +261,7 @@ export const MinistryMemberCreateForm = ({
                     ? SearchTypesKidsMinistry
                     : block.ministryType === MinistryType.YouthMinistry
                       ? SearchTypesYouthMinistry
-                      : block.ministryType === MinistryType.DiscipleshipMinistry
+                      : block.ministryType === MinistryType.BiblicalTeachingMinistry
                         ? SearchTypesDiscipleshipMinistry
                         : block.ministryType === MinistryType.EvangelismMinistry
                           ? SearchTypesEvangelismMinistry

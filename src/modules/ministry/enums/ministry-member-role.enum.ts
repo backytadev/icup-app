@@ -14,9 +14,9 @@ export enum MinistryMemberRole {
   TechnologyMinistryLeader = 'technology_ministry_leader',
   TechnologyMinistryCoLeader = 'technology_ministry_co_leader',
   TechnologyMinistryMember = 'technology_ministry_member',
-  DiscipleshipMinistryLeader = 'discipleship_ministry_leader',
-  DiscipleshipMinistryCoLeader = 'discipleship_ministry_co_leader',
-  DiscipleshipMinistryMember = 'discipleship_ministry_member',
+  BiblicalTeachingMinistryLeader = 'biblical_teaching_ministry_leader',
+  BiblicalTeachingMinistryCoLeader = 'biblical_teaching_ministry_co_leader',
+  BiblicalTeachingMinistryMember = 'biblical_teaching_ministry_member',
   WorshipMinistryLeader = 'worship_ministry_leader',
   WorshipMinistryCoLeader = 'worship_ministry_co_leader',
   WorshipMinistryMember = 'worship_ministry_member',
@@ -38,9 +38,9 @@ export const MinistryMemberRoleNames: Record<MinistryMemberRole, string> = {
   [MinistryMemberRole.TechnologyMinistryLeader]: 'Líder',
   [MinistryMemberRole.TechnologyMinistryCoLeader]: 'Co-Líder',
   [MinistryMemberRole.TechnologyMinistryMember]: 'Miembro',
-  [MinistryMemberRole.DiscipleshipMinistryLeader]: 'Líder',
-  [MinistryMemberRole.DiscipleshipMinistryCoLeader]: 'Co-Líder',
-  [MinistryMemberRole.DiscipleshipMinistryMember]: 'Miembro',
+  [MinistryMemberRole.BiblicalTeachingMinistryLeader]: 'Líder',
+  [MinistryMemberRole.BiblicalTeachingMinistryCoLeader]: 'Co-Líder',
+  [MinistryMemberRole.BiblicalTeachingMinistryMember]: 'Miembro',
   [MinistryMemberRole.WorshipMinistryLeader]: 'Líder',
   [MinistryMemberRole.WorshipMinistryCoLeader]: 'Co-Líder',
   [MinistryMemberRole.WorshipMinistryMember]: 'Miembro',
@@ -116,16 +116,16 @@ export const SearchTypesNamesTechnologyMinistry: Record<SearchTypesTechnologyMin
 
 //* Discipleship Ministry
 export enum SearchTypesDiscipleshipMinistry {
-  DiscipleshipMinistryLeader = 'discipleship_ministry_leader',
-  DiscipleshipMinistryCoLeader = 'discipleship_ministry_co_leader',
-  DiscipleshipMinistryMember = 'discipleship_ministry_member',
+  BiblicalTeachingMinistryLeader = 'biblical_teaching_ministry_leader',
+  BiblicalTeachingMinistryCoLeader = 'biblical_teaching_ministry_co_leader',
+  BiblicalTeachingMinistryMember = 'biblical_teaching_ministry_member',
 }
 
 export const SearchTypesNamesDiscipleshipMinistry: Record<SearchTypesDiscipleshipMinistry, string> =
   {
-    [SearchTypesDiscipleshipMinistry.DiscipleshipMinistryLeader]: 'Líder',
-    [SearchTypesDiscipleshipMinistry.DiscipleshipMinistryCoLeader]: 'Co-Líder',
-    [SearchTypesDiscipleshipMinistry.DiscipleshipMinistryMember]: 'Miembro',
+    [SearchTypesDiscipleshipMinistry.BiblicalTeachingMinistryLeader]: 'Líder',
+    [SearchTypesDiscipleshipMinistry.BiblicalTeachingMinistryCoLeader]: 'Co-Líder',
+    [SearchTypesDiscipleshipMinistry.BiblicalTeachingMinistryMember]: 'Miembro',
   };
 
 //* Worship Ministry
