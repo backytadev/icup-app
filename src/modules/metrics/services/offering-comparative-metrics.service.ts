@@ -6,6 +6,7 @@ import { icupApi } from '@/core/api/icupApi';
 
 import { type MetricQueryParams } from '@/modules/metrics/interfaces/shared/metric-query-params.interface';
 
+import { type ComparativeFinancialBalanceSummaryResponse } from '@/modules/metrics/interfaces/screens-metrics/financial-balance-summary-response.interface';
 import { type IncomeAndExpensesComparativeResponse } from '@/modules/metrics/interfaces/offering-comparative-metrics/income-and-expenses-comparative-response.interface';
 import { type ComparativeOfferingIncomeByTypeResponse } from '@/modules/metrics/interfaces/offering-comparative-metrics/comparative-offering-income-by-type-response.interface';
 import { type GeneralComparativeOfferingIncomeResponse } from '@/modules/metrics/interfaces/offering-comparative-metrics/general-comparative-offering-income-response.interface';
@@ -281,7 +282,7 @@ export const getFinancialBalanceComparativeMetricsReport = async ({
 
 //? VIEW SUMMARIES
 //* Balance Summary
-interface ViewBalanceSummaryQueryParams {
+interface FinancialBalanceSummaryQueryParams {
   year: string;
   startMonth: string;
   endMonth: string;
@@ -295,17 +296,20 @@ export const getFinancialBalanceSummaryReport = async ({
   startMonth,
   endMonth,
   currency,
-}: ViewBalanceSummaryQueryParams): Promise<any[]> => {
+}: FinancialBalanceSummaryQueryParams): Promise<ComparativeFinancialBalanceSummaryResponse> => {
   try {
-    const { data } = await icupApi<any[]>('/metrics/view-balance-summary', {
-      params: {
-        churchId,
-        year,
-        startMonth,
-        endMonth,
-        currency,
-      },
-    });
+    const { data } = await icupApi<ComparativeFinancialBalanceSummaryResponse>(
+      '/metrics/view-balance-summary',
+      {
+        params: {
+          churchId,
+          year,
+          startMonth,
+          endMonth,
+          currency,
+        },
+      }
+    );
 
     return data;
   } catch (error) {

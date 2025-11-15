@@ -10,6 +10,7 @@ import { getSimpleChurches } from '@/modules/church/services/church.service';
 import { SelectChurch } from '@/modules/metrics/components/shared/SelectChurch';
 import { FinancialBalanceComparativeMetricsSkeleton } from '@/modules/metrics/components/shared/FinancialBalanceComparativeMetricsSkeleton';
 
+import { ViewFinancialBalanceSummary } from '@/modules/metrics/components/financial-balance-comparative/screens/ViewFinancialBalanceSummary';
 import { FinancialBalanceComparativeReportFormCard } from '@/modules/metrics/components/financial-balance-comparative/reports/FinancialBalanceComparativeReportFormCard';
 import { GeneralComparativeOfferingIncomeAnalysisCard } from '@/modules/metrics/components/financial-balance-comparative/charts/GeneralComparativeOfferingIncomeAnalysis';
 import { GeneralComparativeOfferingExpensesAnalysisCard } from '@/modules/metrics/components/financial-balance-comparative/charts/GeneralComparativeOfferingExpensesAnalysisCard';
@@ -18,8 +19,6 @@ import { ComparativeOfferingExpensesAnalysisCardByType } from '@/modules/metrics
 import { ComparativeOfferingExpensesAnalysisCardBySubType } from '@/modules/metrics/components/financial-balance-comparative/charts/ComparativeOfferingExpensesAnalysisCardBySubType';
 import { OfferingComparativeAnalysisCardByIncomeAndExpenses } from '@/modules/metrics/components/financial-balance-comparative/charts/OfferingComparativeAnalysisCardByIncomeAndExpenses';
 import { OfferingExpensesAndOfferingIncomeComparativeProportionCard } from '@/modules/metrics/components/financial-balance-comparative/charts/OfferingExpensesAndOfferingIncomeComparativeProportionCard';
-
-import { ViewFinancialBalanceSummary } from '@/modules/metrics/components/financial-balance-comparative/views/ViewFinancialBalanceSummary';
 
 export const FinancialBalanceComparisonMetrics = (): JSX.Element => {
   //* States
@@ -56,10 +55,11 @@ export const FinancialBalanceComparisonMetrics = (): JSX.Element => {
 
       <OfferingExpensesAndOfferingIncomeComparativeProportionCard churchId={churchId} />
 
-      <div className='flex justify-center gap-4 items-center mt-6'>
-        <SelectChurch data={data} churchId={churchId} setChurchId={setChurchId} />
-
-        <FinancialBalanceComparativeReportFormCard churchId={churchId} />
+      <div className='flex justify-center items-center flex-col md:flex-row gap-2 md:gap-4'>
+        <div className='flex justify-center gap-2 items-center mt-6'>
+          <SelectChurch data={data} churchId={churchId} setChurchId={setChurchId} />
+          <FinancialBalanceComparativeReportFormCard churchId={churchId} />
+        </div>
 
         <ViewFinancialBalanceSummary churchId={churchId ?? ''} />
       </div>
