@@ -7,6 +7,7 @@ import { FaBalanceScale } from 'react-icons/fa';
 import { months } from '@/shared/data/months-data';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useMediaQuery } from '@react-hook/media-query';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 
 import {
@@ -38,14 +39,23 @@ interface ChartPieDonutProps {
 }
 
 function ChartPieDonut({ title, data, valueLabel, strokeColor }: ChartPieDonutProps) {
-  const total = data.reduce((acc, curr) => acc + curr.value, 0);
+  const total =
+    valueLabel === 'Saldo'
+      ? data.length > 0
+        ? data[data.length - 1].value
+        : 0
+      : data.reduce((acc, curr) => acc + curr.value, 0);
+
+  const isDesktop = useMediaQuery('(min-width: 768px)');
+  const isXlDesktop = useMediaQuery('(min-width: 1280px)');
 
   return (
-    <Card className='flex flex-col'>
+    <Card className='flex flex-col w-full'>
       <CardHeader className='items-center pb-0'>
         <CardTitle
           className={cn(
-            'text-center text-4xl font-bold',
+            'text-center font-bold',
+            'text-2xl sm:text-3xl md:text-4xl',
             valueLabel === 'Ingresos' && 'text-green-500 dark:text-green-400',
             valueLabel === 'Egresos' && 'text-red-500 dark:text-red-400',
             valueLabel === 'Saldo' && 'text-amber-500 dark:text-amber-400'
@@ -56,18 +66,29 @@ function ChartPieDonut({ title, data, valueLabel, strokeColor }: ChartPieDonutPr
       </CardHeader>
 
       <CardContent className='flex-1 pb-0'>
-        <ChartContainer config={{}} className='mx-auto aspect-square max-h-[380px]'>
+        <ChartContainer
+          config={{}}
+          className='
+            mx-auto 
+            aspect-square 
+            w-full 
+            max-w-[260px] 
+            sm:max-w-[320px]
+            md:max-w-[380px]
+          '
+        >
           <PieChart>
             <ChartTooltip
               cursor={false}
-              content={<ChartTooltipContent className='text-[16px]' hideLabel />}
+              content={<ChartTooltipContent className='text-[14px] sm:text-[16px]' hideLabel />}
             />
 
             <Pie
               data={data}
               dataKey='value'
               nameKey='name'
-              innerRadius={100}
+              innerRadius={isXlDesktop ? 80 : isDesktop ? 100 : 60}
+              outerRadius='70%'
               stroke={strokeColor}
               strokeWidth={1}
             >
@@ -82,21 +103,21 @@ function ChartPieDonut({ title, data, valueLabel, strokeColor }: ChartPieDonutPr
                         dominantBaseline='middle'
                       >
                         <tspan
-                          className='text-4xl font-bold fill-foreground'
+                          className='font-bold fill-foreground text-2xl sm:text-3xl md:text-4xl'
                           x={viewBox.cx}
                           y={viewBox.cy}
                         >
                           {Math.round(total).toLocaleString('es-PE')}
                         </tspan>
                         <tspan
-                          className='text-muted-foreground text-[16px] font-medium'
+                          className='text-muted-foreground font-medium text-[12px] sm:text-[14px] md:text-[16px]'
                           x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 24}
+                          y={(viewBox.cy || 0) + 26}
                         >
                           {`${data[0].currency}`}
                         </tspan>
                         <tspan
-                          className='text-muted-foreground text-[20px] font-medium'
+                          className='text-muted-foreground font-medium text-[14px] sm:text-[16px] md:text-[18px]'
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 50}
                         >
@@ -220,12 +241,12 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent
           className={cn(
-            'max-w-[100vw] h-[100vh] p-0 overflow-y-auto py-10',
+            'max-w-[100vw] h-[100vh] p-0 overflow-y-auto py-10 px-6',
             'dark:bg-slate-950 bg-slate-50 flex flex-col justify-evenly items-center'
           )}
         >
           <DialogHeader className='space-y-4 text-center'>
-            <DialogTitle className='text-5xl font-bold text-amber-500 mb-4'>
+            <DialogTitle className='text-[2rem] md:text-5xl font-bold text-amber-500'>
               Balance Financiero General
             </DialogTitle>
             <Form {...form}>
@@ -233,83 +254,83 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
                 onSubmit={form.handleSubmit(handleSubmit)}
                 className='w-full pt-2 flex flex-col gap-x-10 gap-y-4 md:gap-y-4 px-2 md:px-4'
               >
-                <div className='flex justify-center flex-wrap gap-3'>
-                  <div className='flex flex-row gap-2 w-full'>
-                    <FormField
-                      control={form.control}
-                      name='startMonth'
-                      render={({ field }) => {
-                        return (
-                          <FormItem className='w-full'>
-                            <Select
-                              onValueChange={field.onChange}
-                              value={field.value}
-                              disabled={isInputDisabled}
+                <div className='flex flex-col md:flex-row gap-2 w-full px-8'>
+                  <FormField
+                    control={form.control}
+                    name='startMonth'
+                    render={({ field }) => {
+                      return (
+                        <FormItem className='w-full'>
+                          <Select
+                            onValueChange={field.onChange}
+                            value={field.value}
+                            disabled={isInputDisabled}
+                          >
+                            <FormControl className='text-[14px] md:text-[14px] font-medium'>
+                              <SelectTrigger>
+                                {field.value ? <SelectValue placeholder='Mes' /> : 'Mes'}
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent
+                              className={cn(months.length >= 3 ? 'h-[15rem]' : 'h-auto')}
                             >
-                              <FormControl className='text-[14px] md:text-[14px] font-medium'>
-                                <SelectTrigger>
-                                  {field.value ? <SelectValue placeholder='Mes' /> : 'Mes'}
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent
-                                className={cn(months.length >= 3 ? 'h-[15rem]' : 'h-auto')}
-                              >
-                                {Object.values(months).map(({ label, value }) => (
-                                  <SelectItem className={`text-[14px]`} key={value} value={value}>
-                                    {label}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage className='text-[13px]' />
-                          </FormItem>
-                        );
-                      }}
-                    />
-                    <FormField
-                      control={form.control}
-                      name='endMonth'
-                      render={({ field }) => {
-                        return (
-                          <FormItem className='w-full'>
-                            <Select
-                              onValueChange={field.onChange}
-                              value={field.value}
-                              disabled={isInputDisabled}
+                              {Object.values(months).map(({ label, value }) => (
+                                <SelectItem className={`text-[14px]`} key={value} value={value}>
+                                  {label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage className='text-[13px]' />
+                        </FormItem>
+                      );
+                    }}
+                  />
+                  <FormField
+                    control={form.control}
+                    name='endMonth'
+                    render={({ field }) => {
+                      return (
+                        <FormItem className='w-full'>
+                          <Select
+                            onValueChange={field.onChange}
+                            value={field.value}
+                            disabled={isInputDisabled}
+                          >
+                            <FormControl className='text-[14px] md:text-[14px] font-medium'>
+                              <SelectTrigger>
+                                {field.value ? <SelectValue placeholder='Mes' /> : 'Mes'}
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent
+                              className={cn(months.length >= 3 ? 'h-[15rem]' : 'h-auto')}
                             >
-                              <FormControl className='text-[14px] md:text-[14px] font-medium'>
-                                <SelectTrigger>
-                                  {field.value ? <SelectValue placeholder='Mes' /> : 'Mes'}
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent
-                                className={cn(months.length >= 3 ? 'h-[15rem]' : 'h-auto')}
-                              >
-                                {Object.values(months).map(({ label, value }) => (
-                                  <SelectItem className={`text-[14px]`} key={value} value={value}>
-                                    {label}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage className='text-[13px]' />
-                          </FormItem>
-                        );
-                      }}
-                    />
+                              {Object.values(months).map(({ label, value }) => (
+                                <SelectItem className={`text-[14px]`} key={value} value={value}>
+                                  {label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage className='text-[13px]' />
+                        </FormItem>
+                      );
+                    }}
+                  />
 
+                  <div className='flex w-full gap-4'>
                     <FormField
                       control={form.control}
                       name='year'
                       render={({ field }) => {
                         return (
-                          <FormItem className='flex justify-start gap-5 items-center'>
+                          <FormItem className='w-full'>
                             <Select
                               onValueChange={field.onChange}
                               value={field.value}
                               disabled={isInputDisabled}
                             >
-                              <FormControl className='text-[14px] md:text-[14px] w-[6rem] font-medium'>
+                              <FormControl className='text-[14px] md:text-[14px] w-full md:w-[6rem] font-medium'>
                                 <SelectTrigger>
                                   {field.value ? <SelectValue placeholder='Año' /> : 'Año'}
                                 </SelectTrigger>
@@ -335,13 +356,13 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
                       name='currency'
                       render={({ field }) => {
                         return (
-                          <FormItem className='md:col-start-1 md:col-end-2 md:row-start-1 md:row-end-2'>
+                          <FormItem className='w-full'>
                             <Select
                               onValueChange={field.onChange}
                               value={field.value}
                               disabled={isInputDisabled}
                             >
-                              <FormControl className='text-[14px] md:text-[14px] w-[6rem] font-medium'>
+                              <FormControl className='text-[14px] md:text-[14px] w-full md:w-[6rem] font-medium'>
                                 <SelectTrigger>
                                   {field.value ? <SelectValue placeholder='Divisa' /> : 'Divisa'}
                                 </SelectTrigger>
@@ -379,7 +400,7 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
                   type='submit'
                   variant='ghost'
                   className={cn(
-                    'w-full px-4 py-3 text-[14px] font-semibold rounded-lg shadow-lg transition-transform transform focus:outline-none focus:ring-red-300',
+                    'w-[85%] md:w-[90%] mx-auto px-10 py-3 text-[14px] font-semibold rounded-lg shadow-lg transition-transform transform focus:outline-none focus:ring-red-300',
                     !balanceSummaryQuery.isFetching &&
                       'text-white hover:text-white dark:text-white bg-gradient-to-r from-green-500 via-green-600 to-green-700 hover:from-green-600 hover:via-green-700 hover:to-green-800',
                     balanceSummaryQuery.isFetching &&
@@ -388,7 +409,7 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
                 >
                   <FaBalanceScale
                     className={cn(
-                      'mr-2 text-[1.5rem] text-white',
+                      'mr-2 text-[1.2rem] md:text-[1.5rem] text-white',
                       balanceSummaryQuery.isFetching && 'text-gray-600 dark:text-gray-200'
                     )}
                   />
@@ -398,40 +419,42 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
             </Form>
 
             {/* Botones */}
-            <div className='flex justify-between items-center w-full max-w-4xl px-6 mt-6'>
-              <Button
-                variant='ghost'
-                disabled={page === 1 || !balanceSummaryQuery.data?.length}
-                onClick={() => setPage((p) => (p > 1 ? p - 1 : p))}
-                className={cn(
-                  'flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium text-white',
-                  'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700',
-                  'disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:from-blue-500 disabled:hover:to-blue-600'
-                )}
-              >
-                <ArrowLeft className='h-5 w-5' />
-                Anterior
-              </Button>
+            <div className='w-full max-w-4xl px-7 sm:px-6 mt-6'>
+              <div className='flex flex-row items-center justify-center gap-4 sm:flex-row sm:justify-between sm:items-center'>
+                <Button
+                  variant='ghost'
+                  disabled={page === 1 || !balanceSummaryQuery.data?.length}
+                  onClick={() => setPage((p) => (p > 1 ? p - 1 : p))}
+                  className={cn(
+                    'flex items-center gap-1 sm:gap-2 px-3 py-2 rounded-lg sm:rounded-xl font-medium text-white',
+                    'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700',
+                    'disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:from-blue-500 disabled:hover:to-blue-600'
+                  )}
+                >
+                  <ArrowLeft className='h-4 w-4 sm:h-4 sm:w-5' />
+                  <span className='hidden sm:inline'>Anterior</span>
+                </Button>
 
-              <p className='dark:text-slate-300 text-slate-600 font-bold text-3xl tracking-wide'>
-                {page === 1 && 'Resumen General'}
-                {page === 2 && 'Ingresos'}
-                {page === 3 && 'Salidas'}
-              </p>
+                <p className='text-center text-slate-600 dark:text-slate-300 font-bold text-xl sm:text-xl md:text-3xl tracking-wide'>
+                  {page === 1 && 'Resumen General'}
+                  {page === 2 && 'Ingresos'}
+                  {page === 3 && 'Salidas'}
+                </p>
 
-              <Button
-                variant='ghost'
-                disabled={page === 3 || !balanceSummaryQuery.data?.length}
-                onClick={() => setPage((p) => (p < 3 ? p + 1 : p))}
-                className={cn(
-                  'flex items-center gap-2 px-5 py-2.5 rounded-xl font-medium text-white',
-                  'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700',
-                  'disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:from-blue-500 disabled:hover:to-blue-600'
-                )}
-              >
-                Siguiente
-                <ArrowRight className='h-5 w-5' />
-              </Button>
+                <Button
+                  variant='ghost'
+                  disabled={page === 3 || !balanceSummaryQuery.data?.length}
+                  onClick={() => setPage((p) => (p < 3 ? p + 1 : p))}
+                  className={cn(
+                    'flex items-center gap-1 sm:gap-2 px-3 py-2 rounded-lg sm:rounded-xl font-medium text-white',
+                    'bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700',
+                    'disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:from-blue-500 disabled:hover:to-blue-600'
+                  )}
+                >
+                  <span className='hidden sm:inline'>Siguiente</span>
+                  <ArrowRight className='h-4 w-4 sm:h-4 sm:w-5' />
+                </Button>
+              </div>
             </div>
           </DialogHeader>
 
@@ -443,25 +466,26 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
 
           {/*  Cards de Balance  */}
           {balanceSummaryQuery.data && !balanceSummaryQuery.isLoading && (
-            <div className='w-full max-w-full flex flex-col gap-12 px-10 mt-6'>
+            <div className='w-full max-w-full flex flex-col gap-12 px-2 md:px-8 mt-5'>
               {page === 1 && (
                 <>
-                  <div className='grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-8'>
+                  <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6 sm:gap-7 md:gap-8'>
                     {balanceSummaryQuery.data.map((m: any) => (
                       <Card
                         key={m.month}
                         className={cn(
-                          'rounded-2xl p-6 transition-all duration-300',
+                          'rounded-2xl p-4 sm:p-5 md:p-6 transition-all duration-300',
                           'bg-white dark:bg-slate-900',
                           'border border-slate-300 dark:border-slate-700',
                           'shadow-lg dark:shadow-xl',
                           'hover:scale-[1.015] hover:shadow-2xl'
                         )}
                       >
-                        <CardHeader className='pb-4 pt-0'>
+                        <CardHeader className='pb-3 sm:pb-4 pt-0'>
                           <CardTitle
                             className={cn(
-                              'text-center text-4xl font-extrabold tracking-wide',
+                              'text-center font-extrabold tracking-wide',
+                              'text-3xl sm:text-4xl md:text-[2rem] xl:text-[2.5rem]',
                               'text-blue-700 dark:text-blue-500'
                             )}
                           >
@@ -469,13 +493,13 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
                           </CardTitle>
                         </CardHeader>
 
-                        <CardContent className='space-y-5 text-xl font-medium'>
+                        <CardContent className='space-y-4 sm:space-y-5 text-base sm:text-lg md:text-xl font-medium'>
                           {/* SALDO ANTERIOR */}
                           <div className='flex justify-between'>
                             <span className='text-slate-700 dark:text-slate-400'>
                               Saldo anterior
                             </span>
-                            <span className='font-semibold text-amber-600 dark:text-amber-400'>
+                            <span className='font-semibold text-amber-600 dark:text-amber-400 text-right'>
                               S/. {m.netResultPrevious.toLocaleString('es-PE')}
                             </span>
                           </div>
@@ -483,7 +507,7 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
                           {/* INGRESOS */}
                           <div className='flex justify-between'>
                             <span className='text-slate-700 dark:text-slate-400'>Ingresos</span>
-                            <span className='text-green-600 dark:text-emerald-500 font-bold'>
+                            <span className='font-bold text-green-600 dark:text-emerald-500 text-right'>
                               S/ {m.totalIncome.toLocaleString('es-PE')}
                             </span>
                           </div>
@@ -491,7 +515,7 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
                           {/* EGRESOS */}
                           <div className='flex justify-between'>
                             <span className='text-slate-700 dark:text-slate-400'>Egresos</span>
-                            <span className='text-red-600 dark:text-red-500 font-bold'>
+                            <span className='font-bold text-red-600 dark:text-red-500 text-right'>
                               S/ {m.totalExpenses.toLocaleString('es-PE')}
                             </span>
                           </div>
@@ -501,7 +525,7 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
                             <span className='text-slate-900 dark:text-slate-200 font-bold'>
                               Saldo actual
                             </span>
-                            <span className='text-amber-600 dark:text-amber-500 font-extrabold'>
+                            <span className='font-extrabold text-amber-600 dark:text-amber-500 text-right'>
                               S/ {m.netResult.toLocaleString('es-PE')}
                             </span>
                           </div>
@@ -511,7 +535,7 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
                   </div>
 
                   {/* Charts */}
-                  <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
+                  <div className='grid grid-cols-1 lg:grid-cols-2  xl:grid-cols-3 gap-8'>
                     <ChartPieDonut
                       title='Ingresos por Mes'
                       data={incomeData ?? []}
@@ -527,7 +551,7 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
                     />
 
                     <ChartPieDonut
-                      title='Saldo por Mes'
+                      title='Saldo Final'
                       data={balanceData ?? []}
                       valueLabel='Saldo'
                       strokeColor='#854D0E'
