@@ -144,7 +144,16 @@ export const ExpenseSummaryCard = ({
         >
           <DialogHeader>
             <DialogTitle className='text-3xl md:text-4xl 2xl:text-5xl font-bold text-slate-800 dark:text-slate-100'>
-              Detalle mensual — <span className='text-red-600 dark:text-red-400'>{data.label}</span>
+              <span className='block md:hidden'>
+                Detalle mensual
+                <br />
+                <span className='text-red-600 dark:text-red-400'>{data.label}</span>
+              </span>
+
+              <span className='hidden md:inline'>
+                Detalle mensual —{' '}
+                <span className='text-red-600 dark:text-red-400'>{data.label}</span>
+              </span>
             </DialogTitle>
 
             <DialogDescription className='text-2xl 2xl:text-3xl text-slate-600 dark:text-slate-400 mt-2'>

@@ -41,7 +41,7 @@ export function ChartBarFinancialBalanceSummary({
   };
 
   return (
-    <Card className='w-full bg-white dark:bg-slate-900/40'>
+    <Card className='w-full bg-white dark:bg-slate-900/40 h-[22.5rem] sm:h-[26rem] md:h-[28rem] lg:h-[28rem] 2xl:h-[30rem]'>
       <CardHeader>
         <CardTitle
           className={cn(
@@ -53,16 +53,18 @@ export function ChartBarFinancialBalanceSummary({
         </CardTitle>
       </CardHeader>
 
-      <CardContent className='px-2 sm:px-4 py-0 '>
+      <CardContent className='px-2 sm:px-4 py-0 h-full'>
         {!!data?.length ? (
           <ChartContainer
             config={chartConfig}
-            className={cn('w-full h-full sm:h-[345px] md:h-[345px] lg:h-[415px] xl:h-[415px]')}
+            className={cn(
+              'w-full h-[275px] sm:h-[280px] md:h-[355px] lg:h-[355px] xl:h-[355px] 2xl:h-[385px]'
+            )}
           >
             <BarChart
               data={data}
               accessibilityLayer
-              margin={{ top: 5, right: 5, left: -15, bottom: 10 }}
+              margin={{ top: 5, right: 5, left: -30, bottom: 10 }}
             >
               <CartesianGrid vertical={true} />
 

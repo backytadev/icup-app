@@ -138,7 +138,7 @@ export const IncomeSummaryCard = ({
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent
           className={cn(
-            'w-[90vw] h-[80vh] md:w-[80vw] md:max-w-[80vw] xl:w-[60vw] xl:max-w-[60vw] lg:h-[60vh] overflow-y-auto p-10 rounded-2xl',
+            'w-[90vw] h-[80vh] md:w-[80vw] md:max-w-[80vw] xl:w-[60vw] xl:max-w-[60vw] lg:h-[60vh] overflow-y-auto py-6 px-8 md:p-10 rounded-2xl',
             'bg-white dark:bg-slate-900',
             'border border-slate-300 dark:border-slate-700',
             'shadow-2xl'
@@ -146,11 +146,19 @@ export const IncomeSummaryCard = ({
         >
           <DialogHeader>
             <DialogTitle className='text-3xl md:text-4xl 2xl:text-5xl font-bold text-slate-800 dark:text-slate-100'>
-              Detalle mensual —{' '}
-              <span className='text-green-600 dark:text-green-400'>{data.label}</span>
+              <span className='block md:hidden'>
+                Detalle mensual
+                <br />
+                <span className='text-green-600 dark:text-green-400'>{data.label}</span>
+              </span>
+
+              <span className='hidden md:inline'>
+                Detalle mensual —{' '}
+                <span className='text-green-600 dark:text-green-400'>{data.label}</span>
+              </span>
             </DialogTitle>
 
-            <DialogDescription className='text-2xl 2xl:text-3xl text-slate-600 dark:text-slate-400 mt-2'>
+            <DialogDescription className='text-xl md:text-2xl 2xl:text-3xl text-slate-600 dark:text-slate-400 mt-2'>
               Información detallada desde{' '}
               <strong>{getIncomeDetailByTypeQuery.data?.[0]?.month}</strong> hasta{' '}
               <strong>{getIncomeDetailByTypeQuery.data?.at(-1)?.month}</strong>.
