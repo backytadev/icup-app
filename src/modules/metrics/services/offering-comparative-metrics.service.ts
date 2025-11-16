@@ -4,7 +4,7 @@ import { isAxiosError } from 'axios';
 
 import { icupApi } from '@/core/api/icupApi';
 
-import { type MetricQueryParams } from '@/modules/metrics/interfaces/shared/metric-query-params.interface';
+import { type MetricsQueryParams } from '@/modules/metrics/interfaces/shared/metrics-query-params.interface';
 
 import { type ComparativeFinancialBalanceSummaryResponse } from '@/modules/metrics/interfaces/screens-metrics/financial-balance-summary-response.interface';
 import { type IncomeAndExpensesComparativeResponse } from '@/modules/metrics/interfaces/offering-comparative-metrics/income-and-expenses-comparative-response.interface';
@@ -20,7 +20,7 @@ export const getOfferingComparativeProportion = async ({
   searchType,
   church,
   order,
-}: MetricQueryParams): Promise<OfferingExpensesAndOfferingIncomeComparativeProportionResponse> => {
+}: MetricsQueryParams): Promise<OfferingExpensesAndOfferingIncomeComparativeProportionResponse> => {
   try {
     const { data } = await icupApi<OfferingExpensesAndOfferingIncomeComparativeProportionResponse>(
       `/metrics/${church}`,
@@ -50,7 +50,7 @@ export const getIncomeAndExpensesComparativeByYear = async ({
   currency,
   year,
   order,
-}: MetricQueryParams): Promise<IncomeAndExpensesComparativeResponse[]> => {
+}: MetricsQueryParams): Promise<IncomeAndExpensesComparativeResponse[]> => {
   try {
     const { data } = await icupApi<IncomeAndExpensesComparativeResponse[]>(
       `/metrics/${church}&${currency}&${year}`,
@@ -80,7 +80,7 @@ export const getGeneralComparativeOfferingIncome = async ({
   endMonth,
   year,
   order,
-}: MetricQueryParams): Promise<GeneralComparativeOfferingIncomeResponse[]> => {
+}: MetricsQueryParams): Promise<GeneralComparativeOfferingIncomeResponse[]> => {
   try {
     const { data } = await icupApi<GeneralComparativeOfferingIncomeResponse[]>(
       `/metrics/${church}&${startMonth}&${endMonth}&${year}`,
@@ -109,7 +109,7 @@ export const getComparativeOfferingIncomeByType = async ({
   metricType,
   year,
   order,
-}: MetricQueryParams): Promise<ComparativeOfferingIncomeByTypeResponse[]> => {
+}: MetricsQueryParams): Promise<ComparativeOfferingIncomeByTypeResponse[]> => {
   try {
     const { data } = await icupApi<ComparativeOfferingIncomeByTypeResponse[]>(
       `/metrics/${church}&${metricType}&${year}`,
@@ -139,7 +139,7 @@ export const getGeneralComparativeOfferingExpenses = async ({
   endMonth,
   year,
   order,
-}: MetricQueryParams): Promise<GeneralComparativeOfferingExpensesResponse[]> => {
+}: MetricsQueryParams): Promise<GeneralComparativeOfferingExpensesResponse[]> => {
   try {
     const { data } = await icupApi<GeneralComparativeOfferingExpensesResponse[]>(
       `/metrics/${church}&${startMonth}&${endMonth}&${year}`,
@@ -168,7 +168,7 @@ export const getComparativeOfferingExpensesByType = async ({
   metricType: type,
   year,
   order,
-}: MetricQueryParams): Promise<ComparativeOfferingExpensesByTypeResponse[]> => {
+}: MetricsQueryParams): Promise<ComparativeOfferingExpensesByTypeResponse[]> => {
   try {
     const { data } = await icupApi<ComparativeOfferingExpensesByTypeResponse[]>(
       `/metrics/${church}&${type}&${year}`,
@@ -199,7 +199,7 @@ export const getComparativeOfferingExpensesBySubType = async ({
   endMonth,
   year,
   order,
-}: MetricQueryParams): Promise<ComparativeOfferingExpensesBySubTypeResponse[]> => {
+}: MetricsQueryParams): Promise<ComparativeOfferingExpensesBySubTypeResponse[]> => {
   try {
     const { data } = await icupApi<ComparativeOfferingExpensesBySubTypeResponse[]>(
       `/metrics/${church}&${metricType}&${startMonth}&${endMonth}&${year}`,
@@ -290,7 +290,7 @@ interface FinancialBalanceSummaryQueryParams {
   currency: string;
 }
 
-export const getFinancialBalanceSummaryReport = async ({
+export const getFinancialBalanceSummary = async ({
   year,
   churchId,
   startMonth,
@@ -299,7 +299,7 @@ export const getFinancialBalanceSummaryReport = async ({
 }: FinancialBalanceSummaryQueryParams): Promise<ComparativeFinancialBalanceSummaryResponse> => {
   try {
     const { data } = await icupApi<ComparativeFinancialBalanceSummaryResponse>(
-      '/metrics/view-balance-summary',
+      '/metrics/balance/summary/general',
       {
         params: {
           churchId,
@@ -310,6 +310,80 @@ export const getFinancialBalanceSummaryReport = async ({
         },
       }
     );
+
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
+
+    throw new Error('Ocurrió un error inesperado, hable con el administrador');
+  }
+};
+
+//* Income details by month
+interface IncomeDetailByTypeQueryParams {
+  year: string;
+  startMonth: string;
+  endMonth: string;
+  churchId: string;
+  type: string;
+}
+
+export const getIncomeDetailByType = async ({
+  year,
+  churchId,
+  startMonth,
+  endMonth,
+  type,
+}: IncomeDetailByTypeQueryParams): Promise<any> => {
+  try {
+    const { data } = await icupApi<any>('/metrics/balance/income/monthly-detail-by-type', {
+      params: {
+        churchId,
+        year,
+        startMonth,
+        endMonth,
+        type,
+      },
+    });
+
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
+
+    throw new Error('Ocurrió un error inesperado, hable con el administrador');
+  }
+};
+
+//* Expense details by month
+interface ExpenseDetailByTypeQueryParams {
+  year: string;
+  startMonth: string;
+  endMonth: string;
+  churchId: string;
+  type: string;
+}
+
+export const getExpenseDetailByType = async ({
+  year,
+  churchId,
+  startMonth,
+  endMonth,
+  type,
+}: ExpenseDetailByTypeQueryParams): Promise<any> => {
+  try {
+    const { data } = await icupApi<any>('/metrics/balance/expenses/monthly-detail-by-type', {
+      params: {
+        churchId,
+        year,
+        startMonth,
+        endMonth,
+        type,
+      },
+    });
 
     return data;
   } catch (error) {

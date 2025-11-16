@@ -61,7 +61,7 @@ export const ChartDonutFinancialBalanceSummary = ({
               dataKey='value'
               nameKey='name'
               innerRadius={isXlDesktop ? 80 : isDesktop ? 100 : 60}
-              outerRadius='70%'
+              outerRadius={isDesktop ? '90%' : '70%'}
               stroke={strokeColor}
               strokeWidth={1}
             >

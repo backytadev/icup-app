@@ -4,7 +4,7 @@ import { isAxiosError } from 'axios';
 
 import { icupApi } from '@/core/api/icupApi';
 
-import { type MetricQueryParams } from '@/modules/metrics/interfaces/shared/metric-query-params.interface';
+import { type MetricsQueryParams } from '@/modules/metrics/interfaces/shared/metrics-query-params.interface';
 
 import { type MembersProportionResponse } from '@/modules/metrics/interfaces/member-metrics/members-proportion-response.interface';
 import { type MembersByCategoryResponse } from '@/modules/metrics/interfaces/member-metrics/members-by-category-response.interface';
@@ -22,7 +22,7 @@ export const getMembersProportion = async ({
   searchType,
   church,
   order,
-}: MetricQueryParams): Promise<MembersProportionResponse> => {
+}: MetricsQueryParams): Promise<MembersProportionResponse> => {
   try {
     const { data } = await icupApi<MembersProportionResponse>(`/metrics/${church}`, {
       params: {
@@ -48,7 +48,7 @@ export const getFluctuationMembersByYear = async ({
   year,
   order,
   church,
-}: MetricQueryParams): Promise<MembersFluctuationResponse[]> => {
+}: MetricsQueryParams): Promise<MembersFluctuationResponse[]> => {
   try {
     const { data } = await icupApi<MembersFluctuationResponse[]>(`/metrics/${church}&${year}`, {
       params: {
@@ -72,7 +72,7 @@ export const getMembersByBirthMonth = async ({
   searchType,
   church,
   order,
-}: MetricQueryParams): Promise<MembersByBirthMonthResponse[]> => {
+}: MetricsQueryParams): Promise<MembersByBirthMonthResponse[]> => {
   try {
     const { data } = await icupApi<MembersByBirthMonthResponse[]>(`/metrics/${church}`, {
       params: {
@@ -96,7 +96,7 @@ export const getMembersByCategory = async ({
   searchType,
   church,
   order,
-}: MetricQueryParams): Promise<MembersByCategoryResponse> => {
+}: MetricsQueryParams): Promise<MembersByCategoryResponse> => {
   try {
     const { data } = await icupApi<MembersByCategoryResponse>(`/metrics/${church}`, {
       params: {
@@ -120,7 +120,7 @@ export const getMembersByCategoryAndGender = async ({
   searchType,
   church,
   order,
-}: MetricQueryParams): Promise<MembersByCategoryAndGenderResponse> => {
+}: MetricsQueryParams): Promise<MembersByCategoryAndGenderResponse> => {
   try {
     const { data } = await icupApi<MembersByCategoryAndGenderResponse>(`/metrics/${church}`, {
       params: {
@@ -144,7 +144,7 @@ export const getMembersByRole = async ({
   searchType,
   church,
   order,
-}: MetricQueryParams): Promise<MembersByRoleAndGenderResponse> => {
+}: MetricsQueryParams): Promise<MembersByRoleAndGenderResponse> => {
   try {
     const { data } = await icupApi<MembersByRoleAndGenderResponse>(`/metrics/${church}`, {
       params: {
@@ -168,7 +168,7 @@ export const getMembersByMaritalStatus = async ({
   searchType,
   church,
   order,
-}: MetricQueryParams): Promise<MembersByMaritalStatusResponse> => {
+}: MetricsQueryParams): Promise<MembersByMaritalStatusResponse> => {
   try {
     const { data } = await icupApi<MembersByMaritalStatusResponse>(`/metrics/${church}`, {
       params: {
@@ -194,7 +194,7 @@ export const getDisciplesByZoneAndGender = async ({
   copastor,
   allZones,
   order,
-}: MetricQueryParams): Promise<MembersByZoneAndGenderResponse> => {
+}: MetricsQueryParams): Promise<MembersByZoneAndGenderResponse> => {
   try {
     const { data } = await icupApi<MembersByZoneAndGenderResponse>(
       `/metrics/${church}&${copastor}`,
@@ -224,7 +224,7 @@ export const getPreachersByZoneAndGender = async ({
   copastor,
   allZones,
   order,
-}: MetricQueryParams): Promise<MembersByZoneAndGenderResponse> => {
+}: MetricsQueryParams): Promise<MembersByZoneAndGenderResponse> => {
   try {
     const { data } = await icupApi<MembersByZoneAndGenderResponse>(
       `/metrics/${church}&${copastor}`,
@@ -253,7 +253,7 @@ export const getMembersByDistrictAndGender = async ({
   church,
   district,
   order,
-}: MetricQueryParams): Promise<MembersByDistrictAndGenderResponse> => {
+}: MetricsQueryParams): Promise<MembersByDistrictAndGenderResponse> => {
   try {
     const { data } = await icupApi<MembersByDistrictAndGenderResponse>(
       `/metrics/${church}&${district}`,
@@ -280,7 +280,7 @@ export const getMembersByRecordStatus = async ({
   searchType,
   church,
   order,
-}: MetricQueryParams): Promise<MembersByRecordStatusResponse> => {
+}: MetricsQueryParams): Promise<MembersByRecordStatusResponse> => {
   try {
     const { data } = await icupApi<MembersByRecordStatusResponse>(`/metrics/${church}`, {
       params: {

@@ -45,7 +45,7 @@ export function ChartBarFinancialBalanceSummary({
       <CardHeader>
         <CardTitle
           className={cn(
-            'text-xl md:text-2xl font-bold text-green-600 dark:text-green-400',
+            'text-xl md:text-2xl 2xl:text-3xl font-bold text-green-600 dark:text-green-400',
             type === 'expense' && 'text-red-600 dark:text-red-400'
           )}
         >

@@ -4,7 +4,7 @@ import { isAxiosError } from 'axios';
 
 import { icupApi } from '@/core/api/icupApi';
 
-import { type MetricQueryParams } from '@/modules/metrics/interfaces/shared/metric-query-params.interface';
+import { type MetricsQueryParams } from '@/modules/metrics/interfaces/shared/metrics-query-params.interface';
 
 import { type OfferingExpenseChartResponse } from '@/modules/metrics/interfaces/offering-expense-metrics/offering-expense-chart-response.interface';
 import { type OfferingExpensesProportionResponse } from '@/modules/metrics/interfaces/offering-expense-metrics/offering-expense-proportion-response.interface';
@@ -15,7 +15,7 @@ export const getOfferingExpensesProportion = async ({
   searchType,
   church,
   order,
-}: MetricQueryParams): Promise<OfferingExpensesProportionResponse> => {
+}: MetricsQueryParams): Promise<OfferingExpensesProportionResponse> => {
   try {
     const { data } = await icupApi<OfferingExpensesProportionResponse>(`/metrics/${church}`, {
       params: {
@@ -43,7 +43,7 @@ export const getOperationalOfferingExpenses = async ({
   year,
   isSingleMonth,
   order,
-}: MetricQueryParams): Promise<OfferingExpenseChartResponse[]> => {
+}: MetricsQueryParams): Promise<OfferingExpenseChartResponse[]> => {
   try {
     const { data } = await icupApi<OfferingExpenseChartResponse[]>(
       `/metrics/${church}&${month}&${year}`,
@@ -74,7 +74,7 @@ export const getMaintenanceAndRepairOfferingExpenses = async ({
   year,
   isSingleMonth,
   order,
-}: MetricQueryParams): Promise<OfferingExpenseChartResponse[]> => {
+}: MetricsQueryParams): Promise<OfferingExpenseChartResponse[]> => {
   try {
     const { data } = await icupApi<OfferingExpenseChartResponse[]>(
       `/metrics/${church}&${month}&${year}`,
@@ -105,7 +105,7 @@ export const getDecorationOfferingExpenses = async ({
   year,
   isSingleMonth,
   order,
-}: MetricQueryParams): Promise<OfferingExpenseChartResponse[]> => {
+}: MetricsQueryParams): Promise<OfferingExpenseChartResponse[]> => {
   try {
     const { data } = await icupApi<OfferingExpenseChartResponse[]>(
       `/metrics/${church}&${month}&${year}`,
@@ -136,7 +136,7 @@ export const getEquipmentAndTechnologyOfferingExpenses = async ({
   year,
   isSingleMonth,
   order,
-}: MetricQueryParams): Promise<OfferingExpenseChartResponse[]> => {
+}: MetricsQueryParams): Promise<OfferingExpenseChartResponse[]> => {
   try {
     const { data } = await icupApi<OfferingExpenseChartResponse[]>(
       `/metrics/${church}&${month}&${year}`,
@@ -167,7 +167,7 @@ export const getSuppliesOfferingExpenses = async ({
   year,
   isSingleMonth,
   order,
-}: MetricQueryParams): Promise<OfferingExpenseChartResponse[]> => {
+}: MetricsQueryParams): Promise<OfferingExpenseChartResponse[]> => {
   try {
     const { data } = await icupApi<OfferingExpenseChartResponse[]>(
       `/metrics/${church}&${month}&${year}`,
@@ -198,7 +198,7 @@ export const getPlaningEventsOfferingExpenses = async ({
   year,
   isSingleMonth,
   order,
-}: MetricQueryParams): Promise<OfferingExpenseChartResponse[]> => {
+}: MetricsQueryParams): Promise<OfferingExpenseChartResponse[]> => {
   try {
     const { data } = await icupApi<OfferingExpenseChartResponse[]>(
       `/metrics/${church}&${month}&${year}`,
@@ -229,7 +229,7 @@ export const getOthersOfferingExpenses = async ({
   year,
   isSingleMonth,
   order,
-}: MetricQueryParams): Promise<OfferingExpenseChartResponse[]> => {
+}: MetricsQueryParams): Promise<OfferingExpenseChartResponse[]> => {
   try {
     const { data } = await icupApi<OfferingExpenseChartResponse[]>(
       `/metrics/${church}&${month}&${year}`,
@@ -260,7 +260,7 @@ export const getOfferingExpensesAdjustment = async ({
   year,
   isSingleMonth,
   order,
-}: MetricQueryParams): Promise<OfferingExpensesAdjustmentResponse[]> => {
+}: MetricsQueryParams): Promise<OfferingExpensesAdjustmentResponse[]> => {
   try {
     const { data } = await icupApi<OfferingExpensesAdjustmentResponse[]>(
       `/metrics/${church}&${month}&${year}`,

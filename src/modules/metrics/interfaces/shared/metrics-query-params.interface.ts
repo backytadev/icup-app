@@ -1,4 +1,4 @@
-export interface MetricQueryParams {
+export interface MetricsQueryParams {
   searchType: string;
   metricType?: string;
   church: string;

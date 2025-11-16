@@ -5,7 +5,7 @@ import { cn } from '@/shared/lib/utils';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { ArrowDownRight, ArrowLeft, ArrowRight, ArrowUpRight } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 
 import { months } from '@/shared/data/months-data';
 import { CurrencyType } from '@/modules/offering/shared/enums/currency-type.enum';
@@ -14,9 +14,12 @@ import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/shared/components/ui/dialog';
 
+import { IncomeSummaryCard } from '@/modules/metrics/components/financial-balance-comparative/screens/IncomeSummaryCard';
+import { ExpenseSummaryCard } from '@/modules/metrics/components/financial-balance-comparative/screens/ExpenseSummaryCard';
+
 import { buildScaledData } from '@/modules/metrics/helpers/color-scale';
 import { metricsFormSchema } from '@/modules/metrics/validations/metrics-form-schema';
-import { getFinancialBalanceSummaryReport } from '@/modules/metrics/services/offering-comparative-metrics.service';
+import { getFinancialBalanceSummary } from '@/modules/metrics/services/offering-comparative-metrics.service';
 import { FinancialBalanceSummaryForm } from '@/modules/metrics/components/financial-balance-comparative/screens/FinancialBalanceSummaryForm';
 import { ChartBarFinancialBalanceSummary } from '@/modules/metrics/components/financial-balance-comparative/screens/ChartBarFinancialBalanceSummary';
 import { ChartDonutFinancialBalanceSummary } from '@/modules/metrics/components/financial-balance-comparative/screens/ChartDonutFinancialBalanceSummary';
@@ -61,7 +64,7 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
   const financialSummaryBalanceQuery = useQuery({
     queryKey: ['summary-financial-balance-screen', startMonth, endMonth, currency, churchId],
     queryFn: () =>
-      getFinancialBalanceSummaryReport({
+      getFinancialBalanceSummary({
         churchId: churchId ?? '',
         year: year ?? '',
         startMonth: startMonth ?? '',
@@ -109,23 +112,27 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
 
   //* Income
   const dataBalanceIncome = financialSummaryBalanceQuery.data?.calculateSummaryIncome ?? [];
-  const incomeCards = dataBalanceIncome.map((i) => ({
-    label: i.subType ?? 'Sin sub-tipo',
-    amount: i.totalAmount,
-    pen: i.accumulatedOfferingPEN,
-    usd: i.accumulatedOfferingUSD,
-    eur: i.accumulatedOfferingEUR,
-  }));
+  const incomeCards = dataBalanceIncome
+    .map((i) => ({
+      label: i.subType ?? 'Sin sub-tipo',
+      amount: i.totalAmount,
+      pen: i.accumulatedOfferingPEN,
+      usd: i.accumulatedOfferingUSD,
+      eur: i.accumulatedOfferingEUR,
+    }))
+    .sort((a, b) => b.amount - a.amount);
 
   //* Expenses
   const dataBalanceExpenses = financialSummaryBalanceQuery.data?.calculateSummaryExpenses ?? [];
-  const expenseCards = dataBalanceExpenses.map((i) => ({
-    label: i.type ?? 'Sin tipo',
-    amount: i.totalAmount,
-    pen: i.accumulatedOfferingPEN,
-    usd: i.accumulatedOfferingUSD,
-    eur: i.accumulatedOfferingEUR,
-  }));
+  const expenseCards = dataBalanceExpenses
+    .map((i) => ({
+      label: i.type ?? 'Sin tipo',
+      amount: i.totalAmount,
+      pen: i.accumulatedOfferingPEN,
+      usd: i.accumulatedOfferingUSD,
+      eur: i.accumulatedOfferingEUR,
+    }))
+    .sort((a, b) => b.amount - a.amount);
 
   //* Handlers
   const handleSubmit = async (): Promise<void> => {
@@ -184,7 +191,7 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
                   <span className='hidden sm:inline'>Anterior</span>
                 </Button>
 
-                <p className='text-center text-slate-600 dark:text-slate-300 font-bold text-[22px] md:text-3xl tracking-wide'>
+                <p className='text-center text-slate-600 dark:text-slate-300 font-bold text-[22px] md:text-3xl 2xl:text-[40px] tracking-wide'>
                   {page === 1 && 'Resumen General'}
                   {page === 2 && 'Ingresos'}
                   {page === 3 && 'Salidas'}
@@ -245,7 +252,7 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
                           </CardTitle>
                         </CardHeader>
 
-                        <CardContent className='space-y-4 sm:space-y-5 text-base sm:text-lg md:text-xl font-medium'>
+                        <CardContent className='space-y-4 sm:space-y-5 text-base sm:text-lg md:text-xl 2xl:text-[25px] font-medium'>
                           <div className='flex justify-between'>
                             <span className='text-slate-700 dark:text-slate-400'>
                               Saldo anterior
@@ -313,65 +320,13 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
                 <div className='flex flex-col w-full gap-10'>
                   <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-4 sm:px-8 md:px-4 gap-6'>
                     {incomeCards.map((card) => (
-                      <Card
-                        className={cn(
-                          'rounded-2xl p-4 sm:p-5 md:p-6 transition-all duration-300',
-                          'bg-white dark:bg-slate-900',
-                          'border border-slate-300 dark:border-slate-700',
-                          'hover:scale-[1.015] hover:shadow-2xl shadow-lg dark:shadow-xl'
-                        )}
-                      >
-                        <div className='flex items-start justify-between gap-4 mb-6'>
-                          <div className='flex-1 min-w-0'>
-                            <p className='text-[13px] uppercase tracking-wide text-slate-500 dark:text-slate-400'>
-                              Resumen
-                            </p>
-
-                            <h2 className='text-2xl font-bold text-slate-800 dark:text-slate-100 break-words leading-tight'>
-                              {card.label}
-                            </h2>
-                          </div>
-
-                          <div className='flex-shrink-0 h-11 w-11 rounded-xl bg-green-100 dark:bg-green-900/30 flex items-center justify-center border border-green-200 dark:border-green-800'>
-                            <ArrowUpRight className='h-6 w-6 text-green-600 dark:text-green-400' />
-                          </div>
-                        </div>
-
-                        <div className='space-y-5'>
-                          {card.pen > 0 && (
-                            <div className='flex flex-col gap-1'>
-                              <span className='text-sm text-slate-600 dark:text-slate-400 font-medium'>
-                                Soles (PEN)
-                              </span>
-                              <span className='text-3xl font-extrabold text-green-600 dark:text-green-400'>
-                                {card.pen.toLocaleString('es-PE')}
-                              </span>
-                            </div>
-                          )}
-
-                          {card.usd > 0 && (
-                            <div className='flex flex-col gap-1'>
-                              <span className='text-sm text-slate-600 dark:text-slate-400 font-medium'>
-                                Dólares (USD)
-                              </span>
-                              <span className='text-2xl font-bold text-slate-800 dark:text-slate-200'>
-                                {card.usd.toLocaleString('en-US')}
-                              </span>
-                            </div>
-                          )}
-
-                          {card.eur > 0 && (
-                            <div className='flex flex-col gap-1'>
-                              <span className='text-sm text-slate-600 dark:text-slate-400 font-medium'>
-                                Euros (EUR)
-                              </span>
-                              <span className='text-2xl font-bold text-slate-800 dark:text-slate-200'>
-                                {card.eur.toLocaleString('de-DE')}
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      </Card>
+                      <IncomeSummaryCard
+                        data={card}
+                        startMonth={startMonth}
+                        endMonth={endMonth}
+                        churchId={churchId}
+                        year={year}
+                      />
                     ))}
                   </div>
 
@@ -384,65 +339,13 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
                 <div className='flex flex-col w-full gap-10'>
                   <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-4 sm:px-8 md:px-4 gap-6'>
                     {expenseCards.map((card) => (
-                      <Card
-                        className={cn(
-                          'rounded-2xl p-4 sm:p-5 md:p-6 transition-all duration-300',
-                          'bg-white dark:bg-slate-900',
-                          'border border-slate-300 dark:border-slate-700',
-                          'hover:scale-[1.015] hover:shadow-2xl shadow-lg dark:shadow-xl'
-                        )}
-                      >
-                        <div className='flex items-start justify-between gap-4 mb-6'>
-                          <div className='flex-1 min-w-0'>
-                            <p className='text-[13px] uppercase tracking-wide text-slate-500 dark:text-slate-400'>
-                              Resumen
-                            </p>
-
-                            <h2 className='text-2xl font-bold text-slate-800 dark:text-slate-100 break-words leading-tight'>
-                              {card.label}
-                            </h2>
-                          </div>
-
-                          <div className='flex-shrink-0 h-11 w-11 rounded-xl bg-red-100 dark:bg-red-900/30 flex items-center justify-center border border-red-200 dark:border-red-800'>
-                            <ArrowDownRight className='h-6 w-6 text-red-600 dark:text-red-400' />
-                          </div>
-                        </div>
-
-                        <div className='space-y-5'>
-                          {card.pen > 0 && (
-                            <div className='flex flex-col gap-1'>
-                              <span className='text-sm text-slate-600 dark:text-slate-400 font-medium'>
-                                Soles (PEN)
-                              </span>
-                              <span className='text-3xl font-extrabold text-red-600 dark:text-red-400'>
-                                {card.pen.toLocaleString('es-PE')}
-                              </span>
-                            </div>
-                          )}
-
-                          {card.usd > 0 && (
-                            <div className='flex flex-col gap-1'>
-                              <span className='text-sm text-slate-600 dark:text-slate-400 font-medium'>
-                                Dólares (USD)
-                              </span>
-                              <span className='text-2xl font-bold text-slate-800 dark:text-slate-200'>
-                                {card.usd.toLocaleString('en-US')}
-                              </span>
-                            </div>
-                          )}
-
-                          {card.eur > 0 && (
-                            <div className='flex flex-col gap-1'>
-                              <span className='text-sm text-slate-600 dark:text-slate-400 font-medium'>
-                                Euros (EUR)
-                              </span>
-                              <span className='text-2xl font-bold text-slate-800 dark:text-slate-200'>
-                                {card.eur.toLocaleString('de-DE')}
-                              </span>
-                            </div>
-                          )}
-                        </div>
-                      </Card>
+                      <ExpenseSummaryCard
+                        data={card}
+                        startMonth={startMonth}
+                        endMonth={endMonth}
+                        churchId={churchId}
+                        year={year}
+                      />
                     ))}
                   </div>
 

@@ -4,7 +4,7 @@ import { isAxiosError } from 'axios';
 
 import { icupApi } from '@/core/api/icupApi';
 
-import { type MetricQueryParams } from '@/modules/metrics/interfaces/shared/metric-query-params.interface';
+import { type MetricsQueryParams } from '@/modules/metrics/interfaces/shared/metrics-query-params.interface';
 
 import { type OfferingIncomeProportionResponse } from '@/modules/metrics/interfaces/offering-income-metrics/offering-income-proportion-response.interface';
 import { type OfferingIncomeByActivitiesResponse } from '@/modules/metrics/interfaces/offering-income-metrics/offering-income-by-activities-response.interface';
@@ -23,7 +23,7 @@ export const getOfferingIncomeProportion = async ({
   searchType,
   church,
   order,
-}: MetricQueryParams): Promise<OfferingIncomeProportionResponse> => {
+}: MetricsQueryParams): Promise<OfferingIncomeProportionResponse> => {
   try {
     const { data } = await icupApi<OfferingIncomeProportionResponse>(`/metrics/${church}`, {
       params: {
@@ -51,7 +51,7 @@ export const getOfferingIncomeBySundayService = async ({
   isSingleMonth,
   year,
   order,
-}: MetricQueryParams): Promise<OfferingIncomeBySundayServiceResponse[]> => {
+}: MetricsQueryParams): Promise<OfferingIncomeBySundayServiceResponse[]> => {
   try {
     const { data } = await icupApi<OfferingIncomeBySundayServiceResponse[]>(
       `/metrics/${church}&${month}&${year}`,
@@ -83,7 +83,7 @@ export const getOfferingIncomeByFamilyGroup = async ({
   isSingleMonth,
   year,
   order,
-}: MetricQueryParams): Promise<OfferingIncomeByFamilyGroupResponse[]> => {
+}: MetricsQueryParams): Promise<OfferingIncomeByFamilyGroupResponse[]> => {
   try {
     const { data } = await icupApi<OfferingIncomeByFamilyGroupResponse[]>(
       `/metrics/${church}&${zone}&${month}&${year}`,
@@ -114,7 +114,7 @@ export const getOfferingIncomeBySundaySchool = async ({
   isSingleMonth,
   year,
   order,
-}: MetricQueryParams): Promise<OfferingIncomeBySundaySchoolResponse[]> => {
+}: MetricsQueryParams): Promise<OfferingIncomeBySundaySchoolResponse[]> => {
   try {
     const { data } = await icupApi<OfferingIncomeBySundaySchoolResponse[]>(
       `/metrics/${church}&${month}&${year}`,
@@ -145,7 +145,7 @@ export const getOfferingIncomeByFastingAndVigil = async ({
   isSingleMonth,
   year,
   order,
-}: MetricQueryParams): Promise<OfferingIncomeByFastingAndVigilResponse[]> => {
+}: MetricsQueryParams): Promise<OfferingIncomeByFastingAndVigilResponse[]> => {
   try {
     const { data } = await icupApi<OfferingIncomeByFastingAndVigilResponse[]>(
       `/metrics/${church}&${month}&${year}`,
@@ -176,7 +176,7 @@ export const getOfferingIncomeByYouthService = async ({
   isSingleMonth,
   year,
   order,
-}: MetricQueryParams): Promise<OfferingIncomeByYouthServiceResponse[]> => {
+}: MetricsQueryParams): Promise<OfferingIncomeByYouthServiceResponse[]> => {
   try {
     const { data } = await icupApi<OfferingIncomeByYouthServiceResponse[]>(
       `/metrics/${church}&${month}&${year}`,
@@ -207,7 +207,7 @@ export const getOfferingIncomeBySpecialOffering = async ({
   isSingleMonth,
   year,
   order,
-}: MetricQueryParams): Promise<OfferingIncomeBySpecialOfferingResponse[]> => {
+}: MetricsQueryParams): Promise<OfferingIncomeBySpecialOfferingResponse[]> => {
   try {
     const { data } = await icupApi<OfferingIncomeBySpecialOfferingResponse[]>(
       `/metrics/${church}&${month}&${year}`,
@@ -238,7 +238,7 @@ export const getOfferingIncomeByChurchGround = async ({
   isSingleMonth,
   year,
   order,
-}: MetricQueryParams): Promise<OfferingIncomeByChurchGroundOfferingResponse[]> => {
+}: MetricsQueryParams): Promise<OfferingIncomeByChurchGroundOfferingResponse[]> => {
   try {
     const { data } = await icupApi<OfferingIncomeByChurchGroundOfferingResponse[]>(
       `/metrics/${church}&${month}&${year}`,
@@ -269,7 +269,7 @@ export const getOfferingIncomeByUnitedService = async ({
   isSingleMonth,
   year,
   order,
-}: MetricQueryParams): Promise<OfferingIncomeByUnitedServiceResponse[]> => {
+}: MetricsQueryParams): Promise<OfferingIncomeByUnitedServiceResponse[]> => {
   try {
     const { data } = await icupApi<OfferingIncomeByUnitedServiceResponse[]>(
       `/metrics/${church}&${month}&${year}`,
@@ -300,7 +300,7 @@ export const getOfferingIncomeByActivities = async ({
   isSingleMonth,
   year,
   order,
-}: MetricQueryParams): Promise<OfferingIncomeByActivitiesResponse[]> => {
+}: MetricsQueryParams): Promise<OfferingIncomeByActivitiesResponse[]> => {
   try {
     const { data } = await icupApi<OfferingIncomeByActivitiesResponse[]>(
       `/metrics/${church}&${month}&${year}`,
@@ -331,7 +331,7 @@ export const getOfferingIncomeAdjustment = async ({
   isSingleMonth,
   year,
   order,
-}: MetricQueryParams): Promise<OfferingIncomeByIncomeAdjustmentResponse[]> => {
+}: MetricsQueryParams): Promise<OfferingIncomeByIncomeAdjustmentResponse[]> => {
   try {
     const { data } = await icupApi<OfferingIncomeByIncomeAdjustmentResponse[]>(
       `/metrics/${church}&${month}&${year}`,

@@ -4,7 +4,7 @@ import { isAxiosError } from 'axios';
 
 import { icupApi } from '@/core/api/icupApi';
 
-import { type MetricQueryParams } from '@/modules/metrics/interfaces/shared/metric-query-params.interface';
+import { type MetricsQueryParams } from '@/modules/metrics/interfaces/shared/metrics-query-params.interface';
 
 import { type FamilyGroupsByZoneResponse } from '@/modules/metrics/interfaces/family-group-metrics/family-groups-by-zone-response.interface';
 import { type FamilyGroupsByCopastorAndZoneResponse } from '@/modules/metrics/interfaces/family-group-metrics/family-groups-by-copastor-and-zone-response.interface';
@@ -18,7 +18,7 @@ export const getFamilyGroupsProportion = async ({
   searchType,
   church,
   order,
-}: MetricQueryParams): Promise<FamilyGroupsProportionResponse> => {
+}: MetricsQueryParams): Promise<FamilyGroupsProportionResponse> => {
   try {
     const { data } = await icupApi<FamilyGroupsProportionResponse>(`/metrics/${church}`, {
       params: {
@@ -44,7 +44,7 @@ export const getFluctuationFamilyGroupsByYear = async ({
   year,
   church,
   order,
-}: MetricQueryParams): Promise<FamilyGroupsFluctuationResponse[]> => {
+}: MetricsQueryParams): Promise<FamilyGroupsFluctuationResponse[]> => {
   try {
     const { data } = await icupApi<FamilyGroupsFluctuationResponse[]>(
       `/metrics/${church}&${year}`,
@@ -73,7 +73,7 @@ export const getFamilyGroupsByZone = async ({
   zone,
   church,
   order,
-}: MetricQueryParams): Promise<FamilyGroupsByZoneResponse> => {
+}: MetricsQueryParams): Promise<FamilyGroupsByZoneResponse> => {
   try {
     const { data } = await icupApi<FamilyGroupsByZoneResponse>(`/metrics/${church}&${zone}`, {
       params: {
@@ -100,7 +100,7 @@ export const getFamilyGroupsByCopastorAndZone = async ({
   copastor,
   church,
   order,
-}: MetricQueryParams): Promise<FamilyGroupsByCopastorAndZoneResponse> => {
+}: MetricsQueryParams): Promise<FamilyGroupsByCopastorAndZoneResponse> => {
   try {
     const { data } = await icupApi<FamilyGroupsByCopastorAndZoneResponse>(
       `/metrics/${church}&${copastor}`,
@@ -129,7 +129,7 @@ export const getFamilyGroupsByDistrict = async ({
   district,
   church,
   order,
-}: MetricQueryParams): Promise<FamilyGroupsByCopastorAndZoneResponse> => {
+}: MetricsQueryParams): Promise<FamilyGroupsByCopastorAndZoneResponse> => {
   try {
     const { data } = await icupApi<FamilyGroupsByCopastorAndZoneResponse>(
       `/metrics/${church}&${district}`,
@@ -158,7 +158,7 @@ export const getFamilyGroupsByServiceTime = async ({
   church,
   allZones,
   order,
-}: MetricQueryParams): Promise<FamilyGroupsByServiceTimeResponse> => {
+}: MetricsQueryParams): Promise<FamilyGroupsByServiceTimeResponse> => {
   try {
     const { data } = await icupApi<FamilyGroupsByServiceTimeResponse>(
       `/metrics/${church}&${zone}`,
@@ -188,7 +188,7 @@ export const getFamilyGroupsByRecordStatus = async ({
   church,
   allZones,
   order,
-}: MetricQueryParams): Promise<FamilyGroupsByRecordStatusResponse> => {
+}: MetricsQueryParams): Promise<FamilyGroupsByRecordStatusResponse> => {
   try {
     const { data } = await icupApi<FamilyGroupsByRecordStatusResponse>(
       `/metrics/${church}&${zone}`,
