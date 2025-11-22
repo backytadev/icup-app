@@ -61,6 +61,10 @@ export const userFormSchema = z
         message: 'Debes seleccionar al menos un rol',
       }),
 
+    ministries: z.array(z.string(), {
+      required_error: 'Debes seleccionar al menos un ministerio.',
+    }),
+
     recordStatus: z
       .string(
         z.nativeEnum(RecordStatus, {

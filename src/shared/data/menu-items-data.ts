@@ -24,7 +24,13 @@ export const menuItems: MenuItem[] = [
     subTitle: 'Resumen informativo',
     href: '/dashboard',
     Icon: FcBullish,
-    allowedRoles: [UserRole.SuperUser, UserRole.AdminUser, UserRole.User, UserRole.TreasurerUser],
+    allowedRoles: [
+      UserRole.SuperUser,
+      UserRole.AdminUser,
+      UserRole.User,
+      UserRole.TreasurerUser,
+      UserRole.MinistryUser,
+    ],
   },
   {
     title: 'Iglesia',
@@ -87,7 +93,13 @@ export const menuItems: MenuItem[] = [
     subTitle: 'Modulo Ofrenda',
     href: '/offerings',
     Icon: FcLike,
-    allowedRoles: [UserRole.SuperUser, UserRole.TreasurerUser, UserRole.AdminUser, UserRole.User],
+    allowedRoles: [
+      UserRole.SuperUser,
+      UserRole.TreasurerUser,
+      UserRole.AdminUser,
+      UserRole.User,
+      UserRole.MinistryUser,
+    ],
   },
   {
     title: 'Usuario',

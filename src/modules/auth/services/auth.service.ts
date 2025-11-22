@@ -5,18 +5,22 @@ import { AxiosError } from 'axios';
 
 import { icupApi } from '@/core/api/icupApi';
 import { type UserRole } from '@/modules/user/enums/user-role.enum';
+import { MinistryType } from '@/modules/ministry/enums/ministry-type.enum';
 import { ChurchResponse } from '@/modules/church/interfaces/church-response.interface';
+import { MinistryResponse } from '@/modules/ministry/interfaces/ministry-response.interface';
 
 export interface LoginResponse {
   id: string;
   firstNames: string;
   lastNames: string;
+  ministryType?: MinistryType;
   email: string;
   gender: string;
   roles: UserRole[];
   status: string;
   token: string;
   churches: ChurchResponse[];
+  ministries: MinistryResponse[];
 }
 
 export class AuthService {

@@ -33,6 +33,10 @@ export const useUserUpdateEffects = ({
       'churches',
       data?.churches.map((c) => (typeof c === 'string' ? c : c.id)) as string[]
     );
+    userUpdateForm.setValue(
+      'ministries',
+      data?.ministries.map((c) => (typeof c === 'string' ? c : c.id)) as string[]
+    );
     userUpdateForm.setValue('recordStatus', data?.recordStatus);
 
     const timeoutId = setTimeout(() => {

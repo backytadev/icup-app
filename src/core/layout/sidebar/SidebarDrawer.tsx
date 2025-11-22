@@ -23,9 +23,12 @@ import {
 import { Button } from '@/shared/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/shared/components/ui/avatar';
 import { Sheet, SheetContent, SheetHeader, SheetTrigger } from '@/shared/components/ui/sheet';
+// import { MinistryType, MinistryTypeNames } from '@/modules/ministry/enums/ministry-type.enum';
 
 export function SidebarDrawer(): JSX.Element {
   const logoutUser = useAuthStore((state) => state.logoutUser);
+  // const churches = useAuthStore((state) => state.user?.churches ?? 'No Churches');
+  // const ministries = useAuthStore((state) => state.user?.ministries ?? 'No Ministry');
   const userNames = useAuthStore((state) => state.user?.firstNames ?? 'No User');
   const userLastNames = useAuthStore((state) => state.user?.lastNames ?? 'No User');
   const gender = useAuthStore((state) => state.user?.gender ?? undefined);
@@ -41,6 +44,7 @@ export function SidebarDrawer(): JSX.Element {
     item.allowedRoles.some((role) => userInfo?.roles?.includes(role))
   );
 
+  // todo:  usar los churches y los ministries para hacer selects y esparcir esto por toda la app
   const membershipPaths = [
     '/churches',
     '/pastors',
@@ -147,6 +151,16 @@ export function SidebarDrawer(): JSX.Element {
                 {roles?.map((role) => UserRoleNames[role]).join(' - ')}
               </span>
             </p>
+
+            {/* Ministerios */}
+            {/* {ministryType && (
+              <p className='text-[14px] md:text-[15px] ml-2 md:ml-6 text-left font-bold text-purple-500 mb-2'>
+                <span>Ministerio:</span>
+                <span className='text-[13px] md:text-[14px] text-white font-medium pl-2'>
+                  {MinistryTypeNames[ministryType as MinistryType]}
+                </span>
+              </p>
+            )} */}
 
             {/* Allowed Access */}
             <Collapsible

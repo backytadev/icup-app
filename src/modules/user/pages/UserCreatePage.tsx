@@ -5,7 +5,7 @@
 import { useEffect, useState } from 'react';
 
 import type * as z from 'zod';
-import { Toaster } from 'sonner';
+import { toast, Toaster } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
 
@@ -16,8 +16,11 @@ import { CaretSortIcon } from '@radix-ui/react-icons';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { getSimpleChurches } from '@/modules/church/services/church.service';
+import { getSimpleMinistries } from '@/modules/ministry/services/ministry.service';
+
 import { userFormSchema } from '@/modules/user/validations/user-form-schema';
 import { UserRole, UserRoleNames } from '@/modules/user/enums/user-role.enum';
+import { MinistryType, MinistryTypeNames } from '@/modules/ministry/enums/ministry-type.enum';
 
 import { useUserCreationMutation } from '@/modules/user/hooks/useUserCreationMutation';
 import { useUserCreationSubmitButtonLogic } from '@/modules/user/hooks/useUserCreationSubmitButtonLogic';
@@ -66,7 +69,8 @@ export const UserCreatePage = (): JSX.Element => {
   const [isMessageErrorDisabled, setIsMessageErrorDisabled] = useState<boolean>(true);
   const [isMessageErrorPasswordDisabled, setIsMessageErrorPasswordDisabled] =
     useState<boolean>(true);
-  const [isInputTheirChurchOpen, setIsInputTheirChurchOpen] = useState<boolean>(false);
+  const [isInputTheirChurchesOpen, setIsInputTheirChurchesOpen] = useState<boolean>(false);
+  const [isInputTheirMinistriesOpen, setIsInputTheirMinistriesOpen] = useState<boolean>(false);
 
   //* Form
   const form = useForm<z.infer<typeof userFormSchema>>({
@@ -81,8 +85,12 @@ export const UserCreatePage = (): JSX.Element => {
       passwordConfirm: '',
       roles: [],
       churches: [],
+      ministries: [],
     },
   });
+
+  //* Watchers
+  const roles = form.watch('roles');
 
   //* Password handler
   const toggleShowPassword = (): void => {
@@ -97,6 +105,13 @@ export const UserCreatePage = (): JSX.Element => {
   useEffect(() => {
     document.title = 'Modulo Usuario - IcupApp';
   }, []);
+
+  useEffect(() => {
+    if (!roles) return;
+
+    form.setValue('churches', []);
+    form.setValue('ministries', []);
+  }, [roles]);
 
   //* Custom hooks
   useUserCreationSubmitButtonLogic({
@@ -121,10 +136,37 @@ export const UserCreatePage = (): JSX.Element => {
     retry: false,
   });
 
+  const queryMinistries = useQuery({
+    queryKey: ['ministries'],
+    queryFn: () => getSimpleMinistries({ isSimpleQuery: true }),
+    retry: false,
+  });
+
   //* Form handler
   const handleSubmit = (formData: z.infer<typeof userFormSchema>): void => {
     setIsSubmitButtonDisabled(true);
     setIsInputDisabled(true);
+
+    const hasMinistryUser = formData.roles.includes(UserRole.MinistryUser);
+
+    const hasOtherRoles = formData.roles.some((role) =>
+      [UserRole.AdminUser, UserRole.SuperUser, UserRole.TreasurerUser, UserRole.User].includes(role)
+    );
+
+    if (hasMinistryUser && hasOtherRoles) {
+      toast.error(
+        'El rol de Ministerio no puede combinarse con roles de Administrador o Superusuario.',
+        {
+          position: 'top-center',
+          className: 'justify-center text-center font-semibold',
+        }
+      );
+
+      setIsSubmitButtonDisabled(false);
+      setIsInputDisabled(false);
+
+      return;
+    }
 
     userCreationMutation.mutate({
       firstNames: formData.firstNames,
@@ -135,6 +177,7 @@ export const UserCreatePage = (): JSX.Element => {
       password: formData.password,
       roles: formData.roles,
       churches: formData.churches ?? [],
+      ministries: formData.ministries ?? [],
     });
   };
 
@@ -260,104 +303,6 @@ export const UserCreatePage = (): JSX.Element => {
 
             <FormField
               control={form.control}
-              name='churches'
-              render={({ field }) => {
-                const selected = field.value || [];
-
-                const toggle = (id: string) => {
-                  if (selected.includes(id)) {
-                    form.setValue(
-                      'churches',
-                      selected.filter((v) => v !== id)
-                    );
-                  } else {
-                    form.setValue('churches', [...selected, id]);
-                  }
-                };
-
-                return (
-                  <FormItem>
-                    <FormLabel className='text-[14.5px] md:text-[15px] font-bold'>
-                      Iglesias
-                    </FormLabel>
-                    <Popover open={isInputTheirChurchOpen} onOpenChange={setIsInputTheirChurchOpen}>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant='outline'
-                            disabled={isInputDisabled}
-                            className='w-full justify-between overflow-hidden'
-                          >
-                            <div className='flex flex-wrap gap-1'>
-                              {selected.length === 0 && (
-                                <span className='text-slate-500'>Busque y seleccione iglesias</span>
-                              )}
-
-                              {selected?.map((id) => {
-                                const ch = queryChurches?.data?.find((x) => x.id === id);
-                                if (!ch) return null;
-
-                                return (
-                                  <span
-                                    key={id}
-                                    className='text-xs bg-muted px-2 py-0.5 rounded-full border flex items-center gap-1 max-w-[10rem] truncate'
-                                  >
-                                    {ch.abbreviatedChurchName}
-                                  </span>
-                                );
-                              })}
-                            </div>
-
-                            <CaretSortIcon className='ml-2 h-4 w-4 opacity-50' />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-
-                      <PopoverContent align='center' className='w-auto px-4 py-2'>
-                        <Command>
-                          {queryChurches?.data?.length ? (
-                            <>
-                              <CommandInput placeholder='Buscar iglesia' className='h-9' />
-                              <CommandEmpty>Iglesia no encontrada.</CommandEmpty>
-
-                              <CommandGroup className='max-h-[200px] overflow-auto'>
-                                {queryChurches?.data?.map((church) => {
-                                  const checked = selected.includes(church.id);
-
-                                  return (
-                                    <CommandItem
-                                      key={church.id}
-                                      onSelect={() => toggle(church.id)}
-                                      className='cursor-pointer'
-                                    >
-                                      <div className='flex items-center gap-2 w-full'>
-                                        <input type='checkbox' readOnly checked={checked} />
-                                        <span className='flex-1'>
-                                          {church.abbreviatedChurchName}
-                                        </span>
-                                        {checked && <CheckIcon className='h-4 w-4' />}
-                                      </div>
-                                    </CommandItem>
-                                  );
-                                })}
-                              </CommandGroup>
-                            </>
-                          ) : (
-                            <p className='text-red-500 text-center'>
-                              ❌ No hay iglesias disponibles.
-                            </p>
-                          )}
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage className='text-[13px]' />
-                  </FormItem>
-                );
-              }}
-            />
-
-            <FormField
-              control={form.control}
               name='password'
               render={({ field }) => (
                 <FormItem>
@@ -436,7 +381,7 @@ export const UserCreatePage = (): JSX.Element => {
               control={form.control}
               name='roles'
               render={() => (
-                <FormItem className='md:col-span-2'>
+                <FormItem>
                   <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>Roles</FormLabel>
                   <FormDescription className='text-[13px] md:text-[14px]'>
                     Seleccione los roles
@@ -477,6 +422,220 @@ export const UserCreatePage = (): JSX.Element => {
                 </FormItem>
               )}
             />
+
+            {roles.length > 0 && !roles.includes(UserRole.MinistryUser) && (
+              <FormField
+                control={form.control}
+                name='churches'
+                render={({ field }) => {
+                  const selected = field.value || [];
+
+                  const toggle = (id: string) => {
+                    if (selected.includes(id)) {
+                      form.setValue(
+                        'churches',
+                        selected.filter((v) => v !== id)
+                      );
+                    } else {
+                      form.setValue('churches', [...selected, id]);
+                    }
+                  };
+
+                  return (
+                    <FormItem>
+                      <FormLabel className='text-[14.5px] md:text-[15px] font-bold'>
+                        Iglesias
+                      </FormLabel>
+                      <Popover
+                        open={isInputTheirChurchesOpen}
+                        onOpenChange={setIsInputTheirChurchesOpen}
+                      >
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant='outline'
+                              disabled={isInputDisabled}
+                              className='w-full justify-between overflow-hidden'
+                            >
+                              <div className='flex flex-wrap gap-1'>
+                                {selected.length === 0 && (
+                                  <span className='text-slate-500'>
+                                    Busque y seleccione iglesias
+                                  </span>
+                                )}
+
+                                {selected?.map((id) => {
+                                  const ch = queryChurches?.data?.find((x) => x.id === id);
+                                  if (!ch) return null;
+
+                                  return (
+                                    <span
+                                      key={id}
+                                      className='text-xs bg-muted px-2 py-0.5 rounded-full border flex items-center gap-1 max-w-[10rem] truncate'
+                                    >
+                                      {ch.abbreviatedChurchName}
+                                    </span>
+                                  );
+                                })}
+                              </div>
+
+                              <CaretSortIcon className='ml-2 h-4 w-4 opacity-50' />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+
+                        <PopoverContent align='center' className='w-auto px-4 py-2'>
+                          <Command>
+                            {queryChurches?.data?.length ? (
+                              <>
+                                <CommandInput placeholder='Buscar iglesia' className='h-9' />
+                                <CommandEmpty>Iglesia no encontrada.</CommandEmpty>
+
+                                <CommandGroup className='max-h-[200px] overflow-auto'>
+                                  {queryChurches?.data?.map((church) => {
+                                    const checked = selected.includes(church.id);
+
+                                    return (
+                                      <CommandItem
+                                        key={church.id}
+                                        onSelect={() => toggle(church.id)}
+                                        className='cursor-pointer'
+                                      >
+                                        <div className='flex items-center gap-2 w-full'>
+                                          <input type='checkbox' readOnly checked={checked} />
+                                          <span className='flex-1'>
+                                            {church.abbreviatedChurchName}
+                                          </span>
+                                          {checked && <CheckIcon className='h-4 w-4' />}
+                                        </div>
+                                      </CommandItem>
+                                    );
+                                  })}
+                                </CommandGroup>
+                              </>
+                            ) : (
+                              <p className='text-red-500 text-center'>
+                                ❌ No hay iglesias disponibles.
+                              </p>
+                            )}
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage className='text-[13px]' />
+                    </FormItem>
+                  );
+                }}
+              />
+            )}
+
+            {roles.length > 0 && roles.includes(UserRole.MinistryUser) && (
+              <FormField
+                control={form.control}
+                name='ministries'
+                render={({ field }) => {
+                  const selected = field.value || [];
+
+                  const toggle = (id: string) => {
+                    if (selected.includes(id)) {
+                      form.setValue(
+                        'ministries',
+                        selected.filter((v) => v !== id)
+                      );
+                    } else {
+                      form.setValue('ministries', [...selected, id]);
+                    }
+                  };
+
+                  return (
+                    <FormItem>
+                      <FormLabel className='text-[14.5px] md:text-[15px] font-bold'>
+                        Ministerios
+                      </FormLabel>
+                      <Popover
+                        open={isInputTheirMinistriesOpen}
+                        onOpenChange={setIsInputTheirMinistriesOpen}
+                      >
+                        <PopoverTrigger asChild>
+                          <FormControl>
+                            <Button
+                              variant='outline'
+                              disabled={isInputDisabled}
+                              className='w-full justify-between overflow-hidden'
+                            >
+                              <div className='flex flex-wrap gap-1'>
+                                {selected.length === 0 && (
+                                  <span className='text-slate-500'>
+                                    Busque y seleccione iglesias
+                                  </span>
+                                )}
+
+                                {selected?.map((id) => {
+                                  const ministry = queryMinistries?.data?.find((x) => x.id === id);
+                                  if (!ministry) return null;
+
+                                  return (
+                                    <span
+                                      key={id}
+                                      className='text-xs bg-muted px-2 py-0.5 rounded-full border flex items-center gap-1 max-w-[10rem] truncate'
+                                    >
+                                      {MinistryTypeNames[ministry.ministryType as MinistryType]}
+                                    </span>
+                                  );
+                                })}
+                              </div>
+
+                              <CaretSortIcon className='ml-2 h-4 w-4 opacity-50' />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+
+                        <PopoverContent align='center' className='w-auto px-4 py-2'>
+                          <Command>
+                            {queryMinistries?.data?.length ? (
+                              <>
+                                <CommandInput placeholder='Buscar Ministerio' className='h-9' />
+                                <CommandEmpty>Ministerio no encontrada.</CommandEmpty>
+
+                                <CommandGroup className='max-h-[200px] overflow-auto'>
+                                  {queryMinistries?.data?.map((ministry) => {
+                                    const checked = selected.includes(ministry.id);
+
+                                    return (
+                                      <CommandItem
+                                        key={ministry.id}
+                                        onSelect={() => toggle(ministry.id)}
+                                        className='cursor-pointer'
+                                      >
+                                        <div className='flex items-center gap-2 w-full'>
+                                          <input type='checkbox' readOnly checked={checked} />
+                                          <span className='flex-1'>
+                                            {
+                                              MinistryTypeNames[
+                                                ministry.ministryType as MinistryType
+                                              ]
+                                            }
+                                          </span>
+                                          {checked && <CheckIcon className='h-4 w-4' />}
+                                        </div>
+                                      </CommandItem>
+                                    );
+                                  })}
+                                </CommandGroup>
+                              </>
+                            ) : (
+                              <p className='text-red-500 text-center'>
+                                ❌ No hay iglesias disponibles.
+                              </p>
+                            )}
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage className='text-[13px]' />
+                    </FormItem>
+                  );
+                }}
+              />
+            )}
 
             <div className='md:col-span-2 text-center'>
               {isMessageErrorDisabled ? (

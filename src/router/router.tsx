@@ -131,6 +131,7 @@ export const router = createBrowserRouter([
                       UserRole.TreasurerUser,
                       UserRole.AdminUser,
                       UserRole.User,
+                      UserRole.MinistryUser,
                     ]}
                   >
                     <LazyElement>
@@ -163,6 +164,7 @@ export const router = createBrowserRouter([
               UserRole.TreasurerUser,
               UserRole.AdminUser,
               UserRole.User,
+              UserRole.MinistryUser,
             ]}
           >
             <LazyElement>

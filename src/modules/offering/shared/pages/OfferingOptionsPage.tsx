@@ -5,9 +5,23 @@ import { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 import { FcBearish, FcBullish } from 'react-icons/fc';
 
+import { useAuthStore } from '@/stores/auth/auth.store';
 import { WhiteCard } from '@/shared/components/cards/WhiteCard';
+import { UserRole } from '@/modules/user/enums/user-role.enum';
 
 export const OfferingOptionsPage = (): JSX.Element => {
+  const user = useAuthStore((state) => state.user);
+
+  const allowedFullAccessRoles = [UserRole.SuperUser, UserRole.TreasurerUser];
+  const allowedPartialAccessRoles = [UserRole.MinistryUser];
+
+  const userRoles = user?.roles ?? [];
+
+  const hasFullAccess = userRoles.some((role) => allowedFullAccessRoles.includes(role as UserRole));
+  const hasPartAccess = userRoles.some((role) =>
+    allowedPartialAccessRoles.includes(role as UserRole)
+  );
+
   useEffect(() => {
     document.title = 'Modulo Ofrenda - IcupApp';
   }, []);
@@ -25,11 +39,18 @@ export const OfferingOptionsPage = (): JSX.Element => {
       <div className='w-full h-[35rem] justify-center lg:justify-normal px-8 py-10 flex flex-col gap-10 lg:grid md:gap-8 sm:h-[45rem] md:h-[58rem] lg:h-[58rem]'>
         <NavLink
           key='/offerings/income'
-          to='/offerings/income'
+          to={hasFullAccess || hasPartAccess ? '/offerings/income' : '#'}
+          onClick={(e) => {
+            if (!hasFullAccess && !hasPartAccess) e.preventDefault();
+          }}
           end
           className='row-start-1 row-end-3 col-start-1 col-end-3 h-full'
         >
-          <WhiteCard className='h-full sm:h-full gap-2 sm:gap-4 lg:gap-5' centered>
+          <WhiteCard
+            disabled={!hasFullAccess && !hasPartAccess}
+            className='h-full sm:h-full gap-2 sm:gap-4 lg:gap-5'
+            centered
+          >
             <FcBullish className='text-[5rem] sm:text-[8rem] md:text-[10rem]' />
             <h2 className='text-green-500 font-bold text-[22px] sm:text-3xl lg:text-4xl'>
               Modulo de Ingreso
@@ -42,11 +63,18 @@ export const OfferingOptionsPage = (): JSX.Element => {
 
         <NavLink
           key='/offerings/expenses'
-          to='/offerings/expenses'
+          to={hasFullAccess ? '/offerings/expenses' : '#'}
+          onClick={(e) => {
+            if (!hasFullAccess) e.preventDefault();
+          }}
           end
           className=' row-start-1 row-end-3 col-start-3 col-end-5 h-full'
         >
-          <WhiteCard className='h-full sm:h-full gap-2 sm:gap-4 lg:gap-5' centered>
+          <WhiteCard
+            disabled={!hasFullAccess}
+            className='h-full sm:h-full gap-2 sm:gap-4 lg:gap-5'
+            centered
+          >
             <FcBearish className='text-[5rem] sm:text-[8rem] lg:text-[10rem]' />
             <h2 className='text-red-500 font-bold text-[22px] sm:text-3xl lg:text-4xl'>
               Modulo de Salida

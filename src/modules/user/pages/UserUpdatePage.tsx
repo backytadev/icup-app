@@ -64,6 +64,7 @@ const dataFictional: UserResponse[] = [
     gender: '',
     email: '',
     churches: [],
+    ministries: [],
     roles: [],
     recordStatus: '',
   },

@@ -1,4 +1,5 @@
 import { ChurchResponse } from '@/modules/church/interfaces/church-response.interface';
+import { MinistryResponse } from '@/modules/ministry/interfaces/ministry-response.interface';
 import { type CreatedBy, type UpdatedBy } from '@/shared/interfaces/relations-response.interface';
 
 export interface UserResponse {
@@ -17,4 +18,5 @@ export interface UserResponse {
   inactivationReason?: string;
   recordStatus: string;
   churches: string[] | ChurchResponse[];
+  ministries: string[] | MinistryResponse[];
 }
