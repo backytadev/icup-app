@@ -8,5 +8,6 @@ export interface ChurchQueryParams {
   order: string;
 
   //* Validator for get all register
+  isSimpleQuery?: boolean;
   all?: boolean;
 }

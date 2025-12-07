@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useEffect, useState } from 'react';
 
 import { Trash } from 'lucide-react';
@@ -24,7 +20,7 @@ import {
   type ColumnFiltersState,
 } from '@tanstack/react-table';
 
-import { getUsersByTerm, getUsersReportByTerm } from '@/modules/user/services/user.service';
+import { getUsersByFilters, getUsersReportByFilters } from '@/modules/user/services/user.service';
 import { type UserQueryParams } from '@/modules/user/interfaces/user-query-params.interface';
 import { type UserSearchFormByTerm } from '@/modules/user/interfaces/user-form-search-by-term.interface';
 
@@ -82,7 +78,7 @@ export function SearchByTermUserDataTable<TData, TValue>({
   //* Queries
   const query = useQuery({
     queryKey: ['users-by-term', searchParams],
-    queryFn: () => getUsersByTerm(searchParams as UserQueryParams),
+    queryFn: () => getUsersByFilters(searchParams as UserQueryParams),
     enabled: !!searchParams,
     retry: false,
   });
@@ -151,7 +147,7 @@ export function SearchByTermUserDataTable<TData, TValue>({
   //* Query Report and Event trigger
   const generateReportQuery = useQuery({
     queryKey: ['users-report-by-term', searchParams],
-    queryFn: () => getUsersReportByTerm(searchParams as UserQueryParams),
+    queryFn: () => getUsersReportByFilters(searchParams as UserQueryParams),
     retry: false,
     enabled: false,
   });
@@ -195,7 +191,7 @@ export function SearchByTermUserDataTable<TData, TValue>({
                 {`${dataForm?.lastNamesTerm}`}
               </span>
             )}
-            {dataForm?.searchType === UserSearchType.FullName && (
+            {dataForm?.searchType === UserSearchType.FullNames && (
               <span className='font-medium text-[14px] md:text-[14.5px] italic'>
                 {`${dataForm?.firstNamesTerm} - ${dataForm?.lastNamesTerm} `}
               </span>

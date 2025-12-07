@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/return-await */
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useEffect, useState } from 'react';
 
 import { Trash } from 'lucide-react';
@@ -27,7 +22,7 @@ import {
 
 import { useUserStore } from '@/modules/user/stores/user.store';
 
-import { getGeneralUsersReport, getUsers } from '@/modules/user/services/user.service';
+import { getGeneralUsersReport, getAllUsers } from '@/modules/user/services/user.service';
 import { type UserQueryParams } from '@/modules/user/interfaces/user-query-params.interface';
 
 import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
@@ -79,7 +74,7 @@ export function GeneralUserSearchDataTable<TData, TValue>({
   //* Queries
   const query = useQuery({
     queryKey: ['general-users', searchParams],
-    queryFn: () => getUsers(searchParams as UserQueryParams),
+    queryFn: () => getAllUsers(searchParams as UserQueryParams),
     enabled: !!searchParams,
     retry: false,
   });

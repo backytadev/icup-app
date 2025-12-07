@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-
 import { useEffect, useState } from 'react';
 
 import { Trash } from 'lucide-react';
@@ -25,7 +20,7 @@ import {
   type ColumnFiltersState,
 } from '@tanstack/react-table';
 
-import { getChurches, getGeneralChurchesReport } from '@/modules/church/services/church.service';
+import { getAllChurches, getGeneralChurchesReport } from '@/modules/church/services/church.service';
 import { type ChurchQueryParams } from '@/modules/church/interfaces/church-query-params.interface';
 
 import { useChurchStore } from '@/modules/church/stores/church.store';
@@ -80,7 +75,7 @@ export function GeneralChurchSearchDataTable<TData, TValue>({
   //* Queries
   const query = useQuery({
     queryKey: ['general-churches', searchParams],
-    queryFn: () => getChurches(searchParams as ChurchQueryParams),
+    queryFn: () => getAllChurches(searchParams as ChurchQueryParams),
     enabled: !!searchParams,
     retry: false,
   });

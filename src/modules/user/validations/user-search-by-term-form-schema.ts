@@ -83,7 +83,7 @@ export const userSearchByTermFormSchema = z
   //* Full name
   .refine(
     (data) => {
-      if (data.searchType === UserSearchType.FullName) {
+      if (data.searchType === UserSearchType.FullNames) {
         return !!data.lastNamesTerm;
       }
       return true;
@@ -95,7 +95,7 @@ export const userSearchByTermFormSchema = z
   )
   .refine(
     (data) => {
-      if (data.searchType === UserSearchType.FullName) {
+      if (data.searchType === UserSearchType.FullNames) {
         return !!data.firstNamesTerm;
       }
       return true;

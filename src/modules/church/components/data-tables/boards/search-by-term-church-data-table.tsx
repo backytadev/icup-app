@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useEffect, useState } from 'react';
 
 import { Trash } from 'lucide-react';
@@ -25,8 +21,8 @@ import {
 } from '@tanstack/react-table';
 
 import {
-  getChurchesByTerm,
-  getChurchesReportByTerm,
+  getChurchesByFilters,
+  getChurchesReportByFilters,
 } from '@/modules/church/services/church.service';
 import { type ChurchQueryParams } from '@/modules/church/interfaces/church-query-params.interface';
 import { type ChurchSearchFormByTerm } from '@/modules/church/interfaces/church-search-form-by-term.interface';
@@ -91,7 +87,7 @@ export function SearchByTermChurchDataTable<TData, TValue>({
   //* Queries
   const query = useQuery({
     queryKey: ['churches-by-term', searchParams],
-    queryFn: () => getChurchesByTerm(searchParams as ChurchQueryParams),
+    queryFn: () => getChurchesByFilters(searchParams as ChurchQueryParams),
     enabled: !!searchParams,
     retry: false,
   });
@@ -160,7 +156,7 @@ export function SearchByTermChurchDataTable<TData, TValue>({
   //* Query Report and Event trigger
   const generateReportQuery = useQuery({
     queryKey: ['churches-report-by-term', searchParams],
-    queryFn: () => getChurchesReportByTerm(searchParams as ChurchQueryParams),
+    queryFn: () => getChurchesReportByFilters(searchParams as ChurchQueryParams),
     retry: false,
     enabled: false,
   });

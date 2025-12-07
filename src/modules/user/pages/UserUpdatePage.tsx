@@ -273,7 +273,7 @@ export const UserUpdatePage = (): JSX.Element => {
               )}
 
               {(searchType === UserSearchType.FirstNames ||
-                searchType === UserSearchType.FullName) && (
+                searchType === UserSearchType.FullNames) && (
                 <FormField
                   control={form.control}
                   name='firstNamesTerm'
@@ -297,7 +297,7 @@ export const UserUpdatePage = (): JSX.Element => {
               )}
 
               {(searchType === UserSearchType.LastNames ||
-                searchType === UserSearchType.FullName) && (
+                searchType === UserSearchType.FullNames) && (
                 <FormField
                   control={form.control}
                   name='lastNamesTerm'
@@ -504,7 +504,7 @@ export const UserUpdatePage = (): JSX.Element => {
                     searchType !== UserSearchType.LastNames &&
                     searchType &&
                     'md:col-span-1 lg:col-span-1 xl:col-span-1',
-                  searchType === UserSearchType.FullName &&
+                  searchType === UserSearchType.FullNames &&
                     'md:col-span-1 lg:col-span-1 xl:col-span-5'
                 )}
               >
