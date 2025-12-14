@@ -26,7 +26,7 @@ import {
 } from '@tanstack/react-table';
 
 import {
-  getMinistries,
+  getAllMinistries,
   getGeneralMinistriesReport,
 } from '@/modules/ministry/services/ministry.service';
 import { type MinistryQueryParams } from '@/modules/ministry/interfaces/ministry-query-params.interface';
@@ -83,7 +83,7 @@ export function GeneralMinistrySearchDataTable<TData, TValue>({
   //* Queries
   const query = useQuery({
     queryKey: ['general-ministries', searchParams],
-    queryFn: () => getMinistries(searchParams as MinistryQueryParams),
+    queryFn: () => getAllMinistries(searchParams as MinistryQueryParams),
     enabled: !!searchParams,
     retry: false,
   });

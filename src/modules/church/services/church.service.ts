@@ -49,7 +49,7 @@ export const getSimpleChurches = async ({
   });
 };
 
-//* Find all
+//* Find all churches
 export const getAllChurches = async (params: ChurchQueryParams): Promise<ChurchResponse[]> => {
   const { limit, offset, order, all } = params;
 
