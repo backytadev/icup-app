@@ -95,7 +95,9 @@ export const getGeneralMinistriesReport = async (params: MinistryQueryParams): P
   return true;
 };
 
-export const getMinistriesReportByTerm = async (params: MinistryQueryParams): Promise<boolean> => {
+export const getMinistriesReportByFilters = async (
+  params: MinistryQueryParams
+): Promise<boolean> => {
   const term = buildMinistrySearchTerm(params);
   const queryParams = buildMinistryQueryParams(params, term);
 

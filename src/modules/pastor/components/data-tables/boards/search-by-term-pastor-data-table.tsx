@@ -30,7 +30,10 @@ import {
 } from '@/modules/pastor/enums/pastor-search-type.enum';
 import { PastorSearchSelectOptionNames } from '@/modules/pastor/enums/pastor-search-select-option.enum';
 
-import { getPastorsByTerm, getPastorsReportByTerm } from '@/modules/pastor/services/pastor.service';
+import {
+  getPastorsByFilters,
+  getPastorsReportByFilters,
+} from '@/modules/pastor/services/pastor.service';
 import { type PastorQueryParams } from '@/modules/pastor/interfaces/pastor-query-params.interface';
 import { type PastorSearchFormByTerm } from '@/modules/pastor/interfaces/pastor-search-form-by-term.interface';
 
@@ -89,7 +92,7 @@ export function SearchByTermPastorDataTable<TData, TValue>({
   //* Queries
   const query = useQuery({
     queryKey: ['pastors-by-term', searchParams],
-    queryFn: () => getPastorsByTerm(searchParams as PastorQueryParams),
+    queryFn: () => getPastorsByFilters(searchParams as PastorQueryParams),
     enabled: !!searchParams,
     retry: false,
   });
@@ -163,7 +166,7 @@ export function SearchByTermPastorDataTable<TData, TValue>({
   //* Query Report and Event trigger
   const generateReportQuery = useQuery({
     queryKey: ['pastors-report-by-term', searchParams],
-    queryFn: () => getPastorsReportByTerm(searchParams as PastorQueryParams),
+    queryFn: () => getPastorsReportByFilters(searchParams as PastorQueryParams),
     retry: false,
     enabled: false,
   });

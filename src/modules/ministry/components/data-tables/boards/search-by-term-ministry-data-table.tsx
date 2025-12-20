@@ -26,7 +26,7 @@ import {
 
 import {
   getMinistriesByFilters,
-  getMinistriesReportByTerm,
+  getMinistriesReportByFilters,
 } from '@/modules/ministry/services/ministry.service';
 import { type MinistryQueryParams } from '@/modules/ministry/interfaces/ministry-query-params.interface';
 import { type MinistrySearchFormByTerm } from '@/modules/ministry/interfaces/ministry-search-form-by-term.interface';
@@ -168,7 +168,7 @@ export function SearchByTermMinistryDataTable<TData, TValue>({
   //* Query Report and Event trigger
   const generateReportQuery = useQuery({
     queryKey: ['ministries-report-by-term', searchParams],
-    queryFn: () => getMinistriesReportByTerm(searchParams as MinistryQueryParams),
+    queryFn: () => getMinistriesReportByFilters(searchParams as MinistryQueryParams),
     retry: false,
     enabled: false,
   });

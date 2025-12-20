@@ -1,542 +1,107 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
-import { isAxiosError } from 'axios';
-
-import { icupApi } from '@/core/api/icupApi';
-
+import { apiRequest } from '@/shared/helpers/api-request';
 import { RecordOrder } from '@/shared/enums/record-order.enum';
-
-import { PastorSearchType } from '@/modules/pastor/enums/pastor-search-type.enum';
+import { openPdfInNewTab } from '@/shared/helpers/open-pdf-tab';
 
 import { type PastorFormData } from '@/modules/pastor/interfaces/pastor-form-data.interface';
 import { type PastorResponse } from '@/modules/pastor/interfaces/pastor-response.interface';
 import { type PastorQueryParams } from '@/modules/pastor/interfaces/pastor-query-params.interface';
 
-//? CREATE PASTOR
-export const createPastor = async (formData: PastorFormData): Promise<PastorResponse> => {
-  try {
-    const { data } = await icupApi.post<PastorResponse>('/pastors', formData);
+import { buildPastorSearchTerm } from '@/modules/pastor/builders/buildPastorSearchTerm';
+import { buildPastorQueryParams } from '@/modules/pastor/builders/buildPastorQueryParam';
 
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado');
-  }
-};
-
-//? GET SIMPLE PASTORS
-export const getSimplePastors = async ({
-  isSimpleQuery,
-}: {
-  isSimpleQuery: boolean;
-}): Promise<PastorResponse[]> => {
-  try {
-    const { data } = await icupApi<PastorResponse[]>('/pastors', {
-      params: {
-        order: RecordOrder.Ascending,
-        isSimpleQuery: isSimpleQuery.toString(),
-      },
-    });
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
-};
-
-//? GET PASTORS (paginated)
-export const getPastors = async ({
-  limit,
-  offset,
-  all,
-  order,
-  churchId,
-}: PastorQueryParams): Promise<PastorResponse[]> => {
-  let result: PastorResponse[];
-
-  try {
-    if (!all) {
-      const { data } = await icupApi<PastorResponse[]>('/pastors', {
-        params: {
-          limit,
-          offset,
-          order,
-          churchId,
-        },
-      });
-
-      result = data;
-    } else {
-      const { data } = await icupApi<PastorResponse[]>('/pastors', {
-        params: {
-          order,
-          churchId,
-        },
-      });
-
-      result = data;
-    }
-
-    return result;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
-};
-
-//? GET PASTORS BY TERM (paginated)
-export const getPastorsByTerm = async ({
-  searchType,
-  inputTerm,
-  dateTerm,
-  selectTerm,
-  firstNamesTerm,
-  lastNamesTerm,
-  limit,
-  offset,
-  all,
-  order,
-  churchId,
-}: PastorQueryParams): Promise<PastorResponse[] | undefined> => {
-  let result: PastorResponse[];
-
-  //* Origin country, department, province, district, urban sector, address
-  if (
-    searchType === PastorSearchType.OriginCountry ||
-    searchType === PastorSearchType.ResidenceCountry ||
-    searchType === PastorSearchType.ResidenceDepartment ||
-    searchType === PastorSearchType.ResidenceProvince ||
-    searchType === PastorSearchType.ResidenceDistrict ||
-    searchType === PastorSearchType.ResidenceUrbanSector ||
-    searchType === PastorSearchType.ResidenceAddress
-  ) {
-    try {
-      if (!all) {
-        const { data } = await icupApi<PastorResponse[]>(`/pastors/${inputTerm}`, {
-          params: {
-            limit,
-            offset,
-            order,
-            churchId,
-            searchType,
-          },
-        });
-
-        result = data;
-      } else {
-        const { data } = await icupApi<PastorResponse[]>(`/pastors/${inputTerm}`, {
-          params: {
-            order,
-            churchId,
-            searchType,
-          },
-        });
-        result = data;
-      }
-
-      return result;
-    } catch (error) {
-      if (isAxiosError(error) && error.response) {
-        throw error.response.data;
-      }
-
-      throw new Error('Ocurrió un error inesperado, hable con el administrador');
-    }
-  }
-
-  //* Date Birth
-  if (searchType === PastorSearchType.BirthDate) {
-    try {
-      if (!all) {
-        const { data } = await icupApi<PastorResponse[]>(`/pastors/${dateTerm}`, {
-          params: {
-            limit,
-            offset,
-            order,
-            churchId,
-            searchType,
-          },
-        });
-
-        result = data;
-      } else {
-        const { data } = await icupApi<PastorResponse[]>(`/pastors/${dateTerm}`, {
-          params: {
-            order,
-            churchId,
-            searchType,
-          },
-        });
-        result = data;
-      }
-
-      return result;
-    } catch (error) {
-      if (isAxiosError(error) && error.response) {
-        throw error.response.data;
-      }
-
-      throw new Error('Ocurrió un error inesperado, hable con el administrador');
-    }
-  }
-
-  //* Status, Gender, Month Birth
-  if (
-    searchType === PastorSearchType.RecordStatus ||
-    searchType === PastorSearchType.Gender ||
-    searchType === PastorSearchType.BirthMonth ||
-    searchType === PastorSearchType.MaritalStatus
-  ) {
-    try {
-      if (!all) {
-        const { data } = await icupApi<PastorResponse[]>(`/pastors/${selectTerm}`, {
-          params: {
-            limit,
-            offset,
-            order,
-            churchId,
-            searchType,
-          },
-        });
-
-        result = data;
-      } else {
-        const { data } = await icupApi<PastorResponse[]>(`/pastors/${selectTerm}`, {
-          params: {
-            order,
-            churchId,
-            searchType,
-          },
-        });
-        result = data;
-      }
-
-      return result;
-    } catch (error) {
-      if (isAxiosError(error) && error.response) {
-        throw error.response.data;
-      }
-
-      throw new Error('Ocurrió un error inesperado, hable con el administrador');
-    }
-  }
-
-  //* First Name
-  if (searchType === PastorSearchType.FirstNames) {
-    try {
-      if (!all) {
-        const { data } = await icupApi<PastorResponse[]>(`/pastors/${firstNamesTerm}`, {
-          params: {
-            limit,
-            offset,
-            order,
-            churchId,
-            searchType,
-          },
-        });
-
-        result = data;
-      } else {
-        const { data } = await icupApi<PastorResponse[]>(`/pastors/${firstNamesTerm}`, {
-          params: {
-            order,
-            churchId,
-            searchType,
-          },
-        });
-
-        result = data;
-      }
-
-      return result;
-    } catch (error) {
-      if (isAxiosError(error) && error.response) {
-        throw error.response.data;
-      }
-
-      throw new Error('Ocurrió un error inesperado, hable con el administrador');
-    }
-  }
-
-  //* Last Name
-  if (searchType === PastorSearchType.LastNames) {
-    try {
-      if (!all) {
-        const { data } = await icupApi<PastorResponse[]>(`/pastors/${lastNamesTerm}`, {
-          params: {
-            limit,
-            offset,
-            order,
-            churchId,
-            searchType,
-          },
-        });
-
-        result = data;
-      } else {
-        const { data } = await icupApi<PastorResponse[]>(`/pastors/${lastNamesTerm}`, {
-          params: {
-            order,
-            churchId,
-            searchType,
-          },
-        });
-
-        result = data;
-      }
-
-      return result;
-    } catch (error) {
-      if (isAxiosError(error) && error.response) {
-        throw error.response.data;
-      }
-
-      throw new Error('Ocurrió un error inesperado, hable con el administrador');
-    }
-  }
-
-  //* Full Name
-  if (searchType === PastorSearchType.FullNames) {
-    try {
-      if (!all) {
-        const { data } = await icupApi<PastorResponse[]>(
-          `/pastors/${firstNamesTerm}-${lastNamesTerm}`,
-          {
-            params: {
-              limit,
-              offset,
-              order,
-              churchId,
-              searchType,
-            },
-          }
-        );
-
-        result = data;
-      } else {
-        const { data } = await icupApi<PastorResponse[]>(
-          `/pastors/${firstNamesTerm}-${lastNamesTerm}`,
-          {
-            params: {
-              order,
-              churchId,
-              searchType,
-            },
-          }
-        );
-
-        result = data;
-      }
-
-      return result;
-    } catch (error) {
-      if (isAxiosError(error) && error.response) {
-        throw error.response.data;
-      }
-
-      throw new Error('Ocurrió un error inesperado, hable con el administrador');
-    }
-  }
-};
-
-//* UPDATE PASTOR BY ID
 export interface UpdatePastorOptions {
   id: string;
   formData: PastorFormData;
 }
 
-export const updatePastor = async ({
-  id,
-  formData,
-}: UpdatePastorOptions): Promise<PastorResponse> => {
-  try {
-    const { data } = await icupApi.patch<PastorResponse>(`/pastors/${id}`, formData);
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado');
-  }
-};
-
-//! INACTIVATE PASTOR BY ID
 export interface InactivatePastorOptions {
   id: string;
   memberInactivationCategory: string;
   memberInactivationReason: string;
 }
 
-export const inactivatePastor = async ({
+//* Create
+export const createPastor = async (formData: PastorFormData): Promise<PastorResponse> => {
+  return apiRequest('post', '/pastors', formData);
+};
+
+//* Find simple pastors
+export const getSimplePastors = async ({
+  churchId,
+  isSimpleQuery,
+}: {
+  churchId?: string;
+  isSimpleQuery: boolean;
+}): Promise<PastorResponse[]> => {
+  return apiRequest<PastorResponse[]>('get', '/pastors', {
+    params: {
+      order: RecordOrder.Ascending,
+      isSimpleQuery: isSimpleQuery.toString(),
+      churchId,
+    },
+  });
+};
+
+//* Find all pastors
+export const getAllPastors = async (params: PastorQueryParams): Promise<PastorResponse[]> => {
+  const { limit, offset, order, all, churchId } = params;
+
+  const query = all ? { order, churchId } : { limit, offset, order, churchId };
+
+  return apiRequest<PastorResponse[]>('get', '/pastors', { params: query });
+};
+
+//* Find by filters
+export const getPastorsByFilters = async (params: PastorQueryParams): Promise<PastorResponse[]> => {
+  const term = buildPastorSearchTerm(params);
+  const queryParams = buildPastorQueryParams(params, term);
+
+  return apiRequest<PastorResponse[]>('get', '/pastors/search', { params: queryParams });
+};
+
+//* Update
+export const updatePastor = async ({
   id,
-  memberInactivationCategory,
-  memberInactivationReason,
-}: InactivatePastorOptions): Promise<void> => {
-  try {
-    const { data } = await icupApi.delete(`/pastors/${id}`, {
-      params: {
-        memberInactivationReason,
-        memberInactivationCategory,
-      },
-    });
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  formData,
+}: UpdatePastorOptions): Promise<PastorResponse> => {
+  return apiRequest('patch', `/pastors/${id}`, formData);
 };
 
-//? PASTOR REPORTS
-const openPdfInNewTab = (pdfBlob: Blob): void => {
-  const pdfUrl = URL.createObjectURL(pdfBlob);
-  const newTab = window.open(pdfUrl, '_blank');
-  newTab?.focus();
+//* Delete
+export const inactivatePastor = async (params: InactivatePastorOptions): Promise<void> => {
+  const { id, memberInactivationReason, memberInactivationCategory } = params;
+
+  return apiRequest('delete', `/pastors/${id}`, {
+    params: { memberInactivationCategory, memberInactivationReason },
+  });
 };
 
-//* General
-export const getGeneralPastorsReport = async ({
-  limit,
-  offset,
-  all,
-  order,
-  churchId,
-}: PastorQueryParams): Promise<boolean> => {
-  try {
-    if (!all) {
-      const res = await icupApi<Blob>('/reports/pastors', {
-        params: {
-          limit,
-          offset,
-          order,
-          churchId,
-        },
-        headers: {
-          'Content-Type': 'application/pdf',
-        },
-        responseType: 'blob',
-      });
+//* Reports
+export const getGeneralPastorsReport = async (params: PastorQueryParams): Promise<boolean> => {
+  const { limit, offset, order, all } = params;
 
-      openPdfInNewTab(res.data);
+  const query = all ? { order } : { limit, offset, order };
 
-      return true;
-    } else {
-      const res = await icupApi<Blob>('/reports/pastors', {
-        params: {
-          order,
-          churchId,
-        },
-        headers: {
-          'Content-Type': 'application/pdf',
-        },
-        responseType: 'blob',
-      });
+  const pdf = await apiRequest<Blob>('get', '/reports/pastors', {
+    params: query,
+    responseType: 'blob',
+  });
 
-      openPdfInNewTab(res.data);
-
-      return true;
-    }
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  openPdfInNewTab(pdf);
+  return true;
 };
 
-//* By term
-export const getPastorsReportByTerm = async ({
-  searchType,
-  inputTerm,
-  dateTerm,
-  selectTerm,
-  firstNamesTerm,
-  lastNamesTerm,
-  limit,
-  offset,
-  all,
-  order,
-  churchId,
-}: PastorQueryParams): Promise<boolean> => {
-  let newTerm: string | undefined = '';
+export const getPastorsReportByFilters = async (params: PastorQueryParams): Promise<boolean> => {
+  const term = buildPastorSearchTerm(params);
+  const queryParams = buildPastorQueryParams(params, term);
 
-  const termMapping: Record<PastorSearchType, string | undefined> = {
-    [PastorSearchType.FirstNames]: firstNamesTerm,
-    [PastorSearchType.LastNames]: lastNamesTerm,
-    [PastorSearchType.FullNames]: `${firstNamesTerm}-${lastNamesTerm}`,
-    [PastorSearchType.BirthDate]: dateTerm,
-    [PastorSearchType.BirthMonth]: selectTerm,
-    [PastorSearchType.Gender]: selectTerm,
-    [PastorSearchType.MaritalStatus]: selectTerm,
-    [PastorSearchType.OriginCountry]: inputTerm,
-    [PastorSearchType.ResidenceCountry]: inputTerm,
-    [PastorSearchType.ResidenceDepartment]: inputTerm,
-    [PastorSearchType.ResidenceProvince]: inputTerm,
-    [PastorSearchType.ResidenceDistrict]: inputTerm,
-    [PastorSearchType.ResidenceUrbanSector]: inputTerm,
-    [PastorSearchType.ResidenceAddress]: inputTerm,
-    [PastorSearchType.RecordStatus]: selectTerm,
-  };
+  const pdf = await apiRequest<Blob>('get', '/reports/pastors/search', {
+    params: queryParams,
+    responseType: 'blob',
+    headers: { 'Content-Type': 'application/pdf' },
+  });
 
-  newTerm = termMapping[searchType as PastorSearchType];
+  openPdfInNewTab(pdf);
 
-  try {
-    if (!all) {
-      const res = await icupApi<Blob>(`/reports/pastors/${newTerm}`, {
-        params: {
-          limit,
-          offset,
-          order,
-          churchId,
-          searchType,
-        },
-        headers: {
-          'Content-Type': 'application/pdf',
-        },
-        responseType: 'blob',
-      });
-
-      openPdfInNewTab(res.data);
-
-      return true;
-    } else {
-      const res = await icupApi<Blob>(`/reports/pastors/${newTerm}`, {
-        params: {
-          order,
-          churchId,
-          searchType,
-        },
-        headers: {
-          'Content-Type': 'application/pdf',
-        },
-        responseType: 'blob',
-      });
-
-      openPdfInNewTab(res.data);
-
-      return true;
-    }
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return true;
 };

@@ -27,7 +27,7 @@ import {
 
 import { usePastorStore } from '@/modules/pastor/stores/pastor.store';
 
-import { getGeneralPastorsReport, getPastors } from '@/modules/pastor/services/pastor.service';
+import { getGeneralPastorsReport, getAllPastors } from '@/modules/pastor/services/pastor.service';
 import { type PastorQueryParams } from '@/modules/pastor/interfaces/pastor-query-params.interface';
 
 import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
@@ -80,7 +80,7 @@ export function GeneralPastorSearchDataTable<TData, TValue>({
   //* Queries
   const query = useQuery({
     queryKey: ['general-pastors', searchParams],
-    queryFn: () => getPastors(searchParams as PastorQueryParams),
+    queryFn: () => getAllPastors(searchParams as PastorQueryParams),
     enabled: !!searchParams,
     retry: false,
   });
