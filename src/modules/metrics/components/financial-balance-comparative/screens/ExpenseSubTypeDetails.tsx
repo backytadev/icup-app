@@ -44,9 +44,9 @@ export const ExpenseSubTypeDetails = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className='w-[90vw] max-w-5xl p-8'>
+      <DialogContent className='w-[90vw] h-[90vh] lg:h-auto max-w-5xl p-8 rounded-xl overflow-y-auto'>
         <DialogHeader>
-          <DialogTitle className='text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100'>
+          <DialogTitle className='text-3xl md:text-3xl 2xl:text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100'>
             Detalles por sub-tipo
             <span className='mx-2 text-slate-400'>•</span>
             <span className='text-red-600 dark:text-red-400'>{selectedMonth}</span>
@@ -66,18 +66,18 @@ export const ExpenseSubTypeDetails = ({
         <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mt-6'>
           {data?.map((item: any) => (
             <div key={item.subType} className='rounded-xl p-6 bg-slate-100 dark:bg-slate-800'>
-              <p className='text-3xl font-semibold'>{item.subType}</p>
+              <p className='text-2xl lg:text-3xl 2xl:text-3xl font-semibold'>{item.subType}</p>
 
-              <p className='text-4xl font-bold text-red-600 mt-2'>
+              <p className='text-3xl lg:text-3xl 2xl:text-4xl  font-bold text-red-600 mt-2'>
                 S/ {item.accumulatedOfferingPEN.toLocaleString('es-PE')}
               </p>
 
               {item.accumulatedOfferingUSD > 0 && (
-                <p className='text-lg mt-1'>USD {item.accumulatedOfferingUSD}</p>
+                <p className='text-lg xl:text-xl mt-2'>USD {item.accumulatedOfferingUSD}</p>
               )}
 
               {item.accumulatedOfferingEUR > 0 && (
-                <p className='text-lg mt-1'>EUR {item.accumulatedOfferingEUR}</p>
+                <p className='text-lg xl:text-xl mt-2'>EUR {item.accumulatedOfferingEUR}</p>
               )}
             </div>
           ))}
