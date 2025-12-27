@@ -57,7 +57,7 @@ export const ExpenseSubTypeDetails = ({
 
         {isLoading && (
           <div className='flex justify-center items-center py-20'>
-            <p className='text-xl md:text-2xl 2xl:text-4xl text-slate-500'>Cargando datos...</p>
+            <p className='text-xl md:text-2xl 2xl:text-3xl text-slate-500'>Cargando datos...</p>
           </div>
         )}
 
