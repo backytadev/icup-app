@@ -394,3 +394,31 @@ export const getExpenseDetailByType = async ({
     throw new Error('Ocurrió un error inesperado, hable con el administrador');
   }
 };
+
+export const getExpenseDetailBySubType = async ({
+  year,
+  churchId,
+  startMonth,
+  endMonth,
+  type,
+}: ExpenseDetailByTypeQueryParams): Promise<any> => {
+  try {
+    const { data } = await icupApi<any>('/metrics/balance/expenses/monthly-detail-by-sub-type', {
+      params: {
+        churchId,
+        year,
+        startMonth,
+        endMonth,
+        type,
+      },
+    });
+
+    return data;
+  } catch (error) {
+    if (isAxiosError(error) && error.response) {
+      throw error.response.data;
+    }
+
+    throw new Error('Ocurrió un error inesperado, hable con el administrador');
+  }
+};

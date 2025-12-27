@@ -321,6 +321,7 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
                   <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-4 sm:px-8 md:px-4 gap-6'>
                     {incomeCards.map((card) => (
                       <IncomeSummaryCard
+                        key={card.label}
                         data={card}
                         startMonth={startMonth}
                         endMonth={endMonth}
@@ -340,6 +341,7 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
                   <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-4 sm:px-8 md:px-4 gap-6'>
                     {expenseCards.map((card) => (
                       <ExpenseSummaryCard
+                        key={card.label}
                         data={card}
                         startMonth={startMonth}
                         endMonth={endMonth}

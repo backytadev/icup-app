@@ -14,6 +14,7 @@ import {
 import { Card } from '@/shared/components/ui/card';
 import { getExpenseDetailByType } from '@/modules/metrics/services/offering-comparative-metrics.service';
 import { OfferingExpenseSearchTypeNames } from '@/modules/offering/expense/enums/offering-expense-search-type.enum';
+import { ExpenseSubTypeDetails } from '@/modules/metrics/components/financial-balance-comparative/screens/ExpenseSubTypeDetails';
 
 interface ExpenseSummaryCardProps {
   churchId?: string;
@@ -46,6 +47,8 @@ export const ExpenseSummaryCard = ({
   data,
 }: ExpenseSummaryCardProps) => {
   const [open, setOpen] = useState<boolean>(false);
+  const [openMonthDetail, setOpenMonthDetail] = useState(false);
+  const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
 
   const offeringType = getKeyBySpanishValue(data.label) ?? '';
 
@@ -67,6 +70,11 @@ export const ExpenseSummaryCard = ({
   const handleSearch = async (): Promise<void> => {
     setOpen(true);
     await getExpenseDetailByTypeQuery.refetch();
+  };
+
+  const handleOpenMonthDetail = async (month: string) => {
+    setSelectedMonth(month);
+    setOpenMonthDetail(true);
   };
 
   return (
@@ -181,11 +189,12 @@ export const ExpenseSummaryCard = ({
               {getExpenseDetailByTypeQuery?.data?.map((item: any) => (
                 <div
                   key={item.month}
+                  onClick={() => handleOpenMonthDetail(item.month)}
                   className={cn(
-                    'rounded-2xl p-8 transition-all duration-300',
+                    'rounded-2xl p-8 cursor-pointer transition-all duration-300',
                     'bg-slate-50 dark:bg-slate-800/40',
                     'border border-slate-200 dark:border-slate-700',
-                    'hover:shadow-xl hover:scale-[1.01]'
+                    'hover:shadow-xl hover:scale-[1.02]'
                   )}
                 >
                   <p className='text-3xl lg:text-4xl 2xl:text-[40px] font-extrabold text-slate-800 dark:text-slate-100 mb-6'>
@@ -231,6 +240,15 @@ export const ExpenseSummaryCard = ({
           </div>
         </DialogContent>
       </Dialog>
+
+      <ExpenseSubTypeDetails
+        churchId={churchId}
+        year={year}
+        selectedMonth={selectedMonth}
+        offeringType={offeringType}
+        open={openMonthDetail}
+        setOpen={setOpenMonthDetail}
+      />
     </>
   );
 };
