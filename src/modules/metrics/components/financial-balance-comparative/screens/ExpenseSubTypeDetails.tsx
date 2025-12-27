@@ -26,7 +26,7 @@ export const ExpenseSubTypeDetails = ({
   open,
   setOpen,
 }: ExpenseSubTypeDetailProps) => {
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['expense-detail-by-sub-type', selectedMonth, offeringType, churchId],
     queryFn: () =>
       getExpenseDetailBySubType({
@@ -42,9 +42,6 @@ export const ExpenseSubTypeDetails = ({
 
   if (!open) return null;
 
-  if (isLoading) return <p>Cargando detalle...</p>;
-  if (isError) return <p>Error al cargar el detalle</p>;
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className='w-[90vw] max-w-5xl p-8'>
@@ -58,7 +55,11 @@ export const ExpenseSubTypeDetails = ({
           <DialogDescription className='text-xl'>Información detalla por subtipo</DialogDescription>
         </DialogHeader>
 
-        {isLoading && <p className='text-center py-10'>Cargando subtipos...</p>}
+        {isLoading && (
+          <div className='flex justify-center items-center py-20'>
+            <p className='text-xl md:text-2xl 2xl:text-4xl text-slate-500'>Cargando datos...</p>
+          </div>
+        )}
 
         {!isLoading && data?.length === 0 && <p className='text-center py-10'>No hay datos</p>}
 
