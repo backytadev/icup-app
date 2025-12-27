@@ -25,7 +25,7 @@ export const createMinistry = async (formData: MinistryFormData): Promise<Minist
   return apiRequest('post', '/ministries', formData);
 };
 
-//* Find simple ministries
+//* Find simple
 export const getSimpleMinistries = async ({
   churchId,
   isSimpleQuery,
@@ -42,7 +42,7 @@ export const getSimpleMinistries = async ({
   });
 };
 
-//* Find all ministries
+//* Find all
 export const getAllMinistries = async (
   params: MinistryQueryParams
 ): Promise<MinistryResponse[]> => {

@@ -14,7 +14,7 @@ import {
   SearchTypesWorshipMinistry,
   SearchTypesEvangelismMinistry,
   SearchTypesTechnologyMinistry,
-  SearchTypesDiscipleshipMinistry,
+  SearchTypesBiblicalTeachingMinistry,
   SearchTypesIntercessionMinistry,
 } from '@/modules/ministry/enums/ministry-member-role.enum';
 import { MinistryType, MinistryTypeNames } from '@/modules/ministry/enums/ministry-type.enum';
@@ -293,7 +293,7 @@ export const MinistryMemberUpdateForm = ({
                           : block.ministryType === MinistryType.YouthMinistry
                             ? SearchTypesYouthMinistry
                             : block.ministryType === MinistryType.BiblicalTeachingMinistry
-                              ? SearchTypesDiscipleshipMinistry
+                              ? SearchTypesBiblicalTeachingMinistry
                               : block.ministryType === MinistryType.EvangelismMinistry
                                 ? SearchTypesEvangelismMinistry
                                 : block.ministryType === MinistryType.IntercessionMinistry

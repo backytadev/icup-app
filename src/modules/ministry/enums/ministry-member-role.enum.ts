@@ -115,18 +115,20 @@ export const SearchTypesNamesTechnologyMinistry: Record<SearchTypesTechnologyMin
 };
 
 //* Discipleship Ministry
-export enum SearchTypesDiscipleshipMinistry {
+export enum SearchTypesBiblicalTeachingMinistry {
   BiblicalTeachingMinistryLeader = 'biblical_teaching_ministry_leader',
   BiblicalTeachingMinistryCoLeader = 'biblical_teaching_ministry_co_leader',
   BiblicalTeachingMinistryMember = 'biblical_teaching_ministry_member',
 }
 
-export const SearchTypesNamesDiscipleshipMinistry: Record<SearchTypesDiscipleshipMinistry, string> =
-  {
-    [SearchTypesDiscipleshipMinistry.BiblicalTeachingMinistryLeader]: 'Líder',
-    [SearchTypesDiscipleshipMinistry.BiblicalTeachingMinistryCoLeader]: 'Co-Líder',
-    [SearchTypesDiscipleshipMinistry.BiblicalTeachingMinistryMember]: 'Miembro',
-  };
+export const SearchTypesNamesBiblicalTeachingMinistry: Record<
+  SearchTypesBiblicalTeachingMinistry,
+  string
+> = {
+  [SearchTypesBiblicalTeachingMinistry.BiblicalTeachingMinistryLeader]: 'Líder',
+  [SearchTypesBiblicalTeachingMinistry.BiblicalTeachingMinistryCoLeader]: 'Co-Líder',
+  [SearchTypesBiblicalTeachingMinistry.BiblicalTeachingMinistryMember]: 'Miembro',
+};
 
 //* Worship Ministry
 export enum SearchTypesWorshipMinistry {

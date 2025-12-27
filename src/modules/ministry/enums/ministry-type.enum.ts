@@ -14,6 +14,6 @@ export const MinistryTypeNames: Record<MinistryType, string> = {
   [MinistryType.IntercessionMinistry]: 'Ministerio de Intercesión',
   [MinistryType.EvangelismMinistry]: 'Ministerio de Evangelismo',
   [MinistryType.TechnologyMinistry]: 'Ministerio Tecnología',
-  [MinistryType.BiblicalTeachingMinistry]: 'Ministerio de Enseñanza Biblica',
+  [MinistryType.BiblicalTeachingMinistry]: 'Ministerio de Enseñanza Bíblica',
   [MinistryType.WorshipMinistry]: 'Ministerio de Alabanza',
 };

@@ -8,7 +8,7 @@ export enum MinistrySearchSelectOption {
   IntercessionMinistry = 'intercession_ministry',
   EvangelismMinistry = 'evangelism_ministry',
   TechnologyMinistry = 'technology_ministry',
-  DiscipleshipMinistry = 'discipleship_ministry',
+  BiblicalTeachingMinistry = 'biblical_teaching_ministry',
   WorshipMinistry = 'worship_ministry',
 }
 
@@ -20,7 +20,7 @@ export const MinistrySearchSelectOptionNames: Record<MinistrySearchSelectOption,
   [MinistrySearchSelectOption.IntercessionMinistry]: 'Ministerio de Intercesión',
   [MinistrySearchSelectOption.EvangelismMinistry]: 'Ministerio de Evangelismo',
   [MinistrySearchSelectOption.TechnologyMinistry]: 'Ministerio Tecnología',
-  [MinistrySearchSelectOption.DiscipleshipMinistry]: 'Ministerio de Discipulado',
+  [MinistrySearchSelectOption.BiblicalTeachingMinistry]: 'Ministerio de Enseñanza Bíblica',
   [MinistrySearchSelectOption.WorshipMinistry]: 'Ministerio de Alabanza',
 };
 
@@ -40,7 +40,7 @@ export enum MinistrySearchByMinistryType {
   IntercessionMinistry = 'intercession_ministry',
   EvangelismMinistry = 'evangelism_ministry',
   TechnologyMinistry = 'technology_ministry',
-  DiscipleshipMinistry = 'discipleship_ministry',
+  BiblicalTeachingMinistry = 'biblical_teaching_ministry',
   WorshipMinistry = 'worship_ministry',
 }
 
@@ -50,6 +50,6 @@ export const MinistrySearchNamesByMinistryType: Record<MinistrySearchByMinistryT
   [MinistrySearchByMinistryType.IntercessionMinistry]: 'Ministerio de Intercesión',
   [MinistrySearchByMinistryType.EvangelismMinistry]: 'Ministerio de Evangelismo',
   [MinistrySearchByMinistryType.TechnologyMinistry]: 'Ministerio Tecnología',
-  [MinistrySearchByMinistryType.DiscipleshipMinistry]: 'Ministerio de Discipulado',
+  [MinistrySearchByMinistryType.BiblicalTeachingMinistry]: 'Ministerio de Enseñanza Bíblica',
   [MinistrySearchByMinistryType.WorshipMinistry]: 'Ministerio de Alabanza',
 };
