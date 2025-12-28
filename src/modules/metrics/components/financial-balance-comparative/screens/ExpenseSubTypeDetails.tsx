@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { cn } from '@/shared/lib/utils';
 import {
   Dialog,
   DialogContent,
@@ -43,8 +44,15 @@ export const ExpenseSubTypeDetails = ({
   if (!open) return null;
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className='w-[90vw] h-[90vh] lg:h-auto max-w-5xl p-8 rounded-xl overflow-y-auto'>
+    <Dialog open={open} onOpenChange={() => setOpen(false)}>
+      <DialogContent
+        className={cn(
+          'w-[90vw] h-[70vh] md:w-[80vw] md:max-w-[80vw] xl:w-[60vw] xl:max-w-[55vw] md:h-auto overflow-y-auto p-10 rounded-2xl',
+          'bg-white dark:bg-slate-900',
+          'border border-slate-300 dark:border-slate-700',
+          'shadow-2xl'
+        )}
+      >
         <DialogHeader>
           <DialogTitle className='text-3xl md:text-3xl 2xl:text-4xl font-bold tracking-tight text-slate-900 dark:text-slate-100'>
             Detalles por sub-tipo
@@ -63,7 +71,7 @@ export const ExpenseSubTypeDetails = ({
 
         {!isLoading && data?.length === 0 && <p className='text-center py-10'>No hay datos</p>}
 
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-6 mt-6'>
+        <div className='flex flex-col md:grid md:grid-cols-2 gap-6 mt-6 h-auto'>
           {data?.map((item: any) => (
             <div key={item.subType} className='rounded-xl p-6 bg-slate-100 dark:bg-slate-800'>
               <p className='text-2xl lg:text-3xl 2xl:text-3xl font-semibold'>{item.subType}</p>

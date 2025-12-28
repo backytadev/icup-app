@@ -189,6 +189,9 @@ export const ExpenseSummaryCard = ({
               {getExpenseDetailByTypeQuery?.data?.map((item: any) => (
                 <div
                   key={item.month}
+                  onPointerDownCapture={(e) => {
+                    e.stopPropagation();
+                  }}
                   onClick={() => handleOpenMonthDetail(item.month)}
                   className={cn(
                     'rounded-2xl p-8 cursor-pointer transition-all duration-300',
