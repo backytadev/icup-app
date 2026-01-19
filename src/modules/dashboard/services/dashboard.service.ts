@@ -84,9 +84,10 @@ export const getProportionFamilyGroups = async ({
   //* Most populated family groups
   if (searchType === DashboardSearchType.MostPopulatedFamilyGroups) {
     try {
-      const { data } = await icupApi<FamilyGroupResponse[]>(`/family-groups/${populationLevel}`, {
+      const { data } = await icupApi<FamilyGroupResponse[]>(`/family-groups/search`, {
         params: {
           order,
+          term: populationLevel,
           churchId,
           searchType,
         },
@@ -105,9 +106,10 @@ export const getProportionFamilyGroups = async ({
   //* Less populated family groups
   if (searchType === DashboardSearchType.LessPopulatedFamilyGroups) {
     try {
-      const { data } = await icupApi<FamilyGroupResponse[]>(`/family-groups/${populationLevel}`, {
+      const { data } = await icupApi<FamilyGroupResponse[]>(`/family-groups/search`, {
         params: {
           order,
+          term: populationLevel,
           churchId,
           searchType,
         },

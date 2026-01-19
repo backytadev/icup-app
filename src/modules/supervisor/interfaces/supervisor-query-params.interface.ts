@@ -10,6 +10,9 @@ export interface SupervisorQueryParams {
   offset?: string;
   order: string;
   churchId?: string;
+  withNullZone?: boolean;
+  copastorTerm?: string;
+  churchTerm?: string;
 
   //* Validator for get all register
   all?: boolean;

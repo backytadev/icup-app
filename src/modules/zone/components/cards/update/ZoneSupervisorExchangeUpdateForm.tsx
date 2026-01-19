@@ -17,7 +17,7 @@ import { useZoneSupervisorUpdateMutation } from '@/modules/zone/hooks/useZoneSup
 import { useZoneSupervisorUpdateSubmitButtonLogic } from '@/modules/zone/hooks/useZoneSupervisorUpdateSubmitButtonLogic';
 
 import { type ZoneResponse } from '@/modules/zone/interfaces/zone-response.interface';
-import { getSupervisorsByCopastor } from '@/modules/supervisor/services/supervisor.service';
+import { getSupervisorsByFilters } from '@/modules/supervisor/services/supervisor.service';
 import { SupervisorSearchType } from '@/modules/supervisor/enums/supervisor-search-type.enum';
 import { zoneSupervisorUpdateFormSchema } from '@/modules/zone/validations/zone-supervisor-update-form-schema';
 
@@ -45,6 +45,7 @@ import { Button } from '@/shared/components/ui/button';
 import { Card, CardContent } from '@/shared/components/ui/card';
 import { Tabs, TabsContent } from '@/shared/components/ui/tabs';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
+import { RecordOrder } from '@/shared/enums/record-order.enum';
 
 interface ZoneSupervisorExchangeFormUpdateProps {
   id: string;
@@ -83,10 +84,12 @@ export const ZoneSupervisorExchangeUpdateForm = ({
   const supervisorsQuery = useQuery({
     queryKey: ['supervisors-by-copastor', data?.theirCopastor?.id],
     queryFn: () =>
-      getSupervisorsByCopastor({
-        searchType: SupervisorSearchType.CopastorId,
-        copastorId: data?.theirCopastor?.id ?? '',
-        isNullZone: false,
+      getSupervisorsByFilters({
+        searchType: SupervisorSearchType.AvailableSupervisorsByCopastor,
+        copastorTerm: data?.theirCopastor?.id ?? '',
+        withNullZone: false,
+        churchId: data?.theirChurch?.id ?? '',
+        order: RecordOrder.Ascending,
       }),
     enabled: !!data?.theirCopastor?.id,
     retry: false,

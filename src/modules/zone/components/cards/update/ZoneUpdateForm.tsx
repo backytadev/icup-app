@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/promise-function-async */
-
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-/* eslint-disable @typescript-eslint/no-misused-promises */
-
 import { useEffect, useState } from 'react';
 
 import { type z } from 'zod';
@@ -19,8 +14,9 @@ import { useZoneUpdateSubmitButtonLogic } from '@/modules/zone/hooks/useZoneUpda
 import { zoneFormSchema } from '@/modules/zone/validations/zone-form-schema';
 import { type ZoneResponse } from '@/modules/zone/interfaces/zone-response.interface';
 import { ZoneFormSkeleton } from '@/modules/zone/components/cards/update/ZoneFormSkeleton';
+import { SupervisorSearchType } from '@/modules/supervisor/enums/supervisor-search-type.enum';
 
-import { getSimpleSupervisors } from '@/modules/supervisor/services/supervisor.service';
+import { getSupervisorsByFilters } from '@/modules/supervisor/services/supervisor.service';
 
 import { AlertUpdateRelationZone } from '@/modules/zone/components/alerts/AlertUpdateRelationZone';
 
@@ -33,6 +29,7 @@ import { CountryNames } from '@/shared/enums/country.enum';
 import { ProvinceNames } from '@/shared/enums/province.enum';
 import { DistrictNames } from '@/shared/enums/district.enum';
 import { DepartmentNames } from '@/shared/enums/department.enum';
+import { RecordOrder } from '@/shared/enums/record-order.enum';
 
 import {
   Form,
@@ -144,13 +141,27 @@ export const ZoneUpdateForm = ({
   //* Queries
   const availableSupervisorsQuery = useQuery({
     queryKey: ['available-supervisors'],
-    queryFn: () => getSimpleSupervisors({ isNullZone: true, isSimpleQuery: true }),
+    queryFn: () =>
+      getSupervisorsByFilters({
+        searchType: SupervisorSearchType.AvailableSupervisorsByChurch,
+        withNullZone: true,
+        churchTerm: data?.theirChurch?.id ?? '',
+        churchId: data?.theirChurch?.id ?? '',
+        order: RecordOrder.Ascending,
+      }),
     retry: false,
   });
 
   const notAvailableSupervisorQuery = useQuery({
     queryKey: ['not-available-supervisors'],
-    queryFn: () => getSimpleSupervisors({ isNullZone: false, isSimpleQuery: true }),
+    queryFn: () =>
+      getSupervisorsByFilters({
+        searchType: SupervisorSearchType.AvailableSupervisorsByChurch,
+        withNullZone: false,
+        churchTerm: data?.theirChurch?.id ?? '',
+        churchId: data?.theirChurch?.id ?? '',
+        order: RecordOrder.Ascending,
+      }),
     retry: false,
   });
 

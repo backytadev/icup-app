@@ -221,6 +221,12 @@ export const DiscipleUpdateForm = ({
   } = useMinistryBlocks({ setMinistryBlocks });
 
   //* Queries
+  const queryChurches = useQuery({
+    queryKey: ['churches'],
+    queryFn: () => getSimpleChurches({ isSimpleQuery: true }),
+    retry: false,
+  });
+
   const familyGroupsQuery = useQuery({
     queryKey: ['family-groups', id],
     queryFn: async () => await getSimpleFamilyGroups({ isSimpleQuery: false }),
@@ -229,13 +235,11 @@ export const DiscipleUpdateForm = ({
 
   const supervisorsQuery = useQuery({
     queryKey: ['supervisors', id],
-    queryFn: async () => await getSimpleSupervisors({ isNullZone: false, isSimpleQuery: true }),
-    retry: false,
-  });
-
-  const queryChurches = useQuery({
-    queryKey: ['churches'],
-    queryFn: () => getSimpleChurches({ isSimpleQuery: true }),
+    queryFn: async () =>
+      await getSimpleSupervisors({
+        isSimpleQuery: true,
+        churchId: data?.theirChurch?.id ?? '',
+      }),
     retry: false,
   });
 

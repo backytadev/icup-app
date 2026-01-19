@@ -35,7 +35,7 @@ import { type FamilyGroupQueryParams } from '@/modules/family-group/interfaces/f
 import { type FamilyGroupSearchFormByTerm } from '@/modules/family-group/interfaces/family-group-search-by-term.interface';
 
 import {
-  getFamilyGroupsByTerm,
+  getFamilyGroupsByFilters,
   getFamilyGroupsReportByTerm,
 } from '@/modules/family-group/services/family-group.service';
 
@@ -93,7 +93,7 @@ export function SearchByTermFamilyGroupDataTable<TData, TValue>({
   //* Queries
   const query = useQuery({
     queryKey: ['family-groups-by-term', searchParams],
-    queryFn: () => getFamilyGroupsByTerm(searchParams as FamilyGroupQueryParams),
+    queryFn: () => getFamilyGroupsByFilters(searchParams as FamilyGroupQueryParams),
     enabled: !!searchParams,
     retry: false,
   });

@@ -10,6 +10,8 @@ export interface PreacherQueryParams {
   offset?: string;
   order: string;
   churchId?: string;
+  zoneTerm?: string;
+  withNullFamilyGroup?: boolean;
 
   //* Validator for get all register
   all?: boolean;

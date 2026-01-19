@@ -41,7 +41,7 @@ export const useModuleQueries = ({ memberType }: Options) => {
 
   const supervisorsQuery = useQuery({
     queryKey: ['supervisors'],
-    queryFn: () => getSimpleSupervisors({ isNullZone: false, isSimpleQuery: true }),
+    queryFn: () => getSimpleSupervisors({ isSimpleQuery: true }),
     enabled: !!memberType && memberType === MemberType.Supervisor,
     retry: false,
   });

@@ -35,7 +35,7 @@ import { type CopastorQueryParams } from '@/modules/copastor/interfaces/copastor
 import { type CopastorSearchFormByTerm } from '@/modules/copastor/interfaces/copastor-form-search-by-term.interface';
 
 import {
-  getCopastorsByTerm,
+  getCopastorsByFilters,
   getCopastorsReportByTerm,
 } from '@/modules/copastor/services/copastor.service';
 
@@ -94,7 +94,7 @@ export function SearchByTermCopastorDataTable<TData, TValue>({
   //* Queries
   const query = useQuery({
     queryKey: ['copastors-by-term', searchParams],
-    queryFn: () => getCopastorsByTerm(searchParams as CopastorQueryParams),
+    queryFn: () => getCopastorsByFilters(searchParams as CopastorQueryParams),
     enabled: !!searchParams,
     retry: false,
   });

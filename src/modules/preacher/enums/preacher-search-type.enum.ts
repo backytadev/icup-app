@@ -8,7 +8,7 @@ export enum PreacherSearchType {
   MaritalStatus = 'marital_status',
   OriginCountry = 'origin_country',
   ZoneName = 'zone_name',
-  ZoneId = 'zone_id',
+  AvailablePreachersByZone = 'available_preachers_by_zone',
   FamilyGroupCode = 'family_group_code',
   FamilyGroupName = 'family_group_name',
   ResidenceCountry = 'residence_country',

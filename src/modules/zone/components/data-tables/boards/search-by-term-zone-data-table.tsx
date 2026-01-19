@@ -24,7 +24,7 @@ import {
   type ColumnFiltersState,
 } from '@tanstack/react-table';
 
-import { getZonesByTerm, getZonesReportByTerm } from '@/modules/zone/services/zone.service';
+import { getZonesByFilters, getZonesReportByTerm } from '@/modules/zone/services/zone.service';
 import { type ZoneQueryParams } from '@/modules/zone/interfaces/zone-query-params.interface';
 import { type ZoneSearchFormByTerm } from '@/modules/zone/interfaces/zone-search-form-by-term.interface';
 
@@ -83,7 +83,7 @@ export function SearchByTermZoneDataTable<TData, TValue>({
   //* Queries
   const query = useQuery({
     queryKey: ['zones-by-term', searchParams],
-    queryFn: () => getZonesByTerm(searchParams as ZoneQueryParams),
+    queryFn: () => getZonesByFilters(searchParams as ZoneQueryParams),
     enabled: !!searchParams,
     retry: false,
   });

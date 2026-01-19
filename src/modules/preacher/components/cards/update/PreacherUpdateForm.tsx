@@ -232,7 +232,11 @@ export const PreacherUpdateForm = ({
   //* Queries
   const supervisorsQuery = useQuery({
     queryKey: ['supervisors', id],
-    queryFn: () => getSimpleSupervisors({ isNullZone: false, isSimpleQuery: true }),
+    queryFn: () =>
+      getSimpleSupervisors({
+        isSimpleQuery: true,
+        churchId: data?.theirChurch?.id ?? '',
+      }),
     retry: false,
   });
 

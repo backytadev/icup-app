@@ -15,15 +15,18 @@ import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
 import { cn } from '@/shared/lib/utils';
 
 import { DistrictNames } from '@/shared/enums/district.enum';
+import { RecordOrder } from '@/shared/enums/record-order.enum';
 import { Country, CountryNames } from '@/shared/enums/country.enum';
 import { Province, ProvinceNames } from '@/shared/enums/province.enum';
 import { Department, DepartmentNames } from '@/shared/enums/department.enum';
+import { SupervisorSearchType } from '@/modules/supervisor/enums/supervisor-search-type.enum';
 
 import { PageTitle } from '@/shared/components/page-header/PageTitle';
 import { PageSubTitle } from '@/shared/components/page-header/PageSubTitle';
 
 import { zoneFormSchema } from '@/modules/zone/validations/zone-form-schema';
-import { getSimpleSupervisors } from '@/modules/supervisor/services/supervisor.service';
+import { getSimpleChurches } from '@/modules/church/services/church.service';
+import { getSupervisorsByFilters } from '@/modules/supervisor/services/supervisor.service';
 
 import { useZoneCreationMutation } from '@/modules/zone/hooks/useZoneCreationMutation';
 import { useZoneCreationSubmitButtonLogic } from '@/modules/zone/hooks/useZoneCreationSubmitButtonLogic';
@@ -104,10 +107,24 @@ export const ZoneCreatePage = (): JSX.Element => {
     setIsSubmitButtonDisabled,
   });
 
+  const queryChurches = useQuery({
+    queryKey: ['churches'],
+    queryFn: () => getSimpleChurches({ isSimpleQuery: true }),
+    retry: false,
+  });
+
   //* Queries
   const { data } = useQuery({
     queryKey: ['supervisors-for-zone'],
-    queryFn: () => getSimpleSupervisors({ isNullZone: true, isSimpleQuery: true }),
+    queryFn: () =>
+      getSupervisorsByFilters({
+        searchType: SupervisorSearchType.AvailableSupervisorsByChurch,
+        withNullZone: true,
+        churchTerm: queryChurches?.data?.[0]?.id ?? '',
+        churchId: queryChurches?.data?.[0]?.id ?? '', // colocar de la iglesia general para buscar
+        order: RecordOrder.Ascending,
+      }),
+    enabled: !!queryChurches.data,
     retry: false,
   });
 

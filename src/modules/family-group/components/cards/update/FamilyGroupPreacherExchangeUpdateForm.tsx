@@ -17,7 +17,7 @@ import { useFamilyGroupPreacherUpdateEffects } from '@/modules/family-group/hook
 import { useFamilyGroupPreacherUpdateMutation } from '@/modules/family-group/hooks/useFamilyGroupPreacherUpdateMutation';
 import { useFamilyGroupPreacherUpdateSubmitButtonLogic } from '@/modules/family-group/hooks/useFamilyGroupPreacherUpdateSubmitButtonLogic';
 
-import { getPreachersByZone } from '@/modules/preacher/services/preacher.service';
+import { getPreachersByFilters } from '@/modules/preacher/services/preacher.service';
 import { type FamilyGroupResponse } from '@/modules/family-group/interfaces/family-group-response.interface';
 import { familyGroupPreacherUpdateFormSchema } from '@/modules/family-group/validations/family-group-preacher-update-form-schema';
 
@@ -43,6 +43,7 @@ import {
 } from '@/shared/components/ui/command';
 import { Input } from '@/shared/components/ui/input';
 import { Button } from '@/shared/components/ui/button';
+import { RecordOrder } from '@/shared/enums/record-order.enum';
 import { Card, CardContent } from '@/shared/components/ui/card';
 import { Tabs, TabsContent } from '@/shared/components/ui/tabs';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
@@ -83,10 +84,11 @@ export const FamilyGroupPreacherExchangeUpdateForm = ({
   const preachersQuery = useQuery({
     queryKey: ['preachers-by-zone', data?.theirZone?.id],
     queryFn: () =>
-      getPreachersByZone({
-        searchType: PreacherSearchType.ZoneId,
-        zoneId: data?.theirZone?.id ?? '',
-        isNullFamilyGroup: false,
+      getPreachersByFilters({
+        searchType: PreacherSearchType.AvailablePreachersByZone,
+        zoneTerm: data?.theirZone?.id ?? '',
+        withNullFamilyGroup: false,
+        order: RecordOrder.Ascending,
       }),
     enabled: !!data?.theirZone?.id,
     retry: false,

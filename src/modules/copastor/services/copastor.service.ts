@@ -1,7 +1,3 @@
-import { isAxiosError } from 'axios';
-
-import { icupApi } from '@/core/api/icupApi';
-
 import { apiRequest } from '@/shared/helpers/api-request';
 import { RecordOrder } from '@/shared/enums/record-order.enum';
 import { openPdfInNewTab } from '@/shared/helpers/open-pdf-tab';
@@ -55,7 +51,7 @@ export const getCopastors = async (params: CopastorQueryParams): Promise<Copasto
 };
 
 //* Find by filters
-export const getCopastorsByTerm = async (
+export const getCopastorsByFilters = async (
   params: CopastorQueryParams
 ): Promise<CopastorResponse[]> => {
   const term = buildCopastorSearchTerm(params);
@@ -65,22 +61,11 @@ export const getCopastorsByTerm = async (
 };
 
 //* Update
-
 export const updateCopastor = async ({
   id,
   formData,
 }: UpdateCopastorOptions): Promise<CopastorResponse> => {
-  try {
-    const { data } = await icupApi.patch<CopastorResponse>(`/copastors/${id}`, formData);
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado');
-  }
+  return apiRequest('patch', `/copastors/${id}`, formData);
 };
 
 //* Delete

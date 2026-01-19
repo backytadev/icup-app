@@ -34,7 +34,7 @@ import { DiscipleSearchSubTypeNames } from '@/modules/disciple/enums/disciple-se
 import { DiscipleSearchSelectOptionNames } from '@/modules/disciple/enums/disciple-search-select-option.enum';
 
 import {
-  getDisciplesByTerm,
+  getDisciplesByFilters,
   getDisciplesReportByTerm,
 } from '@/modules/disciple/services/disciple.service';
 import { type DiscipleQueryParams } from '@/modules/disciple/interfaces/disciple-query-params.interface';
@@ -93,7 +93,7 @@ export function SearchByTermDiscipleDataTable<TData, TValue>({
   //* Queries
   const query = useQuery({
     queryKey: ['disciples-by-term', searchParams],
-    queryFn: () => getDisciplesByTerm(searchParams as DiscipleQueryParams),
+    queryFn: () => getDisciplesByFilters(searchParams as DiscipleQueryParams),
     enabled: !!searchParams,
     retry: false,
   });

@@ -22,9 +22,10 @@ import { familyGroupFormSchema } from '@/modules/family-group/validations/family
 import { FamilyGroupServiceTimeNames } from '@/modules/family-group/enums/family-group-service-time.enum';
 
 import { PreacherSearchType } from '@/modules/preacher/enums/preacher-search-type.enum';
-import { getPreachersByZone } from '@/modules/preacher/services/preacher.service';
+import { getPreachersByFilters } from '@/modules/preacher/services/preacher.service';
 
 import { cn } from '@/shared/lib/utils';
+import { RecordOrder } from '@/shared/enums/record-order.enum';
 import { PageTitle } from '@/shared/components/page-header/PageTitle';
 import { PageSubTitle } from '@/shared/components/page-header/PageSubTitle';
 
@@ -152,10 +153,11 @@ export const FamilyGroupCreatePage = (): JSX.Element => {
   const preachersQuery = useQuery({
     queryKey: ['creation-preachers-by-zone', theirZone],
     queryFn: () =>
-      getPreachersByZone({
-        searchType: PreacherSearchType.ZoneId,
-        zoneId: theirZone ?? '',
-        isNullFamilyGroup: true,
+      getPreachersByFilters({
+        searchType: PreacherSearchType.AvailablePreachersByZone,
+        zoneTerm: theirZone ?? '',
+        withNullFamilyGroup: true,
+        order: RecordOrder.Ascending,
       }),
     retry: false,
     enabled: !!theirZone,

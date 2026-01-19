@@ -34,7 +34,7 @@ import { PreacherSearchSubTypeNames } from '@/modules/preacher/enums/preacher-se
 import { PreacherSearchSelectOptionNames } from '@/modules/preacher/enums/preacher-search-select-option.enum';
 
 import {
-  getPreachersByTerm,
+  getPreachersByFilters,
   getPreachersReportByTerm,
 } from '@/modules/preacher/services/preacher.service';
 
@@ -94,7 +94,7 @@ export function SearchByTermPreacherDataTable<TData, TValue>({
   //* Queries
   const query = useQuery({
     queryKey: ['preachers-by-term', searchParams],
-    queryFn: () => getPreachersByTerm(searchParams as PreacherQueryParams),
+    queryFn: () => getPreachersByFilters(searchParams as PreacherQueryParams),
     enabled: !!searchParams,
     retry: false,
   });

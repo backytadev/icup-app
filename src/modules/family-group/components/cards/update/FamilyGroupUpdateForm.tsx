@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useState } from 'react';
 
 import { type z } from 'zod';
@@ -20,6 +15,7 @@ import { familyGroupFormSchema } from '@/modules/family-group/validations/family
 import { FamilyGroupServiceTimeNames } from '@/modules/family-group/enums/family-group-service-time.enum';
 import { type FamilyGroupResponse } from '@/modules/family-group/interfaces/family-group-response.interface';
 import { FamilyGroupFormSkeleton } from '@/modules/family-group/components/cards/update/FamilyGroupFormSkeleton';
+import { AlertUpdateRelationFamilyGroup } from '@/modules/family-group/components/alerts/AlertUpdateRelationFamilyGroup';
 
 import { useFamilyGroupUpdateEffects } from '@/modules/family-group/hooks/useFamilyGroupUpdateEffects';
 import { useFamilyGroupUpdateMutation } from '@/modules/family-group/hooks/useFamilyGroupUpdateMutation';
@@ -27,7 +23,7 @@ import { useFamilyGroupUpdateSubmitButtonLogic } from '@/modules/family-group/ho
 
 import {
   getSimplePreachers,
-  getPreachersByZone,
+  getPreachersByFilters,
 } from '@/modules/preacher/services/preacher.service';
 
 import { cn } from '@/shared/lib/utils';
@@ -35,6 +31,7 @@ import { cn } from '@/shared/lib/utils';
 import { CountryNames } from '@/shared/enums/country.enum';
 import { ProvinceNames } from '@/shared/enums/province.enum';
 import { DistrictNames } from '@/shared/enums/district.enum';
+import { RecordOrder } from '@/shared/enums/record-order.enum';
 import { DepartmentNames } from '@/shared/enums/department.enum';
 import { RecordStatus } from '@/shared/enums/record-status.enum';
 import { UrbanSectorNames } from '@/shared/enums/urban-sector.enum';
@@ -72,7 +69,6 @@ import { Textarea } from '@/shared/components/ui/textarea';
 import { Card, CardContent } from '@/shared/components/ui/card';
 import { Tabs, TabsContent } from '@/shared/components/ui/tabs';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
-import { AlertUpdateRelationFamilyGroup } from '../../alerts/AlertUpdateRelationFamilyGroup';
 
 interface FamilyGroupFormUpdateProps {
   id: string;
@@ -163,17 +159,18 @@ export const FamilyGroupUpdateForm = ({
 
   const preachersQuery = useQuery({
     queryKey: ['preachers'],
-    queryFn: () => getSimplePreachers({ isSimpleQuery: true }),
+    queryFn: () => getSimplePreachers({ isSimpleQuery: true, churchId: data?.theirChurch?.id }),
     retry: false,
   });
 
   const preachersByZoneQuery = useQuery({
     queryKey: ['update-preachers-by-zone', theirZone],
     queryFn: () =>
-      getPreachersByZone({
-        searchType: PreacherSearchType.ZoneId,
-        zoneId: theirZone ?? '',
-        isNullFamilyGroup: true,
+      getPreachersByFilters({
+        searchType: PreacherSearchType.AvailablePreachersByZone,
+        zoneTerm: theirZone ?? '',
+        withNullFamilyGroup: true,
+        order: RecordOrder.Ascending,
       }),
     enabled: !!theirZone,
     retry: false,

@@ -35,7 +35,7 @@ import { type SupervisorQueryParams } from '@/modules/supervisor/interfaces/supe
 import { type SupervisorSearchFormByTerm } from '@/modules/supervisor/interfaces/supervisor-form-search-by-term.interface';
 
 import {
-  getSupervisorsByTerm,
+  getSupervisorsByFilters,
   getSupervisorsReportByTerm,
 } from '@/modules/supervisor/services/supervisor.service';
 
@@ -94,7 +94,7 @@ export function SearchByTermSupervisorDataTable<TData, TValue>({
   //* Queries
   const query = useQuery({
     queryKey: ['supervisors-by-term', searchParams],
-    queryFn: () => getSupervisorsByTerm(searchParams as SupervisorQueryParams),
+    queryFn: () => getSupervisorsByFilters(searchParams as SupervisorQueryParams),
     enabled: !!searchParams,
     retry: false,
   });

@@ -15,7 +15,8 @@ export enum SupervisorSearchType {
   ResidenceUrbanSector = 'residence_urban_sector',
   ResidenceAddress = 'residence_address',
   RecordStatus = 'record_status',
-  CopastorId = 'copastor_id',
+  AvailableSupervisorsByCopastor = 'available_supervisors_by_copastor',
+  AvailableSupervisorsByChurch = 'available_supervisors_by_church',
 }
 
 export const SupervisorSearchTypeNames: Partial<Record<SupervisorSearchType, string>> = {
