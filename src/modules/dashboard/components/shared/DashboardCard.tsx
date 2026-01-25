@@ -54,7 +54,7 @@ export const DashboardCard = ({
       )}
     >
       {/* Header */}
-      <CardHeader className='flex flex-row items-start justify-between space-y-0 pb-3 pt-4 px-4 md:px-5'>
+      <CardHeader className='flex flex-col sm:flex-row items-start justify-between space-y-0 pb-3 pt-4 px-4 md:px-5'>
         <div className='flex items-start gap-3'>
           {icon && (
             <div className='p-2 rounded-lg bg-gradient-to-br from-blue-500/10 to-blue-600/5 dark:from-blue-500/20 dark:to-blue-600/10'>
@@ -70,7 +70,7 @@ export const DashboardCard = ({
             </CardDescription>
           </div>
         </div>
-        {headerAction && <div className='flex-shrink-0'>{headerAction}</div>}
+        {headerAction && <div className='flex-shrink-0 mx-auto sm:m-0 pt-2 sm:mt-0'>{headerAction}</div>}
       </CardHeader>
 
       {/* Content */}
