@@ -1,7 +1,6 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
-
 import { useEffect } from 'react';
 
+import { DashboardHeader } from '@/modules/dashboard/components/shared/DashboardHeader';
 import { MembersInfoCard } from '@/modules/dashboard/components/cards/info/LastMembersCard';
 import { HousesInfoCard } from '@/modules/dashboard/components/cards/info/TopFamilyGroupsCard';
 import { LastSundayOfferingsCard } from '@/modules/dashboard/components/cards/charts/LastSundaysOfferingsCard';
@@ -9,27 +8,54 @@ import { TopFamilyGroupsOfferingsCard } from '@/modules/dashboard/components/car
 
 export const DashboardPage = (): JSX.Element => {
   useEffect(() => {
-    document.title = 'Panel Administrativo';
+    document.title = 'Panel Administrativo - ICUP';
   }, []);
 
   return (
-    <div className='animate-fadeIn'>
-      <h1 className='text-center pb-2 pt-3 md:pt-2 md:pb-2 font-sans text-2xl sm:text-3xl font-bold text-blue-500 text-[2rem] sm:text-[2.4rem] md:text-[2.6rem] lg:text-5xl xl:text-5x'>
-        Panel Administrativo
-      </h1>
-      <p className='text-center font-sans font-bold px-4 pb-4 text-[14.5px] sm:text-[15px] lg:text-base xl:text-lg'>
-        Resumen informativo y gráfico de los últimos registros de la iglesia.
-      </p>
-      <hr className='p-[0.02rem] bg-slate-500' />
+    <div className='min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950'>
+      <div className='max-w-[1800px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6'>
+        {/* Header */}
+        <DashboardHeader />
 
-      <div
-        className='h-auto sm:h-[168rem] mb-5 md:h-auto w-full grid grid-cols-1 gap-y-5 xl:gap-6 2xl:gap-6 lg:grid-rows-1 lg:grid-cols-1 xl:grid-rows-1 xl:grid-cols-6 
-                   py-5 px-2 sm:py-6 sm:px-4 lg:py-6 lg:px-4 xl:px-4 xl:pt-6'
-      >
-        <LastSundayOfferingsCard />
-        <MembersInfoCard />
-        <HousesInfoCard />
-        <TopFamilyGroupsOfferingsCard />
+        {/* Main Grid */}
+        <div className='grid grid-cols-1 xl:grid-cols-6 gap-6'>
+          {/* Charts Row */}
+          <div
+            className='xl:col-span-3 opacity-0 animate-slide-in-up'
+            style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}
+          >
+            <LastSundayOfferingsCard />
+          </div>
+
+          <div
+            className='xl:col-span-3 opacity-0 animate-slide-in-up'
+            style={{ animationDelay: '0.25s', animationFillMode: 'forwards' }}
+          >
+            <TopFamilyGroupsOfferingsCard />
+          </div>
+
+          {/* Info Cards Row */}
+          <div
+            className='xl:col-span-3 opacity-0 animate-slide-in-up'
+            style={{ animationDelay: '0.3s', animationFillMode: 'forwards' }}
+          >
+            <MembersInfoCard />
+          </div>
+
+          <div
+            className='xl:col-span-3 opacity-0 animate-slide-in-up'
+            style={{ animationDelay: '0.35s', animationFillMode: 'forwards' }}
+          >
+            <HousesInfoCard />
+          </div>
+        </div>
+
+        {/* Footer */}
+        <footer className='pt-4 pb-2 text-center'>
+          <p className='text-xs text-slate-400 dark:text-slate-500 font-inter'>
+            Panel Administrativo ICUP &copy; {new Date().getFullYear()}
+          </p>
+        </footer>
       </div>
     </div>
   );

@@ -92,6 +92,24 @@ export default {
           900: '#253555',
           950: '#111827',
         },
+        // ICUP Custom colors
+        'icup': {
+          'primary': {
+            DEFAULT: '#1e3a5f',
+            light: '#2563eb',
+            dark: '#172554',
+          },
+          'accent': {
+            DEFAULT: '#d4a853',
+            light: '#f4d03f',
+            dark: '#b8923f',
+          },
+          'surface': {
+            DEFAULT: '#f8fafc',
+            elevated: '#ffffff',
+            dark: '#0f172a',
+          },
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',
@@ -117,9 +135,17 @@ export default {
         bounce: 'bounce 1s infinite',
         slideDown: 'slideDown 300ms ease-out',
         slideUp: 'slideUp 300ms ease-out',
+        'slide-in-up': 'slideInUp 0.5s ease-out forwards',
+        'slide-in-left': 'slideInLeft 0.5s ease-out forwards',
+        'slide-in-right': 'slideInRight 0.5s ease-out forwards',
+        'fade-in-scale': 'fadeInScale 0.4s ease-out forwards',
+        'float-subtle': 'floatSubtle 6s ease-in-out infinite',
+        'shimmer': 'shimmer 1.5s ease-in-out infinite',
       },
       fontFamily: {
         'dancing-script': ['Dancing Script', 'cursive'],
+        'outfit': ['Outfit', 'sans-serif'],
+        'inter': ['Inter', 'sans-serif'],
       },
       keyframes: {
         fadeIn: {
@@ -141,6 +167,30 @@ export default {
         slideUp: {
           from: { height: 'var(--radix-collapsible-content-height)' },
           to: { height: '0' },
+        },
+        slideInUp: {
+          '0%': { transform: 'translateY(20px)', opacity: '0' },
+          '100%': { transform: 'translateY(0)', opacity: '1' },
+        },
+        slideInLeft: {
+          '0%': { transform: 'translateX(-20px)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' },
+        },
+        slideInRight: {
+          '0%': { transform: 'translateX(20px)', opacity: '0' },
+          '100%': { transform: 'translateX(0)', opacity: '1' },
+        },
+        fadeInScale: {
+          '0%': { transform: 'scale(0.95)', opacity: '0' },
+          '100%': { transform: 'scale(1)', opacity: '1' },
+        },
+        floatSubtle: {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '50%': { transform: 'translateY(-8px)' },
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '200% 0' },
+          '100%': { backgroundPosition: '-200% 0' },
         },
       },
       extendUtilities: {

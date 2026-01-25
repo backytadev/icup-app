@@ -1,242 +1,105 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
-import { useEffect, useState } from 'react';
-
-import { type z } from 'zod';
-import { useForm } from 'react-hook-form';
-import { useQuery } from '@tanstack/react-query';
-import { FcDeleteDatabase } from 'react-icons/fc';
-import { ArrowUpDown, CheckIcon } from 'lucide-react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { CaretSortIcon } from '@radix-ui/react-icons';
-
-import { getSimpleChurches } from '@/modules/church/services/church.service';
-
-import { DashboardSearchType } from '@/modules/dashboard/enums/dashboard-search-type.enum';
-import { getProportionFamilyGroups } from '@/modules/dashboard/services/dashboard.service';
-import { FamilyGroupInfoItem } from '@/modules/dashboard/components/cards/info/FamilyGroupInfoItem';
-import { dashBoardSearchFormSchema } from '@/modules/dashboard/validations/dashboard-search-form-schema';
+import { useState } from 'react';
+import { HiHome } from 'react-icons/hi2';
+import { ArrowUpDown } from 'lucide-react';
 
 import { cn } from '@/shared/lib/utils';
 import { RecordOrder } from '@/shared/enums/record-order.enum';
 
-import {
-  Card,
-  CardTitle,
-  CardHeader,
-  CardContent,
-  CardDescription,
-} from '@/shared/components/ui/card';
-import {
-  Command,
-  CommandItem,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-} from '@/shared/components/ui/command';
-import { Button } from '@/shared/components/ui/button';
-import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
-import { Form, FormControl, FormField, FormItem, FormMessage } from '@/shared/components/ui/form';
+import { useChurchSelector, useDashboardQuery } from '@/modules/dashboard/hooks';
+import { ChurchSelector, DashboardCard } from '@/modules/dashboard/components/shared';
+import { DashboardSearchType } from '@/modules/dashboard/enums/dashboard-search-type.enum';
+import { getProportionFamilyGroups } from '@/modules/dashboard/services/dashboard.service';
+import { FamilyGroupInfoItem } from '@/modules/dashboard/components/cards/info/FamilyGroupInfoItem';
 
-interface SearchParamsOptions {
-  churchId?: string;
-}
+import { Button } from '@/shared/components/ui/button';
 
 export function HousesInfoCard(): JSX.Element {
-  //* States
-  const [changedValue, setChangedValue] = useState<boolean>(true);
-  const [searchParams, setSearchParams] = useState<SearchParamsOptions | undefined>(undefined);
-  const [isInputSearchChurchOpen, setIsInputSearchChurchOpen] = useState<boolean>(false);
+  const [showMostPopulated, setShowMostPopulated] = useState(true);
 
-  //* Form
-  const form = useForm<z.infer<typeof dashBoardSearchFormSchema>>({
-    resolver: zodResolver(dashBoardSearchFormSchema),
-    mode: 'onChange',
-    defaultValues: {
-      churchId: '',
-    },
-  });
+  const {
+    searchParams,
+    isPopoverOpen,
+    setIsPopoverOpen,
+    churchesQuery,
+    selectedChurchCode,
+    handleChurchSelect,
+    form,
+  } = useChurchSelector({ queryKey: 'family-groups' });
 
-  //* Watchers
-  const churchId = form.getValues('churchId');
+  const churchId = form.getValues('churchId') ?? searchParams?.churchId;
 
-  const toggleChangeValue = (): void => {
-    setChangedValue(!changedValue);
-  };
-
-  //* Queries
-  const query = useQuery({
+  const { data, isLoading, isFetching, isEmpty } = useDashboardQuery({
     queryKey: [
       'proportion-family-groups',
-      changedValue ? 'most-populated' : 'less-populated',
+      showMostPopulated ? 'most-populated' : 'less-populated',
       searchParams,
     ],
     queryFn: () =>
       getProportionFamilyGroups({
-        searchType: changedValue
+        searchType: showMostPopulated
           ? DashboardSearchType.MostPopulatedFamilyGroups
           : DashboardSearchType.LessPopulatedFamilyGroups,
-        populationLevel: changedValue ? 'most-populated' : 'less-populated',
-        churchId: searchParams?.churchId ?? churchId,
+        populationLevel: showMostPopulated ? 'most-populated' : 'less-populated',
+        churchId: searchParams?.churchId ?? churchId ?? '',
         order: RecordOrder.Ascending,
       }),
-    retry: false,
+    churchId: searchParams?.churchId ?? churchId,
     enabled: !!searchParams && !!searchParams.churchId,
   });
 
-  const churchesQuery = useQuery({
-    queryKey: ['churches-for-last-members'],
-    queryFn: () => getSimpleChurches({ isSimpleQuery: true }),
-    retry: false,
-  });
-
-  //* Effects
-  // Default value
-  useEffect(() => {
-    if (churchesQuery.data) {
-      const churchId = churchesQuery?.data?.map((church) => church?.id)[0];
-      setSearchParams({ churchId });
-      form.setValue('churchId', churchId);
-    }
-  }, [churchesQuery?.data]);
-
-  //* Form handler
-  const handleSubmit = (formData: z.infer<typeof dashBoardSearchFormSchema>): void => {
-    setSearchParams(formData);
+  const togglePopulationFilter = () => {
+    setShowMostPopulated((prev) => !prev);
   };
 
   return (
-    <Card className='w-auto h-auto row-start-4 row-end-5 col-start-1 col-end-2 md:row-end-4 md:col-start-1 md:col-end-3 lg:row-start-4 lg:row-end-5  xl:col-start-4 xl:col-end-7 xl:row-start-2 xl:row-end-3  border-slate-400'>
-      <div className='w-full flex flex-col md:grid md:grid-cols-4 md:justify-center md:items-center'>
-        <CardHeader className='flex flex-col items-center justify-center px-4 py-2.5 col-span-2'>
-          <CardTitle className='font-bold ml-[0rem] md:-ml-[1rem] text-[22px] sm:text-[25px] md:text-[28px] 2xl:text-[30px] inline-block'>
-            Grupos Familiares
-          </CardTitle>
-
-          <CardDescription className='text-[14px] ml-[0rem] md:ml-[1rem] md:text-[14.5px]'>
-            {`Grupos familiares con  ${changedValue ? 'más' : 'menos'} discípulos.`}
-          </CardDescription>
-        </CardHeader>
-        <div className='flex gap-4 justify-center col-span-2 md:justify-end'>
-          <Button onClick={toggleChangeValue} className='w-[3rem] m-0'>
-            <ArrowUpDown className='h-4 w-6 sm:h-6 sm:w-6' />
+    <DashboardCard
+      title='Grupos Familiares'
+      description={`Grupos con ${showMostPopulated ? 'más' : 'menos'} discípulos.`}
+      icon={<HiHome className='w-5 h-5 text-amber-600 dark:text-amber-400' />}
+      headerAction={
+        <div className='flex items-center gap-2'>
+          <Button
+            onClick={togglePopulationFilter}
+            variant='outline'
+            size='sm'
+            className={cn(
+              'h-9 w-9 p-0',
+              'border-slate-200 dark:border-slate-700',
+              'hover:bg-slate-100 dark:hover:bg-slate-800'
+            )}
+            title={showMostPopulated ? 'Ver menos poblados' : 'Ver más poblados'}
+          >
+            <ArrowUpDown className='h-4 w-4' />
           </Button>
-
-          {/* Form */}
-
-          <div className='col-span-1 flex justify-center -pl-[2rem] pb-2 xl:pr-5'>
-            <Form {...form}>
-              <form>
-                <FormField
-                  control={form.control}
-                  name='churchId'
-                  render={({ field }) => {
-                    return (
-                      <FormItem className='md:col-start-1 md:col-end-2 md:row-start-1 md:row-end-2'>
-                        <Popover
-                          open={isInputSearchChurchOpen}
-                          onOpenChange={setIsInputSearchChurchOpen}
-                        >
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant='outline'
-                                role='combobox'
-                                className={cn(
-                                  'justify-between w-full text-center px-2 text-[13.5px] md:text-[14px]',
-                                  !field.value &&
-                                    'text-slate-500 dark:text-slate-200 font-normal px-2'
-                                )}
-                              >
-                                {field.value
-                                  ? churchesQuery?.data
-                                      ?.find((church) => church.id === field.value)
-                                      ?.churchCode.split('-')
-                                      .slice(0, 2)
-                                      .join('-')
-                                  : searchParams?.churchId
-                                    ? churchesQuery?.data
-                                        ?.find((church) => church.id === searchParams.churchId)
-                                        ?.churchCode.split('-')
-                                        .slice(0, 2)
-                                        .join('-')
-                                    : 'ICUP-CENTRAL'}
-                                <CaretSortIcon className='h-4 w-4 shrink-0' />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent align='center' className='w-auto px-4 py-2'>
-                            <Command>
-                              <CommandInput
-                                placeholder='Busque una iglesia'
-                                className='h-9 text-[14px] md:text-[14px]'
-                              />
-                              <CommandEmpty>Iglesia no encontrada.</CommandEmpty>
-                              <CommandGroup className='max-h-[100px] h-auto'>
-                                {churchesQuery?.data?.map((church) => (
-                                  <CommandItem
-                                    className='text-[14px] md:text-[14px]'
-                                    value={church.churchCode}
-                                    key={church.id}
-                                    onSelect={() => {
-                                      form.setValue('churchId', church.id);
-                                      church && form.handleSubmit(handleSubmit)();
-                                      setIsInputSearchChurchOpen(false);
-                                    }}
-                                  >
-                                    {church?.abbreviatedChurchName}
-                                    <CheckIcon
-                                      className={cn(
-                                        'ml-auto h-4 w-4',
-                                        church.id === field.value ? 'opacity-100' : 'opacity-0'
-                                      )}
-                                    />
-                                  </CommandItem>
-                                ))}
-                              </CommandGroup>
-                            </Command>
-                          </PopoverContent>
-                        </Popover>
-                        <FormMessage className='text-[13px]' />
-                      </FormItem>
-                    );
-                  }}
-                />
-              </form>
-            </Form>
-          </div>
+          <ChurchSelector
+            churches={churchesQuery.data}
+            selectedChurchId={churchId}
+            selectedChurchCode={selectedChurchCode}
+            isOpen={isPopoverOpen}
+            onOpenChange={setIsPopoverOpen}
+            onSelect={handleChurchSelect}
+            isLoading={churchesQuery.isLoading}
+          />
         </div>
-      </div>
-
-      {query.isLoading ? (
-        <CardContent className='h-[42.5rem]'>
-          {
-            <>
-              <div className={'flex flex-col items-center justify-center space-y-4 h-full'}>
-                <div className='flex space-x-2'>
-                  <div className='w-4 h-4 bg-blue-500 rounded-full animate-bounce'></div>
-                  <div className='w-4 h-4 bg-blue-500 rounded-full animate-bounce animation-delay-200'></div>
-                  <div className='w-4 h-4 bg-blue-500 rounded-full animate-bounce animation-delay-400'></div>
-                </div>
-                <span className='text-blue-500 text-lg font-medium'>Cargando...</span>
-              </div>
-            </>
-          }
-        </CardContent>
-      ) : !query?.isLoading && query?.data ? (
-        query.data?.map((data) => <FamilyGroupInfoItem key={data.id} data={data} />)
-      ) : (
-        <CardContent className='h-[42.5rem]'>
-          <div className='text-red-500 flex flex-col justify-center items-center h-full -mt-6'>
-            <FcDeleteDatabase className='text-[6rem] pb-2' />
-            <p className='font-medium text-[15px] md:text-[16px]'>
-              No hay datos disponibles para mostrar.
-            </p>
+      }
+      isLoading={isLoading || (!data && isFetching)}
+      isEmpty={isEmpty}
+      emptyVariant='default'
+      emptyMessage='No hay grupos familiares para mostrar.'
+      className='col-span-1 xl:col-span-3'
+      contentClassName='max-h-[420px] overflow-y-auto'
+    >
+      <div className='space-y-1'>
+        {data?.map((familyGroup, index) => (
+          <div
+            key={familyGroup.id}
+            className='opacity-0 animate-slide-in-up'
+            style={{ animationDelay: `${index * 0.05}s`, animationFillMode: 'forwards' }}
+          >
+            <FamilyGroupInfoItem data={familyGroup} />
           </div>
-        </CardContent>
-      )}
-    </Card>
+        ))}
+      </div>
+    </DashboardCard>
   );
 }

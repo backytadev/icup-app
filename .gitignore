@@ -24,3 +24,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+/.agents
+/.claude
+/.cursor
+CLAUDE.md

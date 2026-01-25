@@ -3,9 +3,10 @@
 </p>
 <p align="center">The library for web and native user interfaces.</p>
 
-# ICUP-APP
+# ICUP-ADMIN
 
-In this project, the administration interface is developed to interact with the API and the backend of the ICUP app, the following technologies are used:
+In this project, the administration interface is developed to interact with the
+API and the backend of the ICUP app, the following technologies are used:
 
 - ReactJs
 - Zustand
@@ -29,7 +30,8 @@ Install my-project with npm or pnpm
 npm i or pnpm i
 ```
 
-3. Clone the `.env.template` and change it to `.env` and configure its environment variables.
+3. Clone the `.env.template` and change it to `.env` and configure its
+   environment variables.
 
 4. Raise the frontend-server dev mode
 

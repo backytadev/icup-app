@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { cn } from '@/shared/lib/utils';
 import { useLocation } from 'react-router-dom';
 
@@ -83,39 +81,83 @@ export const LoadingSpinner = ({ isPendingRequest }: SpinnerProps): JSX.Element 
   const verse = getRandomVerse();
   const { pathname } = useLocation();
 
+  const showDotsAnimation = generalPaths.includes(pathname);
+
   return (
     <div
       className={cn(
-        'h-screen flex items-center justify-center text-slate-100 dark:bg-slate-950',
-        isPendingRequest && '-mt-[20rem] md:-mt-[15rem]',
-        !isPendingRequest &&
-          'md:h-screen md:flex md:flex-col md:items-center md:justify-center md:-mt-[4rem]',
-        isSearchOrUpdatePath(pathname) && 'h-screen',
+        'flex items-center justify-center',
+        'bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950',
+        isPendingRequest && '-mt-[20rem] md:-mt-[15rem] h-auto',
+        !isPendingRequest && 'min-h-screen',
+        isSearchOrUpdatePath(pathname) && 'min-h-screen',
         isMetricsPath(pathname) && 'bg-slate-50/40 dark:bg-slate-950/10'
       )}
     >
-      <div className='flex flex-col items-center justify-center px-4 mt-[2rem]'>
-        {generalPaths.includes(pathname) ? (
-          <div className='flex flex-col items-center justify-center space-y-4 min-h-screen'>
-            <div className='flex space-x-2'>
-              <div className='w-4 h-4 bg-blue-500 rounded-full animate-bounce'></div>
-              <div className='w-4 h-4 bg-blue-500 rounded-full animate-bounce animation-delay-200'></div>
-              <div className='w-4 h-4 bg-blue-500 rounded-full animate-bounce animation-delay-400'></div>
+      <div className='flex flex-col items-center justify-center px-6 py-12'>
+        {showDotsAnimation ? (
+          // Modern dots animation
+          <div className='flex flex-col items-center gap-6'>
+            <div className='flex items-center gap-2'>
+              {[0, 1, 2].map((i) => (
+                <div
+                  key={i}
+                  className={cn(
+                    'w-3.5 h-3.5 rounded-full',
+                    'bg-gradient-to-br from-blue-500 to-blue-600',
+                    'animate-bounce shadow-lg shadow-blue-500/30'
+                  )}
+                  style={{ animationDelay: `${i * 0.15}s` }}
+                />
+              ))}
             </div>
-            <span className='text-blue-500 text-lg font-medium'>Cargando...</span>
+            <span className='text-blue-600 dark:text-blue-400 text-base font-medium font-inter animate-pulse'>
+              Cargando...
+            </span>
           </div>
         ) : (
-          <>
+          // Full spinner with verse
+          <div className='flex flex-col items-center gap-6'>
+            {/* Modern spinner */}
+            <div className='relative'>
+              {/* Outer ring */}
+              <div className='w-20 h-20 rounded-full border-4 border-slate-200 dark:border-slate-700' />
+              {/* Spinning gradient ring */}
+              <div
+                className={cn(
+                  'absolute inset-0 w-20 h-20 rounded-full',
+                  'border-4 border-transparent border-t-blue-500 border-r-blue-400',
+                  'animate-spin'
+                )}
+              />
+              {/* Inner glow */}
+              <div className='absolute inset-2 rounded-full bg-gradient-to-br from-blue-500/10 to-transparent' />
+            </div>
+
+            {/* Loading text */}
+            <span className='text-blue-600 dark:text-blue-400 text-base font-medium font-inter'>
+              Cargando...
+            </span>
+
+            {/* Bible verse */}
             <div
               className={cn(
-                'loader ease-linear rounded-full border-8 border-t-8 border-blue-500 h-32 w-32 mb-2',
-                pathname === '/dashboard' && '-mt-10'
+                'max-w-md text-center px-4 py-3 rounded-xl',
+                'bg-white/60 dark:bg-slate-800/60 backdrop-blur-sm',
+                'border border-slate-200/50 dark:border-slate-700/50',
+                'shadow-sm',
+                'opacity-0 animate-fade-in-scale'
               )}
-            ></div>
-            <h2 className='text-center text-black dark:text-white text-[15px] md:text-[18px] font-semibold'>
-              {verse}
-            </h2>
-          </>
+              style={{ animationDelay: '0.3s', animationFillMode: 'forwards' }}
+            >
+              <p className='text-sm md:text-base text-slate-600 dark:text-slate-300 font-inter italic leading-relaxed'>
+                &ldquo;{verse.split(' - ')[0]}&rdquo;
+              </p>
+              <p className='mt-2 text-xs text-slate-500 dark:text-slate-400 font-medium'>
+                — {verse.split(' - ')[1]}
+              </p>
+            </div>
+          </div>
         )}
       </div>
     </div>

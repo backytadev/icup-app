@@ -15,6 +15,7 @@ import {
   TooltipTrigger,
 } from '@/shared/components/ui/tooltip';
 
+import { ToggleLayout } from '@/core/theme/ToggleLayout';
 import { ToggleNavBar } from '@/core/theme/ToggleNavBar';
 import { SidebarTooltip } from '@/core/layout/sidebar/SidebarTooltip';
 import { SidebarDrawer } from '@/core/layout/sidebar/SidebarDrawer';
@@ -45,10 +46,12 @@ export const SidebarCompact = (): JSX.Element => {
   const otherItems = filteredItems.filter((i) => !membershipPaths.includes(i.href));
 
   return (
-    <div className='bg-slate-900 h-[5.3rem] md:h-auto md:min-h-screen z-10 text-slate-300 w-full md:w-[7.5rem]'>
+    <div className='bg-slate-900 h-[5.3rem] md:h-auto md:min-h-screen z-10 text-slate-300 w-full md:w-[7.5rem] flex flex-col'>
+
       {/* Header */}
       <div className='flex justify-between items-center md:flex-col md:pt-2 md:pb-4 md:px-2 md:gap-6'>
         <div id='logo' className='my-4 md:m-0 px-0 md:pt-4'>
+      
           <a
             href='/dashboard'
             className='inline-flex gap-x-5 items-center md:mt-0 pl-4 pr-3 md:py-4 md:px-0 md:flex md:flex-col-reverse md:gap-3'
@@ -56,7 +59,7 @@ export const SidebarCompact = (): JSX.Element => {
             <h1 className='text-[1.8rem] pl-0 md:-ml-3 md:text-[1.8rem] font-bold font-dancing-script italic text-white'>
               ICUP <span className='md:hidden'> - </span>
               <span className='md:block text-[1.8rem] md:text-[1.8rem] md:text-center leading-3'>
-                APP
+                ADMIN
               </span>
             </h1>
             <span>
@@ -169,6 +172,10 @@ export const SidebarCompact = (): JSX.Element => {
           <FcExport className='text-2xl md:text-3xl m-auto' />
         </a>
       </nav>
+
+      <div className="hidden md:flex pb-4 justify-center items-center mt-24">
+        <ToggleLayout />
+      </div>
     </div>
   );
 };

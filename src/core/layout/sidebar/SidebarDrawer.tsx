@@ -106,7 +106,7 @@ export function SidebarDrawer(): JSX.Element {
           <div id='logo' className='py-1 text-center'>
             <div className='inline-flex gap-x-6 items-center justify-center'>
               <h1 className='-ml-1 text-[1.85rem] font-bold font-dancing-script italic text-white'>
-                ICUP - APP
+                ICUP - ADMIN
               </h1>
               <span>
                 <img
