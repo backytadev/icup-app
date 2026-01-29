@@ -1,4 +1,4 @@
-import { ChurchQueryParams } from '@/modules/church/interfaces/church-query-params.interface';
+import { ChurchQueryParams } from '@/modules/church/types';
 
 export const buildChurchQueryParams = (params: ChurchQueryParams, term: string | undefined) => {
   const { limit, offset, order, all, searchType } = params;

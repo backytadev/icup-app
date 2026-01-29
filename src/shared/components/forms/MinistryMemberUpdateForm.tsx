@@ -3,7 +3,7 @@ import { UseQueryResult } from '@tanstack/react-query';
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
 
 import { cn } from '@/shared/lib/utils';
-import { ChurchResponse } from '@/modules/church/interfaces/church-response.interface';
+import { ChurchResponse } from '@/modules/church/types';
 import { MinistryMemberBlock } from '@/shared/interfaces/ministry-member-block.interface';
 
 import {

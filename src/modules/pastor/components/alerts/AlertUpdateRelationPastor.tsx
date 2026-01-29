@@ -13,7 +13,7 @@ import {
 } from '@/shared/components/ui/alert-dialog';
 
 import { PastorResponse } from '@/modules/pastor/interfaces/pastor-response.interface';
-import { ChurchResponse } from '@/modules/church/interfaces/church-response.interface';
+import { ChurchResponse } from '@/modules/church/types';
 import { PastorFormData } from '@/modules/pastor/interfaces/pastor-form-data.interface';
 
 export interface AlertUpdateRelationPastorProps {

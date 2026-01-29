@@ -1,10 +1,6 @@
 import { useEffect } from 'react';
-
 import { Toaster } from 'sonner';
-
-import { ChurchModuleHeader } from '@/modules/church/components/shared';
-import { ChurchFormCard } from '@/modules/church/components/shared';
-import { ChurchCreateForm } from '@/modules/church/components/forms';
+import { ChurchModuleHeader, ChurchCreateForm } from '@/modules/church/components';
 
 export const ChurchCreatePage = (): JSX.Element => {
   useEffect(() => {
@@ -16,22 +12,14 @@ export const ChurchCreatePage = (): JSX.Element => {
       <Toaster position='top-center' richColors />
 
       <div className='max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6'>
-        {/* Header */}
         <ChurchModuleHeader
           title='Registrar Nueva Iglesia'
           description='Completa el formulario para crear un nuevo registro de iglesia o anexo en el sistema.'
           titleColor='green'
         />
 
-        {/* Form Card */}
-        <ChurchFormCard
-          title='Información de la Iglesia'
-          description='Por favor completa todos los campos requeridos para registrar la nueva iglesia.'
-        >
-          <ChurchCreateForm />
-        </ChurchFormCard>
+        <ChurchCreateForm />
 
-        {/* Footer */}
         <footer className='pt-4 pb-2 text-center'>
           <p className='text-xs text-slate-400 dark:text-slate-500 font-inter'>
             Modulo Iglesia - ICUP App &copy; {new Date().getFullYear()}

@@ -1,44 +1,101 @@
 import { useEffect } from 'react';
 
-import { type ChurchResponse } from '@/modules/church/interfaces/church-response.interface';
+import { PiChurch } from 'react-icons/pi';
+import { FiMapPin } from 'react-icons/fi';
+
+import { type ChurchResponse } from '@/modules/church/types';
 
 import { cn } from '@/shared/lib/utils';
 
-import {
-  formatDateToLimaTime,
-  formatDateToLimaDayMonthYear,
-} from '@/shared/helpers/format-date-to-lima';
+import { formatDateToLimaDayMonthYear } from '@/shared/helpers/format-date-to-lima';
 import { RecordStatus } from '@/shared/enums/record-status.enum';
-import { PopoverDataCard } from '@/shared/components/cards/PopoverDataCard';
+import { PopoverDataCard, type AllowedTypes } from '@/shared/components/cards/PopoverDataCard';
 import { getInitialFullNames } from '@/shared/helpers/get-full-names.helper';
 
 import {
   type ChurchServiceTime,
   ChurchServiceTimeNames,
-} from '@/modules/church/enums/church-service-time.enum';
-import {
   type ChurchInactivationReason,
   ChurchInactivationReasonNames,
-} from '@/modules/church/enums/church-inactivation-reason.enum';
-import {
   type ChurchInactivationCategory,
   ChurchInactivationCategoryNames,
-} from '@/modules/church/enums/church-inactivation-category.enum';
+} from '@/modules/church/enums';
 
-import {
-  Card,
-  CardTitle,
-  CardHeader,
-  CardContent,
-  CardDescription,
-} from '@/shared/components/ui/card';
-import { Label } from '@/shared/components/ui/label';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
 
 interface ChurchTabsCardProps {
   id: string;
   data: ChurchResponse | undefined;
 }
+
+const InfoField = ({
+  label,
+  value,
+  className,
+  valueClassName,
+}: {
+  label: string;
+  value: React.ReactNode;
+  className?: string;
+  valueClassName?: string;
+}): JSX.Element => (
+  <div className={cn('', className)}>
+    <span className='block text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 font-inter mb-1'>
+      {label}
+    </span>
+    <p className={cn(
+      'text-[14px] md:text-[15px] font-medium text-slate-700 dark:text-slate-200 font-inter',
+      valueClassName
+    )}>
+      {value ?? '-'}
+    </p>
+  </div>
+);
+
+const StatusBadge = ({ isActive }: { isActive: boolean }): JSX.Element => (
+  <span
+    className={cn(
+      'inline-flex items-center px-2.5 py-1 rounded-full text-[12px] font-semibold font-inter',
+      isActive
+        ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400'
+        : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
+    )}
+  >
+    {isActive ? 'Activo' : 'Inactivo'}
+  </span>
+);
+
+const StatCard = ({
+  label,
+  count,
+  popoverData,
+  popoverTitle,
+  firstValue,
+  secondValue,
+}: {
+  label: string;
+  count: number | undefined;
+  popoverData: AllowedTypes | undefined;
+  popoverTitle: string;
+  firstValue: string;
+  secondValue: string;
+}): JSX.Element => (
+  <div className='flex flex-col items-center p-2.5 rounded-lg bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200/50 dark:border-slate-700/30'>
+    <span className='text-lg font-bold text-slate-800 dark:text-slate-100 font-outfit'>
+      {count ?? 0}
+    </span>
+    <span className='text-[10px] font-medium text-slate-500 dark:text-slate-400 font-inter uppercase tracking-wide mb-1'>
+      {label}
+    </span>
+    <PopoverDataCard
+      data={popoverData}
+      title={popoverTitle}
+      moduleName={'Iglesia'}
+      firstValue={firstValue}
+      secondValue={secondValue}
+    />
+  </div>
+);
 
 export const ChurchTabsCard = ({ data, id }: ChurchTabsCardProps): JSX.Element => {
   //* Effects
@@ -66,434 +123,336 @@ export const ChurchTabsCard = ({ data, id }: ChurchTabsCardProps): JSX.Element =
     };
   }, [id]);
 
+  const isActive = data?.recordStatus === RecordStatus.Active;
+
   return (
-    <Tabs defaultValue='general-info' className='md:-mt-8 w-[650px] md:w-[630px]'>
-      <TabsList className='grid w-full grid-cols-2 px-auto'>
-        <TabsTrigger value='general-info' className='text-[14.5px] md:text-[15px]'>
-          General
-        </TabsTrigger>
-        <TabsTrigger value='contact-info' className='text-[14.5px] md:text-[15px]'>
-          Contacto
-        </TabsTrigger>
-      </TabsList>
-
-      <TabsContent value='general-info'>
-        <Card className='w-full'>
-          <CardHeader className='text-center pb-4 pt-2'>
-            <CardTitle className='text-blue-500 text-[23px] md:text-[28px] font-bold -mb-2'>
-              Información General
-            </CardTitle>
-            <CardDescription className='text-[14px] md:text-[15px]'>
-              Información general de la iglesia.
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent className='grid grid-cols-3 pl-[1.5rem] pr-[1rem] sm:pl-[4rem] sm:pr-[5rem] gap-x-4 gap-y-2 md:gap-x-6 md:gap-y-4 md:pl-[4.8rem] md:pr-[2rem]'>
-            <div className='space-y-1 col-start-1 col-end-4'>
-              <Label className='text-[14px] md:text-[15px]'>Nombre Completo</Label>
-              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
-                {data?.churchName ?? '-'}
-              </CardDescription>
+    <div className='w-[650px] md:w-[680px] -mt-6'>
+      {/* Header */}
+      <div className='relative overflow-hidden rounded-t-xl bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 dark:from-blue-800 dark:via-blue-900 dark:to-indigo-900 px-5 py-4 md:px-6'>
+        <div className='flex items-center justify-between gap-4'>
+          <div className='flex-1 min-w-0'>
+            <div className='flex items-center gap-2 mb-1.5'>
+              {data?.isAnexe ? (
+                <span className='px-2 py-0.5 text-[10px] font-semibold bg-amber-500/20 text-amber-100 rounded font-inter'>
+                  Anexo
+                </span>
+              ) : (
+                <span className='px-2 py-0.5 text-[10px] font-semibold bg-emerald-500/20 text-emerald-100 rounded font-inter'>
+                  Iglesia Central
+                </span>
+              )}
+              <StatusBadge isActive={isActive} />
             </div>
+            <h2 className='text-lg md:text-xl font-bold text-white font-outfit truncate'>
+              {data?.churchName ?? 'Sin nombre'}
+            </h2>
+            <p className='text-blue-100/80 text-[13px] font-inter mt-0.5'>
+              {data?.abbreviatedChurchName} • Código: {data?.churchCode ?? '-'}
+            </p>
+          </div>
 
-            <div className='space-y-1'>
-              <Label className='text-[14px] md:text-[15px]'>Abreviatura</Label>
-              <CardDescription className='px-2 text-[14px] md:text-[14.5px] break-words'>
-                {data?.abbreviatedChurchName ?? '-'}
-              </CardDescription>
-            </div>
+          <div className='flex-shrink-0 p-2.5 bg-white/10 rounded-lg'>
+            <PiChurch className='w-6 h-6 text-white/90' />
+          </div>
+        </div>
+      </div>
 
-            <div className='space-y-1'>
-              <Label className='text-[14px] md:text-[15px]'>Código</Label>
-              <CardDescription className='px-2 text-[14px] md:text-[14.5px] break-words'>
-                {data?.churchCode ?? '-'}
-              </CardDescription>
-            </div>
+      {/* Tabs */}
+      <Tabs defaultValue='general-info' className='w-full'>
+        <TabsList className='w-full h-auto grid grid-cols-2 rounded-none bg-slate-100 dark:bg-slate-800/80 border-x border-slate-200/80 dark:border-slate-700/50 p-0'>
+          <TabsTrigger
+            value='general-info'
+            className='text-[13px] md:text-[14px] font-inter font-medium data-[state=active]:bg-white dark:data-[state=active]:bg-slate-900 rounded-none py-2.5'
+          >
+            Información General
+          </TabsTrigger>
+          <TabsTrigger
+            value='contact-info'
+            className='text-[13px] md:text-[14px] font-inter font-medium data-[state=active]:bg-white dark:data-[state=active]:bg-slate-900 rounded-none py-2.5'
+          >
+            Contacto y Ubicación
+          </TabsTrigger>
+        </TabsList>
 
-            <div className='space-y-1'>
-              <Label className='text-[14px] md:text-[15px]'>Fecha de Fundación</Label>
-              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
-                {data?.foundingDate ? formatDateToLimaDayMonthYear(data?.foundingDate) : '-'}
-              </CardDescription>
-            </div>
-
-            <div className='space-y-1 col-start-1 col-end-2'>
-              <Label className='text-[14px] md:text-[15px]'>Horarios de Culto</Label>
-              <div className='px-2 text-[14px] md:text-[14.5px]'>
-                <ul className='pl-5 flex flex-col flex-wrap gap-x-10 gap-y-2 list-disc'>
-                  {data?.serviceTimes !== undefined && data?.serviceTimes.length > 0 ? (
-                    data?.serviceTimes.map((serviceTime) =>
-                      Object.keys(ChurchServiceTimeNames).map(
-                        (serviceTimeName) =>
-                          serviceTime === serviceTimeName && (
-                            <li key={serviceTime}>
-                              {ChurchServiceTimeNames[serviceTime as ChurchServiceTime]}
-                            </li>
-                          )
-                      )
+        <TabsContent value='general-info' className='mt-0'>
+          <div className='bg-white dark:bg-slate-900 border border-t-0 border-slate-200/80 dark:border-slate-700/50 rounded-b-xl'>
+            <div className='p-4 md:p-5 space-y-5'>
+              {/* Info básica */}
+              <div className='grid grid-cols-2 md:grid-cols-3 gap-4'>
+                <InfoField
+                  label='Fecha de Fundación'
+                  value={data?.foundingDate ? formatDateToLimaDayMonthYear(data?.foundingDate) : '-'}
+                />
+                <InfoField
+                  label='Iglesia Principal'
+                  value={
+                    data?.theirMainChurch && data?.isAnexe
+                      ? `${data?.theirMainChurch?.abbreviatedChurchName ?? 'No tiene'}`
+                      : !data?.isAnexe
+                        ? 'Esta es la iglesia central'
+                        : 'Sin asignar'
+                  }
+                />
+                <InfoField
+                  label='Horarios de Culto'
+                  value={
+                    data?.serviceTimes && data?.serviceTimes.length > 0 ? (
+                      <div className='flex flex-wrap gap-1'>
+                        {data?.serviceTimes.map((serviceTime) => (
+                          <span
+                            key={serviceTime}
+                            className='px-1.5 py-0.5 text-[11px] bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded font-inter'
+                          >
+                            {ChurchServiceTimeNames[serviceTime as ChurchServiceTime]}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className='text-red-500'>Sin horarios</span>
                     )
-                  ) : (
-                    <li className='text-red-500'>No hay horarios de culto disponibles.</li>
-                  )}
-                </ul>
-              </div>
-            </div>
-
-            <div className='space-y-1 col-start-2 col-end-3'>
-              <Label className='text-[14px] md:text-[15px]'>Iglesia Principal</Label>
-              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
-                {data?.theirMainChurch && data?.isAnexe
-                  ? `${data?.theirMainChurch?.abbreviatedChurchName ?? 'No tiene'} - ${data?.theirMainChurch?.district ?? 'una iglesia principal asignada.'}`
-                  : !data?.isAnexe
-                    ? `Esta es la iglesia central.`
-                    : `Esta iglesia anexo no tiene una iglesia principal asignada.`}
-              </CardDescription>
-            </div>
-
-            <div className='space-y-1'>
-              <Label className='text-[14px] md:text-[15px]'>Anexo</Label>
-              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
-                {data?.isAnexe ? 'Si' : 'No'}
-              </CardDescription>
-            </div>
-
-            {/* Relaciones */}
-            <div className='space-y-1'>
-              <Label className='text-[14px] md:text-[15px]'>Anexos</Label>
-              <div>
-                <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
-                  {data?.anexes?.length ?? '-'}
-                </CardDescription>
-                <PopoverDataCard
-                  data={data?.anexes}
-                  title={'Anexos'}
-                  moduleName={'Iglesia'}
-                  firstValue={'abbreviatedChurchName'}
-                  secondValue={'urbanSector'}
+                  }
+                  className='col-span-2 md:col-span-1'
                 />
               </div>
-            </div>
 
-            <div className='space-y-1 '>
-              <Label className='text-[14px] md:text-[15px]'>Ministerios</Label>
-              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
-                {data?.ministries?.length ?? '-'}
-              </CardDescription>
-              <PopoverDataCard
-                data={data?.ministries}
-                title={'Ministerios'}
-                moduleName={'Iglesia'}
-                firstValue={'ministryType'}
-                secondValue={'customMinistryName'}
-              />
-            </div>
+              {/* Divider - Membresía */}
+              <div className='border-t border-slate-200 dark:border-slate-700/50 pt-4'>
+                <span className='text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider font-inter'>
+                  Membresía
+                </span>
+              </div>
 
-            <div className='space-y-1 '>
-              <Label className='text-[14px] md:text-[15px]'>Pastores</Label>
-              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
-                {data?.pastors?.length ?? '-'}
-              </CardDescription>
-              <PopoverDataCard
-                data={data?.pastors}
-                title={'Pastores'}
-                moduleName={'Iglesia'}
-                firstValue={'firstNames'}
-                secondValue={'lastNames'}
-              />
-            </div>
+              {/* Stats Grid */}
+              <div className='grid grid-cols-3 md:grid-cols-5 gap-2'>
+                <StatCard
+                  label='Anexos'
+                  count={data?.anexes?.length}
+                  popoverData={data?.anexes}
+                  popoverTitle='Anexos'
+                  firstValue='abbreviatedChurchName'
+                  secondValue='urbanSector'
+                />
+                <StatCard
+                  label='Pastores'
+                  count={data?.pastors?.length}
+                  popoverData={data?.pastors}
+                  popoverTitle='Pastores'
+                  firstValue='firstNames'
+                  secondValue='lastNames'
+                />
+                <StatCard
+                  label='Co-Pastores'
+                  count={data?.copastors?.length}
+                  popoverData={data?.copastors}
+                  popoverTitle='Co-Pastores'
+                  firstValue='firstNames'
+                  secondValue='lastNames'
+                />
+                <StatCard
+                  label='Supervisores'
+                  count={data?.supervisors?.length}
+                  popoverData={data?.supervisors}
+                  popoverTitle='Supervisores'
+                  firstValue='firstNames'
+                  secondValue='lastNames'
+                />
+                <StatCard
+                  label='Predicadores'
+                  count={data?.preachers?.length}
+                  popoverData={data?.preachers}
+                  popoverTitle='Predicadores'
+                  firstValue='firstNames'
+                  secondValue='lastNames'
+                />
+              </div>
 
-            <div className='space-y-1'>
-              <Label className='text-[14px] md:text-[15px]'>Co-Pastores</Label>
-              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
-                {data?.copastors?.length ?? '-'}
-              </CardDescription>
-              <PopoverDataCard
-                data={data?.copastors}
-                title={'Co-Pastores'}
-                moduleName={'Iglesia'}
-                firstValue={'firstNames'}
-                secondValue={'lastNames'}
-              />
-            </div>
+              <div className='grid grid-cols-2 md:grid-cols-4 gap-2'>
+                <StatCard
+                  label='Zonas'
+                  count={data?.zones?.length}
+                  popoverData={data?.zones}
+                  popoverTitle='Zonas'
+                  firstValue='zoneName'
+                  secondValue='district'
+                />
+                <StatCard
+                  label='Grupos Fam.'
+                  count={data?.familyGroups?.length}
+                  popoverData={data?.familyGroups}
+                  popoverTitle='Grupos Familiares'
+                  firstValue='familyGroupCode'
+                  secondValue='familyGroupName'
+                />
+                <StatCard
+                  label='Discípulos'
+                  count={data?.disciples?.length}
+                  popoverData={data?.disciples}
+                  popoverTitle='Discípulos'
+                  firstValue='firstNames'
+                  secondValue='lastNames'
+                />
+                <StatCard
+                  label='Ministerios'
+                  count={data?.ministries?.length}
+                  popoverData={data?.ministries}
+                  popoverTitle='Ministerios'
+                  firstValue='ministryType'
+                  secondValue='customMinistryName'
+                />
+              </div>
 
-            <div className='space-y-1'>
-              <Label className='text-[14px] md:text-[15px]'>Supervisores</Label>
-              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
-                {data?.supervisors?.length ?? '-'}
-              </CardDescription>
-              <PopoverDataCard
-                data={data?.supervisors}
-                title={'Supervisores'}
-                moduleName={'Iglesia'}
-                firstValue={'firstNames'}
-                secondValue={'lastNames'}
-              />
-            </div>
+              {/* Divider - Registro */}
+              <div className='border-t border-slate-200 dark:border-slate-700/50 pt-4'>
+                <span className='text-[11px] font-semibold text-amber-600 dark:text-amber-400 uppercase tracking-wider font-inter'>
+                  Información de Registro
+                </span>
+              </div>
 
-            <div className='space-y-1'>
-              <Label className='text-[14px] md:text-[15px]'>Zonas</Label>
-              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
-                {data?.zones?.length ?? '-'}
-              </CardDescription>
-              <PopoverDataCard
-                data={data?.zones}
-                title={'Zonas'}
-                moduleName={'Iglesia'}
-                firstValue={'zoneName'}
-                secondValue={'district'}
-              />
-            </div>
-
-            <div className='space-y-1'>
-              <Label className='text-[14px] md:text-[15px]'>Predicadores</Label>
-              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
-                {data?.preachers?.length ?? '-'}
-              </CardDescription>
-              <PopoverDataCard
-                data={data?.preachers}
-                title={'Predicadores'}
-                moduleName={'Iglesia'}
-                firstValue={'firstNames'}
-                secondValue={'lastNames'}
-              />
-            </div>
-
-            <div className='space-y-1'>
-              <Label className='text-[14px] md:text-[15px]'>Grupos Familiares</Label>
-              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
-                {data?.familyGroups?.length ?? '-'}
-              </CardDescription>
-              <PopoverDataCard
-                data={data?.familyGroups}
-                title={'Grupos Familiares'}
-                moduleName={'Iglesia'}
-                firstValue={'familyGroupCode'}
-                secondValue={'familyGroupName'}
-              />
-            </div>
-
-            <div className='space-y-1'>
-              <Label className='text-[14px] md:text-[15px]'>Discípulos</Label>
-              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
-                {data?.disciples?.length ?? '-'}
-              </CardDescription>
-              <PopoverDataCard
-                data={data?.disciples}
-                title={'Discípulos'}
-                moduleName={'Iglesia'}
-                firstValue={'firstNames'}
-                secondValue={'lastNames'}
-              />
-            </div>
-
-            <span
-              className={cn(
-                'pt-1 md:pt-0 col-start-1 col-end-4 row-start-7 row-end-8 md:row-start-auto md:row-end-auto text-[15px] md:text-[16px] font-bold text-yellow-500',
-                data?.inactivationCategory && 'col-start-1 col-end-4 row-start-7 row-end-8'
-              )}
-            >
-              Información de registro
-            </span>
-
-            <div
-              className={cn(
-                'space-y-1 flex justify-between items-center row-start-8 row-end-9 col-start-1 col-end-4 md:grid md:col-auto md:row-auto',
-                data?.inactivationCategory && 'row-start-8 row-end-9 col-start-1 col-end-4'
-              )}
-            >
-              <Label className='text-[14px] md:text-[15px]'>Creado por</Label>
-              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
-                {data?.createdBy
-                  ? getInitialFullNames({
+              {/* Registro Info */}
+              <div className='grid grid-cols-2 md:grid-cols-4 gap-4'>
+                <InfoField
+                  label='Creado por'
+                  value={data?.createdBy
+                    ? getInitialFullNames({
                       firstNames: data?.createdBy?.firstNames ?? '-',
                       lastNames: data?.createdBy?.lastNames ?? '-',
                     })
-                  : '-'}
-              </CardDescription>
-            </div>
-
-            <div
-              className={cn(
-                'space-y-1 col-start-1 col-end-4 flex justify-between items-center row-start-9 row-end-10 md:grid  md:row-start-8 md:row-end-9 md:col-start-2 md:col-end-4',
-                data?.inactivationCategory &&
-                  'row-start-9 row-end-10 col-start-1 col-end-4 md:col-start-2 md:col-end-3 md:row-start-8 md:row-end-9'
-              )}
-            >
-              <Label className='text-[14px] md:text-[15px]'>Fecha de creación</Label>
-              <CardDescription className='px-2 text-[14px] md:text-[14.5px] text-right md:text-left md:whitespace-nowrap'>
-                {data?.createdAt
-                  ? `${formatDateToLimaDayMonthYear(data?.createdAt)} - ${formatDateToLimaTime(data?.createdAt)}`
-                  : '-'}
-              </CardDescription>
-            </div>
-
-            <div
-              className={cn(
-                'space-y-1 col-start-1 col-end-4 flex justify-between items-center row-start-10 row-end-11 md:grid md:row-auto  md:col-start-1 md:col-end-2',
-                data?.inactivationCategory && 'row-start-10 row-end-11 col-start-1 col-end-4'
-              )}
-            >
-              <Label className='text-[14px] md:text-[15px]'>Actualizado por</Label>
-              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
-                {data?.updatedBy
-                  ? getInitialFullNames({
+                    : '-'}
+                />
+                <InfoField
+                  label='Fecha de creación'
+                  value={data?.createdAt
+                    ? `${formatDateToLimaDayMonthYear(data?.createdAt)}`
+                    : '-'}
+                />
+                <InfoField
+                  label='Actualizado por'
+                  value={data?.updatedBy
+                    ? getInitialFullNames({
                       firstNames: data?.updatedBy?.firstNames ?? '-',
                       lastNames: data?.updatedBy?.lastNames ?? '-',
                     })
-                  : '-'}
-              </CardDescription>
-            </div>
+                    : '-'}
+                />
+                <InfoField
+                  label='Última actualización'
+                  value={data?.updatedAt
+                    ? `${formatDateToLimaDayMonthYear(data?.updatedAt)}`
+                    : '-'}
+                />
+              </div>
 
-            <div
-              className={cn(
-                'space-y-1 col-start-1 col-end-4 flex justify-between items-center row-start-11 row-end-12 md:grid md:row-auto md:col-start-2 md:col-end-4',
-                data?.inactivationCategory &&
-                  'row-start-11 row-end-12 col-start-1 col-end-4 md:row-start-9 md:row-end-10 md:col-start-2 md:col-end-4'
+              {/* Inactivation info */}
+              {data?.inactivationCategory && (
+                <>
+                  <div className='border-t border-red-200 dark:border-red-900/50 pt-4'>
+                    <span className='text-[11px] font-semibold text-red-600 dark:text-red-400 uppercase tracking-wider font-inter'>
+                      Información de Inactivación
+                    </span>
+                  </div>
+
+                  <div className='grid grid-cols-2 gap-4 p-3 rounded-lg bg-red-50/50 dark:bg-red-900/10 border border-red-200/50 dark:border-red-800/30'>
+                    <InfoField
+                      label='Categoría'
+                      value={ChurchInactivationCategoryNames[
+                        data?.inactivationCategory as ChurchInactivationCategory
+                      ] ?? '-'}
+                      valueClassName='text-red-600 dark:text-red-400'
+                    />
+                    <InfoField
+                      label='Motivo'
+                      value={ChurchInactivationReasonNames[
+                        data?.inactivationReason as ChurchInactivationReason
+                      ] ?? '-'}
+                      valueClassName='text-red-600 dark:text-red-400'
+                    />
+                  </div>
+                </>
               )}
-            >
-              <Label className='text-[14px] md:text-[15px]'>Ultima fecha de actualización</Label>
-              <CardDescription className='px-2 text-[14px] md:text-[14.5px] text-right md:text-left'>
-                {data?.updatedAt
-                  ? `${formatDateToLimaDayMonthYear(data?.updatedAt)} - ${formatDateToLimaTime(data?.updatedAt)}`
-                  : '-'}
-              </CardDescription>
             </div>
+          </div>
+        </TabsContent>
 
-            <div
-              className={cn(
-                'space-y-1 col-start-1 col-end-4 flex justify-between md:justify-center items-center row-start-12 row-end-13 md:grid md:row-start-8 md:row-end-9 md:col-start-3 md:col-end-4',
-                data?.inactivationCategory &&
-                  'row-start-12 row-end-13 col-start-1 col-end-4 md:col-start-3 md:col-end-4 md:row-start-8 md:row-end-9'
-              )}
-            >
-              <Label className='text-[14px] md:text-[15px]'>Estado</Label>
-              <CardDescription
-                className={cn(
-                  'px-2 text-[14px] md:text-[14.5px] text-green-600 font-bold',
-                  data?.recordStatus !== RecordStatus.Active && 'text-red-600'
-                )}
-              >
-                {data?.recordStatus === RecordStatus.Active ? 'Activo' : 'Inactivo'}
-              </CardDescription>
-            </div>
+        <TabsContent value='contact-info' className='mt-0'>
+          <div className='bg-white dark:bg-slate-900 border border-t-0 border-slate-200/80 dark:border-slate-700/50 rounded-b-xl'>
+            <div className='p-4 md:p-5 space-y-5'>
+              {/* Contact Info */}
+              <div className='grid grid-cols-2 gap-4'>
+                <InfoField
+                  label='Correo Electrónico'
+                  value={data?.email ?? '-'}
+                  className='col-span-2 md:col-span-1'
+                />
+                <InfoField
+                  label='Teléfono'
+                  value={data?.phoneNumber ?? '-'}
+                />
+              </div>
 
-            {data?.inactivationCategory && (
-              <>
-                <div className='pt-1 md:pt-0 col-start-1 col-end-4 row-start-13 row-end-14 md:row-start-auto md:row-end-auto text-[15px] md:text-[16px] font-bold text-red-500'>
-                  Información de Inactivación
+              {/* Divider - Ubicación */}
+              <div className='border-t border-slate-200 dark:border-slate-700/50 pt-4'>
+                <span className='text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider font-inter'>
+                  Ubicación
+                </span>
+              </div>
+
+              {/* Location Info */}
+              <div className='grid grid-cols-2 md:grid-cols-3 gap-4'>
+                <InfoField
+                  label='País'
+                  value={data?.country ?? '-'}
+                />
+                <InfoField
+                  label='Departamento'
+                  value={data?.department ?? '-'}
+                />
+                <InfoField
+                  label='Provincia'
+                  value={data?.province ?? '-'}
+                />
+                <InfoField
+                  label='Distrito'
+                  value={data?.district ?? '-'}
+                />
+                <InfoField
+                  label='Sector Urbano'
+                  value={data?.urbanSector ?? '-'}
+                />
+              </div>
+
+              {/* Address - Keep icon here as it's essential */}
+              <div className='p-3 rounded-lg bg-slate-50/80 dark:bg-slate-800/30 border border-slate-200/50 dark:border-slate-700/30'>
+                <div className='flex items-start gap-2.5'>
+                  <div className='p-1.5 rounded-md bg-blue-100 dark:bg-blue-900/30 mt-0.5'>
+                    <FiMapPin className='w-4 h-4 text-blue-600 dark:text-blue-400' />
+                  </div>
+                  <div className='flex-1'>
+                    <span className='text-[11px] font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400 font-inter'>
+                      Dirección
+                    </span>
+                    <p className='text-[14px] font-medium text-slate-700 dark:text-slate-200 font-inter mt-0.5'>
+                      {data?.address ?? '-'}
+                    </p>
+                    {data?.referenceAddress && (
+                      <p className='text-[12px] text-slate-500 dark:text-slate-400 font-inter mt-0.5'>
+                        <span className='font-medium'>Referencia:</span> {data?.referenceAddress}
+                      </p>
+                    )}
+                  </div>
                 </div>
-                <div className='flex justify-between md:grid items-center space-y-1 col-start-1 col-end-4 row-start-14 row-end-15 md:col-start-auto md:col-end-auto md:row-start-auto md:row-end-auto'>
-                  <Label className='text-[14px] md:text-[15px]'>Categoría</Label>
-                  <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
-                    {ChurchInactivationCategoryNames[
-                      data?.inactivationCategory as ChurchInactivationCategory
-                    ] ?? '-'}
-                  </CardDescription>
-                </div>
+              </div>
 
-                <div className='flex justify-between md:grid items-center col-start-1 col-end-4 row-start-15 row-end-16 md:col-start-2 md:col-end-4 md:row-start-11 md:row-end-12 space-y-1'>
-                  <Label className='text-[14px] md:text-[15px]'>Motivo o Descripción</Label>
-                  <CardDescription className='px-2 text-[14px] md:text-[14.5px] text-right md:text-left'>
-                    {ChurchInactivationReasonNames[
-                      data?.inactivationReason as ChurchInactivationReason
-                    ] ?? '-'}
-                  </CardDescription>
-                </div>
-              </>
-            )}
-          </CardContent>
-        </Card>
-      </TabsContent>
-
-      <TabsContent value='contact-info'>
-        <Card>
-          <CardHeader className='text-center pb-6 pt-2'>
-            <CardTitle className='text-orange-500 text-[23px] md:text-[28px] font-bold -mb-2'>
-              Contacto
-            </CardTitle>
-            <CardDescription className='text-[14px] md:text-[15px]'>
-              Información de contacto y ubicación.
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent className='grid grid-cols-2 pl-[2.5rem] sm:pl-[7rem] gap-x-8 gap-y-5 md:gap-x-16 md:gap-y-6 md:pl-[7rem] md:pr-[1rem]'>
-            <div className='space-y-1'>
-              <Label className='text-[14px] md:text-[15px]'>E-mail</Label>
-              <CardDescription className='break-words px-2 text-[14px] md:text-[14.5px]'>
-                {data?.email ?? '-'}
-              </CardDescription>
+              {/* Status */}
+              <div className='flex items-center justify-between p-3 rounded-lg bg-slate-50/80 dark:bg-slate-800/30 border border-slate-200/50 dark:border-slate-700/30'>
+                <span className='text-[12px] font-semibold text-slate-600 dark:text-slate-300 font-inter'>
+                  Estado del Registro
+                </span>
+                <StatusBadge isActive={isActive} />
+              </div>
             </div>
-
-            <div className='space-y-1'>
-              <Label className='text-[14px] md:text-[15px]'>Número Teléfono</Label>
-              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
-                {data?.phoneNumber ?? '-'}
-              </CardDescription>
-            </div>
-
-            <div className='space-y-1'>
-              <Label className='text-[14px] md:text-[15px]'>País</Label>
-              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
-                {data?.country ?? '-'}
-              </CardDescription>
-            </div>
-
-            <div className='space-y-1'>
-              <Label className='text-[14px] md:text-[15px]'>Departamento</Label>
-              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
-                {data?.department ?? '-'}
-              </CardDescription>
-            </div>
-
-            <div className='space-y-1'>
-              <Label className='text-[14px] md:text-[15px]'>Provincia</Label>
-              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
-                {data?.province ?? '-'}
-              </CardDescription>
-            </div>
-
-            <div className='space-y-1'>
-              <Label className='text-[14px] md:text-[15px]'>Distrito</Label>
-              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
-                {data?.district ?? '-'}
-              </CardDescription>
-            </div>
-
-            <div className='space-y-1'>
-              <Label className='text-[14px] md:text-[15px]'>Sector Urbano</Label>
-              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
-                {data?.urbanSector ?? '-'}
-              </CardDescription>
-            </div>
-
-            <div className='space-y-1'>
-              <Label className='text-[14px] md:text-[15px]'>Dirección</Label>
-              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
-                {data?.address ?? '-'}
-              </CardDescription>
-            </div>
-
-            <div className='space-y-1'>
-              <Label className='text-[14px] md:text-[15px]'>Referencia de ubicación</Label>
-              <CardDescription className='px-2 text-[14px] md:text-[14.5px]'>
-                {data?.referenceAddress ?? '-'}
-              </CardDescription>
-            </div>
-
-            <div className='space-y-1'>
-              <Label className='text-[14px] md:text-[15px]'>Estado</Label>
-              <CardDescription
-                className={cn(
-                  'px-2 text-[14px] md:text-[14.5px] text-green-600 font-bold',
-                  data?.recordStatus !== RecordStatus.Active && 'text-red-600'
-                )}
-              >
-                {data?.recordStatus === RecordStatus.Active ? 'Activo' : 'Inactivo'}
-              </CardDescription>
-            </div>
-          </CardContent>
-        </Card>
-      </TabsContent>
-    </Tabs>
+          </div>
+        </TabsContent>
+      </Tabs>
+    </div>
   );
 };

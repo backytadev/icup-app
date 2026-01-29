@@ -8,7 +8,7 @@ import { FcDataBackup, FcDeleteDatabase } from 'react-icons/fc';
 import { BarChart, Bar, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 import { getSimpleChurches } from '@/modules/church/services/church.service';
-import { type ChurchResponse } from '@/modules/church/interfaces/church-response.interface';
+import { type ChurchResponse } from '@/modules/church/types';
 
 import { MetricSearchType } from '@/modules/metrics/enums/metrics-search-type.enum';
 import { getMembersByMaritalStatus } from '@/modules/metrics/services/member-metrics.service';

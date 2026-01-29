@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { getSimpleChurches } from '@/modules/church/services/church.service';
 import { dashBoardSearchFormSchema } from '@/modules/dashboard/validations/dashboard-search-form-schema';
 
-import type { ChurchResponse } from '@/modules/church/interfaces/church-response.interface';
+import type { ChurchResponse } from '@/modules/church/types';
 
 type DashboardFormData = z.infer<typeof dashBoardSearchFormSchema>;
 

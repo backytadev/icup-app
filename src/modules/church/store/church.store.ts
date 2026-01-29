@@ -1,40 +1,61 @@
-/* eslint-disable @typescript-eslint/no-confusing-void-expression */
+import { create } from 'zustand';
+import { type ChurchResponse } from '@/modules/church/types';
 
-import { create, type StateCreator } from 'zustand';
-import { type ChurchResponse } from '@/modules/church/interfaces/church-response.interface';
+interface ChurchState {
+  isGeneralFilterDisabled: boolean;
+  isTermFilterDisabled: boolean;
 
-interface ChurchStore {
-  //* Properties
-  isFiltersSearchGeneralDisabled: boolean;
-  isFiltersSearchByTermDisabled: boolean;
-
-  dataSearchGeneralResponse: ChurchResponse[] | undefined;
-  dataSearchByTermResponse: ChurchResponse[] | undefined;
-
-  //* Methods
-  setIsFiltersSearchGeneralDisabled: (value: boolean) => void;
-  setIsFiltersSearchByTermDisabled: (value: boolean) => void;
-
-  setDataSearchGeneralResponse: (value: ChurchResponse[] | undefined) => void;
-  setDataSearchByTermResponse: (value: ChurchResponse[] | undefined) => void;
+  generalSearchData: ChurchResponse[] | undefined;
+  termSearchData: ChurchResponse[] | undefined;
 }
 
-export const storeChurch: StateCreator<ChurchStore> = (set) => ({
-  isFiltersSearchGeneralDisabled: true,
-  isFiltersSearchByTermDisabled: true,
+interface ChurchActions {
+  setGeneralFilterDisabled: (value: boolean) => void;
+  setTermFilterDisabled: (value: boolean) => void;
 
-  dataSearchGeneralResponse: undefined,
-  dataSearchByTermResponse: undefined,
+  setGeneralSearchData: (data: ChurchResponse[] | undefined) => void;
+  setTermSearchData: (data: ChurchResponse[] | undefined) => void;
 
-  setIsFiltersSearchGeneralDisabled: (value: boolean) =>
-    set({ isFiltersSearchGeneralDisabled: value }),
-  setIsFiltersSearchByTermDisabled: (value: boolean) =>
-    set({ isFiltersSearchByTermDisabled: value }),
+  reset: () => void;
+}
 
-  setDataSearchGeneralResponse: (value: ChurchResponse[] | undefined) =>
-    set({ dataSearchGeneralResponse: value }),
-  setDataSearchByTermResponse: (value: ChurchResponse[] | undefined) =>
-    set({ dataSearchByTermResponse: value }),
-});
+type ChurchStore = ChurchState & ChurchActions;
 
-export const useChurchStore = create<ChurchStore>()(storeChurch);
+const initialState: ChurchState = {
+  isGeneralFilterDisabled: true,
+  isTermFilterDisabled: true,
+  generalSearchData: undefined,
+  termSearchData: undefined,
+};
+
+export const useChurchStore = create<ChurchStore>()((set) => ({
+  ...initialState,
+
+  setGeneralFilterDisabled: (value) => set({ isGeneralFilterDisabled: value }),
+  setTermFilterDisabled: (value) => set({ isTermFilterDisabled: value }),
+
+  setGeneralSearchData: (data) => set({ generalSearchData: data }),
+  setTermSearchData: (data) => set({ termSearchData: data }),
+
+  reset: () => set(initialState),
+}));
+
+export const selectGeneralFilterDisabled = (state: ChurchStore): boolean =>
+  state.isGeneralFilterDisabled;
+
+export const selectTermFilterDisabled = (state: ChurchStore): boolean => state.isTermFilterDisabled;
+
+export const selectGeneralSearchData = (state: ChurchStore): ChurchResponse[] | undefined =>
+  state.generalSearchData;
+
+export const selectTermSearchData = (state: ChurchStore): ChurchResponse[] | undefined =>
+  state.termSearchData;
+
+export const selectSetGeneralFilterDisabled = (state: ChurchStore) =>
+  state.setGeneralFilterDisabled;
+
+export const selectSetTermFilterDisabled = (state: ChurchStore) => state.setTermFilterDisabled;
+
+export const selectSetGeneralSearchData = (state: ChurchStore) => state.setGeneralSearchData;
+
+export const selectSetTermSearchData = (state: ChurchStore) => state.setTermSearchData;

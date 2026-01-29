@@ -6,7 +6,7 @@ import { AxiosError } from 'axios';
 import { icupApi } from '@/core/api/icupApi';
 import { type UserRole } from '@/modules/user/enums/user-role.enum';
 import { MinistryType } from '@/modules/ministry/enums/ministry-type.enum';
-import { ChurchResponse } from '@/modules/church/interfaces/church-response.interface';
+import { ChurchResponse } from '@/modules/church/types';
 import { MinistryResponse } from '@/modules/ministry/interfaces/ministry-response.interface';
 
 export interface LoginResponse {

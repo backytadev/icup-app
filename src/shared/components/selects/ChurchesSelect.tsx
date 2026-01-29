@@ -22,7 +22,7 @@ import { Button } from '@/shared/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
 
 import { MemberUseFormReturn } from '@/shared/interfaces/member-form-data';
-import { ChurchResponse } from '@/modules/church/interfaces/church-response.interface';
+import { ChurchResponse } from '@/modules/church/types';
 
 export interface ChurchesSelectProps {
   form: MemberUseFormReturn;

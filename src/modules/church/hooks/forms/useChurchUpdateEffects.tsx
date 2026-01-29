@@ -1,14 +1,8 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
-
 import { useEffect } from 'react';
 import { type UseFormReturn } from 'react-hook-form';
 
-import { type ChurchServiceTime } from '@/modules/church/enums/church-service-time.enum';
-import { type ChurchResponse } from '@/modules/church/interfaces/church-response.interface';
-import { type ChurchFormData } from '@/modules/church/interfaces/church-form-data.interface';
+import { type ChurchServiceTime } from '@/modules/church/enums';
+import { type ChurchResponse, type ChurchFormData } from '@/modules/church/types';
 
 interface Options {
   id: string;
@@ -16,8 +10,6 @@ interface Options {
   setIsLoadingData: React.Dispatch<React.SetStateAction<boolean>>;
   churchUpdateForm: UseFormReturn<ChurchFormData, any, ChurchFormData | undefined>;
 }
-
-// todo: remplazar todos por undefined | ChurchFormData
 
 export const useChurchUpdateEffects = ({
   id,

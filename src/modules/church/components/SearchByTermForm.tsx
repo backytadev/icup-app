@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useEffect, useState } from 'react';
 
 import { type z } from 'zod';
@@ -16,12 +13,12 @@ import { cn } from '@/shared/lib/utils';
 import {
   ChurchSearchType,
   ChurchSearchTypeNames,
-} from '@/modules/church/enums/church-search-type.enum';
+  ChurchSearchNamesByRecordStatus,
+} from '@/modules/church/enums';
 import { RecordOrder, RecordOrderNames } from '@/shared/enums/record-order.enum';
-import { ChurchSearchNamesByRecordStatus } from '@/modules/church/enums/church-search-select-option.enum';
 
-import { churchSearchByTermFormSchema } from '@/modules/church/validations/church-search-by-term-form-schema';
-import { type ChurchSearchFormByTerm } from '@/modules/church/interfaces/church-search-form-by-term.interface';
+import { churchSearchByTermFormSchema } from '@/modules/church/schemas';
+import { type ChurchSearchFormByTerm } from '@/modules/church/types';
 
 import { dateFormatterTermToTimestamp } from '@/shared/helpers/date-formatter-to-timestamp.helper';
 

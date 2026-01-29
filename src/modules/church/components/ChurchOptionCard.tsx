@@ -121,41 +121,41 @@ export const ChurchOptionCard = ({
           <h3 className='text-xl md:text-2xl font-bold text-white font-outfit mb-2'>
             {title}
           </h3>
-          <p className='text-sm text-white/80 font-inter leading-relaxed'>
+          <p className='text-sm text-white/80 font-inter leading-relaxed pr-10'>
             {description}
           </p>
-
-          {/* Arrow indicator */}
-          {!disabled && (
-            <div className='absolute bottom-6 right-6 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center transition-transform duration-300 group-hover:translate-x-1'>
-              <svg
-                className='w-4 h-4 text-white'
-                fill='none'
-                viewBox='0 0 24 24'
-                stroke='currentColor'
-              >
-                <path
-                  strokeLinecap='round'
-                  strokeLinejoin='round'
-                  strokeWidth={2}
-                  d='M9 5l7 7-7 7'
-                />
-              </svg>
-            </div>
-          )}
-
-          {/* Disabled overlay */}
-          {disabled && (
-            <div className='absolute inset-0 bg-slate-900/50 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center'>
-              <div className='w-12 h-12 rounded-full bg-red-500/80 flex items-center justify-center mb-2'>
-                <MdBlock className='w-6 h-6 text-white' />
-              </div>
-              <span className='text-sm font-semibold text-white/90 font-inter'>
-                Acceso restringido
-              </span>
-            </div>
-          )}
         </div>
+
+        {/* Arrow indicator */}
+        {!disabled && (
+          <div className='absolute bottom-6 right-6 z-10 w-8 h-8 rounded-full bg-white/10 flex items-center justify-center transition-transform duration-300 group-hover:translate-x-1'>
+            <svg
+              className='w-4 h-4 text-white'
+              fill='none'
+              viewBox='0 0 24 24'
+              stroke='currentColor'
+            >
+              <path
+                strokeLinecap='round'
+                strokeLinejoin='round'
+                strokeWidth={2}
+                d='M9 5l7 7-7 7'
+              />
+            </svg>
+          </div>
+        )}
+
+        {/* Disabled overlay */}
+        {disabled && (
+          <div className='absolute inset-0 z-20 bg-slate-900/50 backdrop-blur-sm rounded-2xl flex flex-col items-center justify-center'>
+            <div className='w-12 h-12 rounded-full bg-red-500/80 flex items-center justify-center mb-2'>
+              <MdBlock className='w-6 h-6 text-white' />
+            </div>
+            <span className='text-sm font-semibold text-white/90 font-inter'>
+              Acceso restringido
+            </span>
+          </div>
+        )}
       </div>
     </NavLink>
   );

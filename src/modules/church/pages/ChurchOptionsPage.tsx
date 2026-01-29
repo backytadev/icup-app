@@ -9,7 +9,7 @@ import { RiDeleteBin2Fill } from 'react-icons/ri';
 import { useAuthStore } from '@/stores/auth/auth.store';
 import { UserRole } from '@/modules/user/enums/user-role.enum';
 
-import { ChurchModuleHeader, ChurchOptionCard } from '@/modules/church/components/shared';
+import { ChurchModuleHeader, ChurchOptionCard } from '@/modules/church/components';
 
 export const ChurchOptionsPage = (): JSX.Element => {
   const user = useAuthStore((state) => state.user);
@@ -26,13 +26,11 @@ export const ChurchOptionsPage = (): JSX.Element => {
   return (
     <div className='min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950'>
       <div className='max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8'>
-        {/* Header */}
         <ChurchModuleHeader
           title='Modulo Iglesia'
           description='Administra y gestiona la información de las iglesias y anexos registrados en el sistema.'
         />
 
-        {/* Welcome message */}
         <div
           className='text-center opacity-0 animate-slide-in-up'
           style={{ animationDelay: '0.15s', animationFillMode: 'forwards' }}
@@ -42,7 +40,6 @@ export const ChurchOptionsPage = (): JSX.Element => {
           </p>
         </div>
 
-        {/* Options Grid */}
         <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5 gap-6'>
           <ChurchOptionCard
             to='/churches/create'
@@ -93,7 +90,6 @@ export const ChurchOptionsPage = (): JSX.Element => {
           />
         </div>
 
-        {/* Footer */}
         <footer className='pt-6 pb-2 text-center'>
           <p className='text-xs text-slate-400 dark:text-slate-500 font-inter'>
             Modulo Iglesia - ICUP App &copy; {new Date().getFullYear()}

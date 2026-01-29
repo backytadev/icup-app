@@ -1,5 +1,5 @@
 import { type UserRole } from '@/modules/user/enums/user-role.enum';
-import { ChurchResponse } from '@/modules/church/interfaces/church-response.interface';
+import { ChurchResponse } from '@/modules/church/types';
 import { MinistryResponse } from '@/modules/ministry/interfaces/ministry-response.interface';
 
 export interface UserFormData {

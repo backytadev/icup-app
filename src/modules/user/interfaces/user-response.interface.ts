@@ -1,4 +1,4 @@
-import { ChurchResponse } from '@/modules/church/interfaces/church-response.interface';
+import { ChurchResponse } from '@/modules/church/types';
 import { MinistryResponse } from '@/modules/ministry/interfaces/ministry-response.interface';
 import { type CreatedBy, type UpdatedBy } from '@/shared/interfaces/relations-response.interface';
 

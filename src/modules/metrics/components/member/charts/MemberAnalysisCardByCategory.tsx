@@ -14,7 +14,7 @@ import { cn } from '@/shared/lib/utils';
 import { RecordOrder } from '@/shared/enums/record-order.enum';
 
 import { getSimpleChurches } from '@/modules/church/services/church.service';
-import { type ChurchResponse } from '@/modules/church/interfaces/church-response.interface';
+import { type ChurchResponse } from '@/modules/church/types';
 
 import { MetricSearchType } from '@/modules/metrics/enums/metrics-search-type.enum';
 import { getMembersByCategory } from '@/modules/metrics/services/member-metrics.service';

@@ -75,13 +75,61 @@ const isMetricsPath = (pathname: string): boolean => {
 
 interface SpinnerProps {
   isPendingRequest?: boolean;
+  variant?: 'default' | 'overlay';
 }
 
-export const LoadingSpinner = ({ isPendingRequest }: SpinnerProps): JSX.Element => {
+export const LoadingSpinner = ({ isPendingRequest, variant = 'default' }: SpinnerProps): JSX.Element => {
   const verse = getRandomVerse();
   const { pathname } = useLocation();
 
-  const showDotsAnimation = generalPaths.includes(pathname);
+  const showDotsAnimation = generalPaths.includes(pathname) && variant !== 'overlay';
+
+  // Overlay variant - clean, centered spinner without background
+  if (variant === 'overlay') {
+    return (
+      <div className='flex flex-col items-center justify-center gap-5'>
+        {/* Modern spinner */}
+        <div className='relative'>
+          {/* Outer ring */}
+          <div className='w-16 h-16 rounded-full border-4 border-slate-200/60 dark:border-slate-600/40' />
+          {/* Spinning gradient ring */}
+          <div
+            className={cn(
+              'absolute inset-0 w-16 h-16 rounded-full',
+              'border-4 border-transparent border-t-blue-500 border-r-blue-400',
+              'animate-spin'
+            )}
+          />
+          {/* Inner glow */}
+          <div className='absolute inset-2 rounded-full bg-gradient-to-br from-blue-500/10 to-transparent' />
+        </div>
+
+        {/* Loading text */}
+        <span className='text-blue-600 dark:text-blue-400 text-sm font-medium font-inter'>
+          Cargando...
+        </span>
+
+        {/* Bible verse */}
+        <div
+          className={cn(
+            'max-w-sm text-center px-4 py-3 rounded-xl',
+            'bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm',
+            'border border-slate-200/60 dark:border-slate-700/50',
+            'shadow-lg shadow-slate-200/50 dark:shadow-slate-900/50',
+            'opacity-0 animate-fade-in-scale'
+          )}
+          style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}
+        >
+          <p className='text-sm text-slate-600 dark:text-slate-300 font-inter italic leading-relaxed'>
+            &ldquo;{verse.split(' - ')[0]}&rdquo;
+          </p>
+          <p className='mt-1.5 text-xs text-slate-500 dark:text-slate-400 font-medium'>
+            — {verse.split(' - ')[1]}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

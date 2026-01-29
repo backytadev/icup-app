@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useState } from 'react';
 
 import { type z } from 'zod';
@@ -17,18 +13,17 @@ import { useQuery } from '@tanstack/react-query';
 import { CalendarIcon } from 'lucide-react';
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
 
-import {
-  ChurchServiceTime,
-  ChurchServiceTimeNames,
-} from '@/modules/church/enums/church-service-time.enum';
+import { ChurchServiceTime, ChurchServiceTimeNames } from '@/modules/church/enums';
 import { getMainChurch } from '@/modules/church/services/church.service';
-import { churchFormSchema } from '@/modules/church/validations/church-form-schema';
-import { type ChurchResponse } from '@/modules/church/interfaces/church-response.interface';
-import { ChurchFormSkeleton } from '@/modules/church/components/cards/update/ChurchFormSkeleton';
+import { churchFormSchema } from '@/modules/church/schemas';
+import { type ChurchResponse } from '@/modules/church/types';
+import { ChurchFormSkeleton } from '@/modules/church/components';
 
-import { useChurchUpdateEffects } from '@/modules/church/hooks/useChurchUpdateEffects';
-import { useChurchUpdateMutation } from '@/modules/church/hooks/useChurchUpdateMutation';
-import { useChurchUpdateSubmitButtonLogic } from '@/modules/church/hooks/useChurchUpdateSubmitButtonLogic';
+import {
+  useChurchUpdateEffects,
+  useChurchUpdateMutation,
+  useChurchUpdateSubmitButtonLogic,
+} from '@/modules/church/hooks';
 
 import { cn } from '@/shared/lib/utils';
 
@@ -69,8 +64,6 @@ import { Button } from '@/shared/components/ui/button';
 import { Checkbox } from '@/shared/components/ui/checkbox';
 import { Calendar } from '@/shared/components/ui/calendar';
 import { Textarea } from '@/shared/components/ui/textarea';
-import { Card, CardContent } from '@/shared/components/ui/card';
-import { Tabs, TabsContent } from '@/shared/components/ui/tabs';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
 
 interface ChurchFormUpdateProps {
@@ -164,114 +157,126 @@ export const ChurchUpdateForm = ({
   };
 
   return (
-    <Tabs
-      defaultValue='general-info'
-      className='w-auto -mt-8 sm:w-[520px] md:w-[680px] lg:w-[990px] xl:w-[1100px]'
-    >
-      <h2 className='text-center leading-7 text-orange-500 pb-2 font-bold text-[24px] sm:text-[26px] md:text-[28px]'>
-        Modificar información de la Iglesia
-      </h2>
-
-      <TabsContent value='general-info'>
-        <Card className='w-full'>
-          {isLoadingData && <ChurchFormSkeleton />}
-
-          {!isLoadingData && (
-            <CardContent className='py-3 px-4'>
-              <div className='italic dark:text-slate-300 text-slate-500 font-bold text-[16.5px] md:text-[18px] pl-0 mb-4 md:pl-4'>
-                Iglesia: {data?.abbreviatedChurchName} ~ {data?.district}
+    <div className='w-full max-w-[1120px] mx-auto'>
+      {isLoadingData ? (
+        <ChurchFormSkeleton />
+      ) : (
+        <div className='w-full'>
+          {/* Header */}
+          <div className='relative overflow-hidden rounded-t-xl bg-gradient-to-r from-amber-500 via-orange-500 to-orange-600 dark:from-amber-600 dark:via-orange-600 dark:to-orange-700 px-6 py-5'>
+            <div className='flex flex-col gap-1'>
+              <div className='flex items-center gap-2 mb-1'>
+                <span className='px-2.5 py-0.5 text-[10px] font-semibold bg-white/20 text-white rounded font-inter'>
+                  Actualización
+                </span>
+                <span className='px-2.5 py-0.5 text-[10px] font-semibold bg-white/20 text-white rounded font-inter'>
+                  {data?.isAnexe ? 'Anexo' : 'Iglesia Central'}
+                </span>
               </div>
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(handleSubmit)}
-                  className='w-full flex flex-col md:grid md:grid-cols-2 gap-x-10 gap-y-5 px-2 sm:px-12'
-                >
-                  <div className='col-start-1 col-end-2'>
+              <h2 className='text-xl md:text-2xl font-bold text-white font-outfit leading-tight'>
+                Modificar Iglesia
+              </h2>
+              <p className='text-white/80 text-[13px] md:text-[14px] font-inter'>
+                {data?.abbreviatedChurchName} - {data?.district}
+              </p>
+            </div>
+          </div>
+
+          {/* Form Content */}
+          <div className='bg-white dark:bg-slate-900 border border-t-0 border-slate-200/80 dark:border-slate-700/50 rounded-b-xl'>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(handleSubmit)}
+                className='p-5 md:p-6'
+              >
+                {/* Sección: Información General */}
+                <div className='mb-6'>
+                  <div className='mb-4'>
+                    <span className='text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider font-inter'>
+                      Información General
+                    </span>
+                  </div>
+
+                  <div className='grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4'>
                     <FormField
                       control={form.control}
                       name='churchName'
-                      render={({ field }) => {
-                        return (
-                          <FormItem className='mt-0 md:mt-0'>
-                            <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                              Nombre
-                            </FormLabel>
-                            <FormDescription className='text-[13.5px] md:text-[14px]'>
-                              Asigna un nombre a la iglesia.
-                            </FormDescription>
-                            <FormControl className='text-[14px] md:text-[14px]'>
-                              <Input
-                                className='text-[14px]'
-                                disabled={isInputDisabled}
-                                placeholder='Ejem: Iglesia Cristiana Unidos en su Presencia - Roca Fuerte'
-                                type='text'
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage className='text-[13px]' />
-                          </FormItem>
-                        );
-                      }}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className='text-[13px] md:text-[14px] font-semibold text-slate-700 dark:text-slate-300 font-inter'>
+                            Nombre de la Iglesia
+                          </FormLabel>
+                          <FormDescription className='text-[12px] md:text-[13px] text-slate-500 dark:text-slate-400 font-inter'>
+                            Nombre completo de la iglesia.
+                          </FormDescription>
+                          <FormControl>
+                            <Input
+                              className='text-[13px] md:text-[14px] font-inter'
+                              disabled={isInputDisabled}
+                              placeholder='Ejem: Iglesia Cristiana Unidos en su Presencia'
+                              type='text'
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage className='text-[12px]' />
+                        </FormItem>
+                      )}
                     />
 
                     <FormField
                       control={form.control}
                       name='abbreviatedChurchName'
-                      render={({ field }) => {
-                        return (
-                          <FormItem className='mt-3'>
-                            <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                              Nombre abreviado
-                            </FormLabel>
-                            <FormDescription className='text-[13.5px] md:text-[14px]'>
-                              Asigna una abreviación de nombre a la iglesia.
-                            </FormDescription>
-                            <FormControl className='text-[14px] md:text-[14px]'>
-                              <Input
-                                className='text-[14px]'
-                                disabled={isInputDisabled}
-                                placeholder='Ejem: ICUP - Roca Fuerte'
-                                type='text'
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage className='text-[13px]' />
-                          </FormItem>
-                        );
-                      }}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className='text-[13px] md:text-[14px] font-semibold text-slate-700 dark:text-slate-300 font-inter'>
+                            Nombre Abreviado
+                          </FormLabel>
+                          <FormDescription className='text-[12px] md:text-[13px] text-slate-500 dark:text-slate-400 font-inter'>
+                            Abreviación del nombre.
+                          </FormDescription>
+                          <FormControl>
+                            <Input
+                              className='text-[13px] md:text-[14px] font-inter'
+                              disabled={isInputDisabled}
+                              placeholder='Ejem: ICUP - Roca Fuerte'
+                              type='text'
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage className='text-[12px]' />
+                        </FormItem>
+                      )}
                     />
 
                     <FormField
                       control={form.control}
                       name='foundingDate'
                       render={({ field }) => (
-                        <FormItem className='mt-2'>
-                          <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                            Fecha de fundación
+                        <FormItem>
+                          <FormLabel className='text-[13px] md:text-[14px] font-semibold text-slate-700 dark:text-slate-300 font-inter'>
+                            Fecha de Fundación
                           </FormLabel>
-                          <FormDescription className='text-[13.5px] md:text-[14px]'>
-                            Asigna la fecha de fundación de la iglesia.
+                          <FormDescription className='text-[12px] md:text-[13px] text-slate-500 dark:text-slate-400 font-inter'>
+                            Fecha en que se fundó la iglesia.
                           </FormDescription>
                           <Popover
                             open={isInputFoundingDateOpen}
                             onOpenChange={setIsInputFoundingDateOpen}
                           >
                             <PopoverTrigger asChild>
-                              <FormControl className='text-[14px] md:text-[14px]'>
+                              <FormControl>
                                 <Button
                                   disabled={isInputDisabled}
-                                  variant={'outline'}
+                                  variant='outline'
                                   className={cn(
-                                    'text-[14px] w-full pl-3 text-left font-normal',
+                                    'w-full pl-3 text-left font-normal text-[13px] md:text-[14px] font-inter',
                                     !field.value && 'text-muted-foreground'
                                   )}
                                 >
                                   {field.value ? (
                                     format(field.value, 'LLL dd, y', { locale: es })
                                   ) : (
-                                    <span className='text-[14px] md:text-[14px]'>
-                                      Selecciona la fecha de fundación
-                                    </span>
+                                    <span>Selecciona la fecha</span>
                                   )}
                                   <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
                                 </Button>
@@ -292,8 +297,7 @@ export const ChurchUpdateForm = ({
                               />
                             </PopoverContent>
                           </Popover>
-
-                          <FormMessage className='text-[13px]' />
+                          <FormMessage className='text-[12px]' />
                         </FormItem>
                       )}
                     />
@@ -303,453 +307,454 @@ export const ChurchUpdateForm = ({
                       name='serviceTimes'
                       render={() => (
                         <FormItem>
-                          <div className='mt-2'>
-                            <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                              Horarios
-                            </FormLabel>
-                            <FormDescription className='text-[13.5px] md:text-[14px]'>
-                              Selecciona los horarios de culto que tendrá la nueva iglesia.
-                            </FormDescription>
-                          </div>
-                          <div className='flex flex-wrap space-x-5 space-y-1'>
+                          <FormLabel className='text-[13px] md:text-[14px] font-semibold text-slate-700 dark:text-slate-300 font-inter'>
+                            Horarios de Culto
+                          </FormLabel>
+                          <FormDescription className='text-[12px] md:text-[13px] text-slate-500 dark:text-slate-400 font-inter'>
+                            Selecciona los horarios disponibles.
+                          </FormDescription>
+                          <div className='flex flex-wrap gap-x-4 gap-y-2 mt-2'>
                             {Object.values(ChurchServiceTime).map((serviceTime) => (
                               <FormField
                                 key={serviceTime}
                                 control={form.control}
                                 name='serviceTimes'
-                                render={({ field }) => {
-                                  return (
-                                    <FormItem
-                                      key={serviceTime}
-                                      className='text-[14px] flex items-center space-x-2 space-y-0'
-                                    >
-                                      <FormControl className='grid'>
-                                        <Checkbox
-                                          disabled={isInputDisabled}
-                                          checked={field.value?.includes(serviceTime)}
-                                          onCheckedChange={(checked) => {
-                                            let updatedServiceTimes: ChurchServiceTime[] = [];
-                                            checked
-                                              ? (updatedServiceTimes = field.value
-                                                  ? [...field.value, serviceTime]
-                                                  : [serviceTime])
-                                              : (updatedServiceTimes =
-                                                  field.value?.filter(
-                                                    (value) => value !== serviceTime
-                                                  ) ?? []);
-
-                                            field.onChange(updatedServiceTimes);
-                                          }}
-                                        />
-                                      </FormControl>
-                                      <FormLabel className='text-[14px] font-medium'>
-                                        {ChurchServiceTimeNames[serviceTime]}
-                                      </FormLabel>
-                                    </FormItem>
-                                  );
-                                }}
+                                render={({ field }) => (
+                                  <FormItem
+                                    key={serviceTime}
+                                    className='flex items-center space-x-2 space-y-0'
+                                  >
+                                    <FormControl>
+                                      <Checkbox
+                                        disabled={isInputDisabled}
+                                        checked={field.value?.includes(serviceTime)}
+                                        onCheckedChange={(checked) => {
+                                          let updatedServiceTimes: ChurchServiceTime[] = [];
+                                          checked
+                                            ? (updatedServiceTimes = field.value
+                                              ? [...field.value, serviceTime]
+                                              : [serviceTime])
+                                            : (updatedServiceTimes =
+                                              field.value?.filter(
+                                                (value) => value !== serviceTime
+                                              ) ?? []);
+                                          field.onChange(updatedServiceTimes);
+                                        }}
+                                      />
+                                    </FormControl>
+                                    <FormLabel className='text-[12px] md:text-[13px] font-medium text-slate-600 dark:text-slate-400 font-inter cursor-pointer'>
+                                      {ChurchServiceTimeNames[serviceTime]}
+                                    </FormLabel>
+                                  </FormItem>
+                                )}
                               />
                             ))}
                           </div>
-                          <FormMessage className='text-[13px]' />
+                          <FormMessage className='text-[12px]' />
                         </FormItem>
                       )}
                     />
+                  </div>
+                </div>
 
+                {/* Divider */}
+                <div className='border-t border-slate-200 dark:border-slate-700/50 my-5'></div>
+
+                {/* Sección: Contacto */}
+                <div className='mb-6'>
+                  <div className='mb-4'>
+                    <span className='text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider font-inter'>
+                      Información de Contacto
+                    </span>
+                  </div>
+
+                  <div className='grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4'>
                     <FormField
                       control={form.control}
                       name='email'
-                      render={({ field }) => {
-                        return (
-                          <FormItem className='mt-2'>
-                            <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                              E-mail
-                            </FormLabel>
-                            <FormDescription className='text-[13.5px] md:text-[14px]'>
-                              Asigna un e-mail a la iglesia.
-                            </FormDescription>
-                            <FormControl className='text-[14px] md:text-[14px]'>
-                              <Input
-                                className='text-[14px]'
-                                disabled={isInputDisabled}
-                                placeholder='Ejem: iglesia.central@example.com'
-                                type='email'
-                                autoComplete='username'
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage className='text-[13px]' />
-                          </FormItem>
-                        );
-                      }}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className='text-[13px] md:text-[14px] font-semibold text-slate-700 dark:text-slate-300 font-inter'>
+                            Correo Electrónico
+                          </FormLabel>
+                          <FormDescription className='text-[12px] md:text-[13px] text-slate-500 dark:text-slate-400 font-inter'>
+                            Email de contacto de la iglesia.
+                          </FormDescription>
+                          <FormControl>
+                            <Input
+                              className='text-[13px] md:text-[14px] font-inter'
+                              disabled={isInputDisabled}
+                              placeholder='Ejem: iglesia.central@example.com'
+                              type='email'
+                              autoComplete='username'
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage className='text-[12px]' />
+                        </FormItem>
+                      )}
                     />
 
                     <FormField
                       control={form.control}
                       name='phoneNumber'
-                      render={({ field }) => {
-                        return (
-                          <FormItem className='mt-2'>
-                            <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                              Número de teléfono
-                            </FormLabel>
-                            <FormDescription className='text-[13.5px] md:text-[14px]'>
-                              Asigne un número telefónico que tendrá la iglesia.
-                            </FormDescription>
-                            <FormControl className='text-[14px] md:text-[14px]'>
-                              <Input
-                                className='text-[14px]'
-                                disabled={isInputDisabled}
-                                placeholder='Ejem: +51 999 999 999'
-                                type='text'
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage className='text-[13px]' />
-                          </FormItem>
-                        );
-                      }}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className='text-[13px] md:text-[14px] font-semibold text-slate-700 dark:text-slate-300 font-inter'>
+                            Número de Teléfono
+                          </FormLabel>
+                          <FormDescription className='text-[12px] md:text-[13px] text-slate-500 dark:text-slate-400 font-inter'>
+                            Teléfono de contacto.
+                          </FormDescription>
+                          <FormControl>
+                            <Input
+                              className='text-[13px] md:text-[14px] font-inter'
+                              disabled={isInputDisabled}
+                              placeholder='Ejem: +51 999 999 999'
+                              type='text'
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage className='text-[12px]' />
+                        </FormItem>
+                      )}
                     />
+                  </div>
+                </div>
 
+                {/* Divider */}
+                <div className='border-t border-slate-200 dark:border-slate-700/50 my-5'></div>
+
+                {/* Sección: Ubicación */}
+                <div className='mb-6'>
+                  <div className='mb-4'>
+                    <span className='text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider font-inter'>
+                      Ubicación
+                    </span>
+                  </div>
+
+                  <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4'>
                     <FormField
                       control={form.control}
                       name='country'
-                      render={({ field }) => {
-                        return (
-                          <FormItem className='mt-2'>
-                            <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                              País
-                            </FormLabel>
-                            <FormDescription className='text-[13.5px] md:text-[14px]'>
-                              Asigna el país al que pertenece la iglesia.
-                            </FormDescription>
-                            <Select
-                              disabled={isInputDisabled}
-                              onValueChange={field.onChange}
-                              value={field.value}
-                            >
-                              <FormControl className='text-[14px] md:text-[14px]'>
-                                <SelectTrigger>
-                                  {field.value ? (
-                                    <SelectValue placeholder='Selecciona el país' />
-                                  ) : (
-                                    'Selecciona el país'
-                                  )}
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {Object.entries(CountryNames).map(([key, value]) => (
-                                  <SelectItem className={`text-[14px]`} key={key} value={key}>
-                                    {value}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage className='text-[13px]' />
-                          </FormItem>
-                        );
-                      }}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className='text-[13px] md:text-[14px] font-semibold text-slate-700 dark:text-slate-300 font-inter'>
+                            País
+                          </FormLabel>
+                          <Select
+                            disabled={isInputDisabled}
+                            onValueChange={field.onChange}
+                            value={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className='text-[13px] md:text-[14px] font-inter'>
+                                {field.value ? (
+                                  <SelectValue placeholder='Selecciona el país' />
+                                ) : (
+                                  'Selecciona el país'
+                                )}
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {Object.entries(CountryNames).map(([key, value]) => (
+                                <SelectItem className='text-[13px]' key={key} value={key}>
+                                  {value}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage className='text-[12px]' />
+                        </FormItem>
+                      )}
                     />
 
                     <FormField
                       control={form.control}
                       name='department'
-                      render={({ field }) => {
-                        return (
-                          <FormItem className='mt-2'>
-                            <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                              Departamento
-                            </FormLabel>
-                            <FormDescription className='text-[13.5px] md:text-[14px]'>
-                              Asigna el departamento al que pertenece la iglesia.
-                            </FormDescription>
-                            <Select
-                              disabled={isInputDisabled}
-                              onValueChange={field.onChange}
-                              value={field.value}
-                            >
-                              <FormControl className='text-[14px] md:text-[14px]'>
-                                <SelectTrigger>
-                                  {field.value ? (
-                                    <SelectValue placeholder='Selecciona el departamento' />
-                                  ) : (
-                                    'Selecciona el departamento'
-                                  )}
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {Object.entries(DepartmentNames).map(([key, value]) => (
-                                  <SelectItem className={`text-[14px]`} key={key} value={key}>
-                                    {value}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage className='text-[13px]' />
-                          </FormItem>
-                        );
-                      }}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className='text-[13px] md:text-[14px] font-semibold text-slate-700 dark:text-slate-300 font-inter'>
+                            Departamento
+                          </FormLabel>
+                          <Select
+                            disabled={isInputDisabled}
+                            onValueChange={field.onChange}
+                            value={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className='text-[13px] md:text-[14px] font-inter'>
+                                {field.value ? (
+                                  <SelectValue placeholder='Selecciona el departamento' />
+                                ) : (
+                                  'Selecciona el departamento'
+                                )}
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {Object.entries(DepartmentNames).map(([key, value]) => (
+                                <SelectItem className='text-[13px]' key={key} value={key}>
+                                  {value}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage className='text-[12px]' />
+                        </FormItem>
+                      )}
                     />
-                  </div>
 
-                  <div className='col-start-2 col-end-3'>
                     <FormField
                       control={form.control}
                       name='province'
-                      render={({ field }) => {
-                        return (
-                          <FormItem>
-                            <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                              Provincia
-                            </FormLabel>
-                            <FormDescription className='text-[13.5px] md:text-[14px]'>
-                              Asigna la provincia a la que pertenece la iglesia.
-                            </FormDescription>
-                            <Select
-                              disabled={isInputDisabled}
-                              onValueChange={field.onChange}
-                              value={field.value}
-                            >
-                              <FormControl className='text-[14px] md:text-[14px]'>
-                                <SelectTrigger>
-                                  {field.value ? (
-                                    <SelectValue placeholder='Selecciona la provincia' />
-                                  ) : (
-                                    'Selecciona la provincia'
-                                  )}
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {Object.entries(ProvinceNames).map(([key, value]) => (
-                                  <SelectItem className={`text-[14px]`} key={key} value={key}>
-                                    {value}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage className='text-[13px]' />
-                          </FormItem>
-                        );
-                      }}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className='text-[13px] md:text-[14px] font-semibold text-slate-700 dark:text-slate-300 font-inter'>
+                            Provincia
+                          </FormLabel>
+                          <Select
+                            disabled={isInputDisabled}
+                            onValueChange={field.onChange}
+                            value={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className='text-[13px] md:text-[14px] font-inter'>
+                                {field.value ? (
+                                  <SelectValue placeholder='Selecciona la provincia' />
+                                ) : (
+                                  'Selecciona la provincia'
+                                )}
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {Object.entries(ProvinceNames).map(([key, value]) => (
+                                <SelectItem className='text-[13px]' key={key} value={key}>
+                                  {value}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage className='text-[12px]' />
+                        </FormItem>
+                      )}
                     />
 
                     <FormField
                       control={form.control}
                       name='district'
-                      render={({ field }) => {
-                        return (
-                          <FormItem className='mt-3'>
-                            <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                              Distrito
-                            </FormLabel>
-                            <FormDescription className='text-[13.5px] md:text-[14px]'>
-                              Asigna el distrito al que pertenece la iglesia.
-                            </FormDescription>
-                            <Select
-                              disabled={isInputDisabled}
-                              onValueChange={field.onChange}
-                              onOpenChange={() => {
-                                form.resetField('urbanSector', {
-                                  defaultValue: '',
-                                });
-                              }}
-                              value={field.value}
-                            >
-                              <FormControl className='text-[14px] md:text-[14px]'>
-                                <SelectTrigger>
-                                  {field.value ? (
-                                    <SelectValue placeholder='Selecciona el distrito' />
-                                  ) : (
-                                    'Selecciona el distrito'
-                                  )}
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {Object.entries(DistrictNames).map(([key, value]) => (
-                                  <SelectItem
-                                    className={`text-[14px] ${districtsValidation?.districtsDataResult?.includes(value) ? 'hidden' : ''}`}
-                                    key={key}
-                                    value={key}
-                                  >
-                                    {value}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage className='text-[13px]' />
-                          </FormItem>
-                        );
-                      }}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className='text-[13px] md:text-[14px] font-semibold text-slate-700 dark:text-slate-300 font-inter'>
+                            Distrito
+                          </FormLabel>
+                          <Select
+                            disabled={isInputDisabled}
+                            onValueChange={field.onChange}
+                            onOpenChange={() => {
+                              form.resetField('urbanSector', { defaultValue: '' });
+                            }}
+                            value={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className='text-[13px] md:text-[14px] font-inter'>
+                                {field.value ? (
+                                  <SelectValue placeholder='Selecciona el distrito' />
+                                ) : (
+                                  'Selecciona el distrito'
+                                )}
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {Object.entries(DistrictNames).map(([key, value]) => (
+                                <SelectItem
+                                  className={`text-[13px] ${districtsValidation?.districtsDataResult?.includes(value) ? 'hidden' : ''}`}
+                                  key={key}
+                                  value={key}
+                                >
+                                  {value}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage className='text-[12px]' />
+                        </FormItem>
+                      )}
                     />
 
                     <FormField
                       control={form.control}
                       name='urbanSector'
-                      render={({ field }) => {
-                        return (
-                          <FormItem className='mt-2'>
-                            <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                              Sector Urbano
-                            </FormLabel>
-                            <FormDescription className='text-[13.5px] md:text-[14px]'>
-                              Asigna el sector urbano al que pertenece la iglesia.
-                            </FormDescription>
-                            <Select
-                              disabled={isInputDisabled}
-                              onValueChange={field.onChange}
-                              value={field.value}
-                            >
-                              <FormControl className='text-[14px] md:text-[14px]'>
-                                <SelectTrigger>
-                                  {field.value ? (
-                                    <SelectValue placeholder='Selecciona el sector urbano' />
-                                  ) : (
-                                    'Selecciona el sector urbano'
-                                  )}
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {Object.entries(UrbanSectorNames).map(([key, value]) => (
-                                  <SelectItem
-                                    className={`text-[14px] ${(urbanSectorsValidation?.urbanSectorsDataResult?.includes(value) ?? !district) ? 'hidden' : ''}`}
-                                    key={key}
-                                    value={key}
-                                  >
-                                    {value}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage className='text-[13px]' />
-                          </FormItem>
-                        );
-                      }}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className='text-[13px] md:text-[14px] font-semibold text-slate-700 dark:text-slate-300 font-inter'>
+                            Sector Urbano
+                          </FormLabel>
+                          <Select
+                            disabled={isInputDisabled}
+                            onValueChange={field.onChange}
+                            value={field.value}
+                          >
+                            <FormControl>
+                              <SelectTrigger className='text-[13px] md:text-[14px] font-inter'>
+                                {field.value ? (
+                                  <SelectValue placeholder='Selecciona el sector' />
+                                ) : (
+                                  'Selecciona el sector'
+                                )}
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {Object.entries(UrbanSectorNames).map(([key, value]) => (
+                                <SelectItem
+                                  className={`text-[13px] ${(urbanSectorsValidation?.urbanSectorsDataResult?.includes(value) ?? !district) ? 'hidden' : ''}`}
+                                  key={key}
+                                  value={key}
+                                >
+                                  {value}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage className='text-[12px]' />
+                        </FormItem>
+                      )}
                     />
 
                     <FormField
                       control={form.control}
                       name='address'
-                      render={({ field }) => {
-                        return (
-                          <FormItem className='mt-2'>
-                            <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                              Dirección
-                            </FormLabel>
-                            <FormDescription className='text-[13.5px] md:text-[14px]'>
-                              Asigna la dirección de la iglesia.
-                            </FormDescription>
-                            <FormControl className='text-[14px] md:text-[14px]'>
-                              <Input
-                                className='text-[14px]'
-                                disabled={isInputDisabled}
-                                placeholder='Ej: Av. Central 123 - Mz.A Lt.3'
-                                type='text'
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage className='text-[13px]' />
-                          </FormItem>
-                        );
-                      }}
+                      render={({ field }) => (
+                        <FormItem className='md:col-span-2 lg:col-span-1'>
+                          <FormLabel className='text-[13px] md:text-[14px] font-semibold text-slate-700 dark:text-slate-300 font-inter'>
+                            Dirección
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              className='text-[13px] md:text-[14px] font-inter'
+                              disabled={isInputDisabled}
+                              placeholder='Ej: Av. Central 123 - Mz.A Lt.3'
+                              type='text'
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage className='text-[12px]' />
+                        </FormItem>
+                      )}
                     />
 
                     <FormField
                       control={form.control}
                       name='referenceAddress'
-                      render={({ field }) => {
-                        return (
-                          <FormItem className='mt-2'>
-                            <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                              Referencia de dirección
-                            </FormLabel>
-                            <FormControl className='text-[14px] md:text-[14px]'>
-                              <Textarea
-                                disabled={isInputDisabled}
-                                placeholder='Comentarios sobre la ubicación de referencia de la iglesia...'
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage className='text-[13px]' />
-                          </FormItem>
-                        );
-                      }}
-                    />
-
-                    <FormField
-                      control={form.control}
-                      name='isAnexe'
                       render={({ field }) => (
-                        <FormItem className='flex flex-row gap-2 items-end mt-2 px-1 py-3 h-[2.5rem]'>
-                          <FormControl className='text-[14px] md:text-[14px]'>
-                            <Checkbox
+                        <FormItem className='md:col-span-2 lg:col-span-3'>
+                          <FormLabel className='text-[13px] md:text-[14px] font-semibold text-slate-700 dark:text-slate-300 font-inter'>
+                            Referencia de Dirección
+                          </FormLabel>
+                          <FormControl>
+                            <Textarea
+                              className='text-[13px] md:text-[14px] font-inter resize-none'
                               disabled={isInputDisabled}
-                              checked={field?.value}
-                              onCheckedChange={(checked) => {
-                                field.onChange(checked);
-                                form.resetField('theirMainChurch', {
-                                  keepError: true,
-                                });
-                              }}
+                              placeholder='Comentarios sobre la ubicación de referencia...'
+                              {...field}
                             />
                           </FormControl>
-                          <div className='space-y-1 leading-none'>
-                            <FormLabel className='text-[14px] md:text-[14px]'>
-                              ¿Esta iglesia sera un anexo?
-                            </FormLabel>
-                          </div>
+                          <FormMessage className='text-[12px]' />
                         </FormItem>
                       )}
                     />
+                  </div>
+                </div>
 
-                    {isAnexe && (
+                {/* Divider */}
+                <div className='border-t border-slate-200 dark:border-slate-700/50 my-5'></div>
+
+                {/* Sección: Configuración */}
+                <div className='mb-6'>
+                  <div className='mb-4'>
+                    <span className='text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider font-inter'>
+                      Configuración
+                    </span>
+                  </div>
+
+                  <div className='grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4'>
+                    <div className='space-y-4'>
                       <FormField
                         control={form.control}
-                        name='theirMainChurch'
-                        render={({ field }) => {
-                          return (
-                            <FormItem className='mt-3'>
-                              <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
+                        name='isAnexe'
+                        render={({ field }) => (
+                          <FormItem className='flex flex-row items-center gap-3 p-3 rounded-lg bg-slate-50/80 dark:bg-slate-800/50 border border-slate-200/50 dark:border-slate-700/30'>
+                            <FormControl>
+                              <Checkbox
+                                disabled={isInputDisabled}
+                                checked={field?.value}
+                                onCheckedChange={(checked) => {
+                                  field.onChange(checked);
+                                  form.resetField('theirMainChurch', { keepError: true });
+                                }}
+                              />
+                            </FormControl>
+                            <div className='space-y-0.5'>
+                              <FormLabel className='text-[13px] md:text-[14px] font-medium text-slate-700 dark:text-slate-300 font-inter cursor-pointer'>
+                                ¿Esta iglesia es un anexo?
+                              </FormLabel>
+                              <FormDescription className='text-[11px] md:text-[12px] text-slate-500 dark:text-slate-400 font-inter'>
+                                Marca esta opción si depende de una iglesia principal.
+                              </FormDescription>
+                            </div>
+                          </FormItem>
+                        )}
+                      />
+
+                      {isAnexe && (
+                        <FormField
+                          control={form.control}
+                          name='theirMainChurch'
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className='text-[13px] md:text-[14px] font-semibold text-slate-700 dark:text-slate-300 font-inter'>
                                 Iglesia Principal
                               </FormLabel>
-                              <FormDescription className='text-[13.5px] md:text-[14px]'>
-                                Asigna una iglesia principal para este anexo.
+                              <FormDescription className='text-[12px] md:text-[13px] text-slate-500 dark:text-slate-400 font-inter'>
+                                Selecciona la iglesia principal de este anexo.
                               </FormDescription>
                               <Popover
                                 open={isInputMainChurchOpen}
                                 onOpenChange={setIsInputMainChurchOpen}
                               >
                                 <PopoverTrigger asChild>
-                                  <FormControl className='text-[14px] md:text-[14px]'>
+                                  <FormControl>
                                     <Button
                                       value={field.value}
                                       disabled={isInputDisabled}
                                       variant='outline'
                                       role='combobox'
-                                      className={cn('text-[14px] w-full justify-between ')}
+                                      className={cn(
+                                        'w-full justify-between text-[13px] md:text-[14px] font-inter'
+                                      )}
                                     >
                                       {field.value
                                         ? mainChurchQuery?.data?.find(
-                                            (church) => church.id === field.value
-                                          )?.abbreviatedChurchName
-                                        : 'Busque y seleccione una iglesia'}
-                                      <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-5' />
+                                          (church) => church.id === field.value
+                                        )?.abbreviatedChurchName
+                                        : 'Buscar iglesia...'}
+                                      <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                                     </Button>
                                   </FormControl>
                                 </PopoverTrigger>
                                 <PopoverContent align='center' className='w-auto px-4 py-2'>
                                   <Command>
                                     {mainChurchQuery?.data?.length &&
-                                    mainChurchQuery?.data?.length > 0 ? (
+                                      mainChurchQuery?.data?.length > 0 ? (
                                       <>
                                         <CommandInput
-                                          placeholder='Busque una iglesia'
-                                          className='h-9 text-[14px]'
+                                          placeholder='Buscar iglesia...'
+                                          className='h-9 text-[13px]'
                                         />
                                         <CommandEmpty>Iglesia no encontrada.</CommandEmpty>
                                         <CommandGroup className='max-h-[200px] h-auto'>
                                           {mainChurchQuery?.data?.map((church) => (
                                             <CommandItem
-                                              className='text-[14px]'
+                                              className='text-[13px]'
                                               value={church.abbreviatedChurchName}
                                               key={church.id}
                                               onSelect={() => {
@@ -772,110 +777,120 @@ export const ChurchUpdateForm = ({
                                       </>
                                     ) : (
                                       mainChurchQuery?.data?.length === 0 && (
-                                        <p className='text-[13.5px] md:text-[14.5px] font-medium text-red-500 text-center'>
-                                          ❌Iglesia Central no disponible.
+                                        <p className='text-[13px] font-medium text-red-500 text-center py-2'>
+                                          Iglesia Central no disponible.
                                         </p>
                                       )
                                     )}
                                   </Command>
                                 </PopoverContent>
                               </Popover>
-                              <FormMessage className='text-[13px]' />
+                              <FormMessage className='text-[12px]' />
                             </FormItem>
-                          );
-                        }}
-                      />
-                    )}
+                          )}
+                        />
+                      )}
+                    </div>
 
                     <FormField
                       control={form.control}
                       name='recordStatus'
-                      render={({ field }) => {
-                        return (
-                          <FormItem className='mt-2'>
-                            <FormLabel className='text-[14px]'>Estado</FormLabel>
-                            <Select
-                              disabled={isInputDisabled}
-                              value={field.value}
-                              onValueChange={field.onChange}
-                            >
-                              <FormControl className='text-[14px]'>
-                                <SelectTrigger>
-                                  {field.value === 'active' ? (
-                                    <SelectValue placeholder='Activo' />
-                                  ) : (
-                                    <SelectValue placeholder='Inactivo' />
-                                  )}
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                <SelectItem className='text-[14px]' value='active'>
-                                  Activo
-                                </SelectItem>
-                                <SelectItem className='text-[14px]' value='inactive'>
-                                  Inactivo
-                                </SelectItem>
-                              </SelectContent>
-                            </Select>
-                            {form.getValues('recordStatus') === 'active' && (
-                              <FormDescription className='pl-2 text-[12.5px] xl:text-[13px] font-bold'>
-                                *El registro esta <span className='text-green-500'>Activo</span>,
-                                para colocarla como <span className='text-red-500'>Inactivo</span>{' '}
-                                debe inactivar el registro desde el modulo{' '}
-                                <span className='font-bold text-red-500'>Inactivar Iglesia. </span>
-                              </FormDescription>
-                            )}
-                            {form.getValues('recordStatus') === 'inactive' && (
-                              <FormDescription className='pl-2 text-[12.5px] xl:text-[13px] font-bold'>
-                                * El registro esta <span className='text-red-500 '>Inactivo</span>,
-                                puede modificar el estado eligiendo otra opción.
-                              </FormDescription>
-                            )}
-                            <FormMessage className='text-[13px]' />
-                          </FormItem>
-                        );
-                      }}
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className='text-[13px] md:text-[14px] font-semibold text-slate-700 dark:text-slate-300 font-inter'>
+                            Estado del Registro
+                          </FormLabel>
+                          <Select
+                            disabled={isInputDisabled}
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <FormControl>
+                              <SelectTrigger className='text-[13px] md:text-[14px] font-inter'>
+                                {field.value === 'active' ? (
+                                  <SelectValue placeholder='Activo' />
+                                ) : (
+                                  <SelectValue placeholder='Inactivo' />
+                                )}
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem className='text-[13px]' value='active'>
+                                Activo
+                              </SelectItem>
+                              <SelectItem className='text-[13px]' value='inactive'>
+                                Inactivo
+                              </SelectItem>
+                            </SelectContent>
+                          </Select>
+                          {form.getValues('recordStatus') === 'active' && (
+                            <FormDescription className='text-[11px] md:text-[12px] text-slate-500 dark:text-slate-400 font-inter mt-2'>
+                              El registro está{' '}
+                              <span className='text-emerald-600 dark:text-emerald-400 font-semibold'>
+                                Activo
+                              </span>
+                              . Para inactivarlo, use el módulo de{' '}
+                              <span className='text-red-500 font-semibold'>Inactivar Iglesia</span>.
+                            </FormDescription>
+                          )}
+                          {form.getValues('recordStatus') === 'inactive' && (
+                            <FormDescription className='text-[11px] md:text-[12px] text-slate-500 dark:text-slate-400 font-inter mt-2'>
+                              El registro está{' '}
+                              <span className='text-red-500 font-semibold'>Inactivo</span>. Puede
+                              cambiar el estado seleccionando otra opción.
+                            </FormDescription>
+                          )}
+                          <FormMessage className='text-[12px]' />
+                        </FormItem>
+                      )}
                     />
                   </div>
+                </div>
 
+                {/* Divider */}
+                <div className='border-t border-slate-200 dark:border-slate-700/50 my-5'></div>
+
+                {/* Footer: Messages and Submit Button */}
+                <div className='flex flex-col items-center gap-4'>
                   {isMessageErrorDisabled ? (
-                    <p className='-mb-5 mt-4 md:mt-0 md:-mb-3 md:row-start-2 md:row-end-3 md:col-start-1 md:col-end-3 mx-auto md:w-[80%] lg:w-[80%] text-center text-red-500 text-[12.5px] md:text-[13px] font-bold'>
-                      ❌ Datos incompletos, completa todos los campos para guardar el registro.
+                    <p className='text-center text-[12px] md:text-[13px] font-medium text-red-500 font-inter px-4 py-2 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/30'>
+                      Datos incompletos. Completa todos los campos requeridos.
                     </p>
                   ) : (
-                    <p className='-mt-3 order-last md:-mt-3 md:row-start-4 md:row-end-5 md:col-start-1 md:col-end-3 mx-auto md:w-[80%] lg:w-[80%] text-center text-green-500 text-[12.5px] md:text-[13px] font-bold'>
-                      ¡Campos completados correctamente! <br /> Para finalizar por favor guarde los
-                      cambios.
+                    <p className='text-center text-[12px] md:text-[13px] font-medium text-emerald-600 dark:text-emerald-400 font-inter px-4 py-2 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800/30'>
+                      Campos completados. Puedes guardar los cambios.
                     </p>
                   )}
 
-                  <div className='mt-2 md:mt-1 md:col-start-1 md:col-end-3 md:row-start-3 md:row-end-4 w-full md:w-[20rem] md:m-auto'>
-                    <Button
-                      disabled={isSubmitButtonDisabled}
-                      type='submit'
-                      className={cn(
-                        'w-full text-[14px]',
-                        churchUpdateMutation?.isPending &&
-                          'bg-emerald-500 hover:bg-emerald-500 disabled:opacity-100 disabled:md:text-[15px] text-white'
-                      )}
-                      onClick={() => {
-                        setTimeout(() => {
-                          if (Object.keys(form.formState.errors).length === 0) {
-                            setIsSubmitButtonDisabled(true);
-                            setIsInputDisabled(true);
-                          }
-                        }, 100);
-                      }}
-                    >
-                      {churchUpdateMutation?.isPending ? 'Procesando...' : 'Guardar cambios'}
-                    </Button>
-                  </div>
-                </form>
-              </Form>
-            </CardContent>
-          )}
-        </Card>
-      </TabsContent>
-    </Tabs>
+                  <Button
+                    disabled={isSubmitButtonDisabled}
+                    type='submit'
+                    className={cn(
+                      'w-full md:w-[280px] text-[13px] md:text-[14px] font-semibold font-inter',
+                      'bg-gradient-to-r from-amber-500 to-orange-500 text-white',
+                      'hover:from-amber-600 hover:to-orange-600',
+                      'shadow-sm hover:shadow-md hover:shadow-amber-500/20',
+                      'transition-all duration-200',
+                      churchUpdateMutation?.isPending &&
+                      'bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-500 hover:to-teal-500'
+                    )}
+                    onClick={() => {
+                      setTimeout(() => {
+                        if (Object.keys(form.formState.errors).length === 0) {
+                          setIsSubmitButtonDisabled(true);
+                          setIsInputDisabled(true);
+                        }
+                      }, 100);
+                    }}
+                  >
+                    {churchUpdateMutation?.isPending ? 'Procesando...' : 'Guardar Cambios'}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };

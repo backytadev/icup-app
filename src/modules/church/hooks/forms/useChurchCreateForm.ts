@@ -10,12 +10,12 @@ import { Country } from '@/shared/enums/country.enum';
 import { Province } from '@/shared/enums/province.enum';
 import { Department } from '@/shared/enums/department.enum';
 
-import { type ChurchResponse } from '@/modules/church/interfaces/church-response.interface';
+import { type ChurchResponse } from '@/modules/church/types';
 import { getMainChurch } from '@/modules/church/services/church.service';
-import { churchFormSchema } from '@/modules/church/validations/church-form-schema';
+import { churchFormSchema } from '@/modules/church/schemas';
 
-import { useChurchCreationMutation } from '@/modules/church/hooks/useChurchCreationMutation';
-import { useChurchCreationSubmitButtonLogic } from '@/modules/church/hooks/useChurchCreationSubmitButtonLogic';
+import { useChurchCreationMutation } from '@/modules/church/hooks/mutations';
+import { useChurchCreationSubmitButtonLogic } from '@/modules/church/hooks/forms';
 
 import { validateDistrictsAllowedByModule } from '@/shared/helpers/validate-districts-allowed-by-module.helper';
 import { validateUrbanSectorsAllowedByDistrict } from '@/shared/helpers/validate-urban-sectors-allowed-by-district.helper';

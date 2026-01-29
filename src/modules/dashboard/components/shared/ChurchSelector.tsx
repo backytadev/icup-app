@@ -2,7 +2,7 @@ import { CheckIcon } from 'lucide-react';
 import { CaretSortIcon } from '@radix-ui/react-icons';
 
 import { cn } from '@/shared/lib/utils';
-import type { ChurchResponse } from '@/modules/church/interfaces/church-response.interface';
+import type { ChurchResponse } from '@/modules/church/types';
 
 import { Button } from '@/shared/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';

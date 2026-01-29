@@ -1,5 +1,5 @@
-import { ChurchSearchType } from '@/modules/church/enums/church-search-type.enum';
-import { ChurchQueryParams } from '@/modules/church/interfaces/church-query-params.interface';
+import { ChurchSearchType } from '@/modules/church/enums';
+import { ChurchQueryParams } from '@/modules/church/types';
 
 export const buildChurchSearchTerm = (params: ChurchQueryParams): string | undefined => {
   const { searchType, inputTerm, dateTerm, selectTerm } = params;

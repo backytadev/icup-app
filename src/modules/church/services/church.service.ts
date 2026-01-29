@@ -2,11 +2,8 @@ import { apiRequest } from '@/shared/helpers/api-request';
 import { RecordOrder } from '@/shared/enums/record-order.enum';
 import { openPdfInNewTab } from '@/shared/helpers/open-pdf-tab';
 
-import { buildChurchQueryParams } from '@/modules/church/builders/buildChurchQueryParam';
-import { buildChurchSearchTerm } from '@/modules/church/builders/buildChurchSearchTerm';
-import { type ChurchResponse } from '@/modules/church/interfaces/church-response.interface';
-import { type ChurchFormData } from '@/modules/church/interfaces/church-form-data.interface';
-import { type ChurchQueryParams } from '@/modules/church/interfaces/church-query-params.interface';
+import { buildChurchQueryParams, buildChurchSearchTerm } from '@/modules/church/utils';
+import { type ChurchResponse, type ChurchFormData, type ChurchQueryParams } from '@/modules/church/types';
 
 export interface UpdateChurchOptions {
   id: string;

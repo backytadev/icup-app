@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useEffect } from 'react';
 
 import { type UseFormReturn } from 'react-hook-form';
-import { type ChurchFormData } from '@/modules/church/interfaces/church-form-data.interface';
+import { type ChurchFormData } from '@/modules/church/types';
 
 interface Options {
   churchCreationForm: UseFormReturn<ChurchFormData, any, ChurchFormData | undefined>;

@@ -1,15 +1,12 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
+import { type UseMutationResult } from '@tanstack/react-query';
 
-import { toast } from 'sonner';
-import { useNavigate } from 'react-router-dom';
-import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/react-query';
+import { type ErrorResponse } from '@/shared/interfaces/error-response.interface';
+import { useInactivateMutation } from '@/shared/hooks';
 
 import {
   inactivateChurch,
   type InactivateChurchOptions,
 } from '@/modules/church/services/church.service';
-
-import { type ErrorResponse } from '@/shared/interfaces/error-response.interface';
 
 interface Options {
   scrollToTop: () => void;
@@ -24,64 +21,23 @@ export const useChurchInactivationMutation = ({
   setIsButtonDisabled,
   setIsSelectInputDisabled,
 }: Options): UseMutationResult<void, ErrorResponse, InactivateChurchOptions, unknown> => {
-  //* Hooks (external libraries)
-  const navigate = useNavigate();
-
-  //* QueryClient
-  const queryClient = useQueryClient();
-
-  //* Mutation
-  const mutation = useMutation({
+  return useInactivateMutation({
     mutationFn: inactivateChurch,
-    onError: (error: ErrorResponse) => {
-      if (error.message !== 'Unauthorized') {
-        toast.error(error.message, {
-          position: 'top-center',
-          className: 'justify-center',
-        });
-
-        setTimeout(() => {
-          setIsCardOpen(true);
-          setIsButtonDisabled(false);
-          setIsSelectInputDisabled(false);
-        }, 2000);
-      }
-
-      if (error.message === 'Unauthorized') {
-        toast.error('Operación rechazada, el token expiro ingresa nuevamente.', {
-          position: 'top-center',
-          className: 'justify-center',
-        });
-
-        setTimeout(() => {
-          navigate('/');
-        }, 3500);
-      }
-    },
+    invalidateQueries: [['churches-by-term']],
     onSuccess: () => {
-      toast.success('Registro eliminado correctamente.', {
-        position: 'top-center',
-        className: 'justify-center',
-      });
-
-      setTimeout(() => {
-        scrollToTop();
-      }, 150);
-
-      setTimeout(() => {
-        queryClient.invalidateQueries({ queryKey: ['churches-by-term'] });
-      }, 1000);
-
+      scrollToTop();
       setTimeout(() => {
         setIsCardOpen(false);
-      }, 2000);
-
+      }, 500);
       setTimeout(() => {
         setIsButtonDisabled(false);
         setIsSelectInputDisabled(false);
-      }, 2100);
+      }, 600);
+    },
+    onError: () => {
+      setIsCardOpen(true);
+      setIsButtonDisabled(false);
+      setIsSelectInputDisabled(false);
     },
   });
-
-  return mutation;
 };
