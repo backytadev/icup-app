@@ -27,7 +27,7 @@ export const LoginFormCard = ({ className }: LoginFormCardProps): JSX.Element =>
     <div
       className={cn(
         'w-full max-w-md mx-auto',
-        'px-6 py-8 sm:px-8 sm:py-10',
+        'px-6 py-8 mt-16 sm:px-8 sm:py-10 sm:mt-0',
         'rounded-2xl',
         'bg-white/95 dark:bg-slate-900/95',
         'backdrop-blur-xl',

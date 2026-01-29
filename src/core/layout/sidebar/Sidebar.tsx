@@ -214,10 +214,10 @@ export const Sidebar = (): JSX.Element => {
               </AvatarFallback>
             </Avatar>
             <div className='flex-1 min-w-0'>
-              <p className='text-sm font-semibold text-white truncate'>
+              <p className='text-sm font-semibold text-white'>
                 {userNames} {userLastNames}
               </p>
-              <p className='text-xs text-slate-400 truncate'>
+              <p className='text-xs text-slate-400'>
                 {roles.map((role) => UserRoleNames[role]).join(', ')}
               </p>
             </div>
