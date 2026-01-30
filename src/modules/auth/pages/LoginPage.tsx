@@ -9,10 +9,10 @@ export const LoginPage = (): JSX.Element => {
   }, []);
 
   return (
-    <div className='w-full min-h-full flex flex-col items-center justify-center px-4 py-6 lg:py-0'>
+    <div className='w-full flex flex-col items-center'>
       <LoginFormCard />
 
-      <div className='mt-6 w-full max-w-md'>
+      <div className='mt-5 w-full max-w-md'>
         <TestCredentialsCard />
       </div>
     </div>

@@ -147,13 +147,16 @@ export const CardSkeleton = ({
       )}
     >
       {showHeader && (
-        <div className='p-4 border-b border-slate-100 dark:border-slate-800'>
-          <div className='flex items-center justify-between'>
-            <div className='space-y-2'>
-              <div className='h-5 w-40 rounded shimmer' />
-              <div className='h-3 w-56 rounded shimmer' />
+        <div className='px-4 md:px-5 pt-4 pb-3'>
+          <div className='flex flex-col sm:flex-row items-start justify-between'>
+            <div className='flex items-start gap-3'>
+              <div className='p-2 rounded-lg shimmer h-10 w-10' />
+              <div className='space-y-1.5'>
+                <div className='h-5 w-36 md:w-44 rounded shimmer' />
+                <div className='h-3 w-48 md:w-56 rounded shimmer' />
+              </div>
             </div>
-            <div className='h-9 w-28 rounded-lg shimmer' />
+            <div className='h-9 w-32 rounded-lg shimmer mx-auto sm:mx-0 mt-3 sm:mt-0' />
           </div>
         </div>
       )}

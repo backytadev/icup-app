@@ -131,27 +131,33 @@ export const DataTableSkeleton = ({
       {/* 4. Pagination Skeleton - Report button + pagination */}
       <div
         className={cn(
-          'flex flex-col sm:flex-row items-center justify-between gap-4',
-          'p-4 rounded-xl',
+          'flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4',
+          'p-3 sm:p-4 rounded-xl',
           'bg-slate-50/50 dark:bg-slate-800/30',
           'border border-slate-200/60 dark:border-slate-700/40'
         )}
       >
-        <div className='flex flex-col sm:flex-row items-center gap-3'>
-          <div className='h-10 w-36 bg-slate-200 dark:bg-slate-700 rounded-xl animate-pulse' />
+        {/* Report button skeleton */}
+        <div className='flex items-center w-full sm:w-auto justify-center sm:justify-start'>
+          <div className='h-9 sm:h-10 w-32 sm:w-36 bg-slate-200 dark:bg-slate-700 rounded-xl animate-pulse' />
         </div>
 
-        <div className='flex items-center gap-1.5'>
-          <div className='h-4 w-12 bg-slate-200 dark:bg-slate-700 rounded animate-pulse' />
-          <div className='h-7 w-8 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-lg animate-pulse' />
-          <div className='h-4 w-10 bg-slate-200 dark:bg-slate-700 rounded animate-pulse' />
-        </div>
+        {/* Page info + Navigation - same row on mobile */}
+        <div className='flex items-center justify-between sm:justify-end gap-3 w-full sm:w-auto'>
+          {/* Page info skeleton */}
+          <div className='flex items-center gap-1'>
+            <div className='h-3 w-8 bg-slate-200 dark:bg-slate-700 rounded animate-pulse' />
+            <div className='h-6 w-7 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-md animate-pulse' />
+            <div className='h-3 w-6 bg-slate-200 dark:bg-slate-700 rounded animate-pulse' />
+          </div>
 
-        <div className='flex items-center gap-1.5'>
-          <div className='h-9 w-9 bg-slate-200 dark:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-700 animate-pulse' />
-          <div className='h-9 w-16 sm:w-24 bg-slate-200 dark:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-700 animate-pulse' />
-          <div className='h-9 w-16 sm:w-24 bg-slate-200 dark:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-700 animate-pulse' />
-          <div className='h-9 w-9 bg-slate-200 dark:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-700 animate-pulse' />
+          {/* Navigation buttons skeleton */}
+          <div className='flex items-center gap-1'>
+            <div className='h-8 w-8 sm:h-9 sm:w-9 bg-slate-200 dark:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-700 animate-pulse' />
+            <div className='h-8 w-8 sm:h-9 sm:w-20 bg-slate-200 dark:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-700 animate-pulse' />
+            <div className='h-8 w-8 sm:h-9 sm:w-20 bg-slate-200 dark:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-700 animate-pulse' />
+            <div className='h-8 w-8 sm:h-9 sm:w-9 bg-slate-200 dark:bg-slate-700 rounded-lg border border-slate-200 dark:border-slate-700 animate-pulse' />
+          </div>
         </div>
       </div>
     </div>

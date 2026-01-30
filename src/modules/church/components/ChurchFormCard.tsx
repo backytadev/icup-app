@@ -24,7 +24,7 @@ export const ChurchFormCard = ({
         'backdrop-blur-xl',
         'border border-slate-200/60 dark:border-slate-700/40',
         'shadow-xl shadow-slate-200/50 dark:shadow-slate-900/50',
-        'p-6 md:p-8',
+        'p-4 md:p-6',
         'opacity-0 animate-fade-in-scale',
         className
       )}

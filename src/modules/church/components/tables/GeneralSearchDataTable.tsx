@@ -130,9 +130,9 @@ export function GeneralChurchSearchDataTable<TData, TValue>({
         searchMetadata={
           !isGeneralFilterDisabled
             ? {
-                title: 'Iglesias y anexos (Todas)',
-                recordCount: query.data?.length ?? 0,
-              }
+              title: 'Iglesias y anexos (Todas)',
+              recordCount: query.data?.length ?? 0,
+            }
             : undefined
         }
         filters={filters}

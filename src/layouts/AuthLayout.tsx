@@ -28,7 +28,7 @@ export const AuthLayout = (): JSX.Element => {
             <div className='absolute -bottom-32 -left-32 w-72 h-72 rounded-full bg-gradient-to-tl from-amber-400/10 to-orange-500/5 blur-3xl' />
           </div>
 
-          <div className='flex-1 flex items-center justify-center p-4 sm:p-6 relative z-10 overflow-y-auto'>
+          <div className='flex-1 flex items-center justify-center px-4 py-6 sm:p-6 relative z-10 overflow-y-auto'>
             <Outlet />
           </div>
 

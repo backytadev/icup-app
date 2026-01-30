@@ -126,12 +126,12 @@ export const ChurchTabsCard = ({ data, id }: ChurchTabsCardProps): JSX.Element =
   const isActive = data?.recordStatus === RecordStatus.Active;
 
   return (
-    <div className='w-[650px] md:w-[680px] -mt-6'>
+    <div className='w-full max-w-[680px] -mt-2 md:-mt-6'>
       {/* Header */}
-      <div className='relative overflow-hidden rounded-t-xl bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 dark:from-blue-800 dark:via-blue-900 dark:to-indigo-900 px-5 py-4 md:px-6'>
-        <div className='flex items-center justify-between gap-4'>
+      <div className='relative overflow-hidden rounded-t-xl bg-gradient-to-r from-blue-600 via-blue-700 to-indigo-700 dark:from-blue-800 dark:via-blue-900 dark:to-indigo-900 px-4 py-4 md:px-6'>
+        <div className='flex items-center justify-between gap-3'>
           <div className='flex-1 min-w-0'>
-            <div className='flex items-center gap-2 mb-1.5'>
+            <div className='flex items-center gap-2 mb-1.5 flex-wrap'>
               {data?.isAnexe ? (
                 <span className='px-2 py-0.5 text-[10px] font-semibold bg-amber-500/20 text-amber-100 rounded font-inter'>
                   Anexo
@@ -143,16 +143,16 @@ export const ChurchTabsCard = ({ data, id }: ChurchTabsCardProps): JSX.Element =
               )}
               <StatusBadge isActive={isActive} />
             </div>
-            <h2 className='text-lg md:text-xl font-bold text-white font-outfit truncate'>
+            <h2 className='text-base md:text-xl font-bold text-white font-outfit line-clamp-2 break-words'>
               {data?.churchName ?? 'Sin nombre'}
             </h2>
-            <p className='text-blue-100/80 text-[13px] font-inter mt-0.5'>
+            <p className='text-blue-100/80 text-[12px] md:text-[13px] font-inter mt-0.5 truncate'>
               {data?.abbreviatedChurchName} • Código: {data?.churchCode ?? '-'}
             </p>
           </div>
 
-          <div className='flex-shrink-0 p-2.5 bg-white/10 rounded-lg'>
-            <PiChurch className='w-6 h-6 text-white/90' />
+          <div className='flex-shrink-0 p-2 md:p-2.5 bg-white/10 rounded-lg'>
+            <PiChurch className='w-5 h-5 md:w-6 md:h-6 text-white/90' />
           </div>
         </div>
       </div>
@@ -223,7 +223,7 @@ export const ChurchTabsCard = ({ data, id }: ChurchTabsCardProps): JSX.Element =
               </div>
 
               {/* Stats Grid */}
-              <div className='grid grid-cols-3 md:grid-cols-5 gap-2'>
+              <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2'>
                 <StatCard
                   label='Anexos'
                   count={data?.anexes?.length}

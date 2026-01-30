@@ -94,9 +94,11 @@ export const ResponsiveModal = ({
     return (
       <Drawer open={open} onOpenChange={onOpenChange}>
         <DrawerTrigger asChild>{triggerButton}</DrawerTrigger>
-        <DrawerContent>
-          <div className='flex justify-center py-8 px-6 max-h-full overflow-y-auto overflow-x-hidden'>
-            {children}
+        <DrawerContent className='max-h-[95vh]'>
+          <div className='flex justify-center py-6 px-4 max-h-full overflow-y-auto overflow-x-hidden w-full'>
+            <div className='w-full max-w-full'>
+              {children}
+            </div>
           </div>
         </DrawerContent>
       </Drawer>
