@@ -635,7 +635,7 @@ export const ChurchFormFields = ({
                             >
                               {field.value
                                 ? mainChurchData?.find((church) => church.id === field.value)
-                                    ?.abbreviatedChurchName
+                                  ?.abbreviatedChurchName
                                 : 'Buscar iglesia...'}
                               <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-50' />
                             </Button>
@@ -657,7 +657,9 @@ export const ChurchFormFields = ({
                                       value={church?.abbreviatedChurchName}
                                       key={church?.id}
                                       onSelect={() => {
-                                        form.setValue('theirMainChurch', church?.id);
+                                        form.setValue('theirMainChurch', church?.id, {
+                                          shouldValidate: true,
+                                        });
                                         setIsInputMainChurchOpen(false);
                                       }}
                                     >

@@ -12,10 +12,7 @@ import { type ChurchServiceTime } from '@/modules/church/enums';
 import { type ChurchResponse, type ChurchFormData } from '@/modules/church/types';
 import { churchFormSchema } from '@/modules/church/schemas';
 import { getMainChurch } from '@/modules/church/services/church.service';
-import {
-  churchCreateDefaultValues,
-  churchUpdateDefaultValues,
-} from '@/modules/church/constants';
+import { churchCreateDefaultValues, churchUpdateDefaultValues } from '@/modules/church/constants';
 import {
   useChurchCreationMutation,
   useChurchUpdateMutation,
@@ -158,10 +155,7 @@ export const useChurchForm = (options: UseChurchFormOptions): UseChurchFormRetur
   }, [mode, updateId]);
 
   //* Memoized helpers - only recalculate when dependencies change
-  const districtsValidation = useMemo(
-    () => validateDistrictsAllowedByModule(pathname),
-    [pathname]
-  );
+  const districtsValidation = useMemo(() => validateDistrictsAllowedByModule(pathname), [pathname]);
 
   const urbanSectorsValidation = useMemo(
     () => validateUrbanSectorsAllowedByDistrict(district),
