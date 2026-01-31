@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useState, useEffect } from 'react';
 
 import { type z } from 'zod';
@@ -263,8 +258,8 @@ export const OfferingsIncomeGeneralSearchPage = (): JSX.Element => {
                             }}
                             className={
                               (form.getValues('limit') || form.getValues('offset')) &&
-                              !form.formState.errors.limit &&
-                              !form.formState.errors.offset
+                                !form.formState.errors.limit &&
+                                !form.formState.errors.offset
                                 ? ''
                                 : 'bg-slate-500'
                             }

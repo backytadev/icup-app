@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useEffect, useMemo, useState } from 'react';
 
 import { type z } from 'zod';
@@ -190,9 +186,24 @@ export const OfferingIncomeCurrencyExchangeForm = ({
                             <SelectContent>
                               {currentOfferingIncome?.currency === CurrencyType.PEN
                                 ? Object.entries(ExchangeCurrencyTypesNames).map(
+                                  ([key, value]) =>
+                                    key !== ExchangeCurrencyTypes.EURtoPEN &&
+                                    key !== ExchangeCurrencyTypes.USDtoPEN && (
+                                      <SelectItem
+                                        className={`text-[14px] md:text-[14px]`}
+                                        key={key}
+                                        value={key}
+                                      >
+                                        {value}
+                                      </SelectItem>
+                                    )
+                                )
+                                : currentOfferingIncome?.currency === CurrencyType.USD
+                                  ? Object.entries(ExchangeCurrencyTypesNames).map(
                                     ([key, value]) =>
                                       key !== ExchangeCurrencyTypes.EURtoPEN &&
-                                      key !== ExchangeCurrencyTypes.USDtoPEN && (
+                                      key !== ExchangeCurrencyTypes.PENtoUSD &&
+                                      key !== ExchangeCurrencyTypes.PENtoEUR && (
                                         <SelectItem
                                           className={`text-[14px] md:text-[14px]`}
                                           key={key}
@@ -202,35 +213,20 @@ export const OfferingIncomeCurrencyExchangeForm = ({
                                         </SelectItem>
                                       )
                                   )
-                                : currentOfferingIncome?.currency === CurrencyType.USD
-                                  ? Object.entries(ExchangeCurrencyTypesNames).map(
-                                      ([key, value]) =>
-                                        key !== ExchangeCurrencyTypes.EURtoPEN &&
-                                        key !== ExchangeCurrencyTypes.PENtoUSD &&
-                                        key !== ExchangeCurrencyTypes.PENtoEUR && (
-                                          <SelectItem
-                                            className={`text-[14px] md:text-[14px]`}
-                                            key={key}
-                                            value={key}
-                                          >
-                                            {value}
-                                          </SelectItem>
-                                        )
-                                    )
                                   : Object.entries(ExchangeCurrencyTypesNames).map(
-                                      ([key, value]) =>
-                                        key !== ExchangeCurrencyTypes.USDtoPEN &&
-                                        key !== ExchangeCurrencyTypes.PENtoUSD &&
-                                        key !== ExchangeCurrencyTypes.PENtoEUR && (
-                                          <SelectItem
-                                            className={`text-[14px] md:text-[14px]`}
-                                            key={key}
-                                            value={key}
-                                          >
-                                            {value}
-                                          </SelectItem>
-                                        )
-                                    )}
+                                    ([key, value]) =>
+                                      key !== ExchangeCurrencyTypes.USDtoPEN &&
+                                      key !== ExchangeCurrencyTypes.PENtoUSD &&
+                                      key !== ExchangeCurrencyTypes.PENtoEUR && (
+                                        <SelectItem
+                                          className={`text-[14px] md:text-[14px]`}
+                                          key={key}
+                                          value={key}
+                                        >
+                                          {value}
+                                        </SelectItem>
+                                      )
+                                  )}
                             </SelectContent>
                           </Select>
                           <FormMessage className='text-[13px]' />
@@ -271,7 +267,7 @@ export const OfferingIncomeCurrencyExchangeForm = ({
                     className={cn(
                       'w-full text-[14px]',
                       offeringIncomeCurrencyExchangeMutation?.isPending &&
-                        'bg-emerald-500 disabled:opacity-100 disabled:md:text-[15px] text-white'
+                      'bg-emerald-500 disabled:opacity-100 disabled:md:text-[15px] text-white'
                     )}
                     onClick={() => {
                       setTimeout(() => {

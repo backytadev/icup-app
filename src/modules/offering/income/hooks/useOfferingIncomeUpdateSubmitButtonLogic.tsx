@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useEffect } from 'react';
 
 import { type UseFormReturn } from 'react-hook-form';
@@ -90,8 +88,8 @@ export const useOfferingIncomeUpdateSubmitButtonLogic = ({
     //* Sunday service
     if (
       type === OfferingIncomeCreationType.Offering &&
-      subType === OfferingIncomeCreationSubType.SundayService &&
-      // subType === OfferingIncomeCreationSubType.SundaySchool
+      (subType === OfferingIncomeCreationSubType.SundayService ||
+        subType === OfferingIncomeCreationSubType.SundaySchool) &&
       amount &&
       currency &&
       shift &&
@@ -106,8 +104,8 @@ export const useOfferingIncomeUpdateSubmitButtonLogic = ({
 
     if (
       type === OfferingIncomeCreationType.Offering &&
-      subType === OfferingIncomeCreationSubType.SundayService &&
-      // subType === OfferingIncomeCreationSubType.SundaySchool
+      (subType === OfferingIncomeCreationSubType.SundayService ||
+        subType === OfferingIncomeCreationSubType.SundaySchool) &&
       (!churchId || !amount || !currency || !shift || !comments)
     ) {
       setIsSubmitButtonDisabled(true);
@@ -173,9 +171,10 @@ export const useOfferingIncomeUpdateSubmitButtonLogic = ({
       type === OfferingIncomeCreationType.Offering &&
       category === OfferingIncomeCreationCategory.InternalDonation &&
       (subType === OfferingIncomeCreationSubType.Special ||
-        subType === OfferingIncomeCreationSubType.ChurchGround) &&
-      // subType === OfferingIncomeCreationSubType.YouthService ||
-      // subType === OfferingIncomeCreationSubType.SundaySchool
+        subType === OfferingIncomeCreationSubType.ChurchGround
+        || subType === OfferingIncomeCreationSubType.YouthService ||
+        subType === OfferingIncomeCreationSubType.SundaySchool
+      ) &&
       memberType &&
       amount &&
       currency &&
@@ -192,9 +191,10 @@ export const useOfferingIncomeUpdateSubmitButtonLogic = ({
       type === OfferingIncomeCreationType.Offering &&
       category === OfferingIncomeCreationCategory.InternalDonation &&
       (subType === OfferingIncomeCreationSubType.Special ||
-        subType === OfferingIncomeCreationSubType.ChurchGround) &&
-      // subType === OfferingIncomeCreationSubType.YouthService ||
-      // subType === OfferingIncomeCreationSubType.SundaySchool
+        subType === OfferingIncomeCreationSubType.ChurchGround ||
+        subType === OfferingIncomeCreationSubType.YouthService ||
+        subType === OfferingIncomeCreationSubType.SundaySchool
+      ) &&
       (!amount || !currency || !memberId || !memberType || !comments)
     ) {
       setIsSubmitButtonDisabled(true);
@@ -206,9 +206,10 @@ export const useOfferingIncomeUpdateSubmitButtonLogic = ({
       type === OfferingIncomeCreationType.Offering &&
       category === OfferingIncomeCreationCategory.ExternalDonation &&
       (subType === OfferingIncomeCreationSubType.Special ||
-        subType === OfferingIncomeCreationSubType.ChurchGround) &&
-      // subType === OfferingIncomeCreationSubType.YouthService ||
-      // subType === OfferingIncomeCreationSubType.SundaySchool
+        subType === OfferingIncomeCreationSubType.ChurchGround ||
+        subType === OfferingIncomeCreationSubType.YouthService ||
+        subType === OfferingIncomeCreationSubType.SundaySchool
+      ) &&
       memberType &&
       amount &&
       currency &&
@@ -225,9 +226,10 @@ export const useOfferingIncomeUpdateSubmitButtonLogic = ({
       type === OfferingIncomeCreationType.Offering &&
       category === OfferingIncomeCreationCategory.ExternalDonation &&
       (subType === OfferingIncomeCreationSubType.Special ||
-        subType === OfferingIncomeCreationSubType.ChurchGround) &&
-      // subType === OfferingIncomeCreationSubType.YouthService ||
-      // subType === OfferingIncomeCreationSubType.SundaySchool
+        subType === OfferingIncomeCreationSubType.ChurchGround ||
+        subType === OfferingIncomeCreationSubType.YouthService ||
+        subType === OfferingIncomeCreationSubType.SundaySchool
+      ) &&
       (!amount || !currency || !externalDonorId || !memberType || !comments)
     ) {
       setIsSubmitButtonDisabled(true);
@@ -243,7 +245,7 @@ export const useOfferingIncomeUpdateSubmitButtonLogic = ({
       subType !== OfferingIncomeCreationSubType.ZonalVigil &&
       subType !== OfferingIncomeCreationSubType.ZonalEvangelism &&
       subType !== OfferingIncomeCreationSubType.FamilyGroup &&
-      // subType !== OfferingIncomeCreationSubType.SundaySchool &&
+      subType !== OfferingIncomeCreationSubType.SundaySchool &&
       subType !== OfferingIncomeCreationSubType.SundayService &&
       amount &&
       currency &&

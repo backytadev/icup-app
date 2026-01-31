@@ -83,6 +83,18 @@ export const useLoginForm = (): UseLoginFormReturn => {
             }, 1000);
           }
 
+          if (error?.response?.status === 400) {
+            toast.error('El usuario y contraseña es requerido.', {
+              position: 'top-right',
+            });
+
+            setTimeout(() => {
+              if (Object.keys(form.formState.errors).length === 0) {
+                setIsInputDisabled(false);
+              }
+            }, 1000);
+          }
+
           if (error?.response?.status === 429) {
             toast.warning(error?.response?.data?.message, {
               position: 'top-right',

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 
 import { Toaster, toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
 import { type ColumnDef } from '@tanstack/react-table';
 
 import { getAllChurches, getGeneralChurchesReport } from '@/modules/church/services/church.service';
@@ -15,6 +14,7 @@ import {
   selectSetGeneralSearchData,
 } from '@/modules/church/store';
 
+import { useConditionalListQuery, useManualQuery } from '@/shared/hooks';
 import { DataTable, type FilterConfig } from '@/shared/components/data-table';
 import { type GeneralSearchForm } from '@/shared/interfaces/search-general-form.interface';
 
@@ -41,11 +41,10 @@ export function GeneralChurchSearchDataTable<TData, TValue>({
   const navigate = useNavigate();
 
   //* Queries
-  const query = useQuery({
+  const query = useConditionalListQuery({
     queryKey: ['general-churches', searchParams],
     queryFn: () => getAllChurches(searchParams as ChurchQueryParams),
     enabled: !!searchParams,
-    retry: false,
   });
 
   //* Set data result query
@@ -90,11 +89,9 @@ export function GeneralChurchSearchDataTable<TData, TValue>({
   }, [query?.isPending]);
 
   //* Query Report and Event trigger
-  const generateReportQuery = useQuery({
+  const generateReportQuery = useManualQuery({
     queryKey: ['general-churches-report', searchParams],
     queryFn: () => getGeneralChurchesReport(searchParams as ChurchQueryParams),
-    retry: false,
-    enabled: false,
   });
 
   const handleGenerateReport = (): void => {

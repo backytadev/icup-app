@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useEffect, useState } from 'react';
 
 import type * as z from 'zod';
@@ -348,30 +344,29 @@ export const OfferingIncomeFormUpdate = ({
                 </span>
                 <span className='italic dark:text-slate-300 text-slate-500 font-bold text-[16px] md:text-[17px] md:ml-1'>
                   Pertenencia:{' '}
-                  {`${
-                    data?.type === OfferingIncomeCreationType.IncomeAdjustment ||
-                    // data?.subType === OfferingIncomeCreationSubType.SundaySchool ||
+                  {`${data?.type === OfferingIncomeCreationType.IncomeAdjustment ||
+                    data?.subType === OfferingIncomeCreationSubType.SundaySchool ||
                     data?.subType === OfferingIncomeCreationSubType.SundayService ||
                     data?.subType === OfferingIncomeCreationSubType.GeneralFasting ||
                     data?.subType === OfferingIncomeCreationSubType.GeneralVigil ||
-                    // data?.subType === OfferingIncomeCreationSubType.YouthService ||
+                    data?.subType === OfferingIncomeCreationSubType.YouthService ||
                     data?.subType === OfferingIncomeCreationSubType.Activities
-                      ? data?.church?.abbreviatedChurchName
-                      : data?.subType === OfferingIncomeCreationSubType.FamilyGroup
-                        ? `${data?.familyGroup?.familyGroupCode} - ${data?.familyGroup?.familyGroupName}`
-                        : data?.subType === OfferingIncomeCreationSubType.ZonalFasting ||
-                            data?.subType === OfferingIncomeCreationSubType.ZonalVigil
-                          ? `${data?.zone?.zoneName} - ${data?.zone?.district}`
-                          : data?.memberType === MemberType.Disciple
-                            ? `${data?.disciple?.firstNames} ${data?.disciple?.lastNames}`
-                            : data?.memberType === MemberType.Preacher
-                              ? `${data?.preacher?.firstNames} ${data?.preacher?.lastNames}`
-                              : data?.memberType === MemberType.Supervisor
-                                ? `${data?.supervisor?.firstNames} ${data?.supervisor?.lastNames}`
-                                : data?.memberType === MemberType.Copastor
-                                  ? `${data?.copastor?.firstNames} ${data?.copastor?.lastNames}`
-                                  : `${data?.pastor?.firstNames} ${data?.pastor?.lastNames}`
-                  }`}
+                    ? data?.church?.abbreviatedChurchName
+                    : data?.subType === OfferingIncomeCreationSubType.FamilyGroup
+                      ? `${data?.familyGroup?.familyGroupCode} - ${data?.familyGroup?.familyGroupName}`
+                      : data?.subType === OfferingIncomeCreationSubType.ZonalFasting ||
+                        data?.subType === OfferingIncomeCreationSubType.ZonalVigil
+                        ? `${data?.zone?.zoneName} - ${data?.zone?.district}`
+                        : data?.memberType === MemberType.Disciple
+                          ? `${data?.disciple?.firstNames} ${data?.disciple?.lastNames}`
+                          : data?.memberType === MemberType.Preacher
+                            ? `${data?.preacher?.firstNames} ${data?.preacher?.lastNames}`
+                            : data?.memberType === MemberType.Supervisor
+                              ? `${data?.supervisor?.firstNames} ${data?.supervisor?.lastNames}`
+                              : data?.memberType === MemberType.Copastor
+                                ? `${data?.copastor?.firstNames} ${data?.copastor?.lastNames}`
+                                : `${data?.pastor?.firstNames} ${data?.pastor?.lastNames}`
+                    }`}
                 </span>
               </div>
 
@@ -406,7 +401,7 @@ export const OfferingIncomeFormUpdate = ({
                                 >
                                   {field.value
                                     ? churchesQuery?.data?.find((zone) => zone.id === field.value)
-                                        ?.abbreviatedChurchName
+                                      ?.abbreviatedChurchName
                                     : 'Busque y seleccione una iglesia'}
                                   <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-5' />
                                 </Button>
@@ -584,57 +579,57 @@ export const OfferingIncomeFormUpdate = ({
                       (type === OfferingIncomeCreationType.Offering &&
                         subType === OfferingIncomeCreationSubType.ChurchGround &&
                         category === OfferingIncomeCreationCategory.InternalDonation) ||
-                      // (type === OfferingIncomeCreationType.Offering &&
-                      //   subType === OfferingIncomeCreationSubType.SundaySchool &&
-                      //   category === OfferingIncomeCreationCategory.InternalDonation) ||
-                      // (type === OfferingIncomeCreationType.Offering &&
-                      //   subType === OfferingIncomeCreationSubType.YouthService &&
-                      //   category === OfferingIncomeCreationCategory.InternalDonation) ||
+                      (type === OfferingIncomeCreationType.Offering &&
+                        subType === OfferingIncomeCreationSubType.SundaySchool &&
+                        category === OfferingIncomeCreationCategory.InternalDonation) ||
+                      (type === OfferingIncomeCreationType.Offering &&
+                        subType === OfferingIncomeCreationSubType.YouthService &&
+                        category === OfferingIncomeCreationCategory.InternalDonation) ||
                       (type === OfferingIncomeCreationType.Offering &&
                         subType === OfferingIncomeCreationSubType.ChurchGround &&
                         category === OfferingIncomeCreationCategory.ExternalDonation) ||
                       (type === OfferingIncomeCreationType.Offering &&
                         subType === OfferingIncomeCreationSubType.Special &&
-                        category === OfferingIncomeCreationCategory.ExternalDonation)) && (
-                      //  || (type === OfferingIncomeCreationType.Offering &&
-                      //   subType === OfferingIncomeCreationSubType.SundaySchool &&
-                      //   category === OfferingIncomeCreationCategory.ExternalDonation) ||
-                      // (type === OfferingIncomeCreationType.Offering &&
-                      //   subType === OfferingIncomeCreationSubType.YouthService &&
-                      //   category === OfferingIncomeCreationCategory.ExternalDonation)
-                      <FormField
-                        control={form.control}
-                        name='memberType'
-                        render={({ field }) => {
-                          return (
-                            <FormItem className='mt-3'>
-                              <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                                Tipo de Miembro
-                              </FormLabel>
-                              <Select disabled onValueChange={field.onChange} value={field.value}>
-                                <FormControl className='text-[14px] md:text-[14px]'>
-                                  <SelectTrigger>
-                                    {field.value ? (
-                                      <SelectValue placeholder='Selecciona el tipo de miembro' />
-                                    ) : (
-                                      'Selecciona el tipo de miembro'
-                                    )}
-                                  </SelectTrigger>
-                                </FormControl>
-                                <SelectContent>
-                                  {Object.entries(MemberTypeNames).map(([key, value]) => (
-                                    <SelectItem className={`text-[14px]`} key={key} value={key}>
-                                      {value}
-                                    </SelectItem>
-                                  ))}
-                                </SelectContent>
-                              </Select>
-                              <FormMessage className='text-[13px]' />
-                            </FormItem>
-                          );
-                        }}
-                      />
-                    )}
+                        category === OfferingIncomeCreationCategory.ExternalDonation) || (
+                        (type === OfferingIncomeCreationType.Offering &&
+                          subType === OfferingIncomeCreationSubType.SundaySchool &&
+                          category === OfferingIncomeCreationCategory.ExternalDonation) ||
+                        (type === OfferingIncomeCreationType.Offering &&
+                          subType === OfferingIncomeCreationSubType.YouthService &&
+                          category === OfferingIncomeCreationCategory.ExternalDonation))) && (
+                        <FormField
+                          control={form.control}
+                          name='memberType'
+                          render={({ field }) => {
+                            return (
+                              <FormItem className='mt-3'>
+                                <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
+                                  Tipo de Miembro
+                                </FormLabel>
+                                <Select disabled onValueChange={field.onChange} value={field.value}>
+                                  <FormControl className='text-[14px] md:text-[14px]'>
+                                    <SelectTrigger>
+                                      {field.value ? (
+                                        <SelectValue placeholder='Selecciona el tipo de miembro' />
+                                      ) : (
+                                        'Selecciona el tipo de miembro'
+                                      )}
+                                    </SelectTrigger>
+                                  </FormControl>
+                                  <SelectContent>
+                                    {Object.entries(MemberTypeNames).map(([key, value]) => (
+                                      <SelectItem className={`text-[14px]`} key={key} value={key}>
+                                        {value}
+                                      </SelectItem>
+                                    ))}
+                                  </SelectContent>
+                                </Select>
+                                <FormMessage className='text-[13px]' />
+                              </FormItem>
+                            );
+                          }}
+                        />
+                      )}
 
                     {category === OfferingIncomeCreationCategory.ExternalDonation && (
                       <FormField
@@ -670,7 +665,7 @@ export const OfferingIncomeFormUpdate = ({
                                 <PopoverContent align='center' className='w-auto px-4 py-2'>
                                   <Command>
                                     {externalDonorsQuery?.data?.length &&
-                                    externalDonorsQuery?.data?.length > 0 ? (
+                                      externalDonorsQuery?.data?.length > 0 ? (
                                       <>
                                         <CommandInput
                                           placeholder='Busque un donante'
@@ -733,104 +728,104 @@ export const OfferingIncomeFormUpdate = ({
                       category === OfferingIncomeCreationCategory.InternalDonation) ||
                       (type === OfferingIncomeCreationType.Offering &&
                         subType === OfferingIncomeCreationSubType.ChurchGround &&
+                        category === OfferingIncomeCreationCategory.InternalDonation) ||
+                      (type === OfferingIncomeCreationType.Offering &&
+                        subType === OfferingIncomeCreationSubType.SundaySchool &&
+                        category === OfferingIncomeCreationCategory.InternalDonation) ||
+                      (type === OfferingIncomeCreationType.Offering &&
+                        subType === OfferingIncomeCreationSubType.YouthService &&
                         category === OfferingIncomeCreationCategory.InternalDonation)) && (
-                      // || (type === OfferingIncomeCreationType.Offering &&
-                      //   subType === OfferingIncomeCreationSubType.SundaySchool &&
-                      //   category === OfferingIncomeCreationCategory.InternalDonation) ||
-                      // (type === OfferingIncomeCreationType.Offering &&
-                      //   subType === OfferingIncomeCreationSubType.YouthService &&
-                      //   category === OfferingIncomeCreationCategory.InternalDonation)
-                      <FormField
-                        control={form.control}
-                        name='memberId'
-                        render={({ field }) => (
-                          <FormItem className='mt-3'>
-                            <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                              Miembro
-                            </FormLabel>
-                            <FormDescription className='text-[13.5px] md:text-[14px]'>
-                              Seleccione un miembro para asignarlo al registro.
-                            </FormDescription>
-                            {disciplesQuery?.isFetching ||
-                            preachersQuery?.isFetching ||
-                            supervisorsQuery?.isFetching ||
-                            copastorsQuery?.isFetching ||
-                            pastorsQuery?.isFetching ? (
-                              <div className='pt-2 font-black text-[16px] text-center dark:text-gray-300 text-gray-500'>
-                                <span>Cargando información...</span>
-                              </div>
-                            ) : (
-                              <Popover open={isInputMemberOpen} onOpenChange={setIsInputMemberOpen}>
-                                <PopoverTrigger asChild>
-                                  <FormControl className='text-[14px] md:text-[14px]'>
-                                    <Button
-                                      disabled
-                                      variant='outline'
-                                      role='combobox'
-                                      className={cn(
-                                        'w-full justify-between truncate',
-                                        !field.value && 'font-normal'
+                        <FormField
+                          control={form.control}
+                          name='memberId'
+                          render={({ field }) => (
+                            <FormItem className='mt-3'>
+                              <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
+                                Miembro
+                              </FormLabel>
+                              <FormDescription className='text-[13.5px] md:text-[14px]'>
+                                Seleccione un miembro para asignarlo al registro.
+                              </FormDescription>
+                              {disciplesQuery?.isFetching ||
+                                preachersQuery?.isFetching ||
+                                supervisorsQuery?.isFetching ||
+                                copastorsQuery?.isFetching ||
+                                pastorsQuery?.isFetching ? (
+                                <div className='pt-2 font-black text-[16px] text-center dark:text-gray-300 text-gray-500'>
+                                  <span>Cargando información...</span>
+                                </div>
+                              ) : (
+                                <Popover open={isInputMemberOpen} onOpenChange={setIsInputMemberOpen}>
+                                  <PopoverTrigger asChild>
+                                    <FormControl className='text-[14px] md:text-[14px]'>
+                                      <Button
+                                        disabled
+                                        variant='outline'
+                                        role='combobox'
+                                        className={cn(
+                                          'w-full justify-between truncate',
+                                          !field.value && 'font-normal'
+                                        )}
+                                      >
+                                        {field.value
+                                          ? `${queryData?.find((member) => member.id === field.value)?.member?.firstNames} ${queryData?.find((member) => member.id === field.value)?.member?.lastNames}`
+                                          : 'Busque y seleccione un miembro'}
+                                        <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-5' />
+                                      </Button>
+                                    </FormControl>
+                                  </PopoverTrigger>
+                                  <PopoverContent align='center' className='w-auto px-4 py-2'>
+                                    <Command>
+                                      {queryData?.length && queryData?.length > 0 ? (
+                                        <>
+                                          <CommandInput
+                                            placeholder='Busque un miembro...'
+                                            className='h-9 text-[14px]'
+                                          />
+                                          <CommandEmpty>Miembro no encontrado.</CommandEmpty>
+                                          <CommandGroup className='max-h-[200px] overflow-y-auto sm:overflow-y-hidden sm:h-auto'>
+                                            {queryData?.map((member) => (
+                                              <CommandItem
+                                                className='text-[14px]'
+                                                value={getFullNames({
+                                                  firstNames: member?.member?.firstNames ?? '',
+                                                  lastNames: member?.member?.lastNames ?? '',
+                                                })}
+                                                key={member.id}
+                                                onSelect={() => {
+                                                  form.setValue('memberId', member.id);
+                                                  setIsInputMemberOpen(false);
+                                                }}
+                                              >
+                                                {`${member?.member?.firstNames} ${member?.member?.lastNames}`}
+                                                <CheckIcon
+                                                  className={cn(
+                                                    'ml-auto h-4 w-4',
+                                                    member.id === field.value
+                                                      ? 'opacity-100'
+                                                      : 'opacity-0'
+                                                  )}
+                                                />
+                                              </CommandItem>
+                                            ))}
+                                          </CommandGroup>
+                                        </>
+                                      ) : (
+                                        queryData?.length === 0 && (
+                                          <p className='text-[13.5px] md:text-[14.5px] font-medium text-red-500 text-center'>
+                                            ❌No hay miembros disponibles.
+                                          </p>
+                                        )
                                       )}
-                                    >
-                                      {field.value
-                                        ? `${queryData?.find((member) => member.id === field.value)?.member?.firstNames} ${queryData?.find((member) => member.id === field.value)?.member?.lastNames}`
-                                        : 'Busque y seleccione un miembro'}
-                                      <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-5' />
-                                    </Button>
-                                  </FormControl>
-                                </PopoverTrigger>
-                                <PopoverContent align='center' className='w-auto px-4 py-2'>
-                                  <Command>
-                                    {queryData?.length && queryData?.length > 0 ? (
-                                      <>
-                                        <CommandInput
-                                          placeholder='Busque un miembro...'
-                                          className='h-9 text-[14px]'
-                                        />
-                                        <CommandEmpty>Miembro no encontrado.</CommandEmpty>
-                                        <CommandGroup className='max-h-[200px] overflow-y-auto sm:overflow-y-hidden sm:h-auto'>
-                                          {queryData?.map((member) => (
-                                            <CommandItem
-                                              className='text-[14px]'
-                                              value={getFullNames({
-                                                firstNames: member?.member?.firstNames ?? '',
-                                                lastNames: member?.member?.lastNames ?? '',
-                                              })}
-                                              key={member.id}
-                                              onSelect={() => {
-                                                form.setValue('memberId', member.id);
-                                                setIsInputMemberOpen(false);
-                                              }}
-                                            >
-                                              {`${member?.member?.firstNames} ${member?.member?.lastNames}`}
-                                              <CheckIcon
-                                                className={cn(
-                                                  'ml-auto h-4 w-4',
-                                                  member.id === field.value
-                                                    ? 'opacity-100'
-                                                    : 'opacity-0'
-                                                )}
-                                              />
-                                            </CommandItem>
-                                          ))}
-                                        </CommandGroup>
-                                      </>
-                                    ) : (
-                                      queryData?.length === 0 && (
-                                        <p className='text-[13.5px] md:text-[14.5px] font-medium text-red-500 text-center'>
-                                          ❌No hay miembros disponibles.
-                                        </p>
-                                      )
-                                    )}
-                                  </Command>
-                                </PopoverContent>
-                              </Popover>
-                            )}
-                            <FormMessage className='text-[13px]' />
-                          </FormItem>
-                        )}
-                      />
-                    )}
+                                    </Command>
+                                  </PopoverContent>
+                                </Popover>
+                              )}
+                              <FormMessage className='text-[13px]' />
+                            </FormItem>
+                          )}
+                        />
+                      )}
 
                     {type === OfferingIncomeCreationType.Offering &&
                       subType === OfferingIncomeCreationSubType.FamilyGroup &&
@@ -898,7 +893,7 @@ export const OfferingIncomeFormUpdate = ({
                                 <PopoverContent align='center' className='w-auto px-4 py-2'>
                                   <Command>
                                     {familyGroupsQuery?.data?.length &&
-                                    familyGroupsQuery?.data?.length > 0 ? (
+                                      familyGroupsQuery?.data?.length > 0 ? (
                                       <>
                                         <CommandInput
                                           placeholder='Busque un grupo familiar...'
@@ -962,36 +957,35 @@ export const OfferingIncomeFormUpdate = ({
                       (type === OfferingIncomeCreationType.Offering &&
                         subType === OfferingIncomeCreationSubType.ZonalEvangelism &&
                         category === OfferingIncomeCreationCategory.OfferingBox)) && (
-                      <FormField
-                        control={form.control}
-                        name='zoneId'
-                        render={({ field }) => (
-                          <FormItem className='mt-3'>
-                            <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                              Zona
-                            </FormLabel>
-                            <FormDescription className='text-[13.5px] md:text-[14px]'>
-                              Seleccione una zona para asignarlo al registro.
-                            </FormDescription>
-                            <Popover
-                              open={isInputRelationOpen}
-                              onOpenChange={setIsInputRelationOpen}
-                            >
-                              <PopoverTrigger asChild>
-                                <FormControl className='text-[14px] md:text-[14px]'>
-                                  <Button
-                                    disabled
-                                    variant='outline'
-                                    role='combobox'
-                                    className={cn(
-                                      'w-full justify-between truncate',
-                                      !field.value && 'text-slate-500 font-normal'
-                                    )}
-                                  >
-                                    {field.value
-                                      ? `${
-                                          zonesQuery?.data?.find((zone) => zone.id === field.value)
-                                            ?.zoneName
+                        <FormField
+                          control={form.control}
+                          name='zoneId'
+                          render={({ field }) => (
+                            <FormItem className='mt-3'>
+                              <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
+                                Zona
+                              </FormLabel>
+                              <FormDescription className='text-[13.5px] md:text-[14px]'>
+                                Seleccione una zona para asignarlo al registro.
+                              </FormDescription>
+                              <Popover
+                                open={isInputRelationOpen}
+                                onOpenChange={setIsInputRelationOpen}
+                              >
+                                <PopoverTrigger asChild>
+                                  <FormControl className='text-[14px] md:text-[14px]'>
+                                    <Button
+                                      disabled
+                                      variant='outline'
+                                      role='combobox'
+                                      className={cn(
+                                        'w-full justify-between truncate',
+                                        !field.value && 'text-slate-500 font-normal'
+                                      )}
+                                    >
+                                      {field.value
+                                        ? `${zonesQuery?.data?.find((zone) => zone.id === field.value)
+                                          ?.zoneName
                                         } ~ ${getInitialFullNames({
                                           firstNames:
                                             zonesQuery?.data?.find(
@@ -1002,68 +996,68 @@ export const OfferingIncomeFormUpdate = ({
                                               (zone) => zone.id === field.value
                                             )?.theirSupervisor?.lastNames ?? '',
                                         })}`
-                                      : 'Busque y seleccione una zona'}
-                                    <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-5' />
-                                  </Button>
-                                </FormControl>
-                              </PopoverTrigger>
-                              <PopoverContent align='center' className='w-auto px-4 py-2'>
-                                <Command>
-                                  {zonesQuery?.data?.length && zonesQuery?.data?.length > 0 ? (
-                                    <>
-                                      <CommandInput
-                                        placeholder='Busque una zona'
-                                        className='h-9 text-[14px]'
-                                      />
-                                      <CommandEmpty>Zona no encontrada.</CommandEmpty>
-                                      <CommandGroup className='max-h-[200px] overflow-y-auto sm:overflow-y-hidden sm:h-auto'>
-                                        {zonesQuery?.data?.map((zone) => (
-                                          <CommandItem
-                                            className='text-[14px]'
-                                            value={`${zone.zoneName} ${getInitialFullNames({
-                                              firstNames: zone?.theirSupervisor?.firstNames ?? '',
-                                              lastNames: zone?.theirSupervisor?.lastNames ?? '',
-                                            })}`}
-                                            key={zone.id}
-                                            onSelect={() => {
-                                              form.setValue('zoneId', zone.id);
-                                              setIsInputRelationOpen(false);
-                                            }}
-                                          >
-                                            {`${zone.zoneName} ~ ${getInitialFullNames({
-                                              firstNames: zone?.theirSupervisor?.firstNames ?? '',
-                                              lastNames: zone?.theirSupervisor?.lastNames ?? '',
-                                            })}`}
-                                            <CheckIcon
-                                              className={cn(
-                                                'ml-auto h-4 w-4',
-                                                zone.id === field.value
-                                                  ? 'opacity-100'
-                                                  : 'opacity-0'
-                                              )}
-                                            />
-                                          </CommandItem>
-                                        ))}
-                                      </CommandGroup>
-                                    </>
-                                  ) : (
-                                    zonesQuery?.data?.length === 0 && (
-                                      <p className='text-[13.5px] md:text-[14.5px] font-medium text-red-500 text-center'>
-                                        ❌No hay zonas disponibles.
-                                      </p>
-                                    )
-                                  )}
-                                </Command>
-                              </PopoverContent>
-                            </Popover>
-                            <FormMessage className='text-[13px]' />
-                          </FormItem>
-                        )}
-                      />
-                    )}
+                                        : 'Busque y seleccione una zona'}
+                                      <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-5' />
+                                    </Button>
+                                  </FormControl>
+                                </PopoverTrigger>
+                                <PopoverContent align='center' className='w-auto px-4 py-2'>
+                                  <Command>
+                                    {zonesQuery?.data?.length && zonesQuery?.data?.length > 0 ? (
+                                      <>
+                                        <CommandInput
+                                          placeholder='Busque una zona'
+                                          className='h-9 text-[14px]'
+                                        />
+                                        <CommandEmpty>Zona no encontrada.</CommandEmpty>
+                                        <CommandGroup className='max-h-[200px] overflow-y-auto sm:overflow-y-hidden sm:h-auto'>
+                                          {zonesQuery?.data?.map((zone) => (
+                                            <CommandItem
+                                              className='text-[14px]'
+                                              value={`${zone.zoneName} ${getInitialFullNames({
+                                                firstNames: zone?.theirSupervisor?.firstNames ?? '',
+                                                lastNames: zone?.theirSupervisor?.lastNames ?? '',
+                                              })}`}
+                                              key={zone.id}
+                                              onSelect={() => {
+                                                form.setValue('zoneId', zone.id);
+                                                setIsInputRelationOpen(false);
+                                              }}
+                                            >
+                                              {`${zone.zoneName} ~ ${getInitialFullNames({
+                                                firstNames: zone?.theirSupervisor?.firstNames ?? '',
+                                                lastNames: zone?.theirSupervisor?.lastNames ?? '',
+                                              })}`}
+                                              <CheckIcon
+                                                className={cn(
+                                                  'ml-auto h-4 w-4',
+                                                  zone.id === field.value
+                                                    ? 'opacity-100'
+                                                    : 'opacity-0'
+                                                )}
+                                              />
+                                            </CommandItem>
+                                          ))}
+                                        </CommandGroup>
+                                      </>
+                                    ) : (
+                                      zonesQuery?.data?.length === 0 && (
+                                        <p className='text-[13.5px] md:text-[14.5px] font-medium text-red-500 text-center'>
+                                          ❌No hay zonas disponibles.
+                                        </p>
+                                      )
+                                    )}
+                                  </Command>
+                                </PopoverContent>
+                              </Popover>
+                              <FormMessage className='text-[13px]' />
+                            </FormItem>
+                          )}
+                        />
+                      )}
 
-                    {subType === OfferingIncomeCreationSubType.SundayService &&
-                      // || subType === OfferingIncomeCreationSubType.SundaySchool
+                    {(subType === OfferingIncomeCreationSubType.SundayService
+                      || subType === OfferingIncomeCreationSubType.SundaySchool) &&
                       category === OfferingIncomeCreationCategory.OfferingBox && (
                         <FormField
                           control={form.control}
@@ -1176,7 +1170,7 @@ export const OfferingIncomeFormUpdate = ({
                       className={cn(
                         'md:flex md:gap-5',
                         type === OfferingIncomeCreationType.IncomeAdjustment &&
-                          'md:flex-col md:gap-0'
+                        'md:flex-col md:gap-0'
                       )}
                     >
                       <FormField
@@ -1222,23 +1216,23 @@ export const OfferingIncomeFormUpdate = ({
                                   }}
                                   disabled={
                                     (subType === OfferingIncomeCreationSubType.SundayService ||
-                                      // subType === OfferingIncomeCreationSubType.SundaySchool ||
+                                      subType === OfferingIncomeCreationSubType.SundaySchool ||
                                       subType === OfferingIncomeCreationSubType.FamilyGroup) &&
-                                    category === OfferingIncomeCreationCategory.OfferingBox
+                                      category === OfferingIncomeCreationCategory.OfferingBox
                                       ? (date) => {
+                                        const today = new Date();
+                                        const minDate = new Date('1900-01-01');
+                                        const dayOfWeek = date.getDay();
+                                        return dayOfWeek !== 0 || date > today || date < minDate;
+                                      }
+                                      : subType === OfferingIncomeCreationSubType.YouthService &&
+                                        category === OfferingIncomeCreationCategory.OfferingBox
+                                        ? (date) => {
                                           const today = new Date();
                                           const minDate = new Date('1900-01-01');
                                           const dayOfWeek = date.getDay();
-                                          return dayOfWeek !== 0 || date > today || date < minDate;
-                                        }
-                                      : // : subType === OfferingIncomeCreationSubType.YouthService &&
-                                        //     category === OfferingIncomeCreationCategory.OfferingBox
-                                        //   ? (date) => {
-                                        //       const today = new Date();
-                                        //       const minDate = new Date('1900-01-01');
-                                        //       const dayOfWeek = date.getDay();
-                                        //       return dayOfWeek !== 6 || date > today || date < minDate;
-                                        //     }
+                                          return dayOfWeek !== 6 || date > today || date < minDate;
+                                        } :
                                         (date) => date > new Date() || date < new Date('1900-01-01')
                                   }
                                   initialFocus
@@ -1328,11 +1322,10 @@ export const OfferingIncomeFormUpdate = ({
                               <Textarea
                                 className={cn(comments && 'h-full')}
                                 disabled={isInputDisabled}
-                                placeholder={`${
-                                  type === OfferingIncomeCreationType.IncomeAdjustment
-                                    ? `Detalles y/u observaciones sobre el ajuste de ingreso...`
-                                    : 'Detalles y/u observaciones sobre el registro de la ofrenda...'
-                                }`}
+                                placeholder={`${type === OfferingIncomeCreationType.IncomeAdjustment
+                                  ? `Detalles y/u observaciones sobre el ajuste de ingreso...`
+                                  : 'Detalles y/u observaciones sobre el registro de la ofrenda...'
+                                  }`}
                                 {...field}
                               />
                             </FormControl>
@@ -1516,7 +1509,7 @@ export const OfferingIncomeFormUpdate = ({
                       className={cn(
                         'w-full text-[14px]',
                         offeringIncomeUpdateMutation?.isPending &&
-                          'bg-emerald-500 hover:bg-emerald-500 disabled:opacity-100 disabled:md:text-[15px] text-white'
+                        'bg-emerald-500 hover:bg-emerald-500 disabled:opacity-100 disabled:md:text-[15px] text-white'
                       )}
                       onClick={() => {
                         setTimeout(() => {

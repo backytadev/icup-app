@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useEffect, useState } from 'react';
 
 import { type z } from 'zod';
@@ -23,8 +18,8 @@ import {
   OfferingIncomeSearchSubType,
   SubTypeNamesOfferingIncomeSearchByActivities,
   SubTypeNamesOfferingIncomeSearchByFamilyGroup,
-  // SubTypeNamesOfferingIncomeSearchByYoungService,
-  // SubTypeNamesOfferingIncomeSearchBySundaySchool,
+  SubTypeNamesOfferingIncomeSearchByYoungService,
+  SubTypeNamesOfferingIncomeSearchBySundaySchool,
   SubTypeNamesOfferingIncomeSearchBySundayService,
   SubTypeNamesOfferingIncomeSearchByUnitedService,
   SubTypeNamesOfferingIncomeSearchByIncomeAdjustment,
@@ -284,99 +279,99 @@ export const OfferingIncomeUpdatePage = (): JSX.Element => {
                 searchType === OfferingIncomeSearchType.GeneralEvangelism ||
                 searchType === OfferingIncomeSearchType.IncomeAdjustment ||
                 searchType === OfferingIncomeSearchType.Special ||
-                // searchType === OfferingIncomeSearchType.SundaySchool ||
+                searchType === OfferingIncomeSearchType.SundaySchool ||
                 searchType === OfferingIncomeSearchType.SundayService ||
                 searchType === OfferingIncomeSearchType.UnitedService ||
                 searchType === OfferingIncomeSearchType.ZonalUnitedService ||
-                // searchType === OfferingIncomeSearchType.YouthService ||
+                searchType === OfferingIncomeSearchType.YouthService ||
                 searchType === OfferingIncomeSearchType.ZonalFasting ||
                 searchType === OfferingIncomeSearchType.ZonalVigil ||
                 searchType === OfferingIncomeSearchType.ZonalEvangelism) && (
-                <FormField
-                  control={form.control}
-                  name='searchSubType'
-                  render={({ field }) => {
-                    return (
-                      <FormItem>
-                        <FormLabel className='text-[14px] font-bold'>Sub-tipo</FormLabel>
-                        <FormDescription className='text-[13.5px] md:text-[14px]'>
-                          ¿Qué sub tipo de búsqueda deseas hacer?
-                        </FormDescription>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                          value={field.value}
-                          onOpenChange={() => {
-                            form.resetField('firstNamesTerm', {
-                              defaultValue: '',
-                            });
-                            form.resetField('lastNamesTerm', {
-                              defaultValue: '',
-                            });
-                            form.resetField('dateTerm', {
-                              keepError: true,
-                            });
-                            form.resetField('selectTerm', {
-                              keepError: true,
-                            });
-                            form.resetField('inputTerm', {
-                              keepError: true,
-                            });
-                          }}
-                        >
-                          <FormControl className='text-[14px] md:text-[14px]'>
-                            <SelectTrigger>
-                              {field.value ? (
-                                <SelectValue placeholder='Selecciona un sub-tipo' />
-                              ) : (
-                                'Elige un sub-tipo'
-                              )}
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {Object.entries(
-                              searchType === OfferingIncomeSearchType.SundayService
-                                ? SubTypeNamesOfferingIncomeSearchBySundayService
-                                : // : searchType === OfferingIncomeSearchType.SundaySchool
-                                  //   ? SubTypeNamesOfferingIncomeSearchBySundaySchool
-                                  searchType === OfferingIncomeSearchType.FamilyGroup
-                                  ? SubTypeNamesOfferingIncomeSearchByFamilyGroup
-                                  : searchType === OfferingIncomeSearchType.ZonalVigil ||
-                                      searchType === OfferingIncomeSearchType.ZonalFasting ||
-                                      searchType === OfferingIncomeSearchType.ZonalUnitedService ||
-                                      searchType === OfferingIncomeSearchType.ZonalEvangelism
-                                    ? SubTypeNamesOfferingIncomeSearchByFastingAndVigilZonalAndZonalEvangelism
-                                    : searchType === OfferingIncomeSearchType.GeneralFasting ||
-                                        searchType === OfferingIncomeSearchType.GeneralVigil ||
-                                        searchType === OfferingIncomeSearchType.GeneralEvangelism
-                                      ? SubTypeNamesOfferingIncomeSearchByFastingAndVigilGeneralAndGeneralEvangelism
-                                      : // : searchType === OfferingIncomeSearchType.YouthService
-                                        //   ? SubTypeNamesOfferingIncomeSearchByYoungService
-                                        searchType === OfferingIncomeSearchType.UnitedService
-                                        ? SubTypeNamesOfferingIncomeSearchByUnitedService
-                                        : searchType === OfferingIncomeSearchType.Activities
-                                          ? SubTypeNamesOfferingIncomeSearchByActivities
-                                          : searchType === OfferingIncomeSearchType.Special ||
-                                              searchType === OfferingIncomeSearchType.ChurchGround
-                                            ? SubTypeNamesOfferingIncomeSearchByChurchGroundAndSpecial
-                                            : SubTypeNamesOfferingIncomeSearchByIncomeAdjustment
-                            ).map(([key, value]) => (
-                              <SelectItem
-                                className={cn(`text-[14px] md:text-[14px]`)}
-                                key={key}
-                                value={key}
-                              >
-                                {value}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage className='text-[13px]' />
-                      </FormItem>
-                    );
-                  }}
-                />
-              )}
+                  <FormField
+                    control={form.control}
+                    name='searchSubType'
+                    render={({ field }) => {
+                      return (
+                        <FormItem>
+                          <FormLabel className='text-[14px] font-bold'>Sub-tipo</FormLabel>
+                          <FormDescription className='text-[13.5px] md:text-[14px]'>
+                            ¿Qué sub tipo de búsqueda deseas hacer?
+                          </FormDescription>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                            value={field.value}
+                            onOpenChange={() => {
+                              form.resetField('firstNamesTerm', {
+                                defaultValue: '',
+                              });
+                              form.resetField('lastNamesTerm', {
+                                defaultValue: '',
+                              });
+                              form.resetField('dateTerm', {
+                                keepError: true,
+                              });
+                              form.resetField('selectTerm', {
+                                keepError: true,
+                              });
+                              form.resetField('inputTerm', {
+                                keepError: true,
+                              });
+                            }}
+                          >
+                            <FormControl className='text-[14px] md:text-[14px]'>
+                              <SelectTrigger>
+                                {field.value ? (
+                                  <SelectValue placeholder='Selecciona un sub-tipo' />
+                                ) : (
+                                  'Elige un sub-tipo'
+                                )}
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {Object.entries(
+                                searchType === OfferingIncomeSearchType.SundayService
+                                  ? SubTypeNamesOfferingIncomeSearchBySundayService
+                                  : searchType === OfferingIncomeSearchType.SundaySchool
+                                    ? SubTypeNamesOfferingIncomeSearchBySundaySchool
+                                    : searchType === OfferingIncomeSearchType.FamilyGroup
+                                      ? SubTypeNamesOfferingIncomeSearchByFamilyGroup
+                                      : searchType === OfferingIncomeSearchType.ZonalVigil ||
+                                        searchType === OfferingIncomeSearchType.ZonalFasting ||
+                                        searchType === OfferingIncomeSearchType.ZonalUnitedService ||
+                                        searchType === OfferingIncomeSearchType.ZonalEvangelism
+                                        ? SubTypeNamesOfferingIncomeSearchByFastingAndVigilZonalAndZonalEvangelism
+                                        : searchType === OfferingIncomeSearchType.GeneralFasting ||
+                                          searchType === OfferingIncomeSearchType.GeneralVigil ||
+                                          searchType === OfferingIncomeSearchType.GeneralEvangelism
+                                          ? SubTypeNamesOfferingIncomeSearchByFastingAndVigilGeneralAndGeneralEvangelism
+                                          : searchType === OfferingIncomeSearchType.YouthService
+                                            ? SubTypeNamesOfferingIncomeSearchByYoungService
+                                            : searchType === OfferingIncomeSearchType.UnitedService
+                                              ? SubTypeNamesOfferingIncomeSearchByUnitedService
+                                              : searchType === OfferingIncomeSearchType.Activities
+                                                ? SubTypeNamesOfferingIncomeSearchByActivities
+                                                : searchType === OfferingIncomeSearchType.Special ||
+                                                  searchType === OfferingIncomeSearchType.ChurchGround
+                                                  ? SubTypeNamesOfferingIncomeSearchByChurchGroundAndSpecial
+                                                  : SubTypeNamesOfferingIncomeSearchByIncomeAdjustment
+                              ).map(([key, value]) => (
+                                <SelectItem
+                                  className={cn(`text-[14px] md:text-[14px]`)}
+                                  key={key}
+                                  value={key}
+                                >
+                                  {value}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage className='text-[13px]' />
+                        </FormItem>
+                      );
+                    }}
+                  />
+                )}
 
               {(searchType === OfferingIncomeSearchType.FamilyGroup ||
                 searchType === OfferingIncomeSearchType.ZonalFasting ||
@@ -394,10 +389,10 @@ export const OfferingIncomeUpdatePage = (): JSX.Element => {
                       <FormItem>
                         <FormLabel className='text-[14px] font-bold'>
                           {searchSubType === OfferingIncomeSearchSubType.OfferingByGroupCode ||
-                          searchSubType === OfferingIncomeSearchSubType.OfferingByGroupCodeDate
+                            searchSubType === OfferingIncomeSearchSubType.OfferingByGroupCodeDate
                             ? 'Código de grupo familiar'
                             : searchSubType === OfferingIncomeSearchSubType.OfferingByZone ||
-                                searchSubType === OfferingIncomeSearchSubType.OfferingByZoneDate
+                              searchSubType === OfferingIncomeSearchSubType.OfferingByZoneDate
                               ? 'Zona'
                               : ''}
                         </FormLabel>
@@ -425,10 +420,10 @@ export const OfferingIncomeUpdatePage = (): JSX.Element => {
                 searchType === OfferingIncomeSearchType.GeneralEvangelism ||
                 searchType === OfferingIncomeSearchType.IncomeAdjustment ||
                 searchType === OfferingIncomeSearchType.Special ||
-                // searchType === OfferingIncomeSearchType.SundaySchool ||
+                searchType === OfferingIncomeSearchType.SundaySchool ||
                 searchType === OfferingIncomeSearchType.SundayService ||
                 searchType === OfferingIncomeSearchType.UnitedService ||
-                // searchType === OfferingIncomeSearchType.YouthService ||
+                searchType === OfferingIncomeSearchType.YouthService ||
                 searchType === OfferingIncomeSearchType.ZonalFasting ||
                 searchType === OfferingIncomeSearchType.ZonalVigil ||
                 searchType === OfferingIncomeSearchType.ZonalUnitedService ||
@@ -495,85 +490,84 @@ export const OfferingIncomeUpdatePage = (): JSX.Element => {
                   />
                 )}
 
-              {
-                //searchType === OfferingIncomeSearchType.RecordStatus ||
-                // searchType === OfferingIncomeSearchType.SundaySchool ||
+              {(searchType === OfferingIncomeSearchType.RecordStatus ||
                 (searchType === OfferingIncomeSearchType.SundayService ||
                   searchType === OfferingIncomeSearchType.GeneralFasting ||
                   searchType === OfferingIncomeSearchType.GeneralVigil ||
                   searchType === OfferingIncomeSearchType.GeneralEvangelism ||
                   searchType === OfferingIncomeSearchType.Activities ||
                   searchType === OfferingIncomeSearchType.UnitedService ||
-                  // searchType === OfferingIncomeSearchType.YouthService ||
+                  searchType === OfferingIncomeSearchType.SundaySchool ||
+                  searchType === OfferingIncomeSearchType.YouthService ||
                   searchType === OfferingIncomeSearchType.IncomeAdjustment ||
                   searchType === OfferingIncomeSearchType.Special ||
                   searchType === OfferingIncomeSearchType.ChurchGround) &&
-                  (searchSubType === OfferingIncomeSearchSubType.OfferingByShift ||
-                    searchSubType === OfferingIncomeSearchSubType.OfferingByShiftDate ||
-                    searchSubType === OfferingIncomeSearchSubType.OfferingByContributorFirstNames ||
-                    searchSubType === OfferingIncomeSearchSubType.OfferingByContributorLastNames ||
-                    searchSubType ===
-                      OfferingIncomeSearchSubType.OfferingByContributorFullNames) && (
-                    <FormField
-                      control={form.control}
-                      name='selectTerm'
-                      render={({ field }) => {
-                        return (
-                          <FormItem>
-                            <FormLabel className='text-[14px] font-bold'>
-                              {searchSubType === OfferingIncomeSearchSubType.OfferingByShift ||
+                (searchSubType === OfferingIncomeSearchSubType.OfferingByShift ||
+                  searchSubType === OfferingIncomeSearchSubType.OfferingByShiftDate ||
+                  searchSubType === OfferingIncomeSearchSubType.OfferingByContributorFirstNames ||
+                  searchSubType === OfferingIncomeSearchSubType.OfferingByContributorLastNames ||
+                  searchSubType ===
+                  OfferingIncomeSearchSubType.OfferingByContributorFullNames)) && (
+                  <FormField
+                    control={form.control}
+                    name='selectTerm'
+                    render={({ field }) => {
+                      return (
+                        <FormItem>
+                          <FormLabel className='text-[14px] font-bold'>
+                            {searchSubType === OfferingIncomeSearchSubType.OfferingByShift ||
                               searchSubType === OfferingIncomeSearchSubType.OfferingByShiftDate
-                                ? `Turno`
-                                : //: searchType === OfferingIncomeSearchType.RecordStatus
-                                  //? 'Estado de registro'
-                                  'Tipo de miembro'}
-                            </FormLabel>
-                            <FormDescription className='text-[13.5px] md:text-[14px]'>
-                              Selecciona una opción de búsqueda.
-                            </FormDescription>
-                            <Select
-                              onValueChange={field.onChange}
-                              defaultValue={field.value}
-                              value={field.value}
-                            >
-                              <FormControl className='text-[14px] md:text-[14px]'>
-                                <SelectTrigger>
-                                  {field.value ? (
-                                    <SelectValue
-                                      className='text-[14px] md:text-[14px]'
-                                      placeholder='Elige una opción'
-                                    />
-                                  ) : (
-                                    'Elige una opción'
-                                  )}
-                                </SelectTrigger>
-                              </FormControl>
-                              <SelectContent>
-                                {Object.entries(
-                                  // searchType === OfferingIncomeSearchType.RecordStatus
-                                  //   ? OfferingIncomeSearchNamesByRecordStatus :
-                                  searchSubType === OfferingIncomeSearchSubType.OfferingByShift ||
-                                    searchSubType ===
-                                      OfferingIncomeSearchSubType.OfferingByShiftDate
-                                    ? OfferingIncomeSearchNamesByShift
-                                    : OfferingIncomeSearchNamesByMemberType
-                                ).map(([key, value]) => (
-                                  <SelectItem
-                                    className={cn(`text-[14px] md:text-[14px]`)}
-                                    key={key}
-                                    value={key}
-                                  >
-                                    {value}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                            <FormMessage className='text-[13px]' />
-                          </FormItem>
-                        );
-                      }}
-                    />
-                  )
+                              ? `Turno`
+                              : searchType === OfferingIncomeSearchType.RecordStatus
+                                ? 'Estado de registro'
+                                : 'Tipo de miembro'}
+                          </FormLabel>
+                          <FormDescription className='text-[13.5px] md:text-[14px]'>
+                            Selecciona una opción de búsqueda.
+                          </FormDescription>
+                          <Select
+                            onValueChange={field.onChange}
+                            defaultValue={field.value}
+                            value={field.value}
+                          >
+                            <FormControl className='text-[14px] md:text-[14px]'>
+                              <SelectTrigger>
+                                {field.value ? (
+                                  <SelectValue
+                                    className='text-[14px] md:text-[14px]'
+                                    placeholder='Elige una opción'
+                                  />
+                                ) : (
+                                  'Elige una opción'
+                                )}
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {Object.entries(
+                                // searchType === OfferingIncomeSearchType.RecordStatus
+                                //   ? OfferingIncomeSearchNamesByRecordStatus :
+                                searchSubType === OfferingIncomeSearchSubType.OfferingByShift ||
+                                  searchSubType ===
+                                  OfferingIncomeSearchSubType.OfferingByShiftDate
+                                  ? OfferingIncomeSearchNamesByShift
+                                  : OfferingIncomeSearchNamesByMemberType
+                              ).map(([key, value]) => (
+                                <SelectItem
+                                  className={cn(`text-[14px] md:text-[14px]`)}
+                                  key={key}
+                                  value={key}
+                                >
+                                  {value}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage className='text-[13px]' />
+                        </FormItem>
+                      );
+                    }}
+                  />
+                )
               }
 
               {(searchType === OfferingIncomeSearchType.ChurchGround ||
@@ -582,9 +576,10 @@ export const OfferingIncomeUpdatePage = (): JSX.Element => {
                 searchType === OfferingIncomeSearchType.ZonalFasting ||
                 searchType === OfferingIncomeSearchType.ZonalUnitedService ||
                 searchType === OfferingIncomeSearchType.ZonalVigil ||
-                searchType === OfferingIncomeSearchType.ZonalEvangelism) &&
-                // searchType === OfferingIncomeSearchType.YouthService ||
-                // searchType === OfferingIncomeSearchType.SundaySchool
+                searchType === OfferingIncomeSearchType.ZonalEvangelism ||
+                searchType === OfferingIncomeSearchType.YouthService ||
+                searchType === OfferingIncomeSearchType.SundaySchool
+              ) &&
                 (searchSubType === OfferingIncomeSearchSubType.OfferingByContributorFirstNames ||
                   searchSubType === OfferingIncomeSearchSubType.OfferingByContributorFullNames ||
                   searchSubType === OfferingIncomeSearchSubType.OfferingByPreacherFirstNames ||
@@ -619,9 +614,10 @@ export const OfferingIncomeUpdatePage = (): JSX.Element => {
                 searchType === OfferingIncomeSearchType.ZonalFasting ||
                 searchType === OfferingIncomeSearchType.ZonalUnitedService ||
                 searchType === OfferingIncomeSearchType.ZonalVigil ||
-                searchType === OfferingIncomeSearchType.ZonalEvangelism) &&
-                // searchType === OfferingIncomeSearchType.YouthService ||
-                // searchType === OfferingIncomeSearchType.SundaySchool
+                searchType === OfferingIncomeSearchType.ZonalEvangelism ||
+                searchType === OfferingIncomeSearchType.YouthService ||
+                searchType === OfferingIncomeSearchType.SundaySchool
+              ) &&
                 (searchSubType === OfferingIncomeSearchSubType.OfferingByContributorLastNames ||
                   searchSubType === OfferingIncomeSearchSubType.OfferingByContributorFullNames ||
                   searchSubType === OfferingIncomeSearchSubType.OfferingByPreacherLastNames ||
@@ -740,7 +736,7 @@ export const OfferingIncomeUpdatePage = (): JSX.Element => {
                       Elige el tipo de orden de los registros.
                     </FormDescription>
                     <Select
-                      onOpenChange={() => {}}
+                      onOpenChange={() => { }}
                       value={field.value}
                       onValueChange={field.onChange}
                     >
@@ -830,16 +826,16 @@ export const OfferingIncomeUpdatePage = (): JSX.Element => {
                   searchType && !searchSubType && 'md:col-span-1 lg:col-span-1 xl:col-span-3',
                   (searchSubType === OfferingIncomeSearchSubType.OfferingByContributorFirstNames ||
                     searchSubType === OfferingIncomeSearchSubType.OfferingByContributorLastNames) &&
-                    'md:col-span-1 lg:col-span-1 xl:col-span-1',
+                  'md:col-span-1 lg:col-span-1 xl:col-span-1',
                   searchSubType === OfferingIncomeSearchSubType.OfferingByContributorFullNames &&
-                    'md:col-span-2 lg:col-span-1 xl:col-span-4',
+                  'md:col-span-2 lg:col-span-1 xl:col-span-4',
                   (searchSubType === OfferingIncomeSearchSubType.OfferingByPreacherFullNames ||
                     searchSubType === OfferingIncomeSearchSubType.OfferingBySupervisorFullNames) &&
-                    'md:col-span-1 lg:col-span-2 xl:col-span-1',
+                  'md:col-span-1 lg:col-span-2 xl:col-span-1',
                   (searchSubType === OfferingIncomeSearchSubType.OfferingByShiftDate ||
                     searchSubType === OfferingIncomeSearchSubType.OfferingByZoneDate ||
                     searchSubType === OfferingIncomeSearchSubType.OfferingByGroupCodeDate) &&
-                    'md:col-span-1 lg:col-span-2 xl:col-span-1'
+                  'md:col-span-1 lg:col-span-2 xl:col-span-1'
                 )}
               >
                 <Toaster position='top-center' richColors />

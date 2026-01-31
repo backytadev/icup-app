@@ -10,13 +10,11 @@ import { type ChurchResponse, type ChurchFormData } from '@/modules/church/types
 interface Options {
   churchCreationForm: UseFormReturn<ChurchFormData, any, ChurchFormData | undefined>;
   setIsInputDisabled: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const useChurchCreationMutation = ({
   churchCreationForm,
   setIsInputDisabled,
-  setIsSubmitButtonDisabled,
 }: Options): UseMutationResult<ChurchResponse, ErrorResponse, ChurchFormData, unknown> => {
   return useCreateMutation({
     mutationFn: createChurch,
@@ -28,7 +26,6 @@ export const useChurchCreationMutation = ({
     },
     onError: () => {
       setIsInputDisabled(false);
-      setIsSubmitButtonDisabled(false);
     },
   });
 };

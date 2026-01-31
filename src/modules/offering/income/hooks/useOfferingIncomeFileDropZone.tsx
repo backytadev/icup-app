@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-
 import { useCallback, useEffect } from 'react';
 
 import { type UseFormReturn } from 'react-hook-form';

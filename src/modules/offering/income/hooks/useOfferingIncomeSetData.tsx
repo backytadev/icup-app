@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
-
 import { useEffect } from 'react';
 import { type UseFormReturn } from 'react-hook-form';
 
@@ -46,10 +41,10 @@ export const useOfferingIncomeSetData = ({
     offeringIncomeUpdateForm.setValue(
       'memberId',
       data?.disciple?.id ??
-        data?.preacher?.id ??
-        data?.supervisor?.id ??
-        data?.copastor?.id ??
-        data?.pastor?.id
+      data?.preacher?.id ??
+      data?.supervisor?.id ??
+      data?.copastor?.id ??
+      data?.pastor?.id
     );
     offeringIncomeUpdateForm.setValue('externalDonorId', data?.externalDonor?.id ?? '');
     offeringIncomeUpdateForm.setValue('shift', data?.shift ?? '');

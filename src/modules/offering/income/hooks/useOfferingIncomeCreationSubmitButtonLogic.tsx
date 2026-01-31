@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useEffect } from 'react';
 
 import { type UseFormReturn } from 'react-hook-form';
@@ -119,278 +116,278 @@ export const useOfferingIncomeCreationSubmitButtonLogic = ({
 
     //? Sunday School
     //* Sunday School (external donation)
-    // if (
-    //   type === OfferingIncomeCreationType.Offering &&
-    //   category === OfferingIncomeCreationCategory.ExternalDonation &&
-    //   subType === OfferingIncomeCreationSubType.SundaySchool &&
-    //   isNewExternalDonor &&
-    //   externalDonorFirstNames &&
-    //   externalDonorLastNames &&
-    //   externalDonorGender &&
-    //   amount &&
-    //   date &&
-    //   currency &&
-    //   churchId &&
-    //   Object.values(offeringIncomeCreationForm.formState.errors).length === 0 &&
-    //   (!isInputDisabled || !isDropZoneDisabled || !isDeleteFileButtonDisabled)
-    // ) {
-    //   setIsSubmitButtonDisabled(false);
-    //   setIsMessageErrorDisabled(false);
-    // }
+    if (
+      type === OfferingIncomeCreationType.Offering &&
+      category === OfferingIncomeCreationCategory.ExternalDonation &&
+      subType === OfferingIncomeCreationSubType.SundaySchool &&
+      isNewExternalDonor &&
+      externalDonorFirstNames &&
+      externalDonorLastNames &&
+      externalDonorGender &&
+      amount &&
+      date &&
+      currency &&
+      churchId &&
+      Object.values(offeringIncomeCreationForm.formState.errors).length === 0 &&
+      (!isInputDisabled || !isDropZoneDisabled || !isDeleteFileButtonDisabled)
+    ) {
+      setIsSubmitButtonDisabled(false);
+      setIsMessageErrorDisabled(false);
+    }
 
-    // if (
-    //   type === OfferingIncomeCreationType.Offering &&
-    //   category === OfferingIncomeCreationCategory.ExternalDonation &&
-    //   subType === OfferingIncomeCreationSubType.SundaySchool &&
-    //   !isNewExternalDonor &&
-    //   externalDonorId &&
-    //   !externalDonorFirstNames &&
-    //   !externalDonorLastNames &&
-    //   !externalDonorGender &&
-    //   amount &&
-    //   date &&
-    //   currency &&
-    //   churchId &&
-    //   Object.values(offeringIncomeCreationForm.formState.errors).length === 0 &&
-    //   (!isInputDisabled || !isDropZoneDisabled || !isDeleteFileButtonDisabled)
-    // ) {
-    //   setIsSubmitButtonDisabled(false);
-    //   setIsMessageErrorDisabled(false);
-    // }
+    if (
+      type === OfferingIncomeCreationType.Offering &&
+      category === OfferingIncomeCreationCategory.ExternalDonation &&
+      subType === OfferingIncomeCreationSubType.SundaySchool &&
+      !isNewExternalDonor &&
+      externalDonorId &&
+      !externalDonorFirstNames &&
+      !externalDonorLastNames &&
+      !externalDonorGender &&
+      amount &&
+      date &&
+      currency &&
+      churchId &&
+      Object.values(offeringIncomeCreationForm.formState.errors).length === 0 &&
+      (!isInputDisabled || !isDropZoneDisabled || !isDeleteFileButtonDisabled)
+    ) {
+      setIsSubmitButtonDisabled(false);
+      setIsMessageErrorDisabled(false);
+    }
 
-    // if (
-    //   type === OfferingIncomeCreationType.Offering &&
-    //   category === OfferingIncomeCreationCategory.ExternalDonation &&
-    //   subType === OfferingIncomeCreationSubType.SundaySchool &&
-    //   isNewExternalDonor &&
-    //   (!churchId ||
-    //     !date ||
-    //     !amount ||
-    //     !externalDonorFirstNames ||
-    //     !externalDonorLastNames ||
-    //     !externalDonorGender ||
-    //     !currency)
-    // ) {
-    //   setIsSubmitButtonDisabled(true);
-    //   setIsMessageErrorDisabled(true);
-    // }
+    if (
+      type === OfferingIncomeCreationType.Offering &&
+      category === OfferingIncomeCreationCategory.ExternalDonation &&
+      subType === OfferingIncomeCreationSubType.SundaySchool &&
+      isNewExternalDonor &&
+      (!churchId ||
+        !date ||
+        !amount ||
+        !externalDonorFirstNames ||
+        !externalDonorLastNames ||
+        !externalDonorGender ||
+        !currency)
+    ) {
+      setIsSubmitButtonDisabled(true);
+      setIsMessageErrorDisabled(true);
+    }
 
-    // if (
-    //   type === OfferingIncomeCreationType.Offering &&
-    //   category === OfferingIncomeCreationCategory.ExternalDonation &&
-    //   subType === OfferingIncomeCreationSubType.SundaySchool &&
-    //   !isNewExternalDonor &&
-    //   (!churchId || !externalDonorId || !date || !amount || !currency)
-    // ) {
-    //   setIsSubmitButtonDisabled(true);
-    //   setIsMessageErrorDisabled(true);
-    // }
+    if (
+      type === OfferingIncomeCreationType.Offering &&
+      category === OfferingIncomeCreationCategory.ExternalDonation &&
+      subType === OfferingIncomeCreationSubType.SundaySchool &&
+      !isNewExternalDonor &&
+      (!churchId || !externalDonorId || !date || !amount || !currency)
+    ) {
+      setIsSubmitButtonDisabled(true);
+      setIsMessageErrorDisabled(true);
+    }
 
     //* Sunday school (offering box)
-    // if (
-    //   type === OfferingIncomeCreationType.Offering &&
-    //   category === OfferingIncomeCreationCategory.OfferingBox &&
-    //   subType === OfferingIncomeCreationSubType.SundaySchool &&
-    //   amount &&
-    //   date &&
-    //   currency &&
-    //   shift &&
-    //   churchId &&
-    //   Object.values(offeringIncomeCreationForm.formState.errors).length === 0 &&
-    //   (!isInputDisabled || !isDropZoneDisabled || !isDeleteFileButtonDisabled)
-    // ) {
-    //   setIsSubmitButtonDisabled(false);
-    //   setIsMessageErrorDisabled(false);
-    // }
+    if (
+      type === OfferingIncomeCreationType.Offering &&
+      category === OfferingIncomeCreationCategory.OfferingBox &&
+      subType === OfferingIncomeCreationSubType.SundaySchool &&
+      amount &&
+      date &&
+      currency &&
+      shift &&
+      churchId &&
+      Object.values(offeringIncomeCreationForm.formState.errors).length === 0 &&
+      (!isInputDisabled || !isDropZoneDisabled || !isDeleteFileButtonDisabled)
+    ) {
+      setIsSubmitButtonDisabled(false);
+      setIsMessageErrorDisabled(false);
+    }
 
-    // if (
-    //   type === OfferingIncomeCreationType.Offering &&
-    //   category === OfferingIncomeCreationCategory.OfferingBox &&
-    //   subType === OfferingIncomeCreationSubType.SundaySchool &&
-    //   (!churchId || !date || !amount || !currency || !shift)
-    // ) {
-    //   setIsSubmitButtonDisabled(true);
-    //   setIsMessageErrorDisabled(true);
-    // }
+    if (
+      type === OfferingIncomeCreationType.Offering &&
+      category === OfferingIncomeCreationCategory.OfferingBox &&
+      subType === OfferingIncomeCreationSubType.SundaySchool &&
+      (!churchId || !date || !amount || !currency || !shift)
+    ) {
+      setIsSubmitButtonDisabled(true);
+      setIsMessageErrorDisabled(true);
+    }
 
     //* Sunday school (activities)
-    // if (
-    //   type === OfferingIncomeCreationType.Offering &&
-    //   category === OfferingIncomeCreationCategory.FundraisingProMinistry &&
-    //   subType === OfferingIncomeCreationSubType.SundaySchool &&
-    //   amount &&
-    //   date &&
-    //   currency &&
-    //   churchId &&
-    //   Object.values(offeringIncomeCreationForm.formState.errors).length === 0 &&
-    //   (!isInputDisabled || !isDropZoneDisabled || !isDeleteFileButtonDisabled)
-    // ) {
-    //   setIsSubmitButtonDisabled(false);
-    //   setIsMessageErrorDisabled(false);
-    // }
+    if (
+      type === OfferingIncomeCreationType.Offering &&
+      category === OfferingIncomeCreationCategory.FundraisingProMinistry &&
+      subType === OfferingIncomeCreationSubType.SundaySchool &&
+      amount &&
+      date &&
+      currency &&
+      churchId &&
+      Object.values(offeringIncomeCreationForm.formState.errors).length === 0 &&
+      (!isInputDisabled || !isDropZoneDisabled || !isDeleteFileButtonDisabled)
+    ) {
+      setIsSubmitButtonDisabled(false);
+      setIsMessageErrorDisabled(false);
+    }
 
-    // if (
-    //   type === OfferingIncomeCreationType.Offering &&
-    //   category === OfferingIncomeCreationCategory.FundraisingProMinistry &&
-    //   subType === OfferingIncomeCreationSubType.SundaySchool &&
-    //   (!churchId || !date || !amount || !currency)
-    // ) {
-    //   setIsSubmitButtonDisabled(true);
-    //   setIsMessageErrorDisabled(true);
-    // }
+    if (
+      type === OfferingIncomeCreationType.Offering &&
+      category === OfferingIncomeCreationCategory.FundraisingProMinistry &&
+      subType === OfferingIncomeCreationSubType.SundaySchool &&
+      (!churchId || !date || !amount || !currency)
+    ) {
+      setIsSubmitButtonDisabled(true);
+      setIsMessageErrorDisabled(true);
+    }
 
     //* Sunday school (internal donation)
-    // if (
-    //   churchId &&
-    //   type === OfferingIncomeCreationType.Offering &&
-    //   category === OfferingIncomeCreationCategory.InternalDonation &&
-    //   subType === OfferingIncomeCreationSubType.SundaySchool &&
-    //   amount &&
-    //   date &&
-    //   currency &&
-    //   memberType &&
-    //   memberId &&
-    //   Object.values(offeringIncomeCreationForm.formState.errors).length === 0 &&
-    //   (!isInputDisabled || !isDropZoneDisabled || !isDeleteFileButtonDisabled)
-    // ) {
-    //   setIsSubmitButtonDisabled(false);
-    //   setIsMessageErrorDisabled(false);
-    // }
+    if (
+      churchId &&
+      type === OfferingIncomeCreationType.Offering &&
+      category === OfferingIncomeCreationCategory.InternalDonation &&
+      subType === OfferingIncomeCreationSubType.SundaySchool &&
+      amount &&
+      date &&
+      currency &&
+      memberType &&
+      memberId &&
+      Object.values(offeringIncomeCreationForm.formState.errors).length === 0 &&
+      (!isInputDisabled || !isDropZoneDisabled || !isDeleteFileButtonDisabled)
+    ) {
+      setIsSubmitButtonDisabled(false);
+      setIsMessageErrorDisabled(false);
+    }
 
-    // if (
-    //   type === OfferingIncomeCreationType.Offering &&
-    //   category === OfferingIncomeCreationCategory.InternalDonation &&
-    //   subType === OfferingIncomeCreationSubType.SundaySchool &&
-    //   (!churchId || !memberType || !memberId || !date || !amount || !currency)
-    // ) {
-    //   setIsSubmitButtonDisabled(true);
-    //   setIsMessageErrorDisabled(true);
-    // }
+    if (
+      type === OfferingIncomeCreationType.Offering &&
+      category === OfferingIncomeCreationCategory.InternalDonation &&
+      subType === OfferingIncomeCreationSubType.SundaySchool &&
+      (!churchId || !memberType || !memberId || !date || !amount || !currency)
+    ) {
+      setIsSubmitButtonDisabled(true);
+      setIsMessageErrorDisabled(true);
+    }
 
     //? Youth Service
     //* Youth Service (external donation)
-    // if (
-    //   type === OfferingIncomeCreationType.Offering &&
-    //   category === OfferingIncomeCreationCategory.ExternalDonation &&
-    //   subType === OfferingIncomeCreationSubType.YouthService &&
-    //   (isNewExternalDonor || !isNewExternalDonor) &&
-    //   externalDonorFirstNames &&
-    //   externalDonorLastNames &&
-    //   externalDonorGender &&
-    //   amount &&
-    //   date &&
-    //   currency &&
-    //   churchId &&
-    //   Object.values(offeringIncomeCreationForm.formState.errors).length === 0 &&
-    //   (!isInputDisabled || !isDropZoneDisabled || !isDeleteFileButtonDisabled)
-    // ) {
-    //   setIsSubmitButtonDisabled(false);
-    //   setIsMessageErrorDisabled(false);
-    // }
+    if (
+      type === OfferingIncomeCreationType.Offering &&
+      category === OfferingIncomeCreationCategory.ExternalDonation &&
+      subType === OfferingIncomeCreationSubType.YouthService &&
+      (isNewExternalDonor || !isNewExternalDonor) &&
+      externalDonorFirstNames &&
+      externalDonorLastNames &&
+      externalDonorGender &&
+      amount &&
+      date &&
+      currency &&
+      churchId &&
+      Object.values(offeringIncomeCreationForm.formState.errors).length === 0 &&
+      (!isInputDisabled || !isDropZoneDisabled || !isDeleteFileButtonDisabled)
+    ) {
+      setIsSubmitButtonDisabled(false);
+      setIsMessageErrorDisabled(false);
+    }
 
-    // if (
-    //   type === OfferingIncomeCreationType.Offering &&
-    //   category === OfferingIncomeCreationCategory.ExternalDonation &&
-    //   subType === OfferingIncomeCreationSubType.YouthService &&
-    //   !isNewExternalDonor &&
-    //   externalDonorId &&
-    //   !externalDonorFirstNames &&
-    //   !externalDonorLastNames &&
-    //   !externalDonorGender &&
-    //   amount &&
-    //   date &&
-    //   currency &&
-    //   churchId &&
-    //   Object.values(offeringIncomeCreationForm.formState.errors).length === 0 &&
-    //   (!isInputDisabled || !isDropZoneDisabled || !isDeleteFileButtonDisabled)
-    // ) {
-    //   setIsSubmitButtonDisabled(false);
-    //   setIsMessageErrorDisabled(false);
-    // }
+    if (
+      type === OfferingIncomeCreationType.Offering &&
+      category === OfferingIncomeCreationCategory.ExternalDonation &&
+      subType === OfferingIncomeCreationSubType.YouthService &&
+      !isNewExternalDonor &&
+      externalDonorId &&
+      !externalDonorFirstNames &&
+      !externalDonorLastNames &&
+      !externalDonorGender &&
+      amount &&
+      date &&
+      currency &&
+      churchId &&
+      Object.values(offeringIncomeCreationForm.formState.errors).length === 0 &&
+      (!isInputDisabled || !isDropZoneDisabled || !isDeleteFileButtonDisabled)
+    ) {
+      setIsSubmitButtonDisabled(false);
+      setIsMessageErrorDisabled(false);
+    }
 
-    // if (
-    //   type === OfferingIncomeCreationType.Offering &&
-    //   category === OfferingIncomeCreationCategory.ExternalDonation &&
-    //   subType === OfferingIncomeCreationSubType.YouthService &&
-    //   isNewExternalDonor &&
-    //   (!churchId ||
-    //     !date ||
-    //     !amount ||
-    //     !externalDonorFirstNames ||
-    //     !externalDonorLastNames ||
-    //     !externalDonorGender ||
-    //     !currency)
-    // ) {
-    //   setIsSubmitButtonDisabled(true);
-    //   setIsMessageErrorDisabled(true);
-    // }
+    if (
+      type === OfferingIncomeCreationType.Offering &&
+      category === OfferingIncomeCreationCategory.ExternalDonation &&
+      subType === OfferingIncomeCreationSubType.YouthService &&
+      isNewExternalDonor &&
+      (!churchId ||
+        !date ||
+        !amount ||
+        !externalDonorFirstNames ||
+        !externalDonorLastNames ||
+        !externalDonorGender ||
+        !currency)
+    ) {
+      setIsSubmitButtonDisabled(true);
+      setIsMessageErrorDisabled(true);
+    }
 
-    // if (
-    //   type === OfferingIncomeCreationType.Offering &&
-    //   category === OfferingIncomeCreationCategory.ExternalDonation &&
-    //   subType === OfferingIncomeCreationSubType.YouthService &&
-    //   !isNewExternalDonor &&
-    //   (!churchId || !externalDonorId || !date || !amount || !currency)
-    // ) {
-    //   setIsSubmitButtonDisabled(true);
-    //   setIsMessageErrorDisabled(true);
-    // }
+    if (
+      type === OfferingIncomeCreationType.Offering &&
+      category === OfferingIncomeCreationCategory.ExternalDonation &&
+      subType === OfferingIncomeCreationSubType.YouthService &&
+      !isNewExternalDonor &&
+      (!churchId || !externalDonorId || !date || !amount || !currency)
+    ) {
+      setIsSubmitButtonDisabled(true);
+      setIsMessageErrorDisabled(true);
+    }
 
     //* Youth Service (offering box and activities)
-    // if (
-    //   type === OfferingIncomeCreationType.Offering &&
-    //   (category === OfferingIncomeCreationCategory.OfferingBox ||
-    //     category === OfferingIncomeCreationCategory.FundraisingProMinistry) &&
-    //   subType === OfferingIncomeCreationSubType.YouthService &&
-    //   amount &&
-    //   date &&
-    //   currency &&
-    //   churchId &&
-    //   Object.values(offeringIncomeCreationForm.formState.errors).length === 0 &&
-    //   (!isInputDisabled || !isDropZoneDisabled || !isDeleteFileButtonDisabled)
-    // ) {
-    //   setIsSubmitButtonDisabled(false);
-    //   setIsMessageErrorDisabled(false);
-    // }
+    if (
+      type === OfferingIncomeCreationType.Offering &&
+      (category === OfferingIncomeCreationCategory.OfferingBox ||
+        category === OfferingIncomeCreationCategory.FundraisingProMinistry) &&
+      subType === OfferingIncomeCreationSubType.YouthService &&
+      amount &&
+      date &&
+      currency &&
+      churchId &&
+      Object.values(offeringIncomeCreationForm.formState.errors).length === 0 &&
+      (!isInputDisabled || !isDropZoneDisabled || !isDeleteFileButtonDisabled)
+    ) {
+      setIsSubmitButtonDisabled(false);
+      setIsMessageErrorDisabled(false);
+    }
 
-    // if (
-    //   type === OfferingIncomeCreationType.Offering &&
-    //   (category === OfferingIncomeCreationCategory.OfferingBox ||
-    //     category === OfferingIncomeCreationCategory.FundraisingProMinistry) &&
-    //   subType === OfferingIncomeCreationSubType.YouthService &&
-    //   (!churchId || !date || !amount || !currency)
-    // ) {
-    //   setIsSubmitButtonDisabled(true);
-    //   setIsMessageErrorDisabled(true);
-    // }
+    if (
+      type === OfferingIncomeCreationType.Offering &&
+      (category === OfferingIncomeCreationCategory.OfferingBox ||
+        category === OfferingIncomeCreationCategory.FundraisingProMinistry) &&
+      subType === OfferingIncomeCreationSubType.YouthService &&
+      (!churchId || !date || !amount || !currency)
+    ) {
+      setIsSubmitButtonDisabled(true);
+      setIsMessageErrorDisabled(true);
+    }
 
     //* Youth Service (internal donation)
-    // if (
-    //   churchId &&
-    //   type === OfferingIncomeCreationType.Offering &&
-    //   category === OfferingIncomeCreationCategory.InternalDonation &&
-    //   subType === OfferingIncomeCreationSubType.YouthService &&
-    //   amount &&
-    //   date &&
-    //   currency &&
-    //   memberType &&
-    //   memberId &&
-    //   Object.values(offeringIncomeCreationForm.formState.errors).length === 0 &&
-    //   (!isInputDisabled || !isDropZoneDisabled || !isDeleteFileButtonDisabled)
-    // ) {
-    //   setIsSubmitButtonDisabled(false);
-    //   setIsMessageErrorDisabled(false);
-    // }
+    if (
+      churchId &&
+      type === OfferingIncomeCreationType.Offering &&
+      category === OfferingIncomeCreationCategory.InternalDonation &&
+      subType === OfferingIncomeCreationSubType.YouthService &&
+      amount &&
+      date &&
+      currency &&
+      memberType &&
+      memberId &&
+      Object.values(offeringIncomeCreationForm.formState.errors).length === 0 &&
+      (!isInputDisabled || !isDropZoneDisabled || !isDeleteFileButtonDisabled)
+    ) {
+      setIsSubmitButtonDisabled(false);
+      setIsMessageErrorDisabled(false);
+    }
 
-    // if (
-    //   type === OfferingIncomeCreationType.Offering &&
-    //   category === OfferingIncomeCreationCategory.InternalDonation &&
-    //   subType === OfferingIncomeCreationSubType.YouthService &&
-    //   (!churchId || !memberType || !memberId || !date || !amount || !currency)
-    // ) {
-    //   setIsSubmitButtonDisabled(true);
-    //   setIsMessageErrorDisabled(true);
-    // }
+    if (
+      type === OfferingIncomeCreationType.Offering &&
+      category === OfferingIncomeCreationCategory.InternalDonation &&
+      subType === OfferingIncomeCreationSubType.YouthService &&
+      (!churchId || !memberType || !memberId || !date || !amount || !currency)
+    ) {
+      setIsSubmitButtonDisabled(true);
+      setIsMessageErrorDisabled(true);
+    }
 
     //? Church Ground
     //* Church ground (external donation)
@@ -742,7 +739,7 @@ export const useOfferingIncomeCreationSubmitButtonLogic = ({
   //* Reset relations
   useEffect(() => {
     if (
-      // category === OfferingIncomeCreationCategory.FundraisingProMinistry ||
+      category === OfferingIncomeCreationCategory.FundraisingProMinistry ||
       category === OfferingIncomeCreationCategory.OfferingBox ||
       category === OfferingIncomeCreationCategory.ExternalDonation ||
       category === OfferingIncomeCreationCategory.General ||
@@ -779,8 +776,8 @@ export const useOfferingIncomeCreationSubmitButtonLogic = ({
   useEffect(() => {
     if (
       type === OfferingIncomeCreationType.Offering &&
-      subType === OfferingIncomeCreationSubType.SundayService
-      // subType === OfferingIncomeCreationSubType.SundaySchool
+      (subType === OfferingIncomeCreationSubType.SundayService ||
+        subType === OfferingIncomeCreationSubType.SundaySchool)
     ) {
       offeringIncomeCreationForm.resetField('category', { keepDirty: true });
       offeringIncomeCreationForm.resetField('isNewExternalDonor', { keepDirty: true });

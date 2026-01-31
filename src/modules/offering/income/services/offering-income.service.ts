@@ -129,8 +129,8 @@ export const getOfferingsIncomeByTerm = async ({
 
   //* Sunday Service, Sunday School
   if (
-    searchType === OfferingIncomeSearchType.SundayService
-    // searchType === OfferingIncomeSearchType.SundaySchool
+    searchType === OfferingIncomeSearchType.SundayService ||
+    searchType === OfferingIncomeSearchType.SundaySchool
   ) {
     const term =
       searchSubType === OfferingIncomeSearchSubType.OfferingByShift
@@ -294,8 +294,8 @@ export const getOfferingsIncomeByTerm = async ({
   //* Special, ground church, youth service
   if (
     searchType === OfferingIncomeSearchType.Special ||
-    searchType === OfferingIncomeSearchType.ChurchGround
-    // searchType === OfferingIncomeSearchType.YouthService
+    searchType === OfferingIncomeSearchType.ChurchGround ||
+    searchType === OfferingIncomeSearchType.YouthService
   ) {
     const term =
       searchSubType === OfferingIncomeSearchSubType.OfferingByDate

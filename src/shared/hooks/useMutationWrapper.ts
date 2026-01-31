@@ -9,10 +9,6 @@ import {
 
 import { type ErrorResponse } from '@/shared/interfaces/error-response.interface';
 
-/* ================================ */
-/*       Types & Interfaces         */
-/* ================================ */
-
 interface MutationCallbacks<TData> {
   onSuccessCallback?: (data: TData) => void;
   onErrorCallback?: () => void;
@@ -32,10 +28,6 @@ interface MutationOptions<TData, TVariables> {
   successDelay?: number;
   errorDelay?: number;
 }
-
-/* ================================ */
-/*       Mutation Wrapper Hook      */
-/* ================================ */
 
 export function useMutationWrapper<TData, TVariables>({
   mutationFn,
@@ -112,10 +104,6 @@ export function useMutationWrapper<TData, TVariables>({
     },
   });
 }
-
-/* ================================ */
-/*    Pre-configured Mutations      */
-/* ================================ */
 
 interface CreateMutationOptions<TData, TVariables> {
   mutationFn: (variables: TVariables) => Promise<TData>;

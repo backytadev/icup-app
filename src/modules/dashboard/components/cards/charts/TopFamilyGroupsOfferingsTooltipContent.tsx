@@ -87,8 +87,8 @@ export const TopFamilyGroupsTooltipContent = (
         </div>
 
         {/* Metadata */}
-        <div className='pt-2 border-t border-dashed border-slate-200 dark:border-slate-700/50'>
-          <ul className='flex items-center gap-3 flex-wrap'>
+        <div className='pt-2 border-t border-dashed border-slate-200 dark:border-slate-700/50 w-[200px] md:w-auto'>
+          <ul className='flex items-center gap-2 flex-wrap'>
             <li className='flex items-center gap-1.5 font-inter text-[10px] text-slate-500 dark:text-slate-400'>
               <span className='w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600' />
               {OfferingIncomeCreationCategoryNames[data?.category as OfferingIncomeCreationCategory]}

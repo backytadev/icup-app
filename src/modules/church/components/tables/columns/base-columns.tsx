@@ -128,7 +128,7 @@ const inactivateActionColumn: ColumnDef<ChurchColumns, any> = {
 };
 
 
-//* Agregate base columns
+//* Aggregate base columns
 const baseColumns: Array<ColumnDef<ChurchColumns, any>> = [
   idColumn,
   abbreviatedNameColumn,

@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import type * as z from 'zod';
@@ -419,7 +415,7 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                           >
                             {field.value
                               ? churchesQuery?.data?.find((zone) => zone.id === field.value)
-                                  ?.abbreviatedChurchName
+                                ?.abbreviatedChurchName
                               : 'Busque y seleccione una iglesia'}
                             <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-5' />
                           </Button>
@@ -584,15 +580,15 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                             {Object.entries(OfferingIncomeCreationCategoryNames).map(
                               ([key, value]) =>
                                 subType === OfferingIncomeCreationSubType.SundayService ||
-                                subType === OfferingIncomeCreationSubType.FamilyGroup ||
-                                subType === OfferingIncomeCreationSubType.GeneralFasting ||
-                                subType === OfferingIncomeCreationSubType.GeneralVigil ||
-                                subType === OfferingIncomeCreationSubType.ZonalFasting ||
-                                subType === OfferingIncomeCreationSubType.ZonalVigil ||
-                                subType === OfferingIncomeCreationSubType.ZonalEvangelism ||
-                                subType === OfferingIncomeCreationSubType.GeneralEvangelism ||
-                                subType === OfferingIncomeCreationSubType.UnitedService ||
-                                subType === OfferingIncomeCreationSubType.ZonalUnitedService ? (
+                                  subType === OfferingIncomeCreationSubType.FamilyGroup ||
+                                  subType === OfferingIncomeCreationSubType.GeneralFasting ||
+                                  subType === OfferingIncomeCreationSubType.GeneralVigil ||
+                                  subType === OfferingIncomeCreationSubType.ZonalFasting ||
+                                  subType === OfferingIncomeCreationSubType.ZonalVigil ||
+                                  subType === OfferingIncomeCreationSubType.ZonalEvangelism ||
+                                  subType === OfferingIncomeCreationSubType.GeneralEvangelism ||
+                                  subType === OfferingIncomeCreationSubType.UnitedService ||
+                                  subType === OfferingIncomeCreationSubType.ZonalUnitedService ? (
                                   key === OfferingIncomeCreationCategory.OfferingBox && (
                                     <SelectItem key={key} value={key}>
                                       {value}
@@ -609,7 +605,7 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                                   (key === OfferingIncomeCreationCategory.InternalDonation ||
                                     key === OfferingIncomeCreationCategory.ExternalDonation ||
                                     key ===
-                                      OfferingIncomeCreationCategory.FundraisingProChurchGround) && (
+                                    OfferingIncomeCreationCategory.FundraisingProChurchGround) && (
                                     <SelectItem key={key} value={key}>
                                       {value}
                                     </SelectItem>
@@ -625,22 +621,22 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                                     </SelectItem>
                                   )
                                 ) : (
-                                  // subType === OfferingIncomeCreationSubType.SundaySchool ||
-                                  //   subType === OfferingIncomeCreationSubType.YouthService ? (
-                                  //   (key === OfferingIncomeCreationCategory.OfferingBox ||
-                                  //     key === OfferingIncomeCreationCategory.InternalDonation ||
-                                  //     key === OfferingIncomeCreationCategory.ExternalDonation ||
-                                  //     key ===
-                                  //       OfferingIncomeCreationCategory.FundraisingProMinistry
-                                  //     ) && (
-                                  //     <SelectItem key={key} value={key}>
-                                  //       {value}
-                                  //     </SelectItem>
-                                  //   )
-                                  // ) :
-                                  <SelectItem key={key} value={key}>
-                                    {value}
-                                  </SelectItem>
+                                  subType === OfferingIncomeCreationSubType.SundaySchool ||
+                                    subType === OfferingIncomeCreationSubType.YouthService ? (
+                                    (key === OfferingIncomeCreationCategory.OfferingBox ||
+                                      key === OfferingIncomeCreationCategory.InternalDonation ||
+                                      key === OfferingIncomeCreationCategory.ExternalDonation ||
+                                      key ===
+                                      OfferingIncomeCreationCategory.FundraisingProMinistry
+                                    ) && (
+                                      <SelectItem key={key} value={key}>
+                                        {value}
+                                      </SelectItem>
+                                    )
+                                  ) :
+                                    <SelectItem key={key} value={key}>
+                                      {value}
+                                    </SelectItem>
                                 )
                             )}
                           </SelectContent>
@@ -1151,155 +1147,155 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                 category === OfferingIncomeCreationCategory.InternalDonation) ||
                 (type === OfferingIncomeCreationType.Offering &&
                   subType === OfferingIncomeCreationSubType.ChurchGround &&
-                  category === OfferingIncomeCreationCategory.InternalDonation)) && (
-                // (type === OfferingIncomeCreationType.Offering &&
-                //   subType === OfferingIncomeCreationSubType.SundaySchool &&
-                //   category === OfferingIncomeCreationCategory.InternalDonation) ||
-                // (type === OfferingIncomeCreationType.Offering &&
-                //   subType === OfferingIncomeCreationSubType.YouthService &&
-                //   category === OfferingIncomeCreationCategory.InternalDonation)
-                <FormField
-                  control={form.control}
-                  name='memberType'
-                  render={({ field }) => {
-                    return (
-                      <FormItem className='mt-3'>
-                        <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                          Tipo de Miembro
-                        </FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                          disabled={isInputDisabled}
-                        >
-                          <FormControl className='text-[14px] md:text-[14px]'>
-                            <SelectTrigger>
-                              {field.value ? (
-                                <SelectValue placeholder='Selecciona el tipo de miembro' />
-                              ) : (
-                                'Selecciona el tipo de miembro'
+                  category === OfferingIncomeCreationCategory.InternalDonation)) ||
+                (type === OfferingIncomeCreationType.Offering &&
+                  subType === OfferingIncomeCreationSubType.SundaySchool &&
+                  category === OfferingIncomeCreationCategory.InternalDonation) ||
+                (type === OfferingIncomeCreationType.Offering &&
+                  subType === OfferingIncomeCreationSubType.YouthService &&
+                  category === OfferingIncomeCreationCategory.InternalDonation) && (
+                  <FormField
+                    control={form.control}
+                    name='memberType'
+                    render={({ field }) => {
+                      return (
+                        <FormItem className='mt-3'>
+                          <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
+                            Tipo de Miembro
+                          </FormLabel>
+                          <Select
+                            onValueChange={field.onChange}
+                            value={field.value}
+                            disabled={isInputDisabled}
+                          >
+                            <FormControl className='text-[14px] md:text-[14px]'>
+                              <SelectTrigger>
+                                {field.value ? (
+                                  <SelectValue placeholder='Selecciona el tipo de miembro' />
+                                ) : (
+                                  'Selecciona el tipo de miembro'
+                                )}
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {Object.entries(MemberTypeNames).map(
+                                ([key, value]) =>
+                                  key !== MemberType.ExternalDonor && (
+                                    <SelectItem className={`text-[14px]`} key={key} value={key}>
+                                      {value}
+                                    </SelectItem>
+                                  )
                               )}
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {Object.entries(MemberTypeNames).map(
-                              ([key, value]) =>
-                                key !== MemberType.ExternalDonor && (
-                                  <SelectItem className={`text-[14px]`} key={key} value={key}>
-                                    {value}
-                                  </SelectItem>
-                                )
-                            )}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage className='text-[13px]' />
-                      </FormItem>
-                    );
-                  }}
-                />
-              )}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage className='text-[13px]' />
+                        </FormItem>
+                      );
+                    }}
+                  />
+                )}
 
               {((type === OfferingIncomeCreationType.Offering &&
                 subType === OfferingIncomeCreationSubType.Special &&
                 category === OfferingIncomeCreationCategory.InternalDonation) ||
                 (type === OfferingIncomeCreationType.Offering &&
                   subType === OfferingIncomeCreationSubType.ChurchGround &&
-                  category === OfferingIncomeCreationCategory.InternalDonation)) && (
-                // (type === OfferingIncomeCreationType.Offering &&
-                //   subType === OfferingIncomeCreationSubType.SundaySchool &&
-                //   category === OfferingIncomeCreationCategory.InternalDonation) ||
-                // (type === OfferingIncomeCreationType.Offering &&
-                //   subType === OfferingIncomeCreationSubType.YouthService &&
-                //   category === OfferingIncomeCreationCategory.InternalDonation)
-                <FormField
-                  control={form.control}
-                  name='memberId'
-                  render={({ field }) => (
-                    <FormItem className='mt-3'>
-                      <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                        Miembro
-                      </FormLabel>
-                      <FormDescription className='text-[13.5px] md:text-[14px]'>
-                        Seleccione un miembro para asignarlo al registro.
-                      </FormDescription>
-                      {disciplesQuery?.isFetching ||
-                      preachersQuery?.isFetching ||
-                      supervisorsQuery?.isFetching ||
-                      copastorsQuery?.isFetching ||
-                      pastorsQuery?.isFetching ? (
-                        <div className='pt-2 font-black text-[16px] text-center dark:text-gray-300 text-gray-500'>
-                          <span>Cargando información...</span>
-                        </div>
-                      ) : (
-                        <Popover open={isInputMemberOpen} onOpenChange={setIsInputMemberOpen}>
-                          <PopoverTrigger asChild>
-                            <FormControl className='text-[14px] md:text-[14px]'>
-                              <Button
-                                disabled={isInputMemberDisabled}
-                                variant='outline'
-                                role='combobox'
-                                className={cn(
-                                  'w-full justify-between truncate',
-                                  !field.value && 'font-normal'
+                  category === OfferingIncomeCreationCategory.InternalDonation)) ||
+                (type === OfferingIncomeCreationType.Offering &&
+                  subType === OfferingIncomeCreationSubType.SundaySchool &&
+                  category === OfferingIncomeCreationCategory.InternalDonation) ||
+                (type === OfferingIncomeCreationType.Offering &&
+                  subType === OfferingIncomeCreationSubType.YouthService &&
+                  category === OfferingIncomeCreationCategory.InternalDonation) && (
+                  <FormField
+                    control={form.control}
+                    name='memberId'
+                    render={({ field }) => (
+                      <FormItem className='mt-3'>
+                        <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
+                          Miembro
+                        </FormLabel>
+                        <FormDescription className='text-[13.5px] md:text-[14px]'>
+                          Seleccione un miembro para asignarlo al registro.
+                        </FormDescription>
+                        {disciplesQuery?.isFetching ||
+                          preachersQuery?.isFetching ||
+                          supervisorsQuery?.isFetching ||
+                          copastorsQuery?.isFetching ||
+                          pastorsQuery?.isFetching ? (
+                          <div className='pt-2 font-black text-[16px] text-center dark:text-gray-300 text-gray-500'>
+                            <span>Cargando información...</span>
+                          </div>
+                        ) : (
+                          <Popover open={isInputMemberOpen} onOpenChange={setIsInputMemberOpen}>
+                            <PopoverTrigger asChild>
+                              <FormControl className='text-[14px] md:text-[14px]'>
+                                <Button
+                                  disabled={isInputMemberDisabled}
+                                  variant='outline'
+                                  role='combobox'
+                                  className={cn(
+                                    'w-full justify-between truncate',
+                                    !field.value && 'font-normal'
+                                  )}
+                                >
+                                  {field.value
+                                    ? `${queryData?.find((member) => member.id === field.value)?.member?.firstNames} ${queryData?.find((member) => member.id === field.value)?.member?.lastNames}`
+                                    : 'Busque y seleccione un miembro'}
+                                  <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-5' />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent align='center' className='w-auto px-4 py-2'>
+                              <Command>
+                                {queryData?.length && queryData?.length > 0 ? (
+                                  <>
+                                    <CommandInput
+                                      placeholder='Busque un miembro...'
+                                      className='h-9 text-[14px]'
+                                    />
+                                    <CommandEmpty>Miembro no encontrado.</CommandEmpty>
+                                    <CommandGroup className='max-h-[200px] overflow-y-auto sm:overflow-y-hidden sm:h-auto'>
+                                      {queryData?.map((item) => (
+                                        <CommandItem
+                                          className='text-[14px]'
+                                          value={getFullNames({
+                                            firstNames: item.member?.firstNames ?? '',
+                                            lastNames: item.member?.lastNames ?? '',
+                                          })}
+                                          key={item.id}
+                                          onSelect={() => {
+                                            form.setValue('memberId', item.id);
+                                            setIsInputMemberOpen(false);
+                                          }}
+                                        >
+                                          {`${item?.member?.firstNames} ${item?.member?.lastNames}`}
+                                          <CheckIcon
+                                            className={cn(
+                                              'ml-auto h-4 w-4',
+                                              item.id === field.value ? 'opacity-100' : 'opacity-0'
+                                            )}
+                                          />
+                                        </CommandItem>
+                                      ))}
+                                    </CommandGroup>
+                                  </>
+                                ) : (
+                                  queryData?.length === 0 && (
+                                    <p className='text-[13.5px] md:text-[14.5px] font-medium text-red-500 text-center'>
+                                      ❌No hay miembros disponibles.
+                                    </p>
+                                  )
                                 )}
-                              >
-                                {field.value
-                                  ? `${queryData?.find((member) => member.id === field.value)?.member?.firstNames} ${queryData?.find((member) => member.id === field.value)?.member?.lastNames}`
-                                  : 'Busque y seleccione un miembro'}
-                                <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-5' />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent align='center' className='w-auto px-4 py-2'>
-                            <Command>
-                              {queryData?.length && queryData?.length > 0 ? (
-                                <>
-                                  <CommandInput
-                                    placeholder='Busque un miembro...'
-                                    className='h-9 text-[14px]'
-                                  />
-                                  <CommandEmpty>Miembro no encontrado.</CommandEmpty>
-                                  <CommandGroup className='max-h-[200px] overflow-y-auto sm:overflow-y-hidden sm:h-auto'>
-                                    {queryData?.map((item) => (
-                                      <CommandItem
-                                        className='text-[14px]'
-                                        value={getFullNames({
-                                          firstNames: item.member?.firstNames ?? '',
-                                          lastNames: item.member?.lastNames ?? '',
-                                        })}
-                                        key={item.id}
-                                        onSelect={() => {
-                                          form.setValue('memberId', item.id);
-                                          setIsInputMemberOpen(false);
-                                        }}
-                                      >
-                                        {`${item?.member?.firstNames} ${item?.member?.lastNames}`}
-                                        <CheckIcon
-                                          className={cn(
-                                            'ml-auto h-4 w-4',
-                                            item.id === field.value ? 'opacity-100' : 'opacity-0'
-                                          )}
-                                        />
-                                      </CommandItem>
-                                    ))}
-                                  </CommandGroup>
-                                </>
-                              ) : (
-                                queryData?.length === 0 && (
-                                  <p className='text-[13.5px] md:text-[14.5px] font-medium text-red-500 text-center'>
-                                    ❌No hay miembros disponibles.
-                                  </p>
-                                )
-                              )}
-                            </Command>
-                          </PopoverContent>
-                        </Popover>
-                      )}
-                      <FormMessage className='text-[13px]' />
-                    </FormItem>
-                  )}
-                />
-              )}
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                        )}
+                        <FormMessage className='text-[13px]' />
+                      </FormItem>
+                    )}
+                  />
+                )}
 
               {type === OfferingIncomeCreationType.Offering &&
                 subType === OfferingIncomeCreationSubType.FamilyGroup &&
@@ -1342,7 +1338,7 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                           <PopoverContent align='center' className='w-full max-w-[90vw] px-4 py-2'>
                             <Command>
                               {familyGroupsQuery?.data?.length &&
-                              familyGroupsQuery?.data?.length > 0 ? (
+                                familyGroupsQuery?.data?.length > 0 ? (
                                 <>
                                   <CommandInput
                                     placeholder='Busque un grupo familiar...'
@@ -1406,31 +1402,30 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                 (type === OfferingIncomeCreationType.Offering &&
                   subType === OfferingIncomeCreationSubType.ZonalEvangelism &&
                   category === OfferingIncomeCreationCategory.OfferingBox)) && (
-                <FormField
-                  control={form.control}
-                  name='zoneId'
-                  render={({ field }) => (
-                    <FormItem className='mt-3'>
-                      <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>Zona</FormLabel>
-                      <FormDescription className='text-[13.5px] md:text-[14px]'>
-                        Seleccione una zona para asignarlo al registro.
-                      </FormDescription>
-                      <Popover open={isInputZoneOpen} onOpenChange={setIsInputZoneOpen}>
-                        <PopoverTrigger asChild>
-                          <FormControl className='text-[14px] md:text-[14px]'>
-                            <Button
-                              disabled={isInputDisabled}
-                              variant='outline'
-                              role='combobox'
-                              className={cn(
-                                'w-full justify-between truncate',
-                                !field.value && 'text-slate-500 font-normal'
-                              )}
-                            >
-                              {field.value
-                                ? `${
-                                    zonesQuery?.data?.find((zone) => zone.id === field.value)
-                                      ?.zoneName
+                  <FormField
+                    control={form.control}
+                    name='zoneId'
+                    render={({ field }) => (
+                      <FormItem className='mt-3'>
+                        <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>Zona</FormLabel>
+                        <FormDescription className='text-[13.5px] md:text-[14px]'>
+                          Seleccione una zona para asignarlo al registro.
+                        </FormDescription>
+                        <Popover open={isInputZoneOpen} onOpenChange={setIsInputZoneOpen}>
+                          <PopoverTrigger asChild>
+                            <FormControl className='text-[14px] md:text-[14px]'>
+                              <Button
+                                disabled={isInputDisabled}
+                                variant='outline'
+                                role='combobox'
+                                className={cn(
+                                  'w-full justify-between truncate',
+                                  !field.value && 'text-slate-500 font-normal'
+                                )}
+                              >
+                                {field.value
+                                  ? `${zonesQuery?.data?.find((zone) => zone.id === field.value)
+                                    ?.zoneName
                                   } ~ ${getInitialFullNames({
                                     firstNames:
                                       zonesQuery?.data?.find((zone) => zone.id === field.value)
@@ -1439,60 +1434,60 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                                       zonesQuery?.data?.find((zone) => zone.id === field.value)
                                         ?.theirSupervisor?.lastNames ?? '',
                                   })}`
-                                : 'Busque y seleccione una zona'}
-                              <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-5' />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent align='center' className='w-auto px-4 py-2'>
-                          <Command>
-                            {zonesQuery?.data?.length && zonesQuery?.data?.length > 0 ? (
-                              <>
-                                <CommandInput
-                                  placeholder='Busque una zona'
-                                  className='h-9 text-[14px]'
-                                />
-                                <CommandEmpty>Zona no encontrada.</CommandEmpty>
-                                <CommandGroup className='max-h-[200px] overflow-y-auto sm:overflow-y-hidden sm:h-auto'>
-                                  {zonesQuery?.data?.map((zone) => (
-                                    <CommandItem
-                                      className='text-[14px]'
-                                      value={`${zone.zoneName} ${getInitialFullNames({ firstNames: zone?.theirSupervisor?.firstNames ?? '', lastNames: zone?.theirSupervisor?.lastNames ?? '' })}`}
-                                      key={zone.id}
-                                      onSelect={() => {
-                                        form.setValue('zoneId', zone.id);
-                                        setIsInputZoneOpen(false);
-                                      }}
-                                    >
-                                      {`${zone.zoneName} ~ ${getInitialFullNames({ firstNames: zone?.theirSupervisor?.firstNames ?? '', lastNames: zone?.theirSupervisor?.lastNames ?? '' })}`}
-                                      <CheckIcon
-                                        className={cn(
-                                          'ml-auto h-4 w-4',
-                                          zone.id === field.value ? 'opacity-100' : 'opacity-0'
-                                        )}
-                                      />
-                                    </CommandItem>
-                                  ))}
-                                </CommandGroup>
-                              </>
-                            ) : (
-                              zonesQuery?.data?.length === 0 && (
-                                <p className='text-[13.5px] md:text-[14.5px] font-medium text-red-500 text-center'>
-                                  ❌No hay zonas disponibles.
-                                </p>
-                              )
-                            )}
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
-                      <FormMessage className='text-[13px]' />
-                    </FormItem>
-                  )}
-                />
-              )}
+                                  : 'Busque y seleccione una zona'}
+                                <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-5' />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent align='center' className='w-auto px-4 py-2'>
+                            <Command>
+                              {zonesQuery?.data?.length && zonesQuery?.data?.length > 0 ? (
+                                <>
+                                  <CommandInput
+                                    placeholder='Busque una zona'
+                                    className='h-9 text-[14px]'
+                                  />
+                                  <CommandEmpty>Zona no encontrada.</CommandEmpty>
+                                  <CommandGroup className='max-h-[200px] overflow-y-auto sm:overflow-y-hidden sm:h-auto'>
+                                    {zonesQuery?.data?.map((zone) => (
+                                      <CommandItem
+                                        className='text-[14px]'
+                                        value={`${zone.zoneName} ${getInitialFullNames({ firstNames: zone?.theirSupervisor?.firstNames ?? '', lastNames: zone?.theirSupervisor?.lastNames ?? '' })}`}
+                                        key={zone.id}
+                                        onSelect={() => {
+                                          form.setValue('zoneId', zone.id);
+                                          setIsInputZoneOpen(false);
+                                        }}
+                                      >
+                                        {`${zone.zoneName} ~ ${getInitialFullNames({ firstNames: zone?.theirSupervisor?.firstNames ?? '', lastNames: zone?.theirSupervisor?.lastNames ?? '' })}`}
+                                        <CheckIcon
+                                          className={cn(
+                                            'ml-auto h-4 w-4',
+                                            zone.id === field.value ? 'opacity-100' : 'opacity-0'
+                                          )}
+                                        />
+                                      </CommandItem>
+                                    ))}
+                                  </CommandGroup>
+                                </>
+                              ) : (
+                                zonesQuery?.data?.length === 0 && (
+                                  <p className='text-[13.5px] md:text-[14.5px] font-medium text-red-500 text-center'>
+                                    ❌No hay zonas disponibles.
+                                  </p>
+                                )
+                              )}
+                            </Command>
+                          </PopoverContent>
+                        </Popover>
+                        <FormMessage className='text-[13px]' />
+                      </FormItem>
+                    )}
+                  />
+                )}
 
-              {subType === OfferingIncomeCreationSubType.SundayService &&
-                // subType === OfferingIncomeCreationSubType.SundaySchool
+              {(subType === OfferingIncomeCreationSubType.SundayService ||
+                subType === OfferingIncomeCreationSubType.SundaySchool) &&
                 category === OfferingIncomeCreationCategory.OfferingBox && (
                   <FormField
                     control={form.control}
@@ -1642,23 +1637,23 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                           }}
                           disabled={
                             (subType === OfferingIncomeCreationSubType.SundayService ||
-                              // subType === OfferingIncomeCreationSubType.SundaySchool ||
+                              subType === OfferingIncomeCreationSubType.SundaySchool ||
                               subType === OfferingIncomeCreationSubType.FamilyGroup) &&
-                            category === OfferingIncomeCreationCategory.OfferingBox
+                              category === OfferingIncomeCreationCategory.OfferingBox
                               ? (date) => {
+                                const today = new Date();
+                                const minDate = new Date('1900-01-01');
+                                const dayOfWeek = date.getDay();
+                                return dayOfWeek !== 0 || date > today || date < minDate;
+                              }
+                              : subType === OfferingIncomeCreationSubType.YouthService &&
+                                category === OfferingIncomeCreationCategory.OfferingBox
+                                ? (date) => {
                                   const today = new Date();
                                   const minDate = new Date('1900-01-01');
                                   const dayOfWeek = date.getDay();
-                                  return dayOfWeek !== 0 || date > today || date < minDate;
-                                }
-                              : // : subType === OfferingIncomeCreationSubType.YouthService &&
-                                //     category === OfferingIncomeCreationCategory.OfferingBox
-                                //   ? (date) => {
-                                //       const today = new Date();
-                                //       const minDate = new Date('1900-01-01');
-                                //       const dayOfWeek = date.getDay();
-                                //       return dayOfWeek !== 6 || date > today || date < minDate;
-                                //     }
+                                  return dayOfWeek !== 6 || date > today || date < minDate;
+                                } :
                                 (date) => date > new Date() || date < new Date('1900-01-01')
                           }
                           initialFocus
@@ -1697,11 +1692,10 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                       <FormControl className='text-[14px] md:text-[14px]'>
                         <Textarea
                           disabled={isInputDisabled}
-                          placeholder={`${
-                            type === OfferingIncomeCreationType.IncomeAdjustment
-                              ? `Detalles y/u observaciones sobre el ajuste de ingreso...`
-                              : 'Detalles y/u observaciones sobre el registro de la ofrenda...'
-                          }`}
+                          placeholder={`${type === OfferingIncomeCreationType.IncomeAdjustment
+                            ? `Detalles y/u observaciones sobre el ajuste de ingreso...`
+                            : 'Detalles y/u observaciones sobre el registro de la ofrenda...'
+                            }`}
                           {...field}
                         />
                       </FormControl>
@@ -1901,8 +1895,8 @@ export const OfferingIncomeCreatePage = (): JSX.Element => {
                 className={cn(
                   'w-full text-[14px]',
                   offeringIncomeCreationMutation?.isPending &&
-                    isProcessing &&
-                    'bg-emerald-500 hover:bg-emerald-500 disabled:opacity-100 disabled:md:text-[15px] text-white'
+                  isProcessing &&
+                  'bg-emerald-500 hover:bg-emerald-500 disabled:opacity-100 disabled:md:text-[15px] text-white'
                 )}
                 onClick={() => {
                   setTimeout(() => {

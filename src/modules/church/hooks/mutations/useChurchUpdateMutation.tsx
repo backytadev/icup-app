@@ -10,14 +10,12 @@ interface Options {
   dialogClose: () => void;
   scrollToTop: () => void;
   setIsInputDisabled: React.Dispatch<React.SetStateAction<boolean>>;
-  setIsSubmitButtonDisabled: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const useChurchUpdateMutation = ({
   dialogClose,
   scrollToTop,
   setIsInputDisabled,
-  setIsSubmitButtonDisabled,
 }: Options): UseMutationResult<ChurchResponse, ErrorResponse, UpdateChurchOptions, unknown> => {
   return useUpdateMutation({
     mutationFn: updateChurch,
@@ -26,12 +24,10 @@ export const useChurchUpdateMutation = ({
       scrollToTop();
       setTimeout(() => {
         dialogClose();
-        setIsInputDisabled(false);
       }, 800);
     },
     onError: () => {
       setIsInputDisabled(false);
-      setIsSubmitButtonDisabled(false);
     },
   });
 };

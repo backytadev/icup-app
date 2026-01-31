@@ -140,7 +140,7 @@ export const SidebarMobile = (): JSX.Element => {
 
               <SheetContent
                 side='left'
-                className='w-[300px] p-0 bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 border-slate-800/50'
+                className='w-[275px] p-0 bg-gradient-to-b from-slate-900 via-slate-900 to-slate-950 border-slate-800/50'
               >
                 {/* Sheet Header */}
                 <div className='p-5 border-b border-slate-800/50'>

@@ -1,5 +1,3 @@
-import { useEffect, useState } from 'react';
-
 import { type z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -35,8 +33,6 @@ interface GeneralSearchFormProps {
 }
 
 export const GeneralSearchForm = ({ onSearch }: GeneralSearchFormProps): JSX.Element => {
-  const [isDisabledSubmitButton, setIsDisabledSubmitButton] = useState<boolean>(true);
-
   const form = useForm<z.infer<typeof formSearchGeneralSchema>>({
     mode: 'onChange',
     resolver: zodResolver(formSearchGeneralSchema),
@@ -48,25 +44,17 @@ export const GeneralSearchForm = ({ onSearch }: GeneralSearchFormProps): JSX.Ele
     },
   });
 
+  //* Watchers
   const limit = form.watch('limit');
   const offset = form.watch('offset');
   const order = form.watch('order');
 
-  useEffect(() => {
-    if (limit !== '' && offset !== '' && order !== '') {
-      setIsDisabledSubmitButton(false);
-    }
-
-    if (limit === '' || offset === '' || order === '') {
-      setIsDisabledSubmitButton(true);
-    }
-  }, [limit, offset, order]);
+  //* Derived state - no useEffect needed
+  const isDisabledSubmitButton = !limit || !offset || !order;
 
   const handleSubmit = (formData: z.infer<typeof formSearchGeneralSchema>): void => {
     onSearch(formData);
-    setIsDisabledSubmitButton(true);
     form.reset();
-    setIsDisabledSubmitButton(false);
   };
 
   return (

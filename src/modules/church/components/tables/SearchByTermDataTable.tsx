@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useCallback } from 'react';
 
-import { Toaster, toast } from 'sonner';
+import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
 import { type ColumnDef } from '@tanstack/react-table';
 
 import {
@@ -26,7 +25,26 @@ import {
   ChurchSearchSelectOptionNames,
 } from '@/modules/church/enums';
 
+import { useConditionalListQuery, useManualQuery } from '@/shared/hooks';
 import { DataTable, type FilterConfig } from '@/shared/components/data-table';
+
+//* Static filter configuration - hoisted outside component
+const FILTERS_CONFIG: FilterConfig[] = [
+  {
+    columnId: 'abbreviatedChurchName',
+    placeholder: 'Nombre abreviado de iglesia...',
+    type: 'text',
+  },
+  {
+    columnId: 'district',
+    placeholder: 'Distrito...',
+    type: 'text',
+  },
+];
+
+//* Pre-built Maps for O(1) lookups
+const searchTypeNamesMap = new Map(Object.entries(ChurchSearchTypeNames));
+const searchSelectOptionNamesMap = new Map(Object.entries(ChurchSearchSelectOptionNames));
 
 interface DataTableProps<TData, TValue> {
   data: TData[];
@@ -42,28 +60,28 @@ export function SearchByTermChurchDataTable<TData, TValue>({
   searchParams,
   setSearchParams,
 }: DataTableProps<TData, TValue>): JSX.Element {
-  //* States
+  //* Store selectors
   const isTermFilterDisabled = useChurchStore(selectTermFilterDisabled);
   const setTermFilterDisabled = useChurchStore(selectSetTermFilterDisabled);
   const setTermSearchData = useChurchStore(selectSetTermSearchData);
-
-  const [isDisabledButton, setIsDisabledButton] = useState(false);
 
   //* Hooks (external libraries)
   const navigate = useNavigate();
 
   //* Queries
-  const query = useQuery({
+  const query = useConditionalListQuery({
     queryKey: ['churches-by-term', searchParams],
     queryFn: () => getChurchesByFilters(searchParams as ChurchQueryParams),
     enabled: !!searchParams,
-    retry: false,
   });
+
+  //* Derived state - no useState needed
+  const isDisabledButton = query?.isPending;
 
   //* Set data result query
   useEffect(() => {
     setTermSearchData(query.data);
-  }, [query?.isFetching]);
+  }, [query?.isFetching, query.data, setTermSearchData]);
 
   useEffect(() => {
     if (query.error?.message && query.error?.message !== 'Unauthorized') {
@@ -89,110 +107,79 @@ export function SearchByTermChurchDataTable<TData, TValue>({
         navigate('/');
       }, 3000);
     }
-  }, [query?.error]);
-
-  //* Disabled button while query is pending
-  useEffect(() => {
-    if (query?.isPending) {
-      setIsDisabledButton(true);
-      return;
-    }
-
-    setIsDisabledButton(false);
-  }, [query?.isPending]);
+  }, [query?.error, setSearchParams, setTermFilterDisabled, navigate]);
 
   //* Query Report and Event trigger
-  const generateReportQuery = useQuery({
+  const generateReportQuery = useManualQuery({
     queryKey: ['churches-report-by-term', searchParams],
     queryFn: () => getChurchesReportByFilters(searchParams as ChurchQueryParams),
-    retry: false,
-    enabled: false,
   });
 
-  const handleGenerateReport = (): void => {
+  const handleGenerateReport = useCallback((): void => {
     generateReportQuery.refetch();
-  };
+  }, [generateReportQuery]);
 
-  const handleNewSearch = (): void => {
+  const handleNewSearch = useCallback((): void => {
     setTermFilterDisabled(true);
-  };
+  }, [setTermFilterDisabled]);
 
-  //* Get search term display
-  const getSearchTermDisplay = (): string => {
+  //* Memoized search term display - O(1) lookups with Map
+  const searchTermDisplay = useMemo((): string => {
+    if (!dataForm?.searchType) return '';
+
     if (
-      dataForm?.searchType === ChurchSearchType.ChurchName ||
-      dataForm?.searchType === ChurchSearchType.Department ||
-      dataForm?.searchType === ChurchSearchType.Province ||
-      dataForm?.searchType === ChurchSearchType.Address ||
-      dataForm?.searchType === ChurchSearchType.UrbanSector ||
-      dataForm?.searchType === ChurchSearchType.District
+      dataForm.searchType === ChurchSearchType.ChurchName ||
+      dataForm.searchType === ChurchSearchType.Department ||
+      dataForm.searchType === ChurchSearchType.Province ||
+      dataForm.searchType === ChurchSearchType.Address ||
+      dataForm.searchType === ChurchSearchType.UrbanSector ||
+      dataForm.searchType === ChurchSearchType.District
     ) {
-      return dataForm?.inputTerm ?? '';
+      return dataForm.inputTerm ?? '';
     }
 
-    if (dataForm?.searchType === ChurchSearchType.FoundingDate) {
-      const fromDate = dataForm?.dateTerm?.from
-        ? dateFormatterToDDMMYYYY(dataForm?.dateTerm?.from)
+    if (dataForm.searchType === ChurchSearchType.FoundingDate) {
+      const fromDate = dataForm.dateTerm?.from
+        ? dateFormatterToDDMMYYYY(dataForm.dateTerm.from)
         : '';
-      const toDate = dataForm?.dateTerm?.to
-        ? ` - ${dateFormatterToDDMMYYYY(dataForm?.dateTerm?.to)}`
+      const toDate = dataForm.dateTerm?.to
+        ? ` - ${dateFormatterToDDMMYYYY(dataForm.dateTerm.to)}`
         : '';
       return `${fromDate}${toDate}`;
     }
 
-    if (dataForm?.searchType === ChurchSearchType.RecordStatus) {
-      return (
-        Object.entries(ChurchSearchSelectOptionNames).find(
-          ([key]) => key === dataForm?.selectTerm
-        )?.[1] ?? ''
-      );
+    if (dataForm.searchType === ChurchSearchType.RecordStatus) {
+      return searchSelectOptionNamesMap.get(dataForm.selectTerm ?? '') ?? '';
     }
 
     return '';
-  };
+  }, [dataForm]);
 
-  //* Get search type display
-  const getSearchTypeDisplay = (): string => {
-    return (
-      Object.entries(ChurchSearchTypeNames).find(
-        ([key]) => key === dataForm?.searchType
-      )?.[1] ?? ''
-    );
-  };
+  //* Memoized search type display - O(1) lookup with Map
+  const searchTypeDisplay = useMemo((): string => {
+    return searchTypeNamesMap.get(dataForm?.searchType ?? '') ?? '';
+  }, [dataForm?.searchType]);
 
-  //* Filter configuration
-  const filters: FilterConfig[] = [
-    {
-      columnId: 'abbreviatedChurchName',
-      placeholder: 'Nombre abreviado de iglesia...',
-      type: 'text',
-    },
-    {
-      columnId: 'district',
-      placeholder: 'Distrito...',
-      type: 'text',
-    },
-  ];
+  //* Memoized search metadata for table header
+  const searchMetadata = useMemo(() => {
+    if (isTermFilterDisabled) return undefined;
 
-  //* Build search metadata for table header
-  const searchMetadata = !isTermFilterDisabled
-    ? {
-        title: getSearchTypeDisplay(),
-        subtitle: getSearchTermDisplay(),
-        recordCount: query.data?.length ?? 0,
-      }
-    : undefined;
+    return {
+      title: searchTypeDisplay,
+      subtitle: searchTermDisplay,
+      recordCount: query.data?.length ?? 0,
+    };
+  }, [isTermFilterDisabled, searchTypeDisplay, searchTermDisplay, query.data?.length]);
 
   return (
     <div>
-      <Toaster position='top-center' richColors />
       <DataTable
         columns={columns}
         data={(query.data as TData[]) ?? []}
         isLoading={!!searchParams && query?.isPending}
         isFiltersDisabled={isTermFilterDisabled || isDisabledButton}
         searchMetadata={searchMetadata}
-        filters={filters}
+        filters={FILTERS_CONFIG}
         onNewSearch={handleNewSearch}
         onGenerateReport={handleGenerateReport}
         isGeneratingReport={generateReportQuery.isFetching}
