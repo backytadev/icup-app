@@ -32,6 +32,7 @@ export const SidebarCompact = (): JSX.Element => {
 
   const membershipPaths = [
     '/churches',
+    '/ministries',
     '/pastors',
     '/copastors',
     '/supervisors',
@@ -39,7 +40,6 @@ export const SidebarCompact = (): JSX.Element => {
     '/family-groups',
     '/disciples',
     '/zones',
-    '/ministries',
   ];
 
   const membershipItems = filteredItems.filter((i) => membershipPaths.includes(i.href));
@@ -51,7 +51,7 @@ export const SidebarCompact = (): JSX.Element => {
       {/* Header */}
       <div className='flex justify-between items-center md:flex-col md:pt-2 md:pb-4 md:px-2 md:gap-6'>
         <div id='logo' className='my-4 md:m-0 px-0 md:pt-4'>
-      
+
           <a
             href='/dashboard'
             className='inline-flex gap-x-5 items-center md:mt-0 pl-4 pr-3 md:py-4 md:px-0 md:flex md:flex-col-reverse md:gap-3'

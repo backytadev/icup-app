@@ -40,6 +40,13 @@ export const menuItems: MenuItem[] = [
     allowedRoles: [UserRole.SuperUser, UserRole.AdminUser, UserRole.User, UserRole.TreasurerUser],
   },
   {
+    title: 'Ministerio',
+    subTitle: 'Módulo Ministerio',
+    href: '/ministries',
+    Icon: FcOrganization,
+    allowedRoles: [UserRole.SuperUser, UserRole.AdminUser, UserRole.User, UserRole.TreasurerUser],
+  },
+  {
     title: 'Pastor',
     subTitle: 'Modulo Pastor',
     href: '/pastors',
@@ -108,13 +115,7 @@ export const menuItems: MenuItem[] = [
     Icon: FcReadingEbook,
     allowedRoles: [UserRole.SuperUser],
   },
-  {
-    title: 'Ministerio',
-    subTitle: 'Módulo Ministerio',
-    href: '/ministries',
-    Icon: FcOrganization,
-    allowedRoles: [UserRole.SuperUser, UserRole.AdminUser, UserRole.User, UserRole.TreasurerUser],
-  },
+
   {
     title: 'Métricas y Estadísticas',
     subTitle: 'Gráficos y estadísticas',

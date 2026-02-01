@@ -1,13 +1,10 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-extraneous-class */
-
 import { AxiosError } from 'axios';
 
 import { icupApi } from '@/core/api/icupApi';
 import { type UserRole } from '@/modules/user/enums/user-role.enum';
 import { MinistryType } from '@/modules/ministry/enums/ministry-type.enum';
 import { ChurchResponse } from '@/modules/church/types';
-import { MinistryResponse } from '@/modules/ministry/interfaces/ministry-response.interface';
+import { type MinistryResponse } from '@/modules/ministry/types';
 
 export interface LoginResponse {
   id: string;

@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-/* eslint-disable @typescript-eslint/explicit-function-return-type */
-
 import { useState } from 'react';
 
 import { cn } from '@/shared/lib/utils';
@@ -204,10 +200,10 @@ export function SidebarDrawer(): JSX.Element {
                   {(roles?.includes(UserRole.AdminUser) ||
                     roles?.includes(UserRole.SuperUser) ||
                     roles?.includes(UserRole.TreasurerUser)) && (
-                    <li className='text-[13px] md:text-[14px]'>
-                      Creación, actualización e inactivación.
-                    </li>
-                  )}
+                      <li className='text-[13px] md:text-[14px]'>
+                        Creación, actualización e inactivación.
+                      </li>
+                    )}
                   <li className='text-[13px] md:text-[14px]'>Búsqueda general.</li>
                   <li className='text-[13px] md:text-[14px]'>Búsqueda detallada.</li>
                   <li className='text-[13px] md:text-[14px]'>Generación de reportes.</li>

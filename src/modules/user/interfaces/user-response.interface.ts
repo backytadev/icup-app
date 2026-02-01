@@ -1,5 +1,5 @@
 import { ChurchResponse } from '@/modules/church/types';
-import { MinistryResponse } from '@/modules/ministry/interfaces/ministry-response.interface';
+import { type MinistryResponse } from '@/modules/ministry/types';
 import { type CreatedBy, type UpdatedBy } from '@/shared/interfaces/relations-response.interface';
 
 export interface UserResponse {

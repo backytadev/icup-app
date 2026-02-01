@@ -144,6 +144,7 @@ export const Sidebar = (): JSX.Element => {
 
   const membershipPaths = [
     '/churches',
+    '/ministries',
     '/pastors',
     '/copastors',
     '/supervisors',
@@ -151,7 +152,6 @@ export const Sidebar = (): JSX.Element => {
     '/family-groups',
     '/disciples',
     '/zones',
-    '/ministries',
   ];
 
   const membershipItems = filteredItems.filter((i) => membershipPaths.includes(i.href));

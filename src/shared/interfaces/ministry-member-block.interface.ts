@@ -1,4 +1,4 @@
-import { MinistryResponse } from '@/modules/ministry/interfaces/ministry-response.interface';
+import { type MinistryResponse } from '@/modules/ministry/types';
 
 export interface MinistryMemberBlock {
   churchId: string | null;

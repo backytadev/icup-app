@@ -12,7 +12,7 @@ import { UrbanSector } from '@/shared/enums/urban-sector.enum';
 import { RecordStatus } from '@/shared/enums/record-status.enum';
 import { RelationType } from '@/shared/enums/relation-type.enum';
 import { MaritalStatus } from '@/shared/enums/marital-status.enum';
-import { MinistryAssignmentSchema } from '@/modules/ministry/validations/ministry-assignment';
+import { MinistryAssignmentSchema } from '@/modules/ministry/schemas/ministry-assignment';
 
 export const copastorFormSchema = z
   .object({

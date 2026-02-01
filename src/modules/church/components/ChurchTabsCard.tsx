@@ -373,7 +373,7 @@ export const ChurchTabsCard = ({ data, id }: ChurchTabsCardProps): JSX.Element =
           </div>
         </TabsContent>
 
-        <TabsContent value='contact-info' className='mt-0'>
+        <TabsContent value='contact-info' className='mt-0 w-auto md:w-[680px]'>
           <div className='bg-white dark:bg-slate-900 border border-t-0 border-slate-200/80 dark:border-slate-700/50 rounded-b-xl'>
             <div className='p-4 md:p-5 space-y-5'>
               {/* Contact Info */}

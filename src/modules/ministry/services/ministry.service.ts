@@ -2,12 +2,12 @@ import { apiRequest } from '@/shared/helpers/api-request';
 import { RecordOrder } from '@/shared/enums/record-order.enum';
 import { openPdfInNewTab } from '@/shared/helpers/open-pdf-tab';
 
-import { type MinistryResponse } from '@/modules/ministry/interfaces/ministry-response.interface';
-import { type MinistryFormData } from '@/modules/ministry/interfaces/ministry-form-data.interface';
-import { type MinistryQueryParams } from '@/modules/ministry/interfaces/ministry-query-params.interface';
-
-import { buildMinistrySearchTerm } from '@/modules/ministry/builders/buildMinistrySearchTerm';
-import { buildMinistryQueryParams } from '@/modules/ministry/builders/buildMinistryQueryParam';
+import {
+  type MinistryResponse,
+  type MinistryFormData,
+  type MinistryQueryParams,
+} from '@/modules/ministry/types';
+import { buildMinistryQueryParams, buildMinistrySearchTerm } from '@/modules/ministry/utils';
 
 export interface UpdateMinistryOptions {
   id: string;
