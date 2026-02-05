@@ -1,4 +1,4 @@
-import { Hash, Building2, Phone, MapPin, Map, Info, Pencil, Power, UserPen } from 'lucide-react';
+import { Hash, Building2, Phone, MapPin, Map, Settings, UserPen } from 'lucide-react';
 import { type ColumnDef } from '@tanstack/react-table';
 
 import {
@@ -7,7 +7,6 @@ import {
   TextCell,
   NameCell,
   UpdatedByCell,
-  ActionCell,
 } from '@/shared/components/data-table';
 import { getInitialFullNames } from '@/shared/helpers/get-full-names.helper';
 
@@ -72,61 +71,35 @@ const updatedByColumn: ColumnDef<ChurchColumns, any> = {
   ),
 };
 
-//* Action columns
-const infoActionColumn: ColumnDef<ChurchColumns, any> = {
-  id: 'showInfo',
+//* Unified Actions column - combines Info, Update and Inactivate actions
+const actionsColumn: ColumnDef<ChurchColumns, any> = {
+  id: 'actions',
   accessorKey: 'id',
-  cell: (info) => (
-    <ActionCell id={info.row.original.id} value={info.getValue()}>
-      <ChurchInfoCard idRow={info.row.original.id} />
-    </ActionCell>
-  ),
+  cell: (info) => {
+    const id = info.row.original.id;
+    const value = info.getValue();
+
+    if (value === '-' || !id) {
+      return <span>-</span>;
+    }
+
+    return (
+      <div className='flex items-center justify-center gap-1'>
+        <ChurchInfoCard idRow={id} />
+        <ChurchUpdateCard idRow={id} />
+        <ChurchInactivateCard idRow={id} />
+      </div>
+    );
+  },
   header: () => (
     <ColumnHeader
-      label='Info'
-      icon={Info}
+      label='Acciones'
+      icon={Settings}
       sortable={false}
-      colorClass='text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300'
+      colorClass='text-slate-600 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
     />
   ),
 };
-
-const updateActionColumn: ColumnDef<ChurchColumns, any> = {
-  id: 'editInfo',
-  accessorKey: 'id',
-  cell: (info) => (
-    <ActionCell id={info.row.original.id} value={info.getValue()}>
-      <ChurchUpdateCard idRow={info.row.original.id} />
-    </ActionCell>
-  ),
-  header: () => (
-    <ColumnHeader
-      label='Actualizar'
-      icon={Pencil}
-      sortable={false}
-      colorClass='text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300'
-    />
-  ),
-};
-
-const inactivateActionColumn: ColumnDef<ChurchColumns, any> = {
-  id: 'inactivateRecord',
-  accessorKey: 'id',
-  cell: (info) => (
-    <ActionCell id={info.row.original.id} value={info.getValue()}>
-      <ChurchInactivateCard idRow={info.row.original.id} />
-    </ActionCell>
-  ),
-  header: () => (
-    <ColumnHeader
-      label='Inactivar'
-      icon={Power}
-      sortable={false}
-      colorClass='text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300'
-    />
-  ),
-};
-
 
 //* Aggregate base columns
 const baseColumns: Array<ColumnDef<ChurchColumns, any>> = [
@@ -137,22 +110,25 @@ const baseColumns: Array<ColumnDef<ChurchColumns, any>> = [
   urbanSectorColumn,
 ];
 
-
 //* Configuration columns
 export const churchInfoColumns: Array<ColumnDef<ChurchColumns, any>> = [
   ...baseColumns,
   updatedByColumn,
-  infoActionColumn,
+  actionsColumn,
 ];
 
 export const churchUpdateColumns: Array<ColumnDef<ChurchColumns, any>> = [
   ...baseColumns,
-  infoActionColumn,
-  updateActionColumn,
+  actionsColumn,
 ];
 
 export const churchInactivateColumns: Array<ColumnDef<ChurchColumns, any>> = [
   ...baseColumns,
-  infoActionColumn,
-  inactivateActionColumn,
+  actionsColumn,
+];
+
+export const churchUnifiedColumns: Array<ColumnDef<ChurchColumns, any>> = [
+  ...baseColumns,
+  // updatedByColumn,
+  actionsColumn,
 ];

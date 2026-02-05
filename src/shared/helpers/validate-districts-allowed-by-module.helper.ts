@@ -16,7 +16,7 @@ export const validateDistrictsAllowedByModule = (
   //* Disabled Districts
   if (
     path === '/churches/create' ||
-    path === '/churches/update' ||
+    path === '/churches/search' ||
     path === '/disciples/create' ||
     path === '/disciples/update' ||
     path === '/pastors/create' ||
@@ -37,7 +37,7 @@ export const validateDistrictsAllowedByModule = (
     };
   }
 
-  if (path === '/churches/create' || path === '/churches/update') {
+  if (path === '/churches/create' || path === '/churches/search') {
     return {
       districtsDataResult: [
         ...Object.values(DistrictNames).filter(

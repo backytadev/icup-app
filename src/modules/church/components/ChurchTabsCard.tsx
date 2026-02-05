@@ -105,15 +105,8 @@ export const ChurchTabsCard = ({ data, id }: ChurchTabsCardProps): JSX.Element =
     if (id) {
       const url = new URL(window.location.href);
 
-      if (url.pathname === '/churches/general-search')
-        url.pathname = `/churches/general-search/${id}/view`;
-
-      if (url.pathname === '/churches/search-by-term')
-        url.pathname = `/churches/search-by-term/${id}/view`;
-
-      if (url.pathname === '/churches/update') url.pathname = `/churches/update/${id}/view`;
-
-      if (url.pathname === '/churches/inactivate') url.pathname = `/churches/inactivate/${id}/view`;
+      if (url.pathname === '/churches/search')
+        url.pathname = `/churches/search/${id}/view`;
 
       window.history.replaceState({}, '', url);
     }

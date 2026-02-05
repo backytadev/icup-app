@@ -2,9 +2,6 @@ import { useEffect } from 'react';
 
 import { PiChurch } from 'react-icons/pi';
 import { FaSearch } from 'react-icons/fa';
-import { FaFilter } from 'react-icons/fa6';
-import { MdEditDocument } from 'react-icons/md';
-import { RiDeleteBin2Fill } from 'react-icons/ri';
 
 import { useAuthStore } from '@/stores/auth/auth.store';
 import { UserRole } from '@/modules/user/enums/user-role.enum';
@@ -28,7 +25,7 @@ export const ChurchOptionsPage = (): JSX.Element => {
       <div className='max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8'>
         <ChurchModuleHeader
           title='Modulo Iglesia'
-          description='Administra y gestiona la información de las iglesias y anexos registrados en el sistema.'
+          description='Administra y gestiona la informacion de las iglesias y anexos registrados en el sistema.'
         />
 
         <div
@@ -36,11 +33,11 @@ export const ChurchOptionsPage = (): JSX.Element => {
           style={{ animationDelay: '0.15s', animationFillMode: 'forwards' }}
         >
           <p className='text-lg text-slate-600 dark:text-slate-400 font-inter'>
-            Selecciona una opción para continuar
+            Selecciona una opcion para continuar
           </p>
         </div>
 
-        <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5 gap-6'>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto'>
           <ChurchOptionCard
             to='/churches/create'
             icon={<PiChurch />}
@@ -52,41 +49,12 @@ export const ChurchOptionsPage = (): JSX.Element => {
           />
 
           <ChurchOptionCard
-            to='/churches/general-search'
+            to='/churches/search'
             icon={<FaSearch />}
-            title='Consultar Iglesias'
-            description='Consultar registros de iglesias y anexos en general.'
+            title='Gestionar Iglesias'
+            description='Buscar, consultar, actualizar e inactivar registros de iglesias y anexos.'
             color='blue'
             delay='0.25s'
-          />
-
-          <ChurchOptionCard
-            to='/churches/search-by-term'
-            icon={<FaFilter />}
-            title='Buscar por Filtros'
-            description='Consultar registros de iglesias y anexos mediante filtros avanzados.'
-            color='sky'
-            delay='0.3s'
-          />
-
-          <ChurchOptionCard
-            to='/churches/update'
-            icon={<MdEditDocument />}
-            title='Actualizar Iglesia'
-            description='Modificar datos del registro de una iglesia o anexo.'
-            color='orange'
-            disabled={!hasFullAccess}
-            delay='0.35s'
-          />
-
-          <ChurchOptionCard
-            to='/churches/inactivate'
-            icon={<RiDeleteBin2Fill />}
-            title='Inactivar Iglesia'
-            description='Inactivar registro de una iglesia o anexo del sistema.'
-            color='red'
-            disabled={!hasFullAccess}
-            delay='0.4s'
           />
         </div>
 

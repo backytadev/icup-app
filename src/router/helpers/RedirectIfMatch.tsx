@@ -4,17 +4,20 @@ export const RedirectIfMatch = (): JSX.Element => {
   const location = useLocation();
 
   // If starts with church
-  if (location.pathname.startsWith('/churches/general-search/')) {
-    return <Navigate to='/churches/general-search' />;
+  if (location.pathname.startsWith('/churches/search/')) {
+    return <Navigate to='/churches/search' />;
   }
-  if (location.pathname.startsWith('/churches/search-by-term/')) {
-    return <Navigate to='/churches/search-by-term' />;
+  if (location.pathname.startsWith('/churches/general-search')) {
+    return <Navigate to='/churches/search' />;
   }
-  if (location.pathname.startsWith('/churches/update/')) {
-    return <Navigate to='/churches/update' />;
+  if (location.pathname.startsWith('/churches/search-by-term')) {
+    return <Navigate to='/churches/search' />;
   }
-  if (location.pathname.startsWith('/churches/inactivate/')) {
-    return <Navigate to='/churches/inactivate' />;
+  if (location.pathname.startsWith('/churches/update')) {
+    return <Navigate to='/churches/search' />;
+  }
+  if (location.pathname.startsWith('/churches/inactivate')) {
+    return <Navigate to='/churches/search' />;
   }
 
   // If starts with ministry

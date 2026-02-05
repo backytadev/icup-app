@@ -145,7 +145,7 @@ export const useChurchForm = (options: UseChurchFormOptions): UseChurchFormRetur
     if (mode === 'update' && updateId) {
       const originalUrl = window.location.href;
       const url = new URL(window.location.href);
-      url.pathname = `/churches/update/${updateId}/edit`;
+      url.pathname = `/churches/search/${updateId}/edit`;
       window.history.replaceState({}, '', url);
 
       return () => {
