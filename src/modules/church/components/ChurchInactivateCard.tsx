@@ -22,7 +22,6 @@ import { useChurchInactivationMutation } from '@/modules/church/hooks';
 import { churchInactivationFormSchema } from '@/modules/church/schemas';
 
 import { cn } from '@/shared/lib/utils';
-import { BUTTON_VARIANTS, TRIGGER_BUTTON_BASE } from '@/shared/constants/styles';
 
 import {
   Form,
