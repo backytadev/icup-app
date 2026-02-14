@@ -1,7 +1,7 @@
-import { type UseMutationResult } from '@tanstack/react-query';
+import { type UseMutationResult, useQueryClient } from '@tanstack/react-query';
 
 import { type ErrorResponse } from '@/shared/interfaces/error-response.interface';
-import { useInactivateMutation } from '@/shared/hooks';
+import { useMutationWrapper } from '@/shared/hooks';
 
 import { inactivateMinistry } from '@/modules/ministry/services/ministry.service';
 
@@ -24,23 +24,39 @@ export const useMinistryInactivationMutation = ({
   setIsButtonDisabled,
   setIsSelectInputDisabled,
 }: Options): UseMutationResult<void, ErrorResponse, InactivateMinistryOptions, unknown> => {
-  return useInactivateMutation({
+  const queryClient = useQueryClient();
+
+  return useMutationWrapper({
     mutationFn: inactivateMinistry,
-    invalidateQueries: [['ministries-by-term']],
-    onSuccess: () => {
-      scrollToTop();
-      setTimeout(() => {
-        setIsCardOpen(false);
-      }, 500);
-      setTimeout(() => {
+    messages: { success: 'Ministerio eliminado correctamente.' },
+    successDelay: 2000,
+    errorDelay: 2000,
+    callbacks: {
+      onSuccessCallback: () => {
+        //* Invalidate all ministry-related queries
+        setTimeout(() => {
+          queryClient.invalidateQueries({
+            predicate: (query) => {
+              const queryKey = query.queryKey[0];
+              return typeof queryKey === 'string' && queryKey.includes('ministr');
+            }
+          });
+        }, 700);
+
+        scrollToTop();
+        setTimeout(() => {
+          setIsCardOpen(false);
+        }, 500);
+        setTimeout(() => {
+          setIsButtonDisabled(false);
+          setIsSelectInputDisabled(false);
+        }, 600);
+      },
+      onErrorCallback: () => {
+        setIsCardOpen(true);
         setIsButtonDisabled(false);
         setIsSelectInputDisabled(false);
-      }, 600);
-    },
-    onError: () => {
-      setIsCardOpen(true);
-      setIsButtonDisabled(false);
-      setIsSelectInputDisabled(false);
+      },
     },
   });
 };

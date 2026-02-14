@@ -13,7 +13,7 @@ import {
 } from '@/shared/components/ui/alert-dialog';
 
 import { getInitialFullNames } from '@/shared/helpers/get-full-names.helper';
-import { PastorResponse } from '@/modules/pastor/interfaces/pastor-response.interface';
+import { type PastorResponse } from '@/modules/pastor/types';
 import { CopastorResponse } from '@/modules/copastor/interfaces/copastor-response.interface';
 import { CopastorFormData } from '@/modules/copastor/interfaces/copastor-form-data.interface';
 

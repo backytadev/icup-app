@@ -8,17 +8,8 @@ import { LazyElement } from '@/shared/components/lazy/LazyElements';
 const LazyOfferingIncomeCreatePage = lazy(
   () => import('@/modules/offering/income/pages/OfferingIncomeCreatePage')
 );
-const LazyOfferingIncomeUpdatePage = lazy(
-  () => import('@/modules/offering/income/pages/OfferingIncomeUpdatePage')
-);
-const LazyOfferingIncomeInactivatePage = lazy(
-  () => import('@/modules/offering/income/pages/OfferingIncomeInactivatePage')
-);
-const LazyOfferingsIncomeSearchPageByTerm = lazy(
-  () => import('@/modules/offering/income/pages/OfferingsIncomeSearchPageByTerm')
-);
-const LazyOfferingsIncomeGeneralSearchPage = lazy(
-  () => import('@/modules/offering/income/pages/OfferingsIncomeGeneralSearchPage')
+const LazyOfferingIncomeSearchPage = lazy(
+  () => import('@/modules/offering/income/pages/OfferingIncomeSearchPage')
 );
 const LazyOfferingIncomeOptionsPage = lazy(
   () => import('@/modules/offering/income/pages/OfferingIncomeOptionsPage')
@@ -42,34 +33,10 @@ export const OfferingIncomeChildrenRoutes: RouteObject[] = [
     ),
   },
   {
-    path: 'general-search',
+    path: 'search',
     element: (
       <LazyElement>
-        <LazyOfferingsIncomeGeneralSearchPage />
-      </LazyElement>
-    ),
-  },
-  {
-    path: 'search-by-term',
-    element: (
-      <LazyElement>
-        <LazyOfferingsIncomeSearchPageByTerm />
-      </LazyElement>
-    ),
-  },
-  {
-    path: 'update',
-    element: (
-      <LazyElement>
-        <LazyOfferingIncomeUpdatePage />
-      </LazyElement>
-    ),
-  },
-  {
-    path: 'inactivate',
-    element: (
-      <LazyElement>
-        <LazyOfferingIncomeInactivatePage />
+        <LazyOfferingIncomeSearchPage />
       </LazyElement>
     ),
   },

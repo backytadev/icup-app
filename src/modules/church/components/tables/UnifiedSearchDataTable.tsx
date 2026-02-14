@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useCallback } from 'react';
 
-import { toast, Toaster } from 'sonner';
+import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { type ColumnDef } from '@tanstack/react-table';
 
@@ -228,7 +228,6 @@ export function UnifiedChurchSearchDataTable<TData, TValue>({
 
   return (
     <div>
-      <Toaster position='top-center' richColors />
       <DataTable
         columns={columns}
         data={(activeQuery.data as TData[]) ?? []}

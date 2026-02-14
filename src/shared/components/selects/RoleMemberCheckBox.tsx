@@ -72,7 +72,7 @@ export const RoleMemberCheckBox = ({
                                 checked
                                   ? (updatedRoles = field.value ? [...field.value, role] : [role])
                                   : (updatedRoles =
-                                      field.value?.filter((value) => value !== role) ?? []);
+                                      field.value?.filter((value: MemberRole) => value !== role) ?? []);
 
                                 field.onChange(updatedRoles);
                               }}

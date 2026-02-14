@@ -1,14 +1,14 @@
 import { apiRequest } from '@/shared/helpers/api-request';
 
-import { buildUserSearchTerm } from '@/modules/user/builders/buildUserSearchTerm';
-import { buildUserQueryParams } from '@/modules/user/builders/buildUserQueryParam';
+import { buildUserSearchTerm } from '@/modules/user/utils/buildUserSearchTerm';
+import { buildUserQueryParams } from '@/modules/user/utils/buildUserQueryParam';
 
 import { openPdfInNewTab } from '@/shared/helpers/open-pdf-tab';
 
-import { type UserResponse } from '@/modules/user/interfaces/user-response.interface';
-import { type UserFormData } from '@/modules/user/interfaces/user-form-data.interface';
-import { type UserQueryParams } from '@/modules/user/interfaces/user-query-params.interface';
-import { type UserPasswordUpdateFormData } from '@/modules/user/interfaces/user-password-update-form-data.interface';
+import { type UserResponse } from '@/modules/user/types/user-response.interface';
+import { type UserFormData } from '@/modules/user/types/user-form-data.interface';
+import { type UserQueryParams } from '@/modules/user/types/user-query-params.interface';
+import { type UserPasswordUpdateFormData } from '@/modules/user/types/user-password-update-form-data.interface';
 
 export interface UpdateUserOptions {
   id: string;

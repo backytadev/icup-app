@@ -2,7 +2,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { type z } from 'zod';
 import { useForm } from 'react-hook-form';
-import { MdDeleteForever } from 'react-icons/md';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import {
@@ -21,7 +20,6 @@ import { useMinistryInactivationMutation } from '@/modules/ministry/hooks';
 import { ministryInactivationFormSchema } from '@/modules/ministry/schemas/ministry-inactivation-form-schema';
 
 import { cn } from '@/shared/lib/utils';
-import { BUTTON_VARIANTS, TRIGGER_BUTTON_BASE, ICON_SIZE } from '@/shared/constants/styles';
 
 import {
   Form,
@@ -47,6 +45,7 @@ import {
   DialogDescription,
 } from '@/shared/components/ui/dialog';
 import { Button } from '@/shared/components/ui/button';
+import { Trash2 } from 'lucide-react';
 
 interface MinistryInactivateCardProps {
   idRow: string;
@@ -129,12 +128,14 @@ export const MinistryInactivateCard = ({ idRow }: MinistryInactivateCardProps): 
     <Dialog open={isCardOpen} onOpenChange={setIsCardOpen}>
       <DialogTrigger asChild>
         <Button
+          variant='ghost'
+          size='icon'
           onClick={() => {
             form.reset();
           }}
-          className={cn(TRIGGER_BUTTON_BASE, BUTTON_VARIANTS.delete)}
+          className='h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/20'
         >
-          <MdDeleteForever className={ICON_SIZE} />
+          <Trash2 className='h-4 w-4' />
         </Button>
       </DialogTrigger>
       <DialogContent

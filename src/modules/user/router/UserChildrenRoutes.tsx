@@ -5,14 +5,9 @@ import { RouteObject } from 'react-router-dom';
 import { LazyElement } from '@/shared/components/lazy/LazyElements';
 
 //! Lazy load children routes
-const LazyUsersGeneralSearchPage = lazy(
-  () => import('@/modules/user/pages/UsersGeneralSearchPage')
-);
+const LazyUserSearchPage = lazy(() => import('@/modules/user/pages/UserSearchPage'));
 const LazyUserCreatePage = lazy(() => import('@/modules/user/pages/UserCreatePage'));
-const LazyUserUpdatePage = lazy(() => import('@/modules/user/pages/UserUpdatePage'));
 const LazyUserOptionsPage = lazy(() => import('@/modules/user/pages/UserOptionsPage'));
-const LazyUserInactivatePage = lazy(() => import('@/modules/user/pages/UserInactivatePage'));
-const LazyUsersSearchPageByTerm = lazy(() => import('@/modules/user/pages/UsersSearchPageByTerm'));
 
 export const UserChildrenRoutes: RouteObject[] = [
   {
@@ -32,34 +27,10 @@ export const UserChildrenRoutes: RouteObject[] = [
     ),
   },
   {
-    path: 'general-search',
+    path: 'search',
     element: (
       <LazyElement>
-        <LazyUsersGeneralSearchPage />
-      </LazyElement>
-    ),
-  },
-  {
-    path: 'search-by-term',
-    element: (
-      <LazyElement>
-        <LazyUsersSearchPageByTerm />
-      </LazyElement>
-    ),
-  },
-  {
-    path: 'update',
-    element: (
-      <LazyElement>
-        <LazyUserUpdatePage />
-      </LazyElement>
-    ),
-  },
-  {
-    path: 'inactivate',
-    element: (
-      <LazyElement>
-        <LazyUserInactivatePage />
+        <LazyUserSearchPage />
       </LazyElement>
     ),
   },

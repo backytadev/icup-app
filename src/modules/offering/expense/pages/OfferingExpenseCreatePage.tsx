@@ -47,7 +47,9 @@ import { useImagesUploadMutation } from '@/modules/offering/shared/hooks/useImag
 import { type FilesProps } from '@/modules/offering/shared/interfaces/files-props.interface';
 import { type RejectionProps } from '@/modules/offering/shared/interfaces/rejected-props.interface';
 
-import { PageTitle } from '@/shared/components/page-header/PageTitle';
+import { GiReceiveMoney } from 'react-icons/gi';
+
+import { ModuleHeader } from '@/shared/components/page-header/ModuleHeader';
 
 import {
   Form,
@@ -213,158 +215,245 @@ export const OfferingExpenseCreatePage = (): JSX.Element => {
   };
 
   return (
-    <div className='animate-fadeInPage'>
-      <PageTitle className='text-red-600'>Modulo de Salida</PageTitle>
+    <div className='min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950'>
+      <Toaster position='top-center' richColors />
 
-      <h1 className='text-left leading-8 pb-[8px] pt-2 px-4 sm:px-5 2xl:px-10 font-sans font-bold text-green-500 text-[1.6rem] sm:text-[1.75rem] md:text-[1.85rem] lg:text-[1.9rem] xl:text-[2.1rem] 2xl:text-4xl'>
-        Crear nueva salida de ofrenda
-      </h1>
-      <p className='dark:text-slate-300 text-left font-sans font-bold pl-5 pr-6 sm:pl-7 2xl:px-14 text-[13.5px] md:text-[15px] xl:text-base'>
-        Por favor llena los siguientes datos para crear un nuevo registro de salida.
-      </p>
+      <div className='max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6'>
+        <ModuleHeader
+          title='Registrar Nueva Salida'
+          description='Completa el formulario para crear un nuevo registro de salida de ofrenda en el sistema.'
+          titleColor='red'
+          badge='Ofrenda'
+          badgeColor='amber'
+          icon={GiReceiveMoney}
+          accentColor='amber'
+        />
 
-      <div className='flex flex-col items-center pb-8 gap-y-8 md:gap-y-12 px-6 py-4 sm:px-12 sm:py-8 2xl:px-[5rem]  2xl:py-8'>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleSubmit)}
-            className='w-full flex flex-col md:grid md:grid-cols-2 gap-x-8 gap-y-4'
-          >
-            <div className='md:col-start-1 md:col-end-2'>
-              <FormField
-                control={form.control}
-                name='churchId'
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                      Iglesia
-                    </FormLabel>
-                    <FormDescription className='text-[13.5px] md:text-[14px]'>
-                      Selecciona una iglesia para asignarla al registro.
-                    </FormDescription>
-                    <Popover open={isInputChurchOpen} onOpenChange={setIsInputChurchOpen}>
-                      <PopoverTrigger asChild>
-                        <FormControl className='text-[14px] md:text-[14px]'>
-                          <Button
-                            disabled={isInputDisabled}
-                            variant='outline'
-                            role='combobox'
-                            className={cn(
-                              'w-full justify-between',
-                              !field.value && 'text-slate-500 font-normal'
-                            )}
-                          >
-                            {field.value
-                              ? churchesQuery?.data?.find((zone) => zone.id === field.value)
-                                  ?.abbreviatedChurchName
-                              : 'Busque y seleccione una iglesia'}
-                            <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-5' />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent align='center' className='w-auto px-4 py-2'>
-                        <Command>
-                          {churchesQuery?.data?.length && churchesQuery?.data?.length > 0 ? (
-                            <>
-                              <CommandInput
-                                placeholder='Busque una iglesia'
-                                className='h-9 text-[14px]'
-                              />
-                              <CommandEmpty>Iglesia no encontrada.</CommandEmpty>
-                              <CommandGroup className='max-h-[200px] h-auto'>
-                                {churchesQuery?.data?.map((church) => (
-                                  <CommandItem
-                                    className='text-[14px]'
-                                    value={church.abbreviatedChurchName}
-                                    key={church.id}
-                                    onSelect={() => {
-                                      form.setValue('churchId', church.id);
-                                      setIsInputChurchOpen(false);
-                                    }}
-                                  >
-                                    {church.abbreviatedChurchName}
-                                    <CheckIcon
-                                      className={cn(
-                                        'ml-auto h-4 w-4',
-                                        church.id === field.value ? 'opacity-100' : 'opacity-0'
-                                      )}
-                                    />
-                                  </CommandItem>
-                                ))}
-                              </CommandGroup>
-                            </>
-                          ) : (
-                            churchesQuery?.data?.length === 0 && (
-                              <p className='text-[13.5px] md:text-[14.5px] font-medium text-red-500 text-center'>
-                                ❌No hay iglesias disponibles.
-                              </p>
-                            )
-                          )}
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage className='text-[13px]' />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name='type'
-                render={({ field }) => {
-                  return (
-                    <FormItem className='mt-3'>
-                      <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>Tipo</FormLabel>
+        <div className='flex flex-col items-center pb-8 gap-y-8 md:gap-y-12 px-6 py-4 sm:px-12 sm:py-8 2xl:px-[5rem] 2xl:py-8'>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleSubmit)}
+              className='w-full flex flex-col md:grid md:grid-cols-2 gap-x-8 gap-y-4'
+            >
+              <div className='md:col-start-1 md:col-end-2'>
+                <FormField
+                  control={form.control}
+                  name='churchId'
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
+                        Iglesia
+                      </FormLabel>
                       <FormDescription className='text-[13.5px] md:text-[14px]'>
-                        Selecciona un tipo de gasto para el registro.
+                        Selecciona una iglesia para asignarla al registro.
                       </FormDescription>
-                      <Select
-                        onOpenChange={() => {
-                          form.resetField('subType', {
-                            keepError: true,
-                          });
-                        }}
-                        disabled={isInputDisabled}
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <FormControl className='text-[14px] md:text-[14px]'>
-                          <SelectTrigger>
-                            {field.value ? (
-                              <SelectValue placeholder='Selecciona una tipo de egreso o gasto' />
+                      <Popover open={isInputChurchOpen} onOpenChange={setIsInputChurchOpen}>
+                        <PopoverTrigger asChild>
+                          <FormControl className='text-[14px] md:text-[14px]'>
+                            <Button
+                              disabled={isInputDisabled}
+                              variant='outline'
+                              role='combobox'
+                              className={cn(
+                                'w-full justify-between',
+                                !field.value && 'text-slate-500 font-normal'
+                              )}
+                            >
+                              {field.value
+                                ? churchesQuery?.data?.find((zone) => zone.id === field.value)
+                                  ?.abbreviatedChurchName
+                                : 'Busque y seleccione una iglesia'}
+                              <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-5' />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent align='center' className='w-auto px-4 py-2'>
+                          <Command>
+                            {churchesQuery?.data?.length && churchesQuery?.data?.length > 0 ? (
+                              <>
+                                <CommandInput
+                                  placeholder='Busque una iglesia'
+                                  className='h-9 text-[14px]'
+                                />
+                                <CommandEmpty>Iglesia no encontrada.</CommandEmpty>
+                                <CommandGroup className='max-h-[200px] h-auto'>
+                                  {churchesQuery?.data?.map((church) => (
+                                    <CommandItem
+                                      className='text-[14px]'
+                                      value={church.abbreviatedChurchName}
+                                      key={church.id}
+                                      onSelect={() => {
+                                        form.setValue('churchId', church.id);
+                                        setIsInputChurchOpen(false);
+                                      }}
+                                    >
+                                      {church.abbreviatedChurchName}
+                                      <CheckIcon
+                                        className={cn(
+                                          'ml-auto h-4 w-4',
+                                          church.id === field.value ? 'opacity-100' : 'opacity-0'
+                                        )}
+                                      />
+                                    </CommandItem>
+                                  ))}
+                                </CommandGroup>
+                              </>
                             ) : (
-                              'Selecciona una tipo de egreso o gasto'
+                              churchesQuery?.data?.length === 0 && (
+                                <p className='text-[13.5px] md:text-[14.5px] font-medium text-red-500 text-center'>
+                                  ❌No hay iglesias disponibles.
+                                </p>
+                              )
                             )}
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {Object.entries(OfferingExpenseSearchTypeNames).map(
-                            ([key, value]) =>
-                              key !== OfferingExpenseSearchType.RecordStatus && (
+                          </Command>
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage className='text-[13px]' />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name='type'
+                  render={({ field }) => {
+                    return (
+                      <FormItem className='mt-3'>
+                        <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>Tipo</FormLabel>
+                        <FormDescription className='text-[13.5px] md:text-[14px]'>
+                          Selecciona un tipo de gasto para el registro.
+                        </FormDescription>
+                        <Select
+                          onOpenChange={() => {
+                            form.resetField('subType', {
+                              keepError: true,
+                            });
+                          }}
+                          disabled={isInputDisabled}
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        >
+                          <FormControl className='text-[14px] md:text-[14px]'>
+                            <SelectTrigger>
+                              {field.value ? (
+                                <SelectValue placeholder='Selecciona una tipo de egreso o gasto' />
+                              ) : (
+                                'Selecciona una tipo de egreso o gasto'
+                              )}
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {Object.entries(OfferingExpenseSearchTypeNames).map(
+                              ([key, value]) =>
+                                key !== OfferingExpenseSearchType.RecordStatus && (
+                                  <SelectItem key={key} value={key}>
+                                    {value}
+                                  </SelectItem>
+                                )
+                            )}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage className='text-[13px]' />
+                      </FormItem>
+                    );
+                  }}
+                />
+
+                {type !== OfferingExpenseSearchType.ExpensesAdjustment && (
+                  <FormField
+                    control={form.control}
+                    name='subType'
+                    render={({ field }) => {
+                      return (
+                        <FormItem className='mt-3'>
+                          <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
+                            Sub-Tipo
+                          </FormLabel>
+                          <FormDescription className='text-[13.5px] md:text-[14px]'>
+                            Asignar un sub-tipo de gasto al registro.
+                          </FormDescription>
+                          <Select
+                            disabled={isInputDisabled}
+                            value={field.value}
+                            onValueChange={field.onChange}
+                          >
+                            <FormControl className='text-[14px] md:text-[14px]'>
+                              <SelectTrigger>
+                                {field.value ? (
+                                  <SelectValue placeholder='Selecciona una sub-tipo de gasto' />
+                                ) : (
+                                  'Selecciona una sub-tipo de gasto'
+                                )}
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              {Object.entries(
+                                type === OfferingExpenseSearchType.OperationalExpenses
+                                  ? SubTypeNamesOfferingExpenseSearchByOperativeExpenses
+                                  : type === OfferingExpenseSearchType.PlaningEventsExpenses
+                                    ? SubTypeNamesOfferingExpenseSearchByPlaningEventsExpenses
+                                    : type === OfferingExpenseSearchType.DecorationExpenses
+                                      ? SubTypeNamesOfferingExpenseSearchByDecorationExpenses
+                                      : type ===
+                                        OfferingExpenseSearchType.EquipmentAndTechnologyExpenses
+                                        ? SubTypeNamesOfferingExpenseSearchByEquipmentAndTechnologyExpenses
+                                        : type ===
+                                          OfferingExpenseSearchType.MaintenanceAndRepairExpenses
+                                          ? SubTypeNamesOfferingExpenseSearchByMaintenanceAndRepairExpenses
+                                          : type === OfferingExpenseSearchType.SuppliesExpenses
+                                            ? SubTypeNamesOfferingExpenseSearchBySuppliesExpenses
+                                            : SubTypeNamesOfferingExpenseSearchByOtherExpenses
+                              ).map(([key, value]) => (
                                 <SelectItem key={key} value={key}>
                                   {value}
                                 </SelectItem>
-                              )
-                          )}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage className='text-[13px]' />
-                    </FormItem>
-                  );
-                }}
-              />
+                              ))}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage className='text-[13px]' />
+                        </FormItem>
+                      );
+                    }}
+                  />
+                )}
 
-              {type !== OfferingExpenseSearchType.ExpensesAdjustment && (
                 <FormField
                   control={form.control}
-                  name='subType'
+                  name='amount'
                   render={({ field }) => {
                     return (
                       <FormItem className='mt-3'>
                         <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                          Sub-Tipo
+                          Monto
                         </FormLabel>
                         <FormDescription className='text-[13.5px] md:text-[14px]'>
-                          Asignar un sub-tipo de gasto al registro.
+                          Digita la cantidad del gasto realizado.
+                        </FormDescription>
+                        <FormControl className='text-[14px] md:text-[14px]'>
+                          <Input
+                            disabled={isInputDisabled}
+                            placeholder='Monto total del gasto realizado'
+                            type='text'
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className='text-[13px]' />
+                      </FormItem>
+                    );
+                  }}
+                />
+
+                <FormField
+                  control={form.control}
+                  name='currency'
+                  render={({ field }) => {
+                    return (
+                      <FormItem className='mt-3'>
+                        <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
+                          Divisa / Moneda
+                        </FormLabel>
+                        <FormDescription className='text-[13.5px] md:text-[14px]'>
+                          Asignar un tipo de divisa o moneda al registro.
                         </FormDescription>
                         <Select
                           disabled={isInputDisabled}
@@ -374,30 +463,14 @@ export const OfferingExpenseCreatePage = (): JSX.Element => {
                           <FormControl className='text-[14px] md:text-[14px]'>
                             <SelectTrigger>
                               {field.value ? (
-                                <SelectValue placeholder='Selecciona una sub-tipo de gasto' />
+                                <SelectValue placeholder='Selecciona una tipo de divisa o moneda' />
                               ) : (
-                                'Selecciona una sub-tipo de gasto'
+                                'Selecciona una tipo de divisa o moneda'
                               )}
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
-                            {Object.entries(
-                              type === OfferingExpenseSearchType.OperationalExpenses
-                                ? SubTypeNamesOfferingExpenseSearchByOperativeExpenses
-                                : type === OfferingExpenseSearchType.PlaningEventsExpenses
-                                  ? SubTypeNamesOfferingExpenseSearchByPlaningEventsExpenses
-                                  : type === OfferingExpenseSearchType.DecorationExpenses
-                                    ? SubTypeNamesOfferingExpenseSearchByDecorationExpenses
-                                    : type ===
-                                        OfferingExpenseSearchType.EquipmentAndTechnologyExpenses
-                                      ? SubTypeNamesOfferingExpenseSearchByEquipmentAndTechnologyExpenses
-                                      : type ===
-                                          OfferingExpenseSearchType.MaintenanceAndRepairExpenses
-                                        ? SubTypeNamesOfferingExpenseSearchByMaintenanceAndRepairExpenses
-                                        : type === OfferingExpenseSearchType.SuppliesExpenses
-                                          ? SubTypeNamesOfferingExpenseSearchBySuppliesExpenses
-                                          : SubTypeNamesOfferingExpenseSearchByOtherExpenses
-                            ).map(([key, value]) => (
+                            {Object.entries(CurrencyTypeNames).map(([key, value]) => (
                               <SelectItem key={key} value={key}>
                                 {value}
                               </SelectItem>
@@ -409,323 +482,261 @@ export const OfferingExpenseCreatePage = (): JSX.Element => {
                     );
                   }}
                 />
+
+                <FormField
+                  control={form.control}
+                  name='date'
+                  render={({ field }) => (
+                    <FormItem className='mt-3'>
+                      <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>Fecha</FormLabel>
+                      <FormDescription className='text-[13.5px] md:text-[14px]'>
+                        Selecciona la fecha de gasto o compra realizada.
+                      </FormDescription>
+                      <Popover open={isInputDateOpen} onOpenChange={setIsInputDateOpen}>
+                        <PopoverTrigger asChild>
+                          <FormControl className='text-[14px] md:text-[14px]'>
+                            <Button
+                              disabled={isInputDisabled}
+                              variant={'outline'}
+                              className={cn(
+                                'text-[14px] w-full pl-3 text-left font-normal',
+                                !field.value && 'text-muted-foreground'
+                              )}
+                            >
+                              {field.value ? (
+                                format(field.value, 'LLL dd, y', { locale: es })
+                              ) : (
+                                <span className='text-[14px]'>
+                                  Seleccione la fecha del gasto o compra
+                                </span>
+                              )}
+                              <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
+                            </Button>
+                          </FormControl>
+                        </PopoverTrigger>
+                        <PopoverContent className='w-auto p-0' align='start'>
+                          <Calendar
+                            mode='single'
+                            selected={field.value}
+                            onSelect={(date) => {
+                              field.onChange(date);
+                              setIsInputDateOpen(false);
+                            }}
+                            disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
+                            initialFocus
+                          />
+                        </PopoverContent>
+                      </Popover>
+                      <FormMessage className='text-[13px]' />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name='comments'
+                  render={({ field }) => {
+                    return (
+                      <FormItem className='mt-3'>
+                        <FormLabel className='text-[14px] md:text-[14.5px] font-bold flex items-center'>
+                          Detalles / Observaciones
+                          <span className='ml-3 inline-block bg-orange-200 text-orange-600 border text-[10px] font-bold uppercase px-2 py-[2px] rounded-full mr-1'>
+                            Requerido
+                          </span>
+                        </FormLabel>
+                        {type === OfferingExpenseSearchType.ExpensesAdjustment && (
+                          <FormDescription>
+                            Escribe una breve descripción sobre el ajuste
+                          </FormDescription>
+                        )}
+                        <FormControl className='text-[14px] md:text-[14px]'>
+                          <Textarea
+                            disabled={isInputDisabled}
+                            placeholder={`${type === OfferingExpenseSearchType.ExpensesAdjustment
+                                ? `Detalles y/u observaciones sobre el ajuste de salida...`
+                                : 'Detalles y/u observaciones sobre el registro de salida...'
+                              }`}
+                            {...field}
+                          />
+                        </FormControl>
+                        <FormMessage className='text-[13px]' />
+                      </FormItem>
+                    );
+                  }}
+                />
+              </div>
+
+              <div className='md:col-start-2 md:col-end-3 md:border-l-2 border-slate-200 dark:border-slate-800 md:pl-6'>
+                <FormField
+                  control={form.control}
+                  name='fileNames'
+                  render={() => {
+                    return (
+                      <FormItem className='mt-3 md:mt-0'>
+                        <FormLabel className='text-[14px] md:text-[14.5px] font-bold flex items-center'>
+                          Subir imagen
+                          <span className='ml-3 inline-block bg-gray-200 text-slate-600 border text-[10px] font-semibold uppercase px-2 py-[2px] rounded-full mr-1'>
+                            Opcional
+                          </span>
+                        </FormLabel>
+                        <FormControl className='text-[14px] md:text-[14px]'>
+                          <div
+                            {...getRootProps({
+                              className:
+                                'h-[10rem] font-medium text-sm sm:text-[15px] p-10 sm:p-12 md:p-16 max-w-[25rem] md:max-w-[25rem] m-auto border border-dashed border-black dark:border-white hover:bg-green-200 dark:hover:text-black ease-in duration-200 text-center',
+                            })}
+                          >
+                            <input {...getInputProps()} className='m-auto w-[20rem]' />
+
+                            {isDragActive ? (
+                              <p>Suelte sus archivos aquí ...</p>
+                            ) : (
+                              <p className='pt-5 md:pt-0'>
+                                Arrastre y suelte sus archivos aquí, o haga clic para seleccionar.
+                              </p>
+                            )}
+                          </div>
+                        </FormControl>
+                        <FormMessage className='text-[13px]' />
+                        {files && files.length > 3 ? (
+                          <span className='text-red-500 font-bold text-[12.5px] md:text-[13px] text-center mx-auto justify-center flex'>
+                            ❌ Sobrepasa el limite, elige como máximo solo 3 imágenes.
+                          </span>
+                        ) : (
+                          <span className='font-medium text-[12.5px] md:text-[13px] pl-3 md:pl-6 mt-1 flex flex-col'>
+                            <span>✅ Máximo 3 archivos.</span>
+                            <span>✅ El campo se bloqueara al llegar o pasar los 3 archivos.</span>
+                          </span>
+                        )}
+                      </FormItem>
+                    );
+                  }}
+                />
+                <section className='mt-10'>
+                  <div className='flex gap-4 items-center justify-between'>
+                    <h2 className='text-[16px] md:text-[18px] font-bold'>Pre-visualización</h2>
+                    <button
+                      type='button'
+                      disabled={isDeleteFileButtonDisabled}
+                      onClick={removeAll}
+                      className='mt-1 text-[11px] md:text-[11px] w-[8rem] md:w-[10rem] p-2 uppercase tracking-wider font-bold text-red-500 border border-red-400 rounded-md  hover:bg-secondary-400 hover:text-white ease-in duration-200 hover:bg-red-500 transition-colors'
+                    >
+                      Remover todos los archivos
+                    </button>
+                  </div>
+
+                  {/* Accepted files */}
+                  <h3 className='text-[14.5px] lg:text-[16px] font-semibold mt-5 border-b pb-3'>
+                    Archivos Aceptados
+                  </h3>
+                  <ul className='mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-2 gap-x-5 gap-y-20'>
+                    {files.map((file) => (
+                      <li key={file.name} className='relative h-32 rounded-md shadow-lg'>
+                        <img
+                          src={file.preview}
+                          alt={file.name}
+                          width={100}
+                          height={100}
+                          onLoad={() => URL.revokeObjectURL(file.preview)}
+                          className='h-full w-full object-contain rounded-md'
+                        />
+
+                        <Button
+                          type='button'
+                          disabled={isDeleteFileButtonDisabled}
+                          onClick={() => removeFile(file.name)}
+                          variant='ghost'
+                          className={cn(
+                            'w-8 h-8 absolute -top-2 -right-2 p-0 rounded-full flex items-center justify-center',
+                            'border-secondary-400 dark:bg-slate-950 bg-white text-red-500 dark:hover:bg-white hover:bg-slate-200 hover:text-red-600 transition-colors',
+                            'disabled:opacity-50 disabled:pointer-events-none disabled:bg-slate-100 disabled:border-slate-300 disabled:text-slate-400'
+                          )}
+                        >
+                          <TiDeleteOutline className='w-8 h-8' />
+                        </Button>
+
+                        <p className='mt-2 text-neutral-500 text-[12px] font-medium truncate max-w-full text-center'>
+                          {file.name}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+
+                  {/* Rejected Files */}
+                  <h3 className='text-[14.5px] lg:text-[16px] font-semibold mt-20 border-b pb-3'>
+                    Archivos rechazados
+                  </h3>
+                  <ul className='mt-2 flex flex-col'>
+                    {rejected.map(({ file, errors }) => (
+                      <li key={file.name} className='flex items-start justify-between'>
+                        <div>
+                          <p className='mt-2 text-neutral-500 text-sm font-medium'>{file.name}</p>
+                          <ul className='text-[14px] text-red-400 flex gap-3 font-medium'>
+                            {errors.map((error) => (
+                              <li
+                                key={error.code}
+                              >{`${error.message === 'File type must be image/*' ? 'Tipo de archivo debe ser una imagen.' : 'Debe ser un archivo menor a 1000KB.'}`}</li>
+                            ))}
+                          </ul>
+                        </div>
+                        <button
+                          type='button'
+                          disabled={isDeleteFileButtonDisabled}
+                          className='mt-1 py-1 text-[11px] md:text-[11.5px] uppercase tracking-wider font-bold text-red-500 border border-red-400 rounded-md px-3 hover:bg-red-500 hover:text-white ease-in duration-200 transition-colors'
+                          onClick={() => {
+                            removeRejected(file.name);
+                          }}
+                        >
+                          remover
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              </div>
+
+              {isMessageErrorDisabled ? (
+                <p className='-mb-5 mt-2 md:-mb-2 md:row-start-2 md:row-end-3 md:col-start-1 md:col-end-3 mx-auto md:w-[100%] lg:w-[80%] text-center text-red-500 text-[12.5px] md:text-[13px] font-bold'>
+                  ❌ Datos incompletos, completa todos los campos para crear el registro.
+                </p>
+              ) : (
+                <p className='-mt-2 order-last md:-mt-3 md:row-start-4 md:row-end-5 md:col-start-1 md:col-end-3 mx-auto md:w-[80%] lg:w-[80%] text-center text-green-500 text-[12.5px] md:text-[13px] font-bold'>
+                  ¡Campos completados correctamente! <br />
+                </p>
               )}
 
-              <FormField
-                control={form.control}
-                name='amount'
-                render={({ field }) => {
-                  return (
-                    <FormItem className='mt-3'>
-                      <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                        Monto
-                      </FormLabel>
-                      <FormDescription className='text-[13.5px] md:text-[14px]'>
-                        Digita la cantidad del gasto realizado.
-                      </FormDescription>
-                      <FormControl className='text-[14px] md:text-[14px]'>
-                        <Input
-                          disabled={isInputDisabled}
-                          placeholder='Monto total del gasto realizado'
-                          type='text'
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className='text-[13px]' />
-                    </FormItem>
-                  );
-                }}
-              />
-
-              <FormField
-                control={form.control}
-                name='currency'
-                render={({ field }) => {
-                  return (
-                    <FormItem className='mt-3'>
-                      <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                        Divisa / Moneda
-                      </FormLabel>
-                      <FormDescription className='text-[13.5px] md:text-[14px]'>
-                        Asignar un tipo de divisa o moneda al registro.
-                      </FormDescription>
-                      <Select
-                        disabled={isInputDisabled}
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <FormControl className='text-[14px] md:text-[14px]'>
-                          <SelectTrigger>
-                            {field.value ? (
-                              <SelectValue placeholder='Selecciona una tipo de divisa o moneda' />
-                            ) : (
-                              'Selecciona una tipo de divisa o moneda'
-                            )}
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {Object.entries(CurrencyTypeNames).map(([key, value]) => (
-                            <SelectItem key={key} value={key}>
-                              {value}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage className='text-[13px]' />
-                    </FormItem>
-                  );
-                }}
-              />
-
-              <FormField
-                control={form.control}
-                name='date'
-                render={({ field }) => (
-                  <FormItem className='mt-3'>
-                    <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>Fecha</FormLabel>
-                    <FormDescription className='text-[13.5px] md:text-[14px]'>
-                      Selecciona la fecha de gasto o compra realizada.
-                    </FormDescription>
-                    <Popover open={isInputDateOpen} onOpenChange={setIsInputDateOpen}>
-                      <PopoverTrigger asChild>
-                        <FormControl className='text-[14px] md:text-[14px]'>
-                          <Button
-                            disabled={isInputDisabled}
-                            variant={'outline'}
-                            className={cn(
-                              'text-[14px] w-full pl-3 text-left font-normal',
-                              !field.value && 'text-muted-foreground'
-                            )}
-                          >
-                            {field.value ? (
-                              format(field.value, 'LLL dd, y', { locale: es })
-                            ) : (
-                              <span className='text-[14px]'>
-                                Seleccione la fecha del gasto o compra
-                              </span>
-                            )}
-                            <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className='w-auto p-0' align='start'>
-                        <Calendar
-                          mode='single'
-                          selected={field.value}
-                          onSelect={(date) => {
-                            field.onChange(date);
-                            setIsInputDateOpen(false);
-                          }}
-                          disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
-                          initialFocus
-                        />
-                      </PopoverContent>
-                    </Popover>
-                    <FormMessage className='text-[13px]' />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name='comments'
-                render={({ field }) => {
-                  return (
-                    <FormItem className='mt-3'>
-                      <FormLabel className='text-[14px] md:text-[14.5px] font-bold flex items-center'>
-                        Detalles / Observaciones
-                        <span className='ml-3 inline-block bg-orange-200 text-orange-600 border text-[10px] font-bold uppercase px-2 py-[2px] rounded-full mr-1'>
-                          Requerido
-                        </span>
-                      </FormLabel>
-                      {type === OfferingExpenseSearchType.ExpensesAdjustment && (
-                        <FormDescription>
-                          Escribe una breve descripción sobre el ajuste
-                        </FormDescription>
-                      )}
-                      <FormControl className='text-[14px] md:text-[14px]'>
-                        <Textarea
-                          disabled={isInputDisabled}
-                          placeholder={`${
-                            type === OfferingExpenseSearchType.ExpensesAdjustment
-                              ? `Detalles y/u observaciones sobre el ajuste de salida...`
-                              : 'Detalles y/u observaciones sobre el registro de salida...'
-                          }`}
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage className='text-[13px]' />
-                    </FormItem>
-                  );
-                }}
-              />
-            </div>
-
-            <div className='md:col-start-2 md:col-end-3 md:border-l-2 border-slate-200 dark:border-slate-800 md:pl-6'>
-              <FormField
-                control={form.control}
-                name='fileNames'
-                render={() => {
-                  return (
-                    <FormItem className='mt-3 md:mt-0'>
-                      <FormLabel className='text-[14px] md:text-[14.5px] font-bold flex items-center'>
-                        Subir imagen
-                        <span className='ml-3 inline-block bg-gray-200 text-slate-600 border text-[10px] font-semibold uppercase px-2 py-[2px] rounded-full mr-1'>
-                          Opcional
-                        </span>
-                      </FormLabel>
-                      <FormControl className='text-[14px] md:text-[14px]'>
-                        <div
-                          {...getRootProps({
-                            className:
-                              'h-[10rem] font-medium text-sm sm:text-[15px] p-10 sm:p-12 md:p-16 max-w-[25rem] md:max-w-[25rem] m-auto border border-dashed border-black dark:border-white hover:bg-green-200 dark:hover:text-black ease-in duration-200 text-center',
-                          })}
-                        >
-                          <input {...getInputProps()} className='m-auto w-[20rem]' />
-
-                          {isDragActive ? (
-                            <p>Suelte sus archivos aquí ...</p>
-                          ) : (
-                            <p className='pt-5 md:pt-0'>
-                              Arrastre y suelte sus archivos aquí, o haga clic para seleccionar.
-                            </p>
-                          )}
-                        </div>
-                      </FormControl>
-                      <FormMessage className='text-[13px]' />
-                      {files && files.length > 3 ? (
-                        <span className='text-red-500 font-bold text-[12.5px] md:text-[13px] text-center mx-auto justify-center flex'>
-                          ❌ Sobrepasa el limite, elige como máximo solo 3 imágenes.
-                        </span>
-                      ) : (
-                        <span className='font-medium text-[12.5px] md:text-[13px] pl-3 md:pl-6 mt-1 flex flex-col'>
-                          <span>✅ Máximo 3 archivos.</span>
-                          <span>✅ El campo se bloqueara al llegar o pasar los 3 archivos.</span>
-                        </span>
-                      )}
-                    </FormItem>
-                  );
-                }}
-              />
-              <section className='mt-10'>
-                <div className='flex gap-4 items-center justify-between'>
-                  <h2 className='text-[16px] md:text-[18px] font-bold'>Pre-visualización</h2>
-                  <button
-                    type='button'
-                    disabled={isDeleteFileButtonDisabled}
-                    onClick={removeAll}
-                    className='mt-1 text-[11px] md:text-[11px] w-[8rem] md:w-[10rem] p-2 uppercase tracking-wider font-bold text-red-500 border border-red-400 rounded-md  hover:bg-secondary-400 hover:text-white ease-in duration-200 hover:bg-red-500 transition-colors'
-                  >
-                    Remover todos los archivos
-                  </button>
-                </div>
-
-                {/* Accepted files */}
-                <h3 className='text-[14.5px] lg:text-[16px] font-semibold mt-5 border-b pb-3'>
-                  Archivos Aceptados
-                </h3>
-                <ul className='mt-6 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-2 xl:grid-cols-2 gap-x-5 gap-y-20'>
-                  {files.map((file) => (
-                    <li key={file.name} className='relative h-32 rounded-md shadow-lg'>
-                      <img
-                        src={file.preview}
-                        alt={file.name}
-                        width={100}
-                        height={100}
-                        onLoad={() => URL.revokeObjectURL(file.preview)}
-                        className='h-full w-full object-contain rounded-md'
-                      />
-
-                      <Button
-                        type='button'
-                        disabled={isDeleteFileButtonDisabled}
-                        onClick={() => removeFile(file.name)}
-                        variant='ghost'
-                        className={cn(
-                          'w-8 h-8 absolute -top-2 -right-2 p-0 rounded-full flex items-center justify-center',
-                          'border-secondary-400 dark:bg-slate-950 bg-white text-red-500 dark:hover:bg-white hover:bg-slate-200 hover:text-red-600 transition-colors',
-                          'disabled:opacity-50 disabled:pointer-events-none disabled:bg-slate-100 disabled:border-slate-300 disabled:text-slate-400'
-                        )}
-                      >
-                        <TiDeleteOutline className='w-8 h-8' />
-                      </Button>
-
-                      <p className='mt-2 text-neutral-500 text-[12px] font-medium truncate max-w-full text-center'>
-                        {file.name}
-                      </p>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Rejected Files */}
-                <h3 className='text-[14.5px] lg:text-[16px] font-semibold mt-20 border-b pb-3'>
-                  Archivos rechazados
-                </h3>
-                <ul className='mt-2 flex flex-col'>
-                  {rejected.map(({ file, errors }) => (
-                    <li key={file.name} className='flex items-start justify-between'>
-                      <div>
-                        <p className='mt-2 text-neutral-500 text-sm font-medium'>{file.name}</p>
-                        <ul className='text-[14px] text-red-400 flex gap-3 font-medium'>
-                          {errors.map((error) => (
-                            <li
-                              key={error.code}
-                            >{`${error.message === 'File type must be image/*' ? 'Tipo de archivo debe ser una imagen.' : 'Debe ser un archivo menor a 1000KB.'}`}</li>
-                          ))}
-                        </ul>
-                      </div>
-                      <button
-                        type='button'
-                        disabled={isDeleteFileButtonDisabled}
-                        className='mt-1 py-1 text-[11px] md:text-[11.5px] uppercase tracking-wider font-bold text-red-500 border border-red-400 rounded-md px-3 hover:bg-red-500 hover:text-white ease-in duration-200 transition-colors'
-                        onClick={() => {
-                          removeRejected(file.name);
-                        }}
-                      >
-                        remover
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </section>
-            </div>
-
-            {isMessageErrorDisabled ? (
-              <p className='-mb-5 mt-2 md:-mb-2 md:row-start-2 md:row-end-3 md:col-start-1 md:col-end-3 mx-auto md:w-[100%] lg:w-[80%] text-center text-red-500 text-[12.5px] md:text-[13px] font-bold'>
-                ❌ Datos incompletos, completa todos los campos para crear el registro.
-              </p>
-            ) : (
-              <p className='-mt-2 order-last md:-mt-3 md:row-start-4 md:row-end-5 md:col-start-1 md:col-end-3 mx-auto md:w-[80%] lg:w-[80%] text-center text-green-500 text-[12.5px] md:text-[13px] font-bold'>
-                ¡Campos completados correctamente! <br />
-              </p>
-            )}
-
-            <div className='mt-2 col-start-1 col-end-3 row-start-3 row-end-4 w-full md:w-[20rem] md:m-auto'>
-              <Toaster position='top-center' richColors />
-              <Button
-                disabled={isSubmitButtonDisabled}
-                type='submit'
-                className={cn(
-                  'w-full text-[14px]',
-                  (uploadImagesMutation?.isPending || offeringExpenseCreationMutation?.isPending) &&
+              <div className='mt-2 col-start-1 col-end-3 row-start-3 row-end-4 w-full md:w-[20rem] md:m-auto'>
+                <Button
+                  disabled={isSubmitButtonDisabled}
+                  type='submit'
+                  className={cn(
+                    'w-full text-[14px]',
+                    (uploadImagesMutation?.isPending || offeringExpenseCreationMutation?.isPending) &&
                     'bg-emerald-500 hover:bg-emerald-500 disabled:opacity-100 disabled:md:text-[15px] text-white'
-                )}
-                onClick={() => {
-                  setTimeout(() => {
-                    setIsInputDisabled(true);
-                    setIsDropZoneDisabled(true);
-                    setIsDeleteFileButtonDisabled(true);
-                    setIsSubmitButtonDisabled(true);
-                  }, 100);
-                }}
-              >
-                {uploadImagesMutation?.isPending || offeringExpenseCreationMutation?.isPending
-                  ? 'Procesando...'
-                  : 'Registrar'}
-              </Button>
-            </div>
-          </form>
-        </Form>
+                  )}
+                  onClick={() => {
+                    setTimeout(() => {
+                      setIsInputDisabled(true);
+                      setIsDropZoneDisabled(true);
+                      setIsDeleteFileButtonDisabled(true);
+                      setIsSubmitButtonDisabled(true);
+                    }, 100);
+                  }}
+                >
+                  {uploadImagesMutation?.isPending || offeringExpenseCreationMutation?.isPending
+                    ? 'Procesando...'
+                    : 'Registrar'}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </div>
+
+        <footer className='pt-4 pb-2 text-center'>
+          <p className='text-xs text-slate-400 dark:text-slate-500 font-inter'>
+            Modulo de Salida - ICUP App &copy; {new Date().getFullYear()}
+          </p>
+        </footer>
       </div>
     </div>
   );

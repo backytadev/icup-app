@@ -1,4 +1,4 @@
-import { Hash, Building2, Phone, MapPin, Map, Info, Pencil, Power, UserPen } from 'lucide-react';
+import { Hash, Building2, Phone, MapPin, Map, UserPen, Settings } from 'lucide-react';
 import { type ColumnDef } from '@tanstack/react-table';
 
 import {
@@ -7,7 +7,6 @@ import {
   TextCell,
   NameCell,
   UpdatedByCell,
-  ActionCell,
 } from '@/shared/components/data-table';
 import { getInitialFullNames } from '@/shared/helpers/get-full-names.helper';
 
@@ -65,68 +64,42 @@ const updatedByColumn: ColumnDef<MinistryColumns, any> = {
   header: ({ column }) => (
     <ColumnHeader
       column={column}
-      label='Actualizado por'
+      label='Editado por'
       icon={UserPen}
       colorClass='text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300'
     />
   ),
 };
 
-//* Action columns
-const infoActionColumn: ColumnDef<MinistryColumns, any> = {
-  id: 'showInfo',
+//* Unified Actions column - combines Info, Update and Inactivate actions
+const actionsColumn: ColumnDef<MinistryColumns, any> = {
+  id: 'actions',
   accessorKey: 'id',
-  cell: (info) => (
-    <ActionCell id={info.row.original.id} value={info.getValue()}>
-      <MinistryInfoCard idRow={info.row.original.id} />
-    </ActionCell>
-  ),
+  cell: (info) => {
+    const id = info.row.original.id;
+    const value = info.getValue();
+
+    if (value === '-' || !id) {
+      return <span>-</span>;
+    }
+
+    return (
+      <div className='flex items-center justify-center gap-1'>
+        <MinistryInfoCard idRow={id} />
+        <MinistryUpdateCard idRow={id} />
+        <MinistryInactivateCard idRow={id} />
+      </div>
+    );
+  },
   header: () => (
     <ColumnHeader
-      label='Info'
-      icon={Info}
+      label='Acciones'
+      icon={Settings}
       sortable={false}
-      colorClass='text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300'
+      colorClass='text-slate-600 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-300'
     />
   ),
 };
-
-const updateActionColumn: ColumnDef<MinistryColumns, any> = {
-  id: 'editInfo',
-  accessorKey: 'id',
-  cell: (info) => (
-    <ActionCell id={info.row.original.id} value={info.getValue()}>
-      <MinistryUpdateCard idRow={info.row.original.id} />
-    </ActionCell>
-  ),
-  header: () => (
-    <ColumnHeader
-      label='Actualizar'
-      icon={Pencil}
-      sortable={false}
-      colorClass='text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300'
-    />
-  ),
-};
-
-const inactivateActionColumn: ColumnDef<MinistryColumns, any> = {
-  id: 'inactivateRecord',
-  accessorKey: 'id',
-  cell: (info) => (
-    <ActionCell id={info.row.original.id} value={info.getValue()}>
-      <MinistryInactivateCard idRow={info.row.original.id} />
-    </ActionCell>
-  ),
-  header: () => (
-    <ColumnHeader
-      label='Inactivar'
-      icon={Power}
-      sortable={false}
-      colorClass='text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300'
-    />
-  ),
-};
-
 
 //* Aggregate base columns
 const baseColumns: Array<ColumnDef<MinistryColumns, any>> = [
@@ -137,22 +110,9 @@ const baseColumns: Array<ColumnDef<MinistryColumns, any>> = [
   urbanSectorColumn,
 ];
 
-
 //* Configuration columns
-export const ministryInfoColumns: Array<ColumnDef<MinistryColumns, any>> = [
+export const ministryUnifiedColumns: Array<ColumnDef<MinistryColumns, any>> = [
   ...baseColumns,
   updatedByColumn,
-  infoActionColumn,
-];
-
-export const ministryUpdateColumns: Array<ColumnDef<MinistryColumns, any>> = [
-  ...baseColumns,
-  infoActionColumn,
-  updateActionColumn,
-];
-
-export const ministryInactivateColumns: Array<ColumnDef<MinistryColumns, any>> = [
-  ...baseColumns,
-  infoActionColumn,
-  inactivateActionColumn,
+  actionsColumn,
 ];

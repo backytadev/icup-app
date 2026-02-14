@@ -24,6 +24,7 @@ interface FormModalProps {
   triggerIcon?: ReactNode;
   triggerClassName?: string;
   maxWidth?: ModalSize;
+  customMaxWidth?: string;
   children: ReactNode;
   dialogClose?: () => void;
   scrollToTop?: () => void;
@@ -36,6 +37,7 @@ export const FormModal = ({
   triggerIcon,
   triggerClassName,
   maxWidth = 'xl',
+  customMaxWidth,
   children,
 }: FormModalProps): JSX.Element => {
   const topRef = useRef<HTMLDivElement>(null);
@@ -64,22 +66,22 @@ export const FormModal = ({
   const childrenWithProps =
     typeof children === 'object' && children !== null
       ? (() => {
-          const child = children as React.ReactElement<{
-            dialogClose?: () => void;
-            scrollToTop?: () => void;
-          }>;
-          if (child.props !== undefined) {
-            return {
-              ...child,
-              props: {
-                ...child.props,
-                dialogClose: handleClose,
-                scrollToTop: handleScrollToTop,
-              },
-            };
-          }
-          return children;
-        })()
+        const child = children as React.ReactElement<{
+          dialogClose?: () => void;
+          scrollToTop?: () => void;
+        }>;
+        if (child.props !== undefined) {
+          return {
+            ...child,
+            props: {
+              ...child.props,
+              dialogClose: handleClose,
+              scrollToTop: handleScrollToTop,
+            },
+          };
+        }
+        return children;
+      })()
       : children;
 
   // Build size classes based on maxWidth
@@ -98,7 +100,7 @@ export const FormModal = ({
           ref={topRef}
           className={cn(
             'w-full max-h-full justify-center pt-[0.9rem] pb-[1.3rem] overflow-x-hidden overflow-y-auto',
-            sizeClasses
+            customMaxWidth ?? sizeClasses
           )}
         >
           <DialogTitle></DialogTitle>

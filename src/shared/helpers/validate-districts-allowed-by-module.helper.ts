@@ -20,6 +20,7 @@ export const validateDistrictsAllowedByModule = (
     path === '/disciples/create' ||
     path === '/disciples/update' ||
     path === '/pastors/create' ||
+    path === '/pastors/search' ||
     path === '/pastors/update' ||
     path === '/copastors/create' ||
     path === '/copastors/update' ||

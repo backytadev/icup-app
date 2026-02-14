@@ -1,16 +1,12 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 import { type z } from 'zod';
 import { useForm } from 'react-hook-form';
-import { MdDeleteForever } from 'react-icons/md';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { Trash2 } from 'lucide-react';
 
-import { useUserInactivationMutation } from '@/modules/user/hooks/useUserInactivationMutation';
-import { userInactivationFormSchema } from '@/modules/user/validations/user-inactivation-form-schema';
+import { useUserInactivationMutation } from '@/modules/user/hooks/mutations/useUserInactivationMutation';
+import { userInactivationFormSchema } from '@/modules/user/schemas/user-inactivation-form-schema';
 
 import {
   UserInactivationCategory,
@@ -24,6 +20,8 @@ import {
   TransitionOrReassignmentReasonsNames,
   InactivityOrRoleIrrelevanceReasonsNames,
 } from '@/modules/user/enums/user-inactivation-reason.enum';
+
+import { cn } from '@/shared/lib/utils';
 
 import {
   Form,
@@ -90,7 +88,7 @@ export const UserInactivateCard = ({ idRow }: UserInactivateCardProps): JSX.Elem
 
     if (idRow && isCardOpen) {
       const url = new URL(window.location.href);
-      url.pathname = `/users/inactivate/${idRow}/remove`;
+      url.pathname = `/users/search/${idRow}/remove`;
 
       window.history.replaceState({}, '', url);
 
@@ -131,163 +129,208 @@ export const UserInactivateCard = ({ idRow }: UserInactivateCardProps): JSX.Elem
     <Dialog open={isCardOpen} onOpenChange={setIsCardOpen}>
       <DialogTrigger asChild>
         <Button
+          variant='ghost'
+          size='icon'
           onClick={() => {
             form.reset();
           }}
-          className='mt-2 py-2 px-1 h-[2rem] bg-red-400 text-white hover:bg-red-500 hover:text-red-950  dark:text-red-950 dark:hover:bg-red-500 dark:hover:text-white'
+          className='h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/20'
         >
-          <MdDeleteForever className='w-8 h-[1.65rem]' />
+          <Trash2 className='h-4 w-4' />
         </Button>
       </DialogTrigger>
-
-      <DialogContent ref={topRef} className='w-[23rem] sm:w-[25rem] md:w-full'>
+      <DialogContent
+        ref={topRef}
+        className='w-[23rem] sm:w-[25rem] md:w-[500px] max-h-full overflow-x-hidden overflow-y-auto p-0'
+      >
         <div className='h-auto'>
-          <DialogTitle className='dark:text-yellow-500 text-amber-500 font-bold text-[22px] text-center md:text-[26px] pb-2'>
-            ¿Estas seguro de inactivar este Usuario?
-          </DialogTitle>
+          {/* Header */}
+          <div className='relative overflow-hidden bg-gradient-to-r from-red-500 via-red-600 to-rose-600 dark:from-red-700 dark:via-red-800 dark:to-rose-800 p-5 rounded-t-lg'>
+            <div className='absolute inset-0 overflow-hidden'>
+              <div className='absolute -top-1/2 -right-1/4 w-48 h-48 rounded-full bg-white/10' />
+              <div className='absolute -bottom-1/4 -left-1/4 w-32 h-32 rounded-full bg-white/5' />
+            </div>
+            <div className='relative z-10'>
+              <DialogTitle className='text-white font-bold text-xl md:text-2xl text-center font-outfit'>
+                Inactivar Usuario
+              </DialogTitle>
+              <DialogDescription className='text-red-100/80 text-sm text-center mt-1 font-inter'>
+                Esta acción desactivará el acceso del usuario al sistema
+              </DialogDescription>
+            </div>
+          </div>
 
-          <DialogDescription className='text-blue-500 font-bold mb-3 inline-block text-[16px] md:text-[18px]'>
-            Luego de realizar esta operación sucederá lo siguiente:
-          </DialogDescription>
-          <br />
-          <span className='inline-block mb-2 text-[14.5px] md:text-[15px]'>
-            ❌ El registro de este Usuario se colocara en estado{' '}
-            <span className='font-bold'>INACTIVO.</span>
-          </span>
-          <span className='w-full text-left inline-block mb-2 text-[14.5px] md:text-[15px]'>
-            ❌ El registro ya no tendrá acceso al sistema ni a ninguna funcionalidad de esta.
-          </span>
-          <span className='inline-block text-[14.5px] md:text-[15px]'>
-            ✅ Para poder activarlo nuevamente deberás hacerlo desde el modulo{' '}
-            <span className='font-bold'>Actualizar Usuario.</span>
-          </span>
-          <br />
+          {/* Content */}
+          <div className='p-5 space-y-4'>
+            {/* Warning Box */}
+            <div className='p-4 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/30'>
+              <p className='text-sm font-semibold text-amber-700 dark:text-amber-400 font-inter mb-2'>
+                Luego de realizar esta operación:
+              </p>
+              <ul className='space-y-2 text-[13px] text-amber-600 dark:text-amber-300/90 font-inter'>
+                <li className='flex items-start gap-2'>
+                  <span className='text-red-500'>✗</span>
+                  <span>
+                    El registro se colocará en estado <span className='font-semibold'>INACTIVO</span>
+                  </span>
+                </li>
+                <li className='flex items-start gap-2'>
+                  <span className='text-red-500'>✗</span>
+                  <span>El usuario ya no tendrá acceso al sistema ni a ninguna funcionalidad</span>
+                </li>
+                <li className='flex items-start gap-2'>
+                  <span className='text-emerald-500'>✓</span>
+                  <span>
+                    Podrás reactivarlo desde <span className='font-semibold'>Actualizar Usuario</span>
+                  </span>
+                </li>
+              </ul>
+            </div>
 
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(handleSubmit)}>
-              <FormField
-                control={form.control}
-                name='userInactivationCategory'
-                render={({ field }) => {
-                  return (
-                    <FormItem className='mt-3'>
-                      <FormLabel className='text-[14px] md:text-[14.5px] font-bold text-emerald-500'>
-                        ¿Cuál es el motivo por el cual se esta inactivando este registro?
-                      </FormLabel>
-                      <FormDescription className='text-[13.5px] md:text-[14px] pl-1'>
-                        Elige una categoría de eliminación.
-                      </FormDescription>
-                      <Select
-                        disabled={isSelectInputDisabled}
-                        value={field.value}
-                        onOpenChange={() => {
-                          form.resetField('userInactivationReason', {
-                            defaultValue: '',
-                          });
-                        }}
-                        onValueChange={field.onChange}
-                      >
-                        <FormControl className='text-[14px] md:text-[14px]'>
-                          <SelectTrigger>
-                            {field.value ? (
-                              <SelectValue placeholder='Selecciona una categoría' />
-                            ) : (
-                              'Selecciona una categoría'
-                            )}
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {Object.entries(UserInactivationCategoryNames).map(([key, value]) => (
-                            <SelectItem className='text-[14px]' key={key} value={key}>
-                              {value}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage className='text-[13px]' />
-                    </FormItem>
-                  );
-                }}
-              />
-
-              <FormField
-                control={form.control}
-                name='userInactivationReason'
-                render={({ field }) => {
-                  return (
-                    <FormItem className='mt-3'>
-                      <FormDescription className='text-[13.5px] md:text-[14px] pl-1'>
-                        Elige un motivo de eliminación según su categoría.
-                      </FormDescription>
-                      <Select
-                        disabled={isSelectInputDisabled}
-                        value={field.value}
-                        onValueChange={field.onChange}
-                      >
-                        <FormControl className='text-[14px] md:text-[14px]'>
-                          <SelectTrigger>
-                            {field.value ? (
-                              <SelectValue placeholder='Selecciona un motivo' />
-                            ) : (
-                              'Selecciona un motivo'
-                            )}
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent className='mr-[0rem] w-[80%] sm:ml-[0rem] sm:w-[95%] md:mx-auto md:w-full'>
-                          {Object.entries(
-                            userInactivationCategory ===
-                              UserInactivationCategory.AdministrativeChanges
-                              ? AdministrativeChangesReasonsNames
-                              : userInactivationCategory ===
-                                  UserInactivationCategory.InactivityOrRoleIrrelevance
-                                ? InactivityOrRoleIrrelevanceReasonsNames
-                                : userInactivationCategory ===
-                                    UserInactivationCategory.PerformanceOrConduct
-                                  ? PerformanceOrConductReasonsNames
-                                  : userInactivationCategory ===
-                                      UserInactivationCategory.SecurityReasons
-                                    ? SecurityReasonsReasonsNames
-                                    : userInactivationCategory ===
-                                        UserInactivationCategory.TransitionOrReassignment
-                                      ? TransitionOrReassignmentReasonsNames
-                                      : userInactivationCategory ===
-                                          UserInactivationCategory.UnavoidableCircumstances
-                                        ? UnavoidableCircumstancesReasonsNames
-                                        : []
-                          ).map(([key, value]) => (
-                            <SelectItem className='text-[14px]' key={key} value={key}>
-                              {value}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                      <FormMessage className='text-[13px]' />
-                    </FormItem>
-                  );
-                }}
-              />
-
-              <div className='flex justify-center md:justify-end gap-x-4 mt-4'>
-                <Button
-                  disabled={isButtonDisabled}
-                  className='m-auto text-[14px] w-full border-1 border-red-500 bg-gradient-to-r from-red-400 via-red-500 to-red-600 text-white hover:text-red-100 hover:from-red-500 hover:via-red-600 hover:to-red-700 dark:from-red-600 dark:via-red-700 dark:to-red-800 dark:text-gray-100 dark:hover:text-gray-200 dark:hover:from-red-700 dark:hover:via-red-800 dark:hover:to-red-900'
-                  type='button'
-                  onClick={() => {
-                    setIsCardOpen(false);
+            {/* Form */}
+            <Form {...form}>
+              <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-4'>
+                <FormField
+                  control={form.control}
+                  name='userInactivationCategory'
+                  render={({ field }) => {
+                    return (
+                      <FormItem>
+                        <FormLabel className='text-[13px] md:text-[14px] font-semibold text-slate-700 dark:text-slate-300 font-inter'>
+                          Categoría de inactivación
+                        </FormLabel>
+                        <FormDescription className='text-[12px] md:text-[13px] text-slate-500 dark:text-slate-400 font-inter'>
+                          Selecciona la categoría que mejor describe el motivo
+                        </FormDescription>
+                        <Select
+                          disabled={isSelectInputDisabled}
+                          value={field.value}
+                          onOpenChange={() => {
+                            form.resetField('userInactivationReason', {
+                              defaultValue: '',
+                            });
+                          }}
+                          onValueChange={field.onChange}
+                        >
+                          <FormControl>
+                            <SelectTrigger className='text-[13px] md:text-[14px] font-inter bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700'>
+                              {field.value ? (
+                                <SelectValue placeholder='Selecciona una categoría' />
+                              ) : (
+                                'Selecciona una categoría'
+                              )}
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent>
+                            {Object.entries(UserInactivationCategoryNames).map(([key, value]) => (
+                              <SelectItem className='text-[13px] md:text-[14px] font-inter' key={key} value={key}>
+                                {value}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage className='text-[12px] font-inter' />
+                      </FormItem>
+                    );
                   }}
-                >
-                  No, cancelar
-                </Button>
-                <Button
-                  disabled={isButtonDisabled}
-                  type='submit'
-                  className='m-auto text-[14px] w-full border-1 border-green-500 bg-gradient-to-r from-green-400 via-green-500 to-green-600 text-white hover:text-green-100 hover:from-green-500 hover:via-green-600 hover:to-green-700 dark:from-green-600 dark:via-green-700 dark:to-green-800 dark:text-gray-100 dark:hover:text-gray-200 dark:hover:from-green-700 dark:hover:via-green-800 dark:hover:to-green-900'
-                >
-                  Sí, inactivar
-                </Button>
-              </div>
-            </form>
-          </Form>
+                />
+
+                <FormField
+                  control={form.control}
+                  name='userInactivationReason'
+                  render={({ field }) => {
+                    return (
+                      <FormItem>
+                        <FormLabel className='text-[13px] md:text-[14px] font-semibold text-slate-700 dark:text-slate-300 font-inter'>
+                          Motivo específico
+                        </FormLabel>
+                        <FormDescription className='text-[12px] md:text-[13px] text-slate-500 dark:text-slate-400 font-inter'>
+                          Selecciona el motivo según la categoría elegida
+                        </FormDescription>
+                        <Select
+                          disabled={isSelectInputDisabled}
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        >
+                          <FormControl>
+                            <SelectTrigger className='text-[13px] md:text-[14px] font-inter bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700'>
+                              {field.value ? (
+                                <SelectValue placeholder='Selecciona un motivo' />
+                              ) : (
+                                'Selecciona un motivo'
+                              )}
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent className='mr-[0rem] w-[85%] sm:ml-[0rem] sm:w-[95%] md:mx-auto md:w-full'>
+                            {Object.entries(
+                              userInactivationCategory ===
+                                UserInactivationCategory.AdministrativeChanges
+                                ? AdministrativeChangesReasonsNames
+                                : userInactivationCategory ===
+                                  UserInactivationCategory.InactivityOrRoleIrrelevance
+                                  ? InactivityOrRoleIrrelevanceReasonsNames
+                                  : userInactivationCategory ===
+                                    UserInactivationCategory.PerformanceOrConduct
+                                    ? PerformanceOrConductReasonsNames
+                                    : userInactivationCategory ===
+                                      UserInactivationCategory.SecurityReasons
+                                      ? SecurityReasonsReasonsNames
+                                      : userInactivationCategory ===
+                                        UserInactivationCategory.TransitionOrReassignment
+                                        ? TransitionOrReassignmentReasonsNames
+                                        : userInactivationCategory ===
+                                          UserInactivationCategory.UnavoidableCircumstances
+                                          ? UnavoidableCircumstancesReasonsNames
+                                          : []
+                            ).map(([key, value]) => (
+                              <SelectItem className='text-[13px] md:text-[14px] font-inter' key={key} value={key}>
+                                {value}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <FormMessage className='text-[12px] font-inter' />
+                      </FormItem>
+                    );
+                  }}
+                />
+
+                {/* Action Buttons */}
+                <div className='flex gap-3 pt-2'>
+                  <Button
+                    disabled={isButtonDisabled}
+                    className={cn(
+                      'flex-1 h-10 text-[13px] md:text-[14px] font-semibold font-inter',
+                      'bg-slate-100 hover:bg-slate-200 text-slate-700',
+                      'dark:bg-slate-800 dark:hover:bg-slate-700 dark:text-slate-300',
+                      'border border-slate-200 dark:border-slate-700',
+                      'transition-all duration-200'
+                    )}
+                    type='button'
+                    onClick={() => {
+                      setIsCardOpen(false);
+                    }}
+                  >
+                    Cancelar
+                  </Button>
+                  <Button
+                    disabled={isButtonDisabled}
+                    type='submit'
+                    className={cn(
+                      'flex-1 h-10 text-[13px] md:text-[14px] font-semibold font-inter',
+                      'bg-gradient-to-r from-red-500 to-rose-500 text-white',
+                      'hover:from-red-600 hover:to-rose-600',
+                      'shadow-sm hover:shadow-md hover:shadow-red-500/20',
+                      'transition-all duration-200',
+                      isButtonDisabled && 'opacity-50 cursor-not-allowed'
+                    )}
+                  >
+                    {isButtonDisabled ? 'Procesando...' : 'Sí, inactivar'}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

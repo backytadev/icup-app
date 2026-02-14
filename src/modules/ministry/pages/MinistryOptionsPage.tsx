@@ -1,15 +1,13 @@
 import { useEffect } from 'react';
 
-import { MdGroups3 } from 'react-icons/md';
+import { PiUsersThree } from 'react-icons/pi';
 import { FaSearch } from 'react-icons/fa';
-import { FaFilter } from 'react-icons/fa6';
-import { MdEditDocument } from 'react-icons/md';
-import { RiDeleteBin2Fill } from 'react-icons/ri';
 
 import { useAuthStore } from '@/stores/auth/auth.store';
 import { UserRole } from '@/modules/user/enums/user-role.enum';
 
-import { MinistryModuleHeader, MinistryOptionCard } from '@/modules/ministry/components';
+import { ModuleHeader } from '@/shared/components/page-header/ModuleHeader';
+import { ModuleOptionCard } from '@/shared/components/page-header/ModuleOptionCard';
 
 export const MinistryOptionsPage = (): JSX.Element => {
   const user = useAuthStore((state) => state.user);
@@ -26,9 +24,13 @@ export const MinistryOptionsPage = (): JSX.Element => {
   return (
     <div className='min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950'>
       <div className='max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8'>
-        <MinistryModuleHeader
+        <ModuleHeader
           title='Modulo Ministerio'
-          description='Administra y gestiona la información de los ministerios registrados en el sistema.'
+          description='Administra y gestiona la informacion de los ministerios registrados en el sistema.'
+          badge='Membresía'
+          badgeColor='blue'
+          icon={PiUsersThree}
+          accentColor='blue'
         />
 
         <div
@@ -36,14 +38,14 @@ export const MinistryOptionsPage = (): JSX.Element => {
           style={{ animationDelay: '0.15s', animationFillMode: 'forwards' }}
         >
           <p className='text-lg text-slate-600 dark:text-slate-400 font-inter'>
-            Selecciona una opción para continuar
+            Selecciona una opcion para continuar
           </p>
         </div>
 
-        <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5 gap-6'>
-          <MinistryOptionCard
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto'>
+          <ModuleOptionCard
             to='/ministries/create'
-            icon={<MdGroups3 />}
+            icon={<PiUsersThree />}
             title='Registrar Ministerio'
             description='Crear nuevo registro de un ministerio en el sistema.'
             color='green'
@@ -51,42 +53,13 @@ export const MinistryOptionsPage = (): JSX.Element => {
             delay='0.2s'
           />
 
-          <MinistryOptionCard
-            to='/ministries/general-search'
+          <ModuleOptionCard
+            to='/ministries/search'
             icon={<FaSearch />}
-            title='Consultar Ministerios'
-            description='Consultar registros de ministerios en general.'
+            title='Gestionar Ministerios'
+            description='Buscar, consultar, actualizar e inactivar registros de ministerios.'
             color='blue'
             delay='0.25s'
-          />
-
-          <MinistryOptionCard
-            to='/ministries/search-by-term'
-            icon={<FaFilter />}
-            title='Buscar por Filtros'
-            description='Consultar registros de ministerios mediante filtros avanzados.'
-            color='sky'
-            delay='0.3s'
-          />
-
-          <MinistryOptionCard
-            to='/ministries/update'
-            icon={<MdEditDocument />}
-            title='Actualizar Ministerio'
-            description='Modificar datos del registro de un ministerio.'
-            color='orange'
-            disabled={!hasFullAccess}
-            delay='0.35s'
-          />
-
-          <MinistryOptionCard
-            to='/ministries/inactivate'
-            icon={<RiDeleteBin2Fill />}
-            title='Inactivar Ministerio'
-            description='Inactivar registro de un ministerio del sistema.'
-            color='red'
-            disabled={!hasFullAccess}
-            delay='0.4s'
           />
         </div>
 

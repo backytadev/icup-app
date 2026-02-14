@@ -22,7 +22,7 @@ import {
 } from '@/modules/ministry/hooks/mutations';
 
 import { getSimplePastors } from '@/modules/pastor/services/pastor.service';
-import { type PastorResponse } from '@/modules/pastor/interfaces/pastor-response.interface';
+import { type PastorResponse } from '@/modules/pastor/types/pastor-response.interface';
 
 type FormMode = 'create' | 'update';
 

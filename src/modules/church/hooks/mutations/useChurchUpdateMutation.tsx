@@ -1,7 +1,7 @@
-import { type UseMutationResult } from '@tanstack/react-query';
+import { type UseMutationResult, useQueryClient } from '@tanstack/react-query';
 
 import { type ErrorResponse } from '@/shared/interfaces/error-response.interface';
-import { useUpdateMutation } from '@/shared/hooks';
+import { useMutationWrapper } from '@/shared/hooks';
 
 import { type ChurchResponse } from '@/modules/church/types';
 import { updateChurch, type UpdateChurchOptions } from '@/modules/church/services/church.service';
@@ -17,17 +17,33 @@ export const useChurchUpdateMutation = ({
   scrollToTop,
   setIsInputDisabled,
 }: Options): UseMutationResult<ChurchResponse, ErrorResponse, UpdateChurchOptions, unknown> => {
-  return useUpdateMutation({
+  const queryClient = useQueryClient();
+
+  return useMutationWrapper({
     mutationFn: updateChurch,
-    invalidateQueries: [['churches-by-term']],
-    onSuccess: () => {
-      scrollToTop();
-      setTimeout(() => {
-        dialogClose();
-      }, 800);
-    },
-    onError: () => {
-      setIsInputDisabled(false);
+    messages: { success: 'Cambios guardados correctamente.' },
+    successDelay: 1500,
+    errorDelay: 1500,
+    callbacks: {
+      onSuccessCallback: () => {
+        //* Invalidate all church-related queries
+        setTimeout(() => {
+          queryClient.invalidateQueries({
+            predicate: (query) => {
+              const queryKey = query.queryKey[0];
+              return typeof queryKey === 'string' && queryKey.includes('churches');
+            }
+          });
+        }, 700);
+
+        scrollToTop();
+        setTimeout(() => {
+          dialogClose();
+        }, 800);
+      },
+      onErrorCallback: () => {
+        setIsInputDisabled(false);
+      },
     },
   });
 };

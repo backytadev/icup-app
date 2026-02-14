@@ -1,7 +1,7 @@
-import { type UseMutationResult } from '@tanstack/react-query';
+import { type UseMutationResult, useQueryClient } from '@tanstack/react-query';
 
 import { type ErrorResponse } from '@/shared/interfaces/error-response.interface';
-import { useUpdateMutation } from '@/shared/hooks';
+import { useMutationWrapper } from '@/shared/hooks';
 
 import { type MinistryResponse } from '@/modules/ministry/types';
 import {
@@ -20,17 +20,33 @@ export const useMinistryUpdateMutation = ({
   scrollToTop,
   setIsInputDisabled,
 }: Options): UseMutationResult<MinistryResponse, ErrorResponse, UpdateMinistryOptions, unknown> => {
-  return useUpdateMutation({
+  const queryClient = useQueryClient();
+
+  return useMutationWrapper({
     mutationFn: updateMinistry,
-    invalidateQueries: [['ministries-by-term']],
-    onSuccess: () => {
-      scrollToTop();
-      setTimeout(() => {
-        dialogClose();
-      }, 800);
-    },
-    onError: () => {
-      setIsInputDisabled(false);
+    messages: { success: 'Cambios guardados correctamente.' },
+    successDelay: 1500,
+    errorDelay: 1500,
+    callbacks: {
+      onSuccessCallback: () => {
+        //* Invalidate all ministry-related queries
+        setTimeout(() => {
+          queryClient.invalidateQueries({
+            predicate: (query) => {
+              const queryKey = query.queryKey[0];
+              return typeof queryKey === 'string' && queryKey.includes('ministr');
+            }
+          });
+        }, 700);
+
+        scrollToTop();
+        setTimeout(() => {
+          dialogClose();
+        }, 800);
+      },
+      onErrorCallback: () => {
+        setIsInputDisabled(false);
+      },
     },
   });
 };

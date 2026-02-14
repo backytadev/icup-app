@@ -21,31 +21,37 @@ export const RedirectIfMatch = (): JSX.Element => {
   }
 
   // If starts with ministry
+  if (location.pathname.startsWith('/ministries/search/')) {
+    return <Navigate to='/ministries/search' />;
+  }
   if (location.pathname.startsWith('/ministries/general-search/')) {
-    return <Navigate to='/ministries/general-search' />;
+    return <Navigate to='/ministries/search' />;
   }
   if (location.pathname.startsWith('/ministries/search-by-term/')) {
-    return <Navigate to='/ministries/search-by-term' />;
+    return <Navigate to='/ministries/search' />;
   }
   if (location.pathname.startsWith('/ministries/update/')) {
-    return <Navigate to='/ministries/update' />;
+    return <Navigate to='/ministries/search' />;
   }
   if (location.pathname.startsWith('/ministries/inactivate/')) {
-    return <Navigate to='/ministries/inactivate' />;
+    return <Navigate to='/ministries/search' />;
   }
 
   // If starts with pastor
+  if (location.pathname.startsWith('/pastors/search/')) {
+    return <Navigate to='/pastors/search' />;
+  }
   if (location.pathname.startsWith('/pastors/general-search/')) {
-    return <Navigate to='/pastors/general-search' />;
+    return <Navigate to='/pastors/search' />;
   }
   if (location.pathname.startsWith('/pastors/search-by-term/')) {
-    return <Navigate to='/pastors/search-by-term' />;
+    return <Navigate to='/pastors/search' />;
   }
   if (location.pathname.startsWith('/pastors/update/')) {
-    return <Navigate to='/pastors/update' />;
+    return <Navigate to='/pastors/search' />;
   }
   if (location.pathname.startsWith('/pastors/inactivate/')) {
-    return <Navigate to='/pastors/inactivate' />;
+    return <Navigate to='/pastors/search' />;
   }
 
   // If starts with copastor
@@ -133,31 +139,25 @@ export const RedirectIfMatch = (): JSX.Element => {
   }
 
   // If starts with user
+  if (location.pathname.startsWith('/churches/search/')) {
+    return <Navigate to='/churches/search' />;
+  }
   if (location.pathname.startsWith('/users/general-search/')) {
-    return <Navigate to='/users/general-search' />;
+    return <Navigate to='/churches/search' />;
   }
   if (location.pathname.startsWith('/users/search-by-term/')) {
-    return <Navigate to='/users/search-by-term' />;
+    return <Navigate to='/churches/search' />;
   }
   if (location.pathname.startsWith('/users/update/')) {
-    return <Navigate to='/users/update' />;
+    return <Navigate to='/churches/search' />;
   }
   if (location.pathname.startsWith('/users/inactivate/')) {
-    return <Navigate to='/users/inactivate' />;
+    return <Navigate to='/churches/search' />;
   }
 
   // If starts with offering income
-  if (location.pathname.startsWith('/offerings/income/general-search/')) {
-    return <Navigate to='/offerings/income/general-search' />;
-  }
-  if (location.pathname.startsWith('/offerings/income/search-by-term/')) {
-    return <Navigate to='/offerings/income/search-by-term' />;
-  }
-  if (location.pathname.startsWith('/offerings/income/update/')) {
-    return <Navigate to='/offerings/income/update' />;
-  }
-  if (location.pathname.startsWith('/offerings/income/inactivate/')) {
-    return <Navigate to='/offerings/income/inactivate' />;
+  if (location.pathname.startsWith('/offerings/income/search/')) {
+    return <Navigate to='/offerings/income/search' />;
   }
 
   // If starts with offering expense

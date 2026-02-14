@@ -1,7 +1,7 @@
-import { type UseMutationResult } from '@tanstack/react-query';
+import { type UseMutationResult, useQueryClient } from '@tanstack/react-query';
 
 import { type ErrorResponse } from '@/shared/interfaces/error-response.interface';
-import { useInactivateMutation } from '@/shared/hooks';
+import { useMutationWrapper } from '@/shared/hooks';
 
 import {
   inactivateChurch,
@@ -21,23 +21,39 @@ export const useChurchInactivationMutation = ({
   setIsButtonDisabled,
   setIsSelectInputDisabled,
 }: Options): UseMutationResult<void, ErrorResponse, InactivateChurchOptions, unknown> => {
-  return useInactivateMutation({
+  const queryClient = useQueryClient();
+
+  return useMutationWrapper({
     mutationFn: inactivateChurch,
-    invalidateQueries: [['churches-by-term']],
-    onSuccess: () => {
-      scrollToTop();
-      setTimeout(() => {
-        setIsCardOpen(false);
-      }, 500);
-      setTimeout(() => {
+    messages: { success: 'Iglesia eliminada correctamente.' },
+    successDelay: 2000,
+    errorDelay: 2000,
+    callbacks: {
+      onSuccessCallback: () => {
+        //* Invalidate all church-related queries
+        setTimeout(() => {
+          queryClient.invalidateQueries({
+            predicate: (query) => {
+              const queryKey = query.queryKey[0];
+              return typeof queryKey === 'string' && queryKey.includes('churches');
+            }
+          });
+        }, 700);
+
+        scrollToTop();
+        setTimeout(() => {
+          setIsCardOpen(false);
+        }, 500);
+        setTimeout(() => {
+          setIsButtonDisabled(false);
+          setIsSelectInputDisabled(false);
+        }, 600);
+      },
+      onErrorCallback: () => {
+        setIsCardOpen(true);
         setIsButtonDisabled(false);
         setIsSelectInputDisabled(false);
-      }, 600);
-    },
-    onError: () => {
-      setIsCardOpen(true);
-      setIsButtonDisabled(false);
-      setIsSelectInputDisabled(false);
+      },
     },
   });
 };

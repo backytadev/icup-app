@@ -1,7 +1,9 @@
 import { useEffect } from 'react';
 import { Toaster } from 'sonner';
+import { PiUsersThree } from 'react-icons/pi';
 
-import { MinistryModuleHeader, MinistryCreateForm } from '@/modules/ministry/components';
+import { MinistryCreateForm } from '@/modules/ministry/components/forms';
+import { ModuleHeader } from '@/shared/components/page-header/ModuleHeader';
 
 export const MinistryCreatePage = (): JSX.Element => {
   useEffect(() => {
@@ -13,10 +15,14 @@ export const MinistryCreatePage = (): JSX.Element => {
       <Toaster position='top-center' richColors />
 
       <div className='max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6'>
-        <MinistryModuleHeader
+        <ModuleHeader
           title='Registrar Nuevo Ministerio'
           description='Completa el formulario para crear un nuevo registro de ministerio en el sistema.'
           titleColor='green'
+          badge='Membresía'
+          badgeColor='blue'
+          icon={PiUsersThree}
+          accentColor='blue'
         />
 
         <MinistryCreateForm />

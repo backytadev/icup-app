@@ -1,5 +1,5 @@
 import { UserSearchType } from '@/modules/user/enums/user-search-type.enum';
-import { UserQueryParams } from '@/modules/user/interfaces/user-query-params.interface';
+import { UserQueryParams } from '@/modules/user/types/user-query-params.interface';
 
 export const buildUserSearchTerm = (params: UserQueryParams): string | undefined => {
   const { searchType, firstNamesTerm, lastNamesTerm, selectTerm, multiSelectTerm } = params;

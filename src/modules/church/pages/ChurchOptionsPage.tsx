@@ -6,7 +6,8 @@ import { FaSearch } from 'react-icons/fa';
 import { useAuthStore } from '@/stores/auth/auth.store';
 import { UserRole } from '@/modules/user/enums/user-role.enum';
 
-import { ChurchModuleHeader, ChurchOptionCard } from '@/modules/church/components';
+import { ModuleHeader } from '@/shared/components/page-header/ModuleHeader';
+import { ModuleOptionCard } from '@/shared/components/page-header/ModuleOptionCard';
 
 export const ChurchOptionsPage = (): JSX.Element => {
   const user = useAuthStore((state) => state.user);
@@ -23,9 +24,13 @@ export const ChurchOptionsPage = (): JSX.Element => {
   return (
     <div className='min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950'>
       <div className='max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8'>
-        <ChurchModuleHeader
+        <ModuleHeader
           title='Modulo Iglesia'
           description='Administra y gestiona la informacion de las iglesias y anexos registrados en el sistema.'
+          badge='Membresía'
+          badgeColor='amber'
+          icon={PiChurch}
+          accentColor='amber'
         />
 
         <div
@@ -38,7 +43,7 @@ export const ChurchOptionsPage = (): JSX.Element => {
         </div>
 
         <div className='grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto'>
-          <ChurchOptionCard
+          <ModuleOptionCard
             to='/churches/create'
             icon={<PiChurch />}
             title='Registrar Iglesia'
@@ -48,7 +53,7 @@ export const ChurchOptionsPage = (): JSX.Element => {
             delay='0.2s'
           />
 
-          <ChurchOptionCard
+          <ModuleOptionCard
             to='/churches/search'
             icon={<FaSearch />}
             title='Gestionar Iglesias'

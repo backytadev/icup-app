@@ -23,7 +23,7 @@ import { Button } from '@/shared/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
 
 import { getFullNames } from '@/shared/helpers/get-full-names.helper';
-import { PastorResponse } from '@/modules/pastor/interfaces/pastor-response.interface';
+import { type PastorResponse } from '@/modules/pastor/types';
 import { MemberFormData, MemberUseFormReturn } from '@/shared/interfaces/member-form-data';
 
 export interface PastorsSelectProps {

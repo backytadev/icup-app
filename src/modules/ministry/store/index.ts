@@ -1,12 +1,11 @@
 export {
   useMinistryStore,
-  // Selectors
-  selectGeneralFilterDisabled,
-  selectTermFilterDisabled,
-  selectGeneralSearchData,
-  selectTermSearchData,
-  selectSetGeneralFilterDisabled,
-  selectSetTermFilterDisabled,
-  selectSetGeneralSearchData,
-  selectSetTermSearchData,
+  selectSearchMode,
+  selectSearchData,
+  selectFiltersDisabled,
+  selectSetSearchMode,
+  selectSetSearchData,
+  selectSetFiltersDisabled,
 } from './ministry.store';
+
+export type { MinistrySearchMode } from './ministry.store';

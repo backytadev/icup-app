@@ -1,4 +1,4 @@
-import { UserQueryParams } from '@/modules/user/interfaces/user-query-params.interface';
+import { UserQueryParams } from '@/modules/user/types/user-query-params.interface';
 
 export const buildUserQueryParams = (params: UserQueryParams, term: string | undefined) => {
   const { limit, offset, order, all, searchType } = params;

@@ -53,7 +53,7 @@ export const DestroyImageButton = ({
           onClick={() => {
             setIsButtonDisabled(false);
           }}
-          className='border-none p-0 bg-secondary-400 rounded-full flex justify-center items-center absolute -top-3 -right-3 dark:hover:bg-slate-950 hover:bg-white'
+          className='border-none p-0 bg-secondary-400 rounded-full flex justify-center items-center absolute -top-3 -right-3 dark:hover:bg-slate-950 hover:bg-white mr-3 mt-2'
         >
           <TiDeleteOutline className='w-8 h-8 p-0  rounded-full fill-red-500 dark:hover:bg-white hover:bg-slate-200' />
         </Button>
@@ -119,7 +119,7 @@ export const DestroyImageButton = ({
             className={cn(
               'm-auto text-[14px] w-full border-1 border-green-500 bg-gradient-to-r from-green-400 via-green-500 to-green-600 text-white hover:text-green-100 hover:from-green-500 hover:via-green-600 hover:to-green-700 dark:from-green-600 dark:via-green-700 dark:to-green-800 dark:text-gray-100 dark:hover:text-gray-200 dark:hover:from-green-700 dark:hover:via-green-800 dark:hover:to-green-900',
               imageDeletionMutation?.isPending &&
-                'bg-emerald-500 disabled:opacity-100 disabled:md:text-[14.5px] text-white'
+              'bg-emerald-500 disabled:opacity-100 disabled:md:text-[14.5px] text-white'
             )}
           >
             {imageDeletionMutation?.isPending ? 'Procesando...' : 'Sí, eliminar'}

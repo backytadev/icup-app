@@ -24,7 +24,7 @@ export const TopFamilyGroupsTooltipContent = (
     (data?.accumulatedOfferingUSD > 0 && data?.accumulatedOfferingEUR > 0);
 
   return (
-    <div className='min-w-[210px] max-w-[270px] rounded-xl border border-slate-200/80 dark:border-slate-700/60 bg-white dark:bg-slate-900 shadow-lg shadow-slate-200/50 dark:shadow-slate-950/50 overflow-hidden'>
+    <div className='min-w-[210px] max-w-[270px] rounded-xl border border-slate-200/80 dark:border-slate-700/60 bg-white dark:bg-slate-900 dark:shadow-slate-950/50 overflow-hidden'>
       {/* Header */}
       <div className='px-3 py-2.5 bg-gradient-to-r from-emerald-50 to-teal-50/50 dark:from-emerald-900/20 dark:to-teal-900/10 border-b border-slate-200/60 dark:border-slate-700/40'>
         <div className='flex items-center gap-2'>

@@ -12,15 +12,18 @@ import {
 } from '@/modules/church/store';
 
 import { type ChurchResponse, type ChurchSearchFormByTerm } from '@/modules/church/types';
-import { churchUnifiedColumns as columns } from '@/modules/church/components/tables/columns';
-import { UnifiedChurchSearchDataTable } from '@/modules/church/components/tables';
+import { churchUnifiedColumns as columns } from '@/modules/church/components/tables/columns/base-columns';
+import { UnifiedChurchSearchDataTable } from '@/modules/church/components/tables/UnifiedSearchDataTable';
+
+import { PiChurch } from 'react-icons/pi';
 
 import {
-  ChurchModuleHeader,
-  ChurchFormCard,
   GeneralSearchForm,
   SearchByTermForm,
-} from '@/modules/church/components';
+} from '@/modules/church/components/forms';
+
+import { ModuleHeader } from '@/shared/components/page-header/ModuleHeader';
+import { ModuleFormCard } from '@/shared/components/page-header/ModuleFormCard';
 
 import { RecordOrder } from '@/shared/enums/record-order.enum';
 import { type GeneralSearchForm as GeneralSearchFormType } from '@/shared/interfaces/search-general-form.interface';
@@ -68,8 +71,11 @@ export const ChurchSearchPage = (): JSX.Element => {
     document.title = 'Gestionar Iglesias - IcupApp';
   }, []);
 
-  //* Auto-execute general search on mount
+  //* Reset to general mode and auto-execute search on mount
   useEffect(() => {
+    // Always reset to general mode when mounting to prevent stale state
+    setSearchMode('general');
+
     const defaultParams: GeneralSearchFormType = {
       limit: '10',
       offset: '0',
@@ -79,7 +85,7 @@ export const ChurchSearchPage = (): JSX.Element => {
 
     setGeneralSearchParams(defaultParams);
     setFiltersDisabled(false);
-  }, [setFiltersDisabled]);
+  }, [setFiltersDisabled, setSearchMode]);
 
 
   //* Handlers
@@ -139,10 +145,14 @@ export const ChurchSearchPage = (): JSX.Element => {
       <Toaster position='top-center' richColors />
 
       <div className='max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6'>
-        <ChurchModuleHeader
+        <ModuleHeader
           title='Gestionar Iglesias'
           description='Busca, consulta, actualiza e inactiva registros de iglesias y anexos en el sistema.'
           titleColor='blue'
+          badge='Membresía'
+          badgeColor='amber'
+          icon={PiChurch}
+          accentColor='amber'
         />
 
         {/* Mode Toggle */}
@@ -182,7 +192,7 @@ export const ChurchSearchPage = (): JSX.Element => {
 
         {/* Search Form */}
         {isFiltersDisabled && (
-          <ChurchFormCard
+          <ModuleFormCard
             title={searchMode === 'general' ? 'Parametros de Busqueda' : 'Filtros de Busqueda'}
             description={
               searchMode === 'general'
@@ -195,7 +205,7 @@ export const ChurchSearchPage = (): JSX.Element => {
             ) : (
               <SearchByTermForm onSearch={handleFilterSearch} />
             )}
-          </ChurchFormCard>
+          </ModuleFormCard>
         )}
 
         {/* Data Table */}
@@ -203,7 +213,7 @@ export const ChurchSearchPage = (): JSX.Element => {
           className='opacity-0 animate-slide-in-up'
           style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}
         >
-          <ChurchFormCard>
+          <ModuleFormCard>
             <UnifiedChurchSearchDataTable
               columns={columns}
               data={dataFictional}
@@ -214,7 +224,7 @@ export const ChurchSearchPage = (): JSX.Element => {
               setGeneralSearchParams={setGeneralSearchParams}
               setFilterSearchParams={setFilterSearchParams}
             />
-          </ChurchFormCard>
+          </ModuleFormCard>
         </div>
 
         <footer className='pt-4 pb-2 text-center'>

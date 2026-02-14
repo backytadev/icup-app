@@ -3,12 +3,11 @@ import { RecordOrder } from '@/shared/enums/record-order.enum';
 import { openPdfInNewTab } from '@/shared/helpers/open-pdf-tab';
 import { getContextParams } from '@/shared/helpers/get-context-params';
 
-import { type PastorFormData } from '@/modules/pastor/interfaces/pastor-form-data.interface';
-import { type PastorResponse } from '@/modules/pastor/interfaces/pastor-response.interface';
-import { type PastorQueryParams } from '@/modules/pastor/interfaces/pastor-query-params.interface';
+import { type PastorFormData } from '@/modules/pastor/types/pastor-form-data.interface';
+import { type PastorResponse } from '@/modules/pastor/types/pastor-response.interface';
+import { type PastorQueryParams } from '@/modules/pastor/types/pastor-query-params.interface';
 
-import { buildPastorSearchTerm } from '@/modules/pastor/builders/buildPastorSearchTerm';
-import { buildPastorQueryParams } from '@/modules/pastor/builders/buildPastorQueryParam';
+import { buildPastorSearchTerm, buildPastorQueryParams } from '@/modules/pastor/utils';
 
 export interface UpdatePastorOptions {
   id: string;

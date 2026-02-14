@@ -64,7 +64,7 @@ const updatedByColumn: ColumnDef<ChurchColumns, any> = {
   header: ({ column }) => (
     <ColumnHeader
       column={column}
-      label='Actualizado por'
+      label='Editado por'
       icon={UserPen}
       colorClass='text-amber-600 dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300'
     />
@@ -110,25 +110,8 @@ const baseColumns: Array<ColumnDef<ChurchColumns, any>> = [
   urbanSectorColumn,
 ];
 
-//* Configuration columns
-export const churchInfoColumns: Array<ColumnDef<ChurchColumns, any>> = [
-  ...baseColumns,
-  updatedByColumn,
-  actionsColumn,
-];
-
-export const churchUpdateColumns: Array<ColumnDef<ChurchColumns, any>> = [
-  ...baseColumns,
-  actionsColumn,
-];
-
-export const churchInactivateColumns: Array<ColumnDef<ChurchColumns, any>> = [
-  ...baseColumns,
-  actionsColumn,
-];
-
 export const churchUnifiedColumns: Array<ColumnDef<ChurchColumns, any>> = [
   ...baseColumns,
-  // updatedByColumn,
+  updatedByColumn,
   actionsColumn,
 ];

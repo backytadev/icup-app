@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo, useRef } from 'react';
 import { Pencil } from 'lucide-react';
 
 import { useChurchStore, selectSearchData } from '@/modules/church/store';
-import { ChurchUpdateForm } from '@/modules/church/components';
+import { ChurchUpdateForm } from '@/modules/church/components/forms';
 import { FormModal } from '@/shared/components/modal';
 import { Button } from '@/shared/components/ui/button';
 

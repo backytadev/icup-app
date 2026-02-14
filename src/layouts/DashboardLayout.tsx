@@ -4,6 +4,7 @@ import { useAuthStore } from '@/stores/auth/auth.store';
 
 import { Sidebar } from '@/core/layout/sidebar/Sidebar';
 import { SidebarMobile } from '@/core/layout/sidebar/SidebarMobile';
+import { ChurchContextBanner } from '@/core/layout/ChurchContextBanner';
 import { LoadingSpinner } from '@/shared/components/spinners/LoadingSpinner';
 
 export const DashboardLayout = (): JSX.Element | null => {
@@ -19,9 +20,13 @@ export const DashboardLayout = (): JSX.Element | null => {
       <div className='flex'>
         <Sidebar />
 
-        <main className='flex-1 w-full min-h-screen'>
-          <Outlet />
-        </main>
+        <div className='flex-1 w-full min-h-screen flex flex-col'>
+          <ChurchContextBanner />
+
+          <main className='flex-1 w-full'>
+            <Outlet />
+          </main>
+        </div>
       </div>
     </div>
   );

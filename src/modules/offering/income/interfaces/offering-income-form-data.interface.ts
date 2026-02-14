@@ -1,5 +1,5 @@
 export interface OfferingIncomeFormData {
-  churchId: string;
+  churchId?: string | undefined;
   type: string;
   subType?: string | undefined;
   category?: string | undefined;
@@ -17,16 +17,17 @@ export interface OfferingIncomeFormData {
   externalDonorPostalCode?: string | undefined;
   shift?: string | undefined;
   amount: string;
+  fileNames?: string[] | undefined;
+  imageUrls?: string[] | undefined;
   date: Date;
   currency: string;
   comments?: string | undefined;
-  fileNames?: string[] | undefined;
-  imageUrls?: string[] | undefined;
   memberType?: string | undefined;
   familyGroupId?: string | undefined;
   memberId?: string | undefined;
   zoneId?: string | undefined;
   recordStatus?: string | undefined;
+  shouldOpenReceiptInBrowser?: 'yes' | 'no' | undefined;
 }
 
 export type OfferingIncomeFormDataKeys =
@@ -50,10 +51,12 @@ export type OfferingIncomeFormDataKeys =
   | 'shift'
   | 'currency'
   | 'comments'
+  | 'familyGroupId'
+  | 'memberId'
   | 'fileNames'
   | 'imageUrls'
-  | 'familyGroupId'
   | 'memberId'
   | 'zoneId'
   | 'churchId'
-  | 'recordStatus';
+  | 'recordStatus'
+  | 'shouldOpenReceiptInBrowser';

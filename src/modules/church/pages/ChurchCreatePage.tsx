@@ -1,6 +1,9 @@
 import { useEffect } from 'react';
 import { Toaster } from 'sonner';
-import { ChurchModuleHeader, ChurchCreateForm } from '@/modules/church/components';
+import { PiChurch } from 'react-icons/pi';
+
+import { ChurchCreateForm } from '@/modules/church/components/forms';
+import { ModuleHeader } from '@/shared/components/page-header/ModuleHeader';
 
 export const ChurchCreatePage = (): JSX.Element => {
   useEffect(() => {
@@ -12,10 +15,14 @@ export const ChurchCreatePage = (): JSX.Element => {
       <Toaster position='top-center' richColors />
 
       <div className='max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6'>
-        <ChurchModuleHeader
+        <ModuleHeader
           title='Registrar Nueva Iglesia'
           description='Completa el formulario para crear un nuevo registro de iglesia o anexo en el sistema.'
           titleColor='green'
+          badge='Membresía'
+          badgeColor='amber'
+          icon={PiChurch}
+          accentColor='amber'
         />
 
         <ChurchCreateForm />

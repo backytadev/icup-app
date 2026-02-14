@@ -36,9 +36,10 @@ export const ChurchMinistrySelector = ({
     !user?.roles?.includes(UserRole.SuperUser) &&
     !user?.roles?.includes(UserRole.AdminUser);
 
+  // Ministries filtered by active church
   const ministriesForActiveChurch = activeChurchId
     ? availableMinistries.filter((m) => m.theirChurch?.id === activeChurchId)
-    : [];
+    : availableMinistries;
 
   const activeChurch = availableChurches.find((c) => c.id === activeChurchId);
   const activeMinistry = availableMinistries.find((m) => m.id === activeMinistryId);
@@ -59,16 +60,20 @@ export const ChurchMinistrySelector = ({
     window.location.reload();
   };
 
-  const showMinistrySelector = isMinistryUser && ministriesForActiveChurch.length > 0;
+  // Show ministry selector if user is MinistryUser and has 2+ ministries
+  const showMinistrySelector = isMinistryUser && availableMinistries.length > 1;
   const hasSingleChurch = availableChurches.length === 1;
+  const hasSingleMinistry = ministriesForActiveChurch.length === 1;
 
   // Collapsed view (icon only)
   if (!isExpanded) {
     return (
       <div className='px-3 space-y-1'>
+        {/* Church icon */}
         <div className='flex items-center justify-center p-2 rounded-lg bg-blue-600/10 border border-blue-500/20'>
           <Church className='w-5 h-5 text-blue-400' />
         </div>
+        {/* Ministry icon (only if user has 2+ ministries) */}
         {showMinistrySelector && (
           <div className='flex items-center justify-center p-2 rounded-lg bg-emerald-600/10 border border-emerald-500/20'>
             <BookOpen className='w-5 h-5 text-emerald-400' />
@@ -136,17 +141,24 @@ export const ChurchMinistrySelector = ({
         )}
       </div>
 
-      {/* Ministry Selector (only for MinistryUser) */}
+      {/* Ministry Selector (only for MinistryUser with 2+ ministries) */}
       {showMinistrySelector && (
         <div className='space-y-1'>
           <span className='text-[11px] font-semibold uppercase tracking-wider text-slate-500 px-1'>
             Ministerio
           </span>
-          {ministriesForActiveChurch.length === 1 ? (
+          {hasSingleMinistry ? (
             <div className='flex items-center gap-2 p-2.5 rounded-xl bg-emerald-600/10 border border-emerald-500/20'>
               <BookOpen className='w-4 h-4 text-emerald-400 shrink-0' />
               <span className='text-sm font-medium text-emerald-200 truncate'>
                 {activeMinistry?.customMinistryName}
+              </span>
+            </div>
+          ) : ministriesForActiveChurch.length === 0 ? (
+            <div className='flex items-center gap-2 p-2.5 rounded-xl bg-amber-600/10 border border-amber-500/20'>
+              <BookOpen className='w-4 h-4 text-amber-400 shrink-0' />
+              <span className='text-xs font-medium text-amber-200 truncate'>
+                Sin ministerios en esta iglesia
               </span>
             </div>
           ) : (

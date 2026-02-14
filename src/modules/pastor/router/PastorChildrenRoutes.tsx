@@ -1,20 +1,13 @@
 /* eslint-disable @typescript-eslint/promise-function-async */
 
 import { lazy } from 'react';
-import { RouteObject } from 'react-router-dom';
+import { type RouteObject } from 'react-router-dom';
 import { LazyElement } from '@/shared/components/lazy/LazyElements';
 
 //! Lazy load children routes
-const LazyPastorsSearchPageByTerm = lazy(
-  () => import('@/modules/pastor/pages/PastorsSearchPageByTerm')
-);
-const LazyPastorsGeneralSearchPage = lazy(
-  () => import('@/modules/pastor/pages/PastorsGeneralSearchPage')
-);
-const PastorCreatePage = lazy(() => import('@/modules/pastor/pages/PastorCreatePage'));
-const LazyPastorUpdatePage = lazy(() => import('@/modules/pastor/pages/PastorUpdatePage'));
 const LazyPastorOptionsPage = lazy(() => import('@/modules/pastor/pages/PastorOptionsPage'));
-const LazyPastorInactivatePage = lazy(() => import('@/modules/pastor/pages/PastorInactivatePage'));
+const LazyPastorCreatePage = lazy(() => import('@/modules/pastor/pages/PastorCreatePage'));
+const LazyPastorSearchPage = lazy(() => import('@/modules/pastor/pages/PastorSearchPage'));
 
 export const PastorChildrenRoutes: RouteObject[] = [
   {
@@ -29,39 +22,15 @@ export const PastorChildrenRoutes: RouteObject[] = [
     path: 'create',
     element: (
       <LazyElement>
-        <PastorCreatePage />
+        <LazyPastorCreatePage />
       </LazyElement>
     ),
   },
   {
-    path: 'general-search',
+    path: 'search',
     element: (
       <LazyElement>
-        <LazyPastorsGeneralSearchPage />
-      </LazyElement>
-    ),
-  },
-  {
-    path: 'search-by-term',
-    element: (
-      <LazyElement>
-        <LazyPastorsSearchPageByTerm />
-      </LazyElement>
-    ),
-  },
-  {
-    path: 'update',
-    element: (
-      <LazyElement>
-        <LazyPastorUpdatePage />
-      </LazyElement>
-    ),
-  },
-  {
-    path: 'inactivate',
-    element: (
-      <LazyElement>
-        <LazyPastorInactivatePage />
+        <LazyPastorSearchPage />
       </LazyElement>
     ),
   },

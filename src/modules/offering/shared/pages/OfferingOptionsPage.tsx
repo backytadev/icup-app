@@ -1,13 +1,13 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
-
 import { useEffect } from 'react';
 
-import { NavLink } from 'react-router-dom';
-import { FcBearish, FcBullish } from 'react-icons/fc';
+import { TbArrowBigUpLines, TbArrowBigDownLines } from 'react-icons/tb';
+import { GiReceiveMoney } from 'react-icons/gi';
 
 import { useAuthStore } from '@/stores/auth/auth.store';
-import { WhiteCard } from '@/shared/components/cards/WhiteCard';
 import { UserRole } from '@/modules/user/enums/user-role.enum';
+
+import { ModuleHeader } from '@/shared/components/page-header/ModuleHeader';
+import { ModuleOptionCard } from '@/shared/components/page-header/ModuleOptionCard';
 
 export const OfferingOptionsPage = (): JSX.Element => {
   const user = useAuthStore((state) => state.user);
@@ -27,63 +27,53 @@ export const OfferingOptionsPage = (): JSX.Element => {
   }, []);
 
   return (
-    <div className='animate-fadeIn'>
-      <h1 className='text-center pb-2 pt-2 md:pt-2 md:pb-2 font-sans text-2xl sm:text-3xl font-bold text-amber-500 dark:text-offering-color text-[2rem] sm:text-[2.4rem] md:text-[2.6rem] lg:text-5xl xl:text-5xl'>
-        Modulo Ofrenda
-      </h1>
-      <p className='text-center font-sans text-sm sm:text-md md:text-[15px] font-bold px-4 pb-4 lg:text-base xl:text-lg'>
-        Bienvenido, por favor elige una opción.
-      </p>
-      <hr className='p-[0.015rem] bg-slate-500' />
+    <div className='min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950'>
+      <div className='max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8'>
+        <ModuleHeader
+          title='Modulo Ofrenda'
+          description='Administra y gestiona los ingresos y salidas de ofrendas registradas en el sistema.'
+          badge='Ofrenda'
+          badgeColor='amber'
+          icon={GiReceiveMoney}
+          accentColor='amber'
+        />
 
-      <div className='w-full h-[35rem] justify-center lg:justify-normal px-8 py-10 flex flex-col gap-10 lg:grid md:gap-8 sm:h-[45rem] md:h-[58rem] lg:h-[58rem]'>
-        <NavLink
-          key='/offerings/income'
-          to={hasFullAccess || hasPartAccess ? '/offerings/income' : '#'}
-          onClick={(e) => {
-            if (!hasFullAccess && !hasPartAccess) e.preventDefault();
-          }}
-          end
-          className='row-start-1 row-end-3 col-start-1 col-end-3 h-full'
+        <div
+          className='text-center opacity-0 animate-slide-in-up'
+          style={{ animationDelay: '0.15s', animationFillMode: 'forwards' }}
         >
-          <WhiteCard
+          <p className='text-lg text-slate-600 dark:text-slate-400 font-inter'>
+            Selecciona una opcion para continuar
+          </p>
+        </div>
+
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto'>
+          <ModuleOptionCard
+            to='/offerings/income'
+            icon={<TbArrowBigUpLines />}
+            title='Modulo de Ingreso'
+            description='Control de ingresos de ofrenda.'
+            color='green'
             disabled={!hasFullAccess && !hasPartAccess}
-            className='h-full sm:h-full gap-2 sm:gap-4 lg:gap-5'
-            centered
-          >
-            <FcBullish className='text-[5rem] sm:text-[8rem] md:text-[10rem]' />
-            <h2 className='text-green-500 font-bold text-[22px] sm:text-3xl lg:text-4xl'>
-              Modulo de Ingreso
-            </h2>
-            <p className='font-bold text-[14px] sm:text-[16px] lg:text-[17px] leading-6 xl:leading-3'>
-              Control de ingresos de ofrenda
-            </p>
-          </WhiteCard>
-        </NavLink>
+            delay='0.2s'
+          />
 
-        <NavLink
-          key='/offerings/expenses'
-          to={hasFullAccess ? '/offerings/expenses' : '#'}
-          onClick={(e) => {
-            if (!hasFullAccess) e.preventDefault();
-          }}
-          end
-          className=' row-start-1 row-end-3 col-start-3 col-end-5 h-full'
-        >
-          <WhiteCard
+          <ModuleOptionCard
+            to='/offerings/expenses'
+            icon={<TbArrowBigDownLines />}
+            title='Modulo de Salida'
+            description='Control de gastos de ofrenda.'
+            color='red'
             disabled={!hasFullAccess}
-            className='h-full sm:h-full gap-2 sm:gap-4 lg:gap-5'
-            centered
-          >
-            <FcBearish className='text-[5rem] sm:text-[8rem] lg:text-[10rem]' />
-            <h2 className='text-red-500 font-bold text-[22px] sm:text-3xl lg:text-4xl'>
-              Modulo de Salida
-            </h2>
-            <p className='font-bold text-[14px] sm:text-[16px] lg:text-[17px] leading-6 xl:leading-3'>
-              Control de gastos de ofrenda
-            </p>
-          </WhiteCard>
-        </NavLink>
+            delay='0.25s'
+          />
+        </div>
+
+        <footer className='pt-6 pb-2 text-center'>
+          <p className='text-xs text-slate-400 dark:text-slate-500 font-inter'>
+            Modulo Ofrenda - ICUP App &copy; {new Date().getFullYear()}
+          </p>
+        </footer>
       </div>
     </div>
   );

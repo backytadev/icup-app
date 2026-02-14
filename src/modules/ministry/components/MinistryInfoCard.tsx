@@ -1,17 +1,15 @@
 import { useState, useMemo } from 'react';
 
-import { useLocation } from 'react-router-dom';
-import { BsFillPersonVcardFill } from 'react-icons/bs';
-
 import { MinistryTabsCard } from '@/modules/ministry/components';
 
 import {
   useMinistryStore,
-  selectGeneralSearchData,
-  selectTermSearchData,
+  selectSearchData,
 } from '@/modules/ministry/store/ministry.store';
 
 import { ResponsiveModal } from '@/shared/components/modal';
+import { Button } from '@/shared/components/ui/button';
+import { Eye } from 'lucide-react';
 
 interface MinistryInfoCardProps {
   idRow: string;
@@ -19,27 +17,27 @@ interface MinistryInfoCardProps {
 
 export const MinistryInfoCard = ({ idRow }: MinistryInfoCardProps): JSX.Element => {
   //* States
-  const generalSearchData = useMinistryStore(selectGeneralSearchData);
-  const termSearchData = useMinistryStore(selectTermSearchData);
-
+  const searchData = useMinistryStore(selectSearchData);
   const [open, setOpen] = useState<boolean>(false);
-
-  //* Hooks (external libraries)
-  const { pathname } = useLocation();
 
   //* Set data
   const currentMinistry = useMemo(() => {
-    return pathname === '/ministries/general-search'
-      ? generalSearchData?.find((data) => data.id === idRow)
-      : termSearchData?.find((data) => data.id === idRow);
-  }, [pathname, generalSearchData, termSearchData, idRow]);
+    return searchData?.find((data) => data.id === idRow);
+  }, [searchData, idRow]);
 
   return (
     <ResponsiveModal
       open={open}
       onOpenChange={setOpen}
       triggerVariant='info'
-      triggerIcon={<BsFillPersonVcardFill className='w-8 h-[1.65rem]' />}
+      trigger={
+        <Button
+          variant='ghost'
+          className='h-8 w-8 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-50 dark:text-blue-400 dark:hover:text-blue-300 dark:hover:bg-blue-900/20'
+        >
+          <Eye className='h-4 w-4' />
+        </Button>
+      }
       maxWidth='lg'
     >
       <MinistryTabsCard data={currentMinistry} id={idRow} />

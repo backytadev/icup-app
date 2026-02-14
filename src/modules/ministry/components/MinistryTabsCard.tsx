@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 
 import { FiMapPin } from 'react-icons/fi';
-import { GiChurch } from 'react-icons/gi';
 
 import { type MinistryResponse } from '@/modules/ministry/types';
 
@@ -27,6 +26,7 @@ import {
 import { MinistryType, MinistryTypeNames } from '@/modules/ministry/enums/ministry-type.enum';
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/shared/components/ui/tabs';
+import { PiUsersThree } from 'react-icons/pi';
 
 interface MinistryTabsCardProps {
   id: string;
@@ -110,16 +110,8 @@ export const MinistryTabsCard = ({ data, id }: MinistryTabsCardProps): JSX.Eleme
     if (id) {
       const url = new URL(window.location.href);
 
-      if (url.pathname === '/ministries/general-search')
-        url.pathname = `/ministries/general-search/${id}/view`;
-
-      if (url.pathname === '/ministries/search-by-term')
-        url.pathname = `/ministries/search-by-term/${id}/view`;
-
-      if (url.pathname === '/ministries/update') url.pathname = `/ministries/update/${id}/view`;
-
-      if (url.pathname === '/ministries/inactivate')
-        url.pathname = `/ministries/inactivate/${id}/view`;
+      if (url.pathname === '/ministries/search')
+        url.pathname = `/ministries/search/${id}/view`;
 
       window.history.replaceState({}, '', url);
     }
@@ -152,7 +144,7 @@ export const MinistryTabsCard = ({ data, id }: MinistryTabsCardProps): JSX.Eleme
           </div>
 
           <div className='flex-shrink-0 p-2 md:p-2.5 bg-white/10 rounded-lg'>
-            <GiChurch className='w-5 h-5 md:w-6 md:h-6 text-white/90' />
+            <PiUsersThree className='w-5 h-5 md:w-6 md:h-6 text-white/90' />
           </div>
         </div>
       </div>

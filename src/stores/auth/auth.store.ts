@@ -3,7 +3,7 @@ import { devtools, persist } from 'zustand/middleware';
 
 import { AuthService } from '@/modules/auth/services/auth.service';
 import { type AuthStatus } from '@/modules/auth/types/auth-status.type';
-import { type User } from '@/modules/user/interfaces/user-form-data.interface';
+import { type User } from '@/modules/user/types/user-form-data.interface';
 import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
 import { jwtDecode } from 'jwt-decode';
 

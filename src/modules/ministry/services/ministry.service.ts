@@ -44,6 +44,16 @@ export const getSimpleMinistries = async ({
   });
 };
 
+//* Get all simple ministries (for user module - no context filtering)
+export const getAllSimpleMinistries = async (): Promise<MinistryResponse[]> => {
+  return apiRequest<MinistryResponse[]>('get', '/ministries', {
+    params: {
+      order: RecordOrder.Ascending,
+      isSimpleQuery: 'true',
+    },
+  });
+};
+
 //* Find all
 export const getAllMinistries = async (
   params: MinistryQueryParams
