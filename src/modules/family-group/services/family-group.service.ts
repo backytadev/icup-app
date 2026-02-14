@@ -1,6 +1,7 @@
 import { apiRequest } from '@/shared/helpers/api-request';
 import { RecordOrder } from '@/shared/enums/record-order.enum';
 import { openPdfInNewTab } from '@/shared/helpers/open-pdf-tab';
+import { getContextParams } from '@/shared/helpers/get-context-params';
 
 import { buildFamilyGroupSearchTerm } from '@/modules/family-group/builders/buildFamilyGroupSearchTerm';
 import { buildFamilyGroupQueryParams } from '@/modules/family-group/builders/buildFamilyGroupQueryParam';
@@ -35,11 +36,12 @@ export const getSimpleFamilyGroups = async ({
   isSimpleQuery: boolean;
   churchId?: string;
 }): Promise<FamilyGroupResponse[]> => {
+  const { churchId: contextChurchId } = getContextParams();
   return apiRequest<FamilyGroupResponse[]>('get', '/family-groups', {
     params: {
       order: RecordOrder.Ascending,
       isSimpleQuery: isSimpleQuery.toString(),
-      churchId,
+      churchId: churchId ?? contextChurchId,
     },
   });
 };
@@ -49,8 +51,12 @@ export const getFamilyGroups = async (
   params: FamilyGroupQueryParams
 ): Promise<FamilyGroupResponse[]> => {
   const { limit, offset, order, all, churchId } = params;
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurchId = churchId ?? contextChurchId;
 
-  const query = all ? { order, churchId } : { limit, offset, order, churchId };
+  const query = all
+    ? { order, churchId: resolvedChurchId }
+    : { limit, offset, order, churchId: resolvedChurchId };
 
   return apiRequest<FamilyGroupResponse[]>('get', '/family-groups', { params: query });
 };
@@ -61,8 +67,11 @@ export const getFamilyGroupsByFilters = async (
 ): Promise<FamilyGroupResponse[]> => {
   const term = buildFamilyGroupSearchTerm(params);
   const queryParams = buildFamilyGroupQueryParams(params, term);
+  const { churchId } = getContextParams();
 
-  return apiRequest<FamilyGroupResponse[]>('get', '/family-groups/search', { params: queryParams });
+  return apiRequest<FamilyGroupResponse[]>('get', '/family-groups/search', {
+    params: { ...queryParams, churchId },
+  });
 };
 
 //* Update
@@ -89,8 +98,9 @@ export const getGeneralFamilyGroupsReport = async (
   params: FamilyGroupQueryParams
 ): Promise<boolean> => {
   const { limit, offset, order, all } = params;
+  const { churchId } = getContextParams();
 
-  const query = all ? { order } : { limit, offset, order };
+  const query = all ? { order, churchId } : { limit, offset, order, churchId };
 
   const pdf = await apiRequest<Blob>('get', '/reports/family-groups', {
     params: query,
@@ -106,9 +116,10 @@ export const getFamilyGroupsReportByTerm = async (
 ): Promise<boolean> => {
   const term = buildFamilyGroupSearchTerm(params);
   const queryParams = buildFamilyGroupQueryParams(params, term);
+  const { churchId } = getContextParams();
 
   const pdf = await apiRequest<Blob>('get', '/reports/family-groups/search', {
-    params: queryParams,
+    params: { ...queryParams, churchId },
     responseType: 'blob',
     headers: { 'Content-Type': 'application/pdf' },
   });

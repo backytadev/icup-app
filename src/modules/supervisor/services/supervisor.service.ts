@@ -1,6 +1,7 @@
 import { apiRequest } from '@/shared/helpers/api-request';
 import { RecordOrder } from '@/shared/enums/record-order.enum';
 import { openPdfInNewTab } from '@/shared/helpers/open-pdf-tab';
+import { getContextParams } from '@/shared/helpers/get-context-params';
 
 import { buildSupervisorSearchTerm } from '@/modules/supervisor/builders/buildSupervisorSearchTerm';
 import { buildSupervisorQueryParams } from '@/modules/supervisor/builders/buildSupervisorQueryParam';
@@ -43,12 +44,13 @@ export const getSimpleSupervisors = async ({
   // withNullZone,
   isSimpleQuery,
 }: SimpleSupervisorsOptions): Promise<SupervisorResponse[]> => {
+  const { churchId: contextChurchId } = getContextParams();
   return apiRequest<SupervisorResponse[]>('get', '/supervisors', {
     params: {
       order: RecordOrder.Ascending,
       isSimpleQuery: isSimpleQuery.toString(),
       // withNullZone: withNullZone.toString(),
-      churchId,
+      churchId: churchId ?? contextChurchId,
     },
   });
 };
@@ -58,8 +60,12 @@ export const getSupervisors = async (
   params: SupervisorQueryParams
 ): Promise<SupervisorResponse[]> => {
   const { limit, offset, order, all, churchId } = params;
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurchId = churchId ?? contextChurchId;
 
-  const query = all ? { order, churchId } : { limit, offset, order, churchId };
+  const query = all
+    ? { order, churchId: resolvedChurchId }
+    : { limit, offset, order, churchId: resolvedChurchId };
 
   return apiRequest<SupervisorResponse[]>('get', '/supervisors', { params: query });
 };
@@ -70,8 +76,11 @@ export const getSupervisorsByFilters = async (
 ): Promise<SupervisorResponse[]> => {
   const term = buildSupervisorSearchTerm(params);
   const queryParams = buildSupervisorQueryParams(params, term);
+  const { churchId } = getContextParams();
 
-  return apiRequest<SupervisorResponse[]>('get', '/supervisors/search', { params: queryParams });
+  return apiRequest<SupervisorResponse[]>('get', '/supervisors/search', {
+    params: { ...queryParams, churchId },
+  });
 };
 
 //* Update
@@ -96,8 +105,9 @@ export const getGeneralSupervisorsReport = async (
   params: SupervisorQueryParams
 ): Promise<boolean> => {
   const { limit, offset, order, all } = params;
+  const { churchId } = getContextParams();
 
-  const query = all ? { order } : { limit, offset, order };
+  const query = all ? { order, churchId } : { limit, offset, order, churchId };
 
   const pdf = await apiRequest<Blob>('get', '/reports/supervisors', {
     params: query,
@@ -113,9 +123,10 @@ export const getSupervisorsReportByTerm = async (
 ): Promise<boolean> => {
   const term = buildSupervisorSearchTerm(params);
   const queryParams = buildSupervisorQueryParams(params, term);
+  const { churchId } = getContextParams();
 
   const pdf = await apiRequest<Blob>('get', '/reports/supervisors/search', {
-    params: queryParams,
+    params: { ...queryParams, churchId },
     responseType: 'blob',
     headers: { 'Content-Type': 'application/pdf' },
   });

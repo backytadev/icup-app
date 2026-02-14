@@ -5,6 +5,7 @@ import { icupApi } from '@/core/api/icupApi';
 import { RecordOrder } from '@/shared/enums/record-order.enum';
 import { apiRequest } from '@/shared/helpers/api-request';
 import { openPdfInNewTab } from '@/shared/helpers/open-pdf-tab';
+import { getContextParams } from '@/shared/helpers/get-context-params';
 
 import { type DiscipleResponse } from '@/modules/disciple/interfaces/disciple-response.interface';
 import { type DiscipleFormData } from '@/modules/disciple/interfaces/disciple-form-data.interface';
@@ -36,11 +37,12 @@ export const getSimpleDisciples = async ({
   isSimpleQuery: true;
   churchId?: string;
 }): Promise<DiscipleResponse[]> => {
+  const { churchId: contextChurchId } = getContextParams();
   return apiRequest<DiscipleResponse[]>('get', '/disciples', {
     params: {
       order: RecordOrder.Ascending,
       isSimpleQuery: isSimpleQuery.toString(),
-      churchId,
+      churchId: churchId ?? contextChurchId,
     },
   });
 };
@@ -48,8 +50,12 @@ export const getSimpleDisciples = async ({
 //* Find all
 export const getDisciples = async (params: DiscipleQueryParams): Promise<DiscipleResponse[]> => {
   const { limit, offset, order, all, churchId } = params;
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurchId = churchId ?? contextChurchId;
 
-  const query = all ? { order, churchId } : { limit, offset, order, churchId };
+  const query = all
+    ? { order, churchId: resolvedChurchId }
+    : { limit, offset, order, churchId: resolvedChurchId };
 
   return apiRequest<DiscipleResponse[]>('get', '/disciples', { params: query });
 };
@@ -60,8 +66,11 @@ export const getDisciplesByFilters = async (
 ): Promise<DiscipleResponse[]> => {
   const term = buildDiscipleSearchTerm(params);
   const queryParams = buildDiscipleQueryParams(params, term);
+  const { churchId } = getContextParams();
 
-  return apiRequest<DiscipleResponse[]>('get', '/disciples/search', { params: queryParams });
+  return apiRequest<DiscipleResponse[]>('get', '/disciples/search', {
+    params: { ...queryParams, churchId },
+  });
 };
 
 //* Update
@@ -99,8 +108,9 @@ export const inactivateDisciple = async ({
 //* Reports
 export const getGeneralDisciplesReport = async (params: DiscipleQueryParams): Promise<boolean> => {
   const { limit, offset, order, all } = params;
+  const { churchId } = getContextParams();
 
-  const query = all ? { order } : { limit, offset, order };
+  const query = all ? { order, churchId } : { limit, offset, order, churchId };
 
   const pdf = await apiRequest<Blob>('get', '/reports/disciples', {
     params: query,
@@ -114,9 +124,10 @@ export const getGeneralDisciplesReport = async (params: DiscipleQueryParams): Pr
 export const getDisciplesReportByTerm = async (params: DiscipleQueryParams): Promise<boolean> => {
   const term = buildDiscipleSearchTerm(params);
   const queryParams = buildDiscipleQueryParams(params, term);
+  const { churchId } = getContextParams();
 
   const pdf = await apiRequest<Blob>('get', '/reports/disciples/search', {
-    params: queryParams,
+    params: { ...queryParams, churchId },
     responseType: 'blob',
     headers: { 'Content-Type': 'application/pdf' },
   });

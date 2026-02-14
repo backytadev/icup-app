@@ -1,6 +1,7 @@
 import { apiRequest } from '@/shared/helpers/api-request';
 import { RecordOrder } from '@/shared/enums/record-order.enum';
 import { openPdfInNewTab } from '@/shared/helpers/open-pdf-tab';
+import { getContextParams } from '@/shared/helpers/get-context-params';
 
 import { type PastorFormData } from '@/modules/pastor/interfaces/pastor-form-data.interface';
 import { type PastorResponse } from '@/modules/pastor/interfaces/pastor-response.interface';
@@ -33,11 +34,12 @@ export const getSimplePastors = async ({
   churchId?: string;
   isSimpleQuery: boolean;
 }): Promise<PastorResponse[]> => {
+  const { churchId: contextChurchId } = getContextParams();
   return apiRequest<PastorResponse[]>('get', '/pastors', {
     params: {
       order: RecordOrder.Ascending,
       isSimpleQuery: isSimpleQuery.toString(),
-      churchId,
+      churchId: churchId ?? contextChurchId,
     },
   });
 };
@@ -45,8 +47,12 @@ export const getSimplePastors = async ({
 //* Find all pastors
 export const getAllPastors = async (params: PastorQueryParams): Promise<PastorResponse[]> => {
   const { limit, offset, order, all, churchId } = params;
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurchId = churchId ?? contextChurchId;
 
-  const query = all ? { order, churchId } : { limit, offset, order, churchId };
+  const query = all
+    ? { order, churchId: resolvedChurchId }
+    : { limit, offset, order, churchId: resolvedChurchId };
 
   return apiRequest<PastorResponse[]>('get', '/pastors', { params: query });
 };
@@ -55,8 +61,11 @@ export const getAllPastors = async (params: PastorQueryParams): Promise<PastorRe
 export const getPastorsByFilters = async (params: PastorQueryParams): Promise<PastorResponse[]> => {
   const term = buildPastorSearchTerm(params);
   const queryParams = buildPastorQueryParams(params, term);
+  const { churchId } = getContextParams();
 
-  return apiRequest<PastorResponse[]>('get', '/pastors/search', { params: queryParams });
+  return apiRequest<PastorResponse[]>('get', '/pastors/search', {
+    params: { ...queryParams, churchId },
+  });
 };
 
 //* Update
@@ -79,8 +88,9 @@ export const inactivatePastor = async (params: InactivatePastorOptions): Promise
 //* Reports
 export const getGeneralPastorsReport = async (params: PastorQueryParams): Promise<boolean> => {
   const { limit, offset, order, all } = params;
+  const { churchId } = getContextParams();
 
-  const query = all ? { order } : { limit, offset, order };
+  const query = all ? { order, churchId } : { limit, offset, order, churchId };
 
   const pdf = await apiRequest<Blob>('get', '/reports/pastors', {
     params: query,
@@ -94,9 +104,10 @@ export const getGeneralPastorsReport = async (params: PastorQueryParams): Promis
 export const getPastorsReportByFilters = async (params: PastorQueryParams): Promise<boolean> => {
   const term = buildPastorSearchTerm(params);
   const queryParams = buildPastorQueryParams(params, term);
+  const { churchId } = getContextParams();
 
   const pdf = await apiRequest<Blob>('get', '/reports/pastors/search', {
-    params: queryParams,
+    params: { ...queryParams, churchId },
     responseType: 'blob',
     headers: { 'Content-Type': 'application/pdf' },
   });

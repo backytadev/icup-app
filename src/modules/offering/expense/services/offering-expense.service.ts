@@ -3,6 +3,7 @@
 import { isAxiosError } from 'axios';
 
 import { icupApi } from '@/core/api/icupApi';
+import { getContextParams } from '@/shared/helpers/get-context-params';
 
 import { type OfferingExpenseResponse } from '@/modules/offering/expense/interfaces/offering-expense-response.interface';
 import { type OfferingExpenseFormData } from '@/modules/offering/expense/interfaces/offering-expense-form-data.interface';
@@ -37,6 +38,8 @@ export const getOfferingsExpenses = async ({
   dateTerm,
   churchId,
 }: OfferingExpenseQueryParams): Promise<OfferingExpenseResponse[]> => {
+  const { churchId: contextChurchId } = getContextParams();
+  churchId = churchId ?? contextChurchId;
   let result: OfferingExpenseResponse[];
 
   try {
@@ -98,6 +101,8 @@ export const getOfferingsExpensesByTerm = async ({
   order,
   churchId,
 }: OfferingExpenseQueryParams): Promise<OfferingExpenseResponse[] | undefined> => {
+  const { churchId: contextChurchId } = getContextParams();
+  churchId = churchId ?? contextChurchId;
   let result: OfferingExpenseResponse[];
 
   //* Others types

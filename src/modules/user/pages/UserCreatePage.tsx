@@ -181,6 +181,8 @@ export const UserCreatePage = (): JSX.Element => {
     });
   };
 
+  // Anotaciones
+  // Generar contexto en zustand de iglesia, con selecto de iglesia general, el usuario tendra asignado iglesia, y ministerios
   return (
     <div className='animate-fadeInPage'>
       <PageTitle className='text-user-color'>Modulo Usuario</PageTitle>
@@ -404,7 +406,7 @@ export const UserCreatePage = (): JSX.Element => {
                                   checked
                                     ? (updated = field.value ? [...field.value, role] : [role])
                                     : (updated =
-                                        field.value?.filter((value) => value !== role) ?? []);
+                                      field.value?.filter((value) => value !== role) ?? []);
 
                                   field.onChange(updated);
                                 }}
@@ -611,7 +613,7 @@ export const UserCreatePage = (): JSX.Element => {
                                           <span className='flex-1'>
                                             {
                                               MinistryTypeNames[
-                                                ministry.ministryType as MinistryType
+                                              ministry.ministryType as MinistryType
                                               ]
                                             }
                                           </span>

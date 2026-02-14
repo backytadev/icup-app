@@ -4,9 +4,10 @@ import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 import { RecordOrder } from '@/shared/enums/record-order.enum';
 import { formatDateToLimaDayMonthYear } from '@/shared/helpers/format-date-to-lima';
+import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
 
-import { useChurchSelector, useDashboardQuery } from '@/modules/dashboard/hooks';
-import { ChurchSelector, DashboardCard } from '@/modules/dashboard/components/shared';
+import { useDashboardQuery } from '@/modules/dashboard/hooks';
+import { DashboardCard } from '@/modules/dashboard/components/shared';
 import { DashboardSearchType } from '@/modules/dashboard/enums/dashboard-search-type.enum';
 import { getOfferingsForBarChartByTerm } from '@/modules/dashboard/services/dashboard.service';
 import { LastSundaysOfferingsTooltipContent } from '@/modules/dashboard/components/cards/charts/LastSundaysOfferingsTooltipContent';
@@ -47,20 +48,10 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export const LastSundayOfferingsCard = (): JSX.Element => {
-  const {
-    searchParams,
-    isPopoverOpen,
-    setIsPopoverOpen,
-    churchesQuery,
-    selectedChurchCode,
-    handleChurchSelect,
-    form,
-  } = useChurchSelector({ queryKey: 'sunday-offerings' });
-
-  const churchId = form.getValues('churchId') ?? searchParams?.churchId;
+  const activeChurchId = useChurchMinistryContextStore((s) => s.activeChurchId);
 
   const { data, isLoading, isFetching, isEmpty } = useDashboardQuery({
-    queryKey: ['last-sundays-offerings', searchParams],
+    queryKey: ['last-sundays-offerings', activeChurchId],
     queryFn: () => {
       const timeZone = 'America/Lima';
       const now = new Date();
@@ -68,14 +59,13 @@ export const LastSundayOfferingsCard = (): JSX.Element => {
 
       return getOfferingsForBarChartByTerm({
         searchType: DashboardSearchType.LastSundaysOfferings,
-        churchId: searchParams?.churchId ?? churchId ?? '',
+        churchId: activeChurchId ?? '',
         date: formatZonedTime(zonedDate, 'yyyy-MM-dd HH:mm:ss', { timeZone }),
         limit: '14',
         order: RecordOrder.Descending,
       });
     },
-    churchId: searchParams?.churchId ?? churchId,
-    enabled: !!searchParams,
+    churchId: activeChurchId ?? undefined,
   });
 
   return (
@@ -83,17 +73,7 @@ export const LastSundayOfferingsCard = (): JSX.Element => {
       title='Ofrendas Dominicales'
       description={`Últimas ofrendas dominicales (${new Date().getFullYear()})`}
       icon={<TbChartBar className='w-5 h-5 text-blue-600 dark:text-blue-400' />}
-      headerAction={
-        <ChurchSelector
-          churches={churchesQuery.data}
-          selectedChurchId={churchId}
-          selectedChurchCode={selectedChurchCode}
-          isOpen={isPopoverOpen}
-          onOpenChange={setIsPopoverOpen}
-          onSelect={handleChurchSelect}
-          isLoading={churchesQuery.isLoading}
-        />
-      }
+
       isLoading={isLoading || (!data && isFetching)}
       isEmpty={isEmpty}
       emptyVariant='chart'

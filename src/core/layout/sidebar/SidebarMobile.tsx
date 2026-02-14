@@ -19,6 +19,7 @@ import {
 import { Sheet, SheetContent, SheetTrigger } from '@/shared/components/ui/sheet';
 import { Button } from '@/shared/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/shared/components/ui/avatar';
+import { ChurchMinistrySelector } from '@/core/layout/sidebar/ChurchMinistrySelector';
 
 interface MobileNavItemProps {
   href: string;
@@ -177,6 +178,11 @@ export const SidebarMobile = (): JSX.Element => {
                       </p>
                     </div>
                   </div>
+                </div>
+
+                {/* Church & Ministry Selector */}
+                <div className='px-1 pt-3'>
+                  <ChurchMinistrySelector isExpanded onSelect={closeMobile} />
                 </div>
 
                 {/* Navigation */}

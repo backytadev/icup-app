@@ -1,6 +1,7 @@
 import { apiRequest } from '@/shared/helpers/api-request';
 import { RecordOrder } from '@/shared/enums/record-order.enum';
 import { openPdfInNewTab } from '@/shared/helpers/open-pdf-tab';
+import { getContextParams } from '@/shared/helpers/get-context-params';
 
 import {
   type MinistryResponse,
@@ -33,11 +34,12 @@ export const getSimpleMinistries = async ({
   churchId?: string;
   isSimpleQuery: boolean;
 }): Promise<MinistryResponse[]> => {
+  const { churchId: contextChurchId } = getContextParams();
   return apiRequest<MinistryResponse[]>('get', '/ministries', {
     params: {
       order: RecordOrder.Ascending,
       isSimpleQuery: isSimpleQuery.toString(),
-      churchId,
+      churchId: churchId ?? contextChurchId,
     },
   });
 };
@@ -47,8 +49,12 @@ export const getAllMinistries = async (
   params: MinistryQueryParams
 ): Promise<MinistryResponse[]> => {
   const { limit, offset, order, all, churchId } = params;
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurchId = churchId ?? contextChurchId;
 
-  const query = all ? { order, churchId } : { limit, offset, order, churchId };
+  const query = all
+    ? { order, churchId: resolvedChurchId }
+    : { limit, offset, order, churchId: resolvedChurchId };
 
   return apiRequest<MinistryResponse[]>('get', '/ministries', { params: query });
 };
@@ -59,8 +65,11 @@ export const getMinistriesByFilters = async (
 ): Promise<MinistryResponse[]> => {
   const term = buildMinistrySearchTerm(params);
   const queryParams = buildMinistryQueryParams(params, term);
+  const { churchId } = getContextParams();
 
-  return apiRequest<MinistryResponse[]>('get', '/ministries/search', { params: queryParams });
+  return apiRequest<MinistryResponse[]>('get', '/ministries/search', {
+    params: { ...queryParams, churchId },
+  });
 };
 
 //* Update
@@ -83,8 +92,9 @@ export const inactivateMinistry = async (params: InactivateMinistryOptions): Pro
 //* Reports
 export const getGeneralMinistriesReport = async (params: MinistryQueryParams): Promise<boolean> => {
   const { limit, offset, order, all } = params;
+  const { churchId } = getContextParams();
 
-  const query = all ? { order } : { limit, offset, order };
+  const query = all ? { order, churchId } : { limit, offset, order, churchId };
 
   const pdf = await apiRequest<Blob>('get', '/reports/ministries', {
     params: query,
@@ -100,9 +110,10 @@ export const getMinistriesReportByFilters = async (
 ): Promise<boolean> => {
   const term = buildMinistrySearchTerm(params);
   const queryParams = buildMinistryQueryParams(params, term);
+  const { churchId } = getContextParams();
 
   const pdf = await apiRequest<Blob>('get', '/reports/ministries/search', {
-    params: queryParams,
+    params: { ...queryParams, churchId },
     responseType: 'blob',
     headers: { 'Content-Type': 'application/pdf' },
   });

@@ -1,37 +1,27 @@
 import { HiUsers } from 'react-icons/hi2';
 
 import { RecordOrder } from '@/shared/enums/record-order.enum';
+import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
 import { getDisciples } from '@/modules/disciple/services/disciple.service';
 
-import { useChurchSelector, useDashboardQuery } from '@/modules/dashboard/hooks';
-import { ChurchSelector, DashboardCard } from '@/modules/dashboard/components/shared';
+import { useDashboardQuery } from '@/modules/dashboard/hooks';
+import { DashboardCard } from '@/modules/dashboard/components/shared';
 import { MemberInfoItem } from '@/modules/dashboard/components/cards/info/MemberInfoItem';
 
 export function MembersInfoCard(): JSX.Element {
-  const {
-    searchParams,
-    isPopoverOpen,
-    setIsPopoverOpen,
-    churchesQuery,
-    selectedChurchCode,
-    handleChurchSelect,
-    form,
-  } = useChurchSelector({ queryKey: 'last-members' });
-
-  const churchId = form.getValues('churchId') ?? searchParams?.churchId;
+  const activeChurchId = useChurchMinistryContextStore((s) => s.activeChurchId);
 
   const { data, isLoading, isFetching, isEmpty } = useDashboardQuery({
-    queryKey: ['last-disciples', searchParams],
+    queryKey: ['last-disciples', activeChurchId],
     queryFn: () =>
       getDisciples({
         limit: '10',
         all: false,
         offset: '0',
-        churchId: searchParams?.churchId ?? churchId ?? '',
+        churchId: activeChurchId ?? '',
         order: RecordOrder.Descending,
       }),
-    churchId: searchParams?.churchId ?? churchId,
-    enabled: !!searchParams && !!searchParams.churchId,
+    churchId: activeChurchId ?? undefined,
   });
 
   return (
@@ -39,17 +29,7 @@ export function MembersInfoCard(): JSX.Element {
       title='Discípulos Nuevos'
       description='Últimos discípulos registrados.'
       icon={<HiUsers className='w-5 h-5 text-green-600 dark:text-green-400' />}
-      headerAction={
-        <ChurchSelector
-          churches={churchesQuery.data}
-          selectedChurchId={churchId}
-          selectedChurchCode={selectedChurchCode}
-          isOpen={isPopoverOpen}
-          onOpenChange={setIsPopoverOpen}
-          onSelect={handleChurchSelect}
-          isLoading={churchesQuery.isLoading}
-        />
-      }
+
       isLoading={isLoading || (!data && isFetching)}
       isEmpty={isEmpty}
       emptyVariant='member'

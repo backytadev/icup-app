@@ -3,6 +3,7 @@
 import { isAxiosError } from 'axios';
 
 import { icupApi } from '@/core/api/icupApi';
+import { getContextParams } from '@/shared/helpers/get-context-params';
 
 import { type MetricsQueryParams } from '@/modules/metrics/interfaces/shared/metrics-query-params.interface';
 
@@ -23,8 +24,11 @@ export const getMembersProportion = async ({
   church,
   order,
 }: MetricsQueryParams): Promise<MembersProportionResponse> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurch = church || contextChurchId;
+
   try {
-    const { data } = await icupApi<MembersProportionResponse>(`/metrics/${church}`, {
+    const { data } = await icupApi<MembersProportionResponse>(`/metrics/${resolvedChurch}`, {
       params: {
         searchType,
         order,
@@ -49,8 +53,11 @@ export const getFluctuationMembersByYear = async ({
   order,
   church,
 }: MetricsQueryParams): Promise<MembersFluctuationResponse[]> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurch = church || contextChurchId;
+
   try {
-    const { data } = await icupApi<MembersFluctuationResponse[]>(`/metrics/${church}&${year}`, {
+    const { data } = await icupApi<MembersFluctuationResponse[]>(`/metrics/${resolvedChurch}&${year}`, {
       params: {
         searchType,
         order,
@@ -73,8 +80,11 @@ export const getMembersByBirthMonth = async ({
   church,
   order,
 }: MetricsQueryParams): Promise<MembersByBirthMonthResponse[]> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurch = church || contextChurchId;
+
   try {
-    const { data } = await icupApi<MembersByBirthMonthResponse[]>(`/metrics/${church}`, {
+    const { data } = await icupApi<MembersByBirthMonthResponse[]>(`/metrics/${resolvedChurch}`, {
       params: {
         searchType,
         order,
@@ -97,8 +107,11 @@ export const getMembersByCategory = async ({
   church,
   order,
 }: MetricsQueryParams): Promise<MembersByCategoryResponse> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurch = church || contextChurchId;
+
   try {
-    const { data } = await icupApi<MembersByCategoryResponse>(`/metrics/${church}`, {
+    const { data } = await icupApi<MembersByCategoryResponse>(`/metrics/${resolvedChurch}`, {
       params: {
         searchType,
         order,
@@ -121,8 +134,11 @@ export const getMembersByCategoryAndGender = async ({
   church,
   order,
 }: MetricsQueryParams): Promise<MembersByCategoryAndGenderResponse> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurch = church || contextChurchId;
+
   try {
-    const { data } = await icupApi<MembersByCategoryAndGenderResponse>(`/metrics/${church}`, {
+    const { data } = await icupApi<MembersByCategoryAndGenderResponse>(`/metrics/${resolvedChurch}`, {
       params: {
         searchType,
         order,
@@ -145,8 +161,11 @@ export const getMembersByRole = async ({
   church,
   order,
 }: MetricsQueryParams): Promise<MembersByRoleAndGenderResponse> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurch = church || contextChurchId;
+
   try {
-    const { data } = await icupApi<MembersByRoleAndGenderResponse>(`/metrics/${church}`, {
+    const { data } = await icupApi<MembersByRoleAndGenderResponse>(`/metrics/${resolvedChurch}`, {
       params: {
         searchType,
         order,
@@ -169,8 +188,11 @@ export const getMembersByMaritalStatus = async ({
   church,
   order,
 }: MetricsQueryParams): Promise<MembersByMaritalStatusResponse> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurch = church || contextChurchId;
+
   try {
-    const { data } = await icupApi<MembersByMaritalStatusResponse>(`/metrics/${church}`, {
+    const { data } = await icupApi<MembersByMaritalStatusResponse>(`/metrics/${resolvedChurch}`, {
       params: {
         searchType,
         order,
@@ -195,9 +217,12 @@ export const getDisciplesByZoneAndGender = async ({
   allZones,
   order,
 }: MetricsQueryParams): Promise<MembersByZoneAndGenderResponse> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurch = church || contextChurchId;
+
   try {
     const { data } = await icupApi<MembersByZoneAndGenderResponse>(
-      `/metrics/${church}&${copastor}`,
+      `/metrics/${resolvedChurch}&${copastor}`,
       {
         params: {
           searchType,
@@ -225,9 +250,12 @@ export const getPreachersByZoneAndGender = async ({
   allZones,
   order,
 }: MetricsQueryParams): Promise<MembersByZoneAndGenderResponse> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurch = church || contextChurchId;
+
   try {
     const { data } = await icupApi<MembersByZoneAndGenderResponse>(
-      `/metrics/${church}&${copastor}`,
+      `/metrics/${resolvedChurch}&${copastor}`,
       {
         params: {
           searchType,
@@ -254,9 +282,12 @@ export const getMembersByDistrictAndGender = async ({
   district,
   order,
 }: MetricsQueryParams): Promise<MembersByDistrictAndGenderResponse> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurch = church || contextChurchId;
+
   try {
     const { data } = await icupApi<MembersByDistrictAndGenderResponse>(
-      `/metrics/${church}&${district}`,
+      `/metrics/${resolvedChurch}&${district}`,
       {
         params: {
           searchType,
@@ -281,8 +312,11 @@ export const getMembersByRecordStatus = async ({
   church,
   order,
 }: MetricsQueryParams): Promise<MembersByRecordStatusResponse> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurch = church || contextChurchId;
+
   try {
-    const { data } = await icupApi<MembersByRecordStatusResponse>(`/metrics/${church}`, {
+    const { data } = await icupApi<MembersByRecordStatusResponse>(`/metrics/${resolvedChurch}`, {
       params: {
         searchType,
         order,
@@ -319,12 +353,14 @@ export const getMemberMetricsReport = async ({
   types,
   dialogClose,
 }: MetricReportQueryParams): Promise<boolean> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurchId = churchId || contextChurchId;
   const joinedReportTypes = types.join('+');
 
   try {
     const res = await icupApi<Blob>('/reports/member-metrics', {
       params: {
-        churchId,
+        churchId: resolvedChurchId,
         year,
         types: joinedReportTypes,
       },

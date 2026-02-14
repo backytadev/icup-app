@@ -39,6 +39,7 @@ import {
 } from '@/shared/components/ui/dropdown-menu';
 import { Button } from '@/shared/components/ui/button';
 import { Avatar, AvatarImage, AvatarFallback } from '@/shared/components/ui/avatar';
+import { ChurchMinistrySelector } from '@/core/layout/sidebar/ChurchMinistrySelector';
 
 interface SidebarItemProps {
   href: string;
@@ -224,6 +225,9 @@ export const Sidebar = (): JSX.Element => {
           </div>
         </div>
       )}
+
+      {/* Church & Ministry Selector */}
+      <ChurchMinistrySelector isExpanded={isExpanded} />
 
       {/* Toggle Button */}
       <div className={cn('px-3 mb-2', isExpanded && 'px-4')}>

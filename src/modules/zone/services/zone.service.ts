@@ -1,6 +1,7 @@
 import { apiRequest } from '@/shared/helpers/api-request';
 import { RecordOrder } from '@/shared/enums/record-order.enum';
 import { openPdfInNewTab } from '@/shared/helpers/open-pdf-tab';
+import { getContextParams } from '@/shared/helpers/get-context-params';
 
 import { buildZoneQueryParams } from '@/modules/zone/builders/buildZoneQueryParam';
 import { buildZoneSearchTerm } from '@/modules/zone/builders/buildZoneSearchTerm';
@@ -33,11 +34,12 @@ export const getSimpleZones = async ({
   churchId?: string;
   isSimpleQuery: boolean;
 }): Promise<ZoneResponse[]> => {
+  const { churchId: contextChurchId } = getContextParams();
   return apiRequest<ZoneResponse[]>('get', '/zones', {
     params: {
       order: RecordOrder.Ascending,
       isSimpleQuery: isSimpleQuery.toString(),
-      churchId,
+      churchId: churchId ?? contextChurchId,
     },
   });
 };
@@ -45,8 +47,12 @@ export const getSimpleZones = async ({
 //* Find all
 export const getZones = async (params: ZoneQueryParams): Promise<ZoneResponse[]> => {
   const { limit, offset, order, all, churchId } = params;
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurchId = churchId ?? contextChurchId;
 
-  const query = all ? { order, churchId } : { limit, offset, order, churchId };
+  const query = all
+    ? { order, churchId: resolvedChurchId }
+    : { limit, offset, order, churchId: resolvedChurchId };
 
   return apiRequest<ZoneResponse[]>('get', '/zones', { params: query });
 };
@@ -55,8 +61,11 @@ export const getZones = async (params: ZoneQueryParams): Promise<ZoneResponse[]>
 export const getZonesByFilters = async (params: ZoneQueryParams): Promise<ZoneResponse[]> => {
   const term = buildZoneSearchTerm(params);
   const queryParams = buildZoneQueryParams(params, term);
+  const { churchId } = getContextParams();
 
-  return apiRequest<ZoneResponse[]>('get', '/zones/search', { params: queryParams });
+  return apiRequest<ZoneResponse[]>('get', '/zones/search', {
+    params: { ...queryParams, churchId },
+  });
 };
 
 //* Update
@@ -76,8 +85,9 @@ export const inactivateZone = async (params: InactivateZoneOptions): Promise<voi
 //* Reports
 export const getGeneralZonesReport = async (params: ZoneQueryParams): Promise<boolean> => {
   const { limit, offset, order, all } = params;
+  const { churchId } = getContextParams();
 
-  const query = all ? { order } : { limit, offset, order };
+  const query = all ? { order, churchId } : { limit, offset, order, churchId };
 
   const pdf = await apiRequest<Blob>('get', '/reports/zones', {
     params: query,
@@ -91,9 +101,10 @@ export const getGeneralZonesReport = async (params: ZoneQueryParams): Promise<bo
 export const getZonesReportByTerm = async (params: ZoneQueryParams): Promise<boolean> => {
   const term = buildZoneSearchTerm(params);
   const queryParams = buildZoneQueryParams(params, term);
+  const { churchId } = getContextParams();
 
   const pdf = await apiRequest<Blob>('get', '/reports/zones/search', {
-    params: queryParams,
+    params: { ...queryParams, churchId },
     responseType: 'blob',
     headers: { 'Content-Type': 'application/pdf' },
   });

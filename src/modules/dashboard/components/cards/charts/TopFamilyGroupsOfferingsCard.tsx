@@ -2,9 +2,10 @@ import { TbChartPie } from 'react-icons/tb';
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from 'recharts';
 
 import { RecordOrder } from '@/shared/enums/record-order.enum';
+import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
 
-import { useChurchSelector, useDashboardQuery } from '@/modules/dashboard/hooks';
-import { ChurchSelector, DashboardCard } from '@/modules/dashboard/components/shared';
+import { useDashboardQuery } from '@/modules/dashboard/hooks';
+import { DashboardCard } from '@/modules/dashboard/components/shared';
 import { DashboardSearchType } from '@/modules/dashboard/enums/dashboard-search-type.enum';
 import { getOfferingsForBarChartByTerm } from '@/modules/dashboard/services/dashboard.service';
 import { TopFamilyGroupsTooltipContent } from '@/modules/dashboard/components/cards/charts/TopFamilyGroupsOfferingsTooltipContent';
@@ -33,29 +34,18 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 export const TopFamilyGroupsOfferingsCard = (): JSX.Element => {
-  const {
-    searchParams,
-    isPopoverOpen,
-    setIsPopoverOpen,
-    churchesQuery,
-    selectedChurchCode,
-    handleChurchSelect,
-    form,
-  } = useChurchSelector({ queryKey: 'top-family-groups-offerings' });
-
-  const churchId = form.getValues('churchId') ?? searchParams?.churchId;
+  const activeChurchId = useChurchMinistryContextStore((s) => s.activeChurchId);
 
   const { data, isLoading, isFetching, isEmpty } = useDashboardQuery({
-    queryKey: ['top-family-groups-offerings', searchParams],
+    queryKey: ['top-family-groups-offerings', activeChurchId],
     queryFn: () =>
       getOfferingsForBarChartByTerm({
         searchType: DashboardSearchType.TopFamilyGroupsOfferings,
-        churchId: searchParams?.churchId ?? churchId ?? '',
+        churchId: activeChurchId ?? '',
         year: new Date().getFullYear().toString(),
         order: RecordOrder.Descending,
       }),
-    churchId: searchParams?.churchId ?? churchId,
-    enabled: !!searchParams,
+    churchId: activeChurchId ?? undefined,
   });
 
   return (
@@ -63,17 +53,7 @@ export const TopFamilyGroupsOfferingsCard = (): JSX.Element => {
       title='Ofrendas - Grupo Familiar'
       description={`Grupos familiares destacados (${new Date().getFullYear()})`}
       icon={<TbChartPie className='w-5 h-5 text-purple-600 dark:text-purple-400' />}
-      headerAction={
-        <ChurchSelector
-          churches={churchesQuery.data}
-          selectedChurchId={churchId}
-          selectedChurchCode={selectedChurchCode}
-          isOpen={isPopoverOpen}
-          onOpenChange={setIsPopoverOpen}
-          onSelect={handleChurchSelect}
-          isLoading={churchesQuery.isLoading}
-        />
-      }
+
       isLoading={isLoading || (!data && isFetching)}
       isEmpty={isEmpty}
       emptyVariant='chart'

@@ -5,6 +5,7 @@ import { isAxiosError } from 'axios';
 import { icupApi } from '@/core/api/icupApi';
 
 import { RecordOrder } from '@/shared/enums/record-order.enum';
+import { getContextParams } from '@/shared/helpers/get-context-params';
 
 import { OfferingIncomeSearchType } from '@/modules/offering/income/enums/offering-income-search-type.enum';
 import { OfferingIncomeSearchSubType } from '@/modules/offering/income/enums/offering-income-search-sub-type.enum';
@@ -61,6 +62,8 @@ export const getOfferingsIncome = async ({
   dateTerm,
   churchId,
 }: OfferingIncomeQueryParams): Promise<OfferingIncomeResponse[]> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurchId = churchId ?? contextChurchId;
   let result: OfferingIncomeResponse[];
 
   try {
@@ -71,7 +74,7 @@ export const getOfferingsIncome = async ({
           offset,
           order,
           searchDate: dateTerm,
-          churchId,
+          churchId: resolvedChurchId,
         },
       });
 
@@ -125,6 +128,9 @@ export const getOfferingsIncomeByTerm = async ({
   order,
   churchId,
 }: OfferingIncomeQueryParams): Promise<OfferingIncomeResponse[] | undefined> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurchId = churchId ?? contextChurchId;
+  churchId = resolvedChurchId;
   let result: OfferingIncomeResponse[];
 
   //* Sunday Service, Sunday School

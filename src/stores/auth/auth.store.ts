@@ -4,6 +4,7 @@ import { devtools, persist } from 'zustand/middleware';
 import { AuthService } from '@/modules/auth/services/auth.service';
 import { type AuthStatus } from '@/modules/auth/types/auth-status.type';
 import { type User } from '@/modules/user/interfaces/user-form-data.interface';
+import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
 import { jwtDecode } from 'jwt-decode';
 
 export interface AuthState {
@@ -27,6 +28,8 @@ export const storeApi: StateCreator<AuthState> = (set) => ({
       const { token, ...user } = await AuthService.login(email, password, userName);
 
       set({ status: 'authorized', token, user });
+
+      useChurchMinistryContextStore.getState().initialize(user);
     } catch (error) {
       set({ status: 'unauthorized', token: undefined, user: undefined });
 
@@ -36,6 +39,7 @@ export const storeApi: StateCreator<AuthState> = (set) => ({
 
   logoutUser: () => {
     set({ status: 'unauthorized', token: undefined, user: undefined });
+    useChurchMinistryContextStore.getState().reset();
   },
 
   verifyTokenExists: async () => {
@@ -56,8 +60,14 @@ export const storeApi: StateCreator<AuthState> = (set) => ({
       }
 
       set({ status: 'authorized', token });
+
+      const user = JSON.parse(session)?.state?.user;
+      if (user) {
+        useChurchMinistryContextStore.getState().initialize(user);
+      }
     } catch (error) {
       set({ status: 'unauthorized', token: undefined, user: undefined });
+      useChurchMinistryContextStore.getState().reset();
       localStorage.removeItem('auth-storage');
     }
   },

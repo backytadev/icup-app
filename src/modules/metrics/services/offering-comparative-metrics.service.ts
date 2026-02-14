@@ -3,6 +3,7 @@
 import { isAxiosError } from 'axios';
 
 import { icupApi } from '@/core/api/icupApi';
+import { getContextParams } from '@/shared/helpers/get-context-params';
 
 import { type MetricsQueryParams } from '@/modules/metrics/interfaces/shared/metrics-query-params.interface';
 
@@ -21,9 +22,12 @@ export const getOfferingComparativeProportion = async ({
   church,
   order,
 }: MetricsQueryParams): Promise<OfferingExpensesAndOfferingIncomeComparativeProportionResponse> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurch = church || contextChurchId;
+
   try {
     const { data } = await icupApi<OfferingExpensesAndOfferingIncomeComparativeProportionResponse>(
-      `/metrics/${church}`,
+      `/metrics/${resolvedChurch}`,
       {
         params: {
           searchType,
@@ -51,9 +55,12 @@ export const getIncomeAndExpensesComparativeByYear = async ({
   year,
   order,
 }: MetricsQueryParams): Promise<IncomeAndExpensesComparativeResponse[]> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurch = church || contextChurchId;
+
   try {
     const { data } = await icupApi<IncomeAndExpensesComparativeResponse[]>(
-      `/metrics/${church}&${currency}&${year}`,
+      `/metrics/${resolvedChurch}&${currency}&${year}`,
       {
         params: {
           searchType,
@@ -81,9 +88,12 @@ export const getGeneralComparativeOfferingIncome = async ({
   year,
   order,
 }: MetricsQueryParams): Promise<GeneralComparativeOfferingIncomeResponse[]> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurch = church || contextChurchId;
+
   try {
     const { data } = await icupApi<GeneralComparativeOfferingIncomeResponse[]>(
-      `/metrics/${church}&${startMonth}&${endMonth}&${year}`,
+      `/metrics/${resolvedChurch}&${startMonth}&${endMonth}&${year}`,
       {
         params: {
           searchType,
@@ -110,9 +120,12 @@ export const getComparativeOfferingIncomeByType = async ({
   year,
   order,
 }: MetricsQueryParams): Promise<ComparativeOfferingIncomeByTypeResponse[]> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurch = church || contextChurchId;
+
   try {
     const { data } = await icupApi<ComparativeOfferingIncomeByTypeResponse[]>(
-      `/metrics/${church}&${metricType}&${year}`,
+      `/metrics/${resolvedChurch}&${metricType}&${year}`,
       {
         params: {
           searchType,
@@ -140,9 +153,12 @@ export const getGeneralComparativeOfferingExpenses = async ({
   year,
   order,
 }: MetricsQueryParams): Promise<GeneralComparativeOfferingExpensesResponse[]> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurch = church || contextChurchId;
+
   try {
     const { data } = await icupApi<GeneralComparativeOfferingExpensesResponse[]>(
-      `/metrics/${church}&${startMonth}&${endMonth}&${year}`,
+      `/metrics/${resolvedChurch}&${startMonth}&${endMonth}&${year}`,
       {
         params: {
           searchType,
@@ -169,9 +185,12 @@ export const getComparativeOfferingExpensesByType = async ({
   year,
   order,
 }: MetricsQueryParams): Promise<ComparativeOfferingExpensesByTypeResponse[]> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurch = church || contextChurchId;
+
   try {
     const { data } = await icupApi<ComparativeOfferingExpensesByTypeResponse[]>(
-      `/metrics/${church}&${type}&${year}`,
+      `/metrics/${resolvedChurch}&${type}&${year}`,
       {
         params: {
           searchType,
@@ -200,9 +219,12 @@ export const getComparativeOfferingExpensesBySubType = async ({
   year,
   order,
 }: MetricsQueryParams): Promise<ComparativeOfferingExpensesBySubTypeResponse[]> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurch = church || contextChurchId;
+
   try {
     const { data } = await icupApi<ComparativeOfferingExpensesBySubTypeResponse[]>(
-      `/metrics/${church}&${metricType}&${startMonth}&${endMonth}&${year}`,
+      `/metrics/${resolvedChurch}&${metricType}&${startMonth}&${endMonth}&${year}`,
       {
         params: {
           searchType,
@@ -245,12 +267,14 @@ export const getFinancialBalanceComparativeMetricsReport = async ({
   types,
   dialogClose,
 }: MetricReportQueryParams): Promise<boolean> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurchId = churchId || contextChurchId;
   const joinedReportTypes = types.join('+');
 
   try {
     const res = await icupApi<Blob>('/reports/financial-balance-comparative-metrics', {
       params: {
-        churchId,
+        churchId: resolvedChurchId,
         year,
         startMonth,
         endMonth,
@@ -297,12 +321,15 @@ export const getFinancialBalanceSummary = async ({
   endMonth,
   currency,
 }: FinancialBalanceSummaryQueryParams): Promise<ComparativeFinancialBalanceSummaryResponse> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurchId = churchId || contextChurchId;
+
   try {
     const { data } = await icupApi<ComparativeFinancialBalanceSummaryResponse>(
       '/metrics/balance/summary/general',
       {
         params: {
-          churchId,
+          churchId: resolvedChurchId,
           year,
           startMonth,
           endMonth,
@@ -337,10 +364,13 @@ export const getIncomeDetailByType = async ({
   endMonth,
   type,
 }: IncomeDetailByTypeQueryParams): Promise<any> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurchId = churchId || contextChurchId;
+
   try {
     const { data } = await icupApi<any>('/metrics/balance/income/monthly-detail-by-type', {
       params: {
-        churchId,
+        churchId: resolvedChurchId,
         year,
         startMonth,
         endMonth,
@@ -374,10 +404,13 @@ export const getExpenseDetailByType = async ({
   endMonth,
   type,
 }: ExpenseDetailByTypeQueryParams): Promise<any> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurchId = churchId || contextChurchId;
+
   try {
     const { data } = await icupApi<any>('/metrics/balance/expenses/monthly-detail-by-type', {
       params: {
-        churchId,
+        churchId: resolvedChurchId,
         year,
         startMonth,
         endMonth,
@@ -402,10 +435,13 @@ export const getExpenseDetailBySubType = async ({
   endMonth,
   type,
 }: ExpenseDetailByTypeQueryParams): Promise<any> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurchId = churchId || contextChurchId;
+
   try {
     const { data } = await icupApi<any>('/metrics/balance/expenses/monthly-detail-by-sub-type', {
       params: {
-        churchId,
+        churchId: resolvedChurchId,
         year,
         startMonth,
         endMonth,

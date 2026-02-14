@@ -3,6 +3,7 @@
 import { isAxiosError } from 'axios';
 
 import { icupApi } from '@/core/api/icupApi';
+import { getContextParams } from '@/shared/helpers/get-context-params';
 
 import { type MetricsQueryParams } from '@/modules/metrics/interfaces/shared/metrics-query-params.interface';
 
@@ -19,8 +20,11 @@ export const getFamilyGroupsProportion = async ({
   church,
   order,
 }: MetricsQueryParams): Promise<FamilyGroupsProportionResponse> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurch = church || contextChurchId;
+
   try {
-    const { data } = await icupApi<FamilyGroupsProportionResponse>(`/metrics/${church}`, {
+    const { data } = await icupApi<FamilyGroupsProportionResponse>(`/metrics/${resolvedChurch}`, {
       params: {
         searchType,
         order,
@@ -45,9 +49,12 @@ export const getFluctuationFamilyGroupsByYear = async ({
   church,
   order,
 }: MetricsQueryParams): Promise<FamilyGroupsFluctuationResponse[]> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurch = church || contextChurchId;
+
   try {
     const { data } = await icupApi<FamilyGroupsFluctuationResponse[]>(
-      `/metrics/${church}&${year}`,
+      `/metrics/${resolvedChurch}&${year}`,
       {
         params: {
           searchType,
@@ -74,8 +81,11 @@ export const getFamilyGroupsByZone = async ({
   church,
   order,
 }: MetricsQueryParams): Promise<FamilyGroupsByZoneResponse> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurch = church || contextChurchId;
+
   try {
-    const { data } = await icupApi<FamilyGroupsByZoneResponse>(`/metrics/${church}&${zone}`, {
+    const { data } = await icupApi<FamilyGroupsByZoneResponse>(`/metrics/${resolvedChurch}&${zone}`, {
       params: {
         searchType,
         allFamilyGroups: allFamilyGroups?.toString(),
@@ -101,9 +111,12 @@ export const getFamilyGroupsByCopastorAndZone = async ({
   church,
   order,
 }: MetricsQueryParams): Promise<FamilyGroupsByCopastorAndZoneResponse> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurch = church || contextChurchId;
+
   try {
     const { data } = await icupApi<FamilyGroupsByCopastorAndZoneResponse>(
-      `/metrics/${church}&${copastor}`,
+      `/metrics/${resolvedChurch}&${copastor}`,
       {
         params: {
           searchType,
@@ -130,9 +143,12 @@ export const getFamilyGroupsByDistrict = async ({
   church,
   order,
 }: MetricsQueryParams): Promise<FamilyGroupsByCopastorAndZoneResponse> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurch = church || contextChurchId;
+
   try {
     const { data } = await icupApi<FamilyGroupsByCopastorAndZoneResponse>(
-      `/metrics/${church}&${district}`,
+      `/metrics/${resolvedChurch}&${district}`,
       {
         params: {
           searchType,
@@ -159,9 +175,12 @@ export const getFamilyGroupsByServiceTime = async ({
   allZones,
   order,
 }: MetricsQueryParams): Promise<FamilyGroupsByServiceTimeResponse> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurch = church || contextChurchId;
+
   try {
     const { data } = await icupApi<FamilyGroupsByServiceTimeResponse>(
-      `/metrics/${church}&${zone}`,
+      `/metrics/${resolvedChurch}&${zone}`,
       {
         params: {
           searchType,
@@ -189,9 +208,12 @@ export const getFamilyGroupsByRecordStatus = async ({
   allZones,
   order,
 }: MetricsQueryParams): Promise<FamilyGroupsByRecordStatusResponse> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurch = church || contextChurchId;
+
   try {
     const { data } = await icupApi<FamilyGroupsByRecordStatusResponse>(
-      `/metrics/${church}&${zone}`,
+      `/metrics/${resolvedChurch}&${zone}`,
       {
         params: {
           searchType,
@@ -231,12 +253,14 @@ export const getFamilyGroupMetricsReport = async ({
   types,
   dialogClose,
 }: MetricReportQueryParams): Promise<boolean> => {
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurchId = churchId || contextChurchId;
   const joinedReportTypes = types.join('+');
 
   try {
     const res = await icupApi<Blob>('/reports/family-group-metrics', {
       params: {
-        churchId,
+        churchId: resolvedChurchId,
         year,
         types: joinedReportTypes,
       },
