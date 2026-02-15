@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useForm, type UseFormReturn } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
@@ -14,6 +14,7 @@ import { type MinistryMemberBlock } from '@/shared/interfaces/ministry-member-bl
 import { type PastorResponse } from '@/modules/pastor/types/pastor-response.interface';
 import { type PastorFormData } from '@/modules/pastor/types/pastor-form-data.interface';
 import { pastorFormSchema } from '@/modules/pastor/schemas/pastor-form-schema';
+import { pastorCreateDefaultValues, pastorUpdateDefaultValues } from '@/modules/pastor/constants';
 import {
   usePastorCreationMutation,
   usePastorUpdateMutation,
@@ -22,6 +23,9 @@ import {
 import { getSimpleChurches } from '@/modules/church/services/church.service';
 import { getSimpleMinistries } from '@/modules/ministry/services/ministry.service';
 import { type ChurchResponse } from '@/modules/church/types';
+
+//* Constant noop function - stable reference, no need for useCallback
+const NOOP = (): void => {};
 
 type FormMode = 'create' | 'update';
 
@@ -74,12 +78,6 @@ interface UsePastorFormReturn {
 export const usePastorForm = (options: UsePastorFormOptions): UsePastorFormReturn => {
   const { mode } = options;
 
-  //* Extract primitive values from options to use as stable dependencies
-  const updateId = mode === 'update' ? (options as UpdateModeOptions).id : undefined;
-  const updateData = mode === 'update' ? (options as UpdateModeOptions).data : undefined;
-  const dialogClose = mode === 'update' ? (options as UpdateModeOptions).dialogClose : undefined;
-  const scrollToTop = mode === 'update' ? (options as UpdateModeOptions).scrollToTop : undefined;
-
   //* States
   const [isLoadingData, setIsLoadingData] = useState(mode === 'update');
   const [isInputDisabled, setIsInputDisabled] = useState<boolean>(false);
@@ -89,7 +87,7 @@ export const usePastorForm = (options: UsePastorFormOptions): UsePastorFormRetur
 
   //* Alert dialog states for church change
   const [changedChurchId, setChangedChurchId] = useState<string | undefined>(
-    mode === 'update' ? updateData?.theirChurch?.id : undefined
+    mode === 'update' ? (options as UpdateModeOptions).data?.theirChurch?.id : undefined
   );
   const [isAlertDialogOpen, setIsAlertDialogOpen] = useState<boolean>(false);
 
@@ -113,29 +111,7 @@ export const usePastorForm = (options: UsePastorFormOptions): UsePastorFormRetur
   const form = useForm<PastorFormData>({
     mode: 'onChange',
     resolver: zodResolver(pastorFormSchema),
-    defaultValues: {
-      firstNames: '',
-      lastNames: '',
-      gender: '',
-      originCountry: '',
-      birthDate: undefined,
-      maritalStatus: '',
-      numberChildren: '0',
-      conversionDate: undefined,
-      email: '',
-      phoneNumber: '',
-      residenceCountry: '',
-      residenceDepartment: '',
-      residenceProvince: '',
-      residenceDistrict: '',
-      residenceUrbanSector: '',
-      residenceAddress: '',
-      referenceAddress: '',
-      roles: [MemberRole.Pastor],
-      relationType: RelationType.OnlyRelatedHierarchicalCover,
-      recordStatus: undefined,
-      theirChurch: '',
-    },
+    defaultValues: mode === 'create' ? pastorCreateDefaultValues : pastorUpdateDefaultValues,
   });
 
   //* Watchers
@@ -158,19 +134,15 @@ export const usePastorForm = (options: UsePastorFormOptions): UsePastorFormRetur
   const theirChurch = form.watch('theirChurch');
   const recordStatus = form.watch('recordStatus');
 
-  //* Memoized helpers
-  const districtsValidation = useMemo(() => validateDistrictsAllowedByModule(pathname), [pathname]);
+  //* Helpers - pure functions, no need for useMemo (cheap computations)
+  const districtsValidation = validateDistrictsAllowedByModule(pathname);
+  const urbanSectorsValidation = validateUrbanSectorsAllowedByDistrict(residenceDistrict);
 
-  const urbanSectorsValidation = useMemo(
-    () => validateUrbanSectorsAllowedByDistrict(residenceDistrict),
-    [residenceDistrict]
-  );
-
-  //* Queries
-  const queryKey = useMemo(
-    () => (mode === 'create' ? ['churches-pastor-create'] : ['churches-pastor-update', updateId]),
-    [mode, updateId]
-  );
+  //* Queries - direct array literal (no useMemo needed for simple arrays)
+  const queryKey =
+    mode === 'create'
+      ? ['churches-pastor-create']
+      : ['churches-pastor-update', (options as UpdateModeOptions).id];
 
   const churchesQuery = useQuery<ChurchResponse[], Error>({
     queryKey,
@@ -200,6 +172,8 @@ export const usePastorForm = (options: UsePastorFormOptions): UsePastorFormRetur
   useEffect(() => {
     if (mode !== 'update') return;
 
+    const updateData = (options as UpdateModeOptions).data;
+
     const fetchMinistriesByChurch = async (churchId: string) => {
       try {
         const respData = await getSimpleMinistries({ isSimpleQuery: true, churchId });
@@ -212,7 +186,7 @@ export const usePastorForm = (options: UsePastorFormOptions): UsePastorFormRetur
     const loadMinistryBlocks = async () => {
       if (updateData?.member.ministries && updateData.member.ministries.length > 0) {
         const blocks = await Promise.all(
-          updateData.member.ministries.map(async (m) => {
+          updateData.member.ministries.map(async (m: any) => {
             const ministriesList = await fetchMinistriesByChurch(m.churchMinistryId ?? '');
             return {
               churchPopoverOpen: false,
@@ -231,26 +205,25 @@ export const usePastorForm = (options: UsePastorFormOptions): UsePastorFormRetur
     };
 
     void loadMinistryBlocks();
-  }, [mode, updateData, setMinistryBlocks]);
+  }, [mode, options, setMinistryBlocks]);
 
   //* Effects - Update Mode: Populate form with data
   useEffect(() => {
     if (mode !== 'update') return;
 
+    const updateData = (options as UpdateModeOptions).data;
     if (updateData) {
       form.setValue('firstNames', updateData.member?.firstNames ?? '');
       form.setValue('lastNames', updateData.member?.lastNames ?? '');
       form.setValue('gender', updateData.member?.gender ?? '');
       form.setValue('originCountry', updateData.member?.originCountry ?? '');
-      form.setValue(
-        'birthDate',
-        new Date(String(updateData.member?.birthDate).replace(/-/g, '/'))
-      );
+      form.setValue('birthDate', new Date(String(updateData.member?.birthDate).replace(/-/g, '/')));
       form.setValue('maritalStatus', updateData.member?.maritalStatus ?? '');
       form.setValue('numberChildren', String(updateData.member?.numberChildren) ?? '0');
       form.setValue(
         'conversionDate',
-        updateData.member?.conversionDate && String(updateData.member.conversionDate) !== '1969-12-31'
+        updateData.member?.conversionDate &&
+          String(updateData.member.conversionDate) !== '1969-12-31'
           ? new Date(String(updateData.member.conversionDate).replace(/-/g, '/'))
           : undefined
       );
@@ -269,28 +242,24 @@ export const usePastorForm = (options: UsePastorFormOptions): UsePastorFormRetur
       form.setValue('recordStatus', updateData.recordStatus);
     }
 
-    const timeoutId = setTimeout(() => {
-      setIsLoadingData(false);
-    }, 1200);
-
-    return () => {
-      clearTimeout(timeoutId);
-    };
-  }, [mode, updateData, form]);
+    //* Set loading to false immediately after data is populated
+    setIsLoadingData(false);
+  }, [mode, options, form]);
 
   //* Effects - Update Mode: Dynamic URL
   useEffect(() => {
-    if (mode === 'update' && updateId) {
-      const originalUrl = window.location.href;
-      const url = new URL(window.location.href);
-      url.pathname = `/pastors/update/${updateId}/edit`;
-      window.history.replaceState({}, '', url);
+    if (mode !== 'update') return;
 
-      return () => {
-        window.history.replaceState({}, '', originalUrl);
-      };
-    }
-  }, [mode, updateId]);
+    const updateId = (options as UpdateModeOptions).id;
+    const originalUrl = window.location.href;
+    const url = new URL(window.location.href);
+    url.pathname = `/pastors/update/${updateId}/edit`;
+    window.history.replaceState({}, '', url);
+
+    return () => {
+      window.history.replaceState({}, '', originalUrl);
+    };
+  }, [mode, options]);
 
   //* Effects - Update Mode: Controller district and urban sector
   useEffect(() => {
@@ -301,26 +270,19 @@ export const usePastorForm = (options: UsePastorFormOptions): UsePastorFormRetur
 
   //* Effect to open alert dialog when church changes in update mode
   useEffect(() => {
-    if (
-      mode === 'update' &&
-      updateData?.theirChurch?.id !== changedChurchId &&
-      changedChurchId !== undefined
-    ) {
-      const timeoutId = setTimeout(() => {
-        setIsAlertDialogOpen(true);
-      }, 100);
-      return () => clearTimeout(timeoutId);
+    if (mode !== 'update') return;
+
+    const updateData = (options as UpdateModeOptions).data;
+    if (updateData?.theirChurch?.id !== changedChurchId && changedChurchId !== undefined) {
+      setIsAlertDialogOpen(true);
     }
-  }, [mode, updateData?.theirChurch?.id, changedChurchId]);
+  }, [mode, options, changedChurchId]);
 
   //* Submit button logic - Create Mode
   useEffect(() => {
     if (mode !== 'create') return;
 
-    if (
-      form.formState.errors &&
-      Object.values(form.formState.errors).length > 0
-    ) {
+    if (form.formState.errors && Object.values(form.formState.errors).length > 0) {
       setIsSubmitButtonDisabled(true);
       setIsMessageErrorDisabled(true);
     }
@@ -436,10 +398,7 @@ export const usePastorForm = (options: UsePastorFormOptions): UsePastorFormRetur
   useEffect(() => {
     if (mode !== 'update') return;
 
-    if (
-      form.formState.errors &&
-      Object.values(form.formState.errors).length > 0
-    ) {
+    if (form.formState.errors && Object.values(form.formState.errors).length > 0) {
       setIsSubmitButtonDisabled(true);
       setIsMessageErrorDisabled(true);
     }
@@ -571,12 +530,9 @@ export const usePastorForm = (options: UsePastorFormOptions): UsePastorFormRetur
     setIsSubmitButtonDisabled,
   });
 
-  //* Memoized callbacks for mutation options
-  const noop = useCallback(() => {}, []);
-
   const pastorUpdateMutation = usePastorUpdateMutation({
-    dialogClose: dialogClose ?? noop,
-    scrollToTop: scrollToTop ?? noop,
+    dialogClose: mode === 'update' ? (options as UpdateModeOptions).dialogClose : NOOP,
+    scrollToTop: mode === 'update' ? (options as UpdateModeOptions).scrollToTop : NOOP,
     setIsInputDisabled,
     setIsSubmitButtonDisabled,
   });
@@ -585,18 +541,16 @@ export const usePastorForm = (options: UsePastorFormOptions): UsePastorFormRetur
     mode === 'create' ? pastorCreationMutation.isPending : pastorUpdateMutation.isPending;
 
   //* Form handler
-  const handleSubmit = useCallback(
-    (formData: PastorFormData): void => {
-      setIsInputDisabled(true);
+  const handleSubmit = (formData: PastorFormData): void => {
+    setIsInputDisabled(true);
 
-      if (mode === 'create') {
-        pastorCreationMutation.mutate(formData);
-      } else if (updateId) {
-        pastorUpdateMutation.mutate({ id: updateId, formData });
-      }
-    },
-    [mode, updateId, pastorCreationMutation, pastorUpdateMutation]
-  );
+    if (mode === 'create') {
+      pastorCreationMutation.mutate(formData);
+    } else {
+      const updateId = (options as UpdateModeOptions).id;
+      pastorUpdateMutation.mutate({ id: updateId, formData });
+    }
+  };
 
   return {
     form,

@@ -3,12 +3,12 @@ import { RecordOrder } from '@/shared/enums/record-order.enum';
 import { openPdfInNewTab } from '@/shared/helpers/open-pdf-tab';
 import { getContextParams } from '@/shared/helpers/get-context-params';
 
+import { MinistrySearchType } from '@/modules/ministry/enums/ministry-search-type.enum';
 import {
   type MinistryResponse,
   type MinistryFormData,
   type MinistryQueryParams,
 } from '@/modules/ministry/types';
-import { buildMinistryQueryParams, buildMinistrySearchTerm } from '@/modules/ministry/utils';
 
 export interface UpdateMinistryOptions {
   id: string;
@@ -20,6 +20,47 @@ export interface InactivateMinistryOptions {
   ministryInactivationCategory: string;
   ministryInactivationReason: string;
 }
+
+//* Internal helpers - used only in this service
+const buildMinistrySearchTerm = (params: MinistryQueryParams): string | undefined => {
+  const { searchType, inputTerm, dateTerm, selectTerm, firstNamesTerm, lastNamesTerm } = params;
+
+  const mapping: Record<MinistrySearchType, string | undefined> = {
+    [MinistrySearchType.MinistryCustomName]: inputTerm,
+    [MinistrySearchType.Department]: inputTerm,
+    [MinistrySearchType.Province]: inputTerm,
+    [MinistrySearchType.District]: inputTerm,
+    [MinistrySearchType.UrbanSector]: inputTerm,
+    [MinistrySearchType.Address]: inputTerm,
+    [MinistrySearchType.FoundingDate]: dateTerm,
+    [MinistrySearchType.RecordStatus]: selectTerm,
+    [MinistrySearchType.MinistryType]: selectTerm,
+    [MinistrySearchType.FirstNames]: firstNamesTerm,
+    [MinistrySearchType.LastNames]: lastNamesTerm,
+    [MinistrySearchType.FullNames]:
+      firstNamesTerm && lastNamesTerm ? `${firstNamesTerm}-${lastNamesTerm}` : undefined,
+  };
+
+  return mapping[searchType as MinistrySearchType];
+};
+
+const buildMinistryQueryParams = (
+  params: MinistryQueryParams,
+  term?: string
+): Record<string, any> => {
+  const { limit, offset, order, all, searchType, searchSubType, churchId } = params;
+
+  const base: Record<string, any> = {
+    term,
+    searchType,
+    order,
+  };
+
+  if (searchSubType) base.searchSubType = searchSubType;
+  if (churchId) base.churchId = churchId;
+
+  return all ? base : { ...base, limit, offset };
+};
 
 //* Create
 export const createMinistry = async (formData: MinistryFormData): Promise<MinistryResponse> => {

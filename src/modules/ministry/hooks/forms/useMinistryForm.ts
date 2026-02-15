@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 import { useForm, type UseFormReturn } from 'react-hook-form';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
@@ -23,6 +23,9 @@ import {
 
 import { getSimplePastors } from '@/modules/pastor/services/pastor.service';
 import { type PastorResponse } from '@/modules/pastor/types/pastor-response.interface';
+
+//* Constant noop function - stable reference, no need for useCallback
+const NOOP = (): void => {};
 
 type FormMode = 'create' | 'update';
 
@@ -72,12 +75,6 @@ interface UseMinistryFormReturn {
 export const useMinistryForm = (options: UseMinistryFormOptions): UseMinistryFormReturn => {
   const { mode } = options;
 
-  //* Extract primitive values from options to use as stable dependencies
-  const updateId = mode === 'update' ? (options as UpdateModeOptions).id : undefined;
-  const updateData = mode === 'update' ? (options as UpdateModeOptions).data : undefined;
-  const dialogClose = mode === 'update' ? (options as UpdateModeOptions).dialogClose : undefined;
-  const scrollToTop = mode === 'update' ? (options as UpdateModeOptions).scrollToTop : undefined;
-
   //* States
   const [isLoadingData, setIsLoadingData] = useState(mode === 'update');
   const [isInputDisabled, setIsInputDisabled] = useState<boolean>(false);
@@ -86,7 +83,7 @@ export const useMinistryForm = (options: UseMinistryFormOptions): UseMinistryFor
 
   //* Alert dialog states for pastor change
   const [changedPastorId, setChangedPastorId] = useState<string | undefined>(
-    mode === 'update' ? updateData?.theirPastor?.id : undefined
+    mode === 'update' ? (options as UpdateModeOptions).data?.theirPastor?.id : undefined
   );
   const [isAlertDialogOpen, setIsAlertDialogOpen] = useState<boolean>(false);
 
@@ -118,10 +115,11 @@ export const useMinistryForm = (options: UseMinistryFormOptions): UseMinistryFor
     document.title = 'Modulo Ministerio - IcupApp';
   }, []);
 
-  //* Effects - Update Mode: Populate form with data (primitive dependency)
+  //* Effects - Update Mode: Populate form with data
   useEffect(() => {
     if (mode !== 'update') return;
 
+    const updateData = (options as UpdateModeOptions).data;
     if (updateData) {
       form.setValue('customMinistryName', updateData.customMinistryName!);
       form.setValue('ministryType', updateData.ministryType ?? '');
@@ -140,42 +138,32 @@ export const useMinistryForm = (options: UseMinistryFormOptions): UseMinistryFor
       form.setValue('recordStatus', updateData.recordStatus);
     }
 
-    const timeoutId = setTimeout(() => {
-      setIsLoadingData(false);
-    }, 1200);
+    //* Set loading to false immediately after data is populated
+    setIsLoadingData(false);
+  }, [mode, options, form]);
+
+  //* Effects - Update Mode: Dynamic URL
+  useEffect(() => {
+    if (mode !== 'update') return;
+
+    const updateId = (options as UpdateModeOptions).id;
+    const originalUrl = window.location.href;
+    const url = new URL(window.location.href);
+    url.pathname = `/ministries/update/${updateId}/edit`;
+    window.history.replaceState({}, '', url);
 
     return () => {
-      clearTimeout(timeoutId);
+      window.history.replaceState({}, '', originalUrl);
     };
-  }, [mode, updateData, form]);
+  }, [mode, options]);
 
-  //* Effects - Update Mode: Dynamic URL (primitive dependency)
-  useEffect(() => {
-    if (mode === 'update' && updateId) {
-      const originalUrl = window.location.href;
-      const url = new URL(window.location.href);
-      url.pathname = `/ministries/update/${updateId}/edit`;
-      window.history.replaceState({}, '', url);
+  //* Helpers - pure functions, no need for useMemo (cheap computations)
+  const districtsValidation = validateDistrictsAllowedByModule(pathname);
+  const urbanSectorsValidation = validateUrbanSectorsAllowedByDistrict(district);
 
-      return () => {
-        window.history.replaceState({}, '', originalUrl);
-      };
-    }
-  }, [mode, updateId]);
-
-  //* Memoized helpers - only recalculate when dependencies change
-  const districtsValidation = useMemo(() => validateDistrictsAllowedByModule(pathname), [pathname]);
-
-  const urbanSectorsValidation = useMemo(
-    () => validateUrbanSectorsAllowedByDistrict(district),
-    [district]
-  );
-
-  //* Queries - stable queryKey
-  const queryKey = useMemo(
-    () => (mode === 'create' ? ['pastors'] : ['pastors', updateId]),
-    [mode, updateId]
-  );
+  //* Queries - direct array literal (no useMemo needed for simple arrays)
+  const queryKey =
+    mode === 'create' ? ['pastors'] : ['pastors', (options as UpdateModeOptions).id];
 
   const { data: pastorsData } = useSimpleQuery<PastorResponse[]>({
     queryKey,
@@ -184,24 +172,23 @@ export const useMinistryForm = (options: UseMinistryFormOptions): UseMinistryFor
 
   //* Query for pastors (used in the alert dialog)
   const pastorsQuery = useQuery<PastorResponse[], Error>({
-    queryKey: ['pastors-for-alert', updateId],
+    queryKey: ['pastors-for-alert', mode === 'update' ? (options as UpdateModeOptions).id : undefined],
     queryFn: () => getSimplePastors({ isSimpleQuery: true }),
     enabled: mode === 'update',
   });
 
   //* Effect to open alert dialog when pastor changes in update mode
   useEffect(() => {
+    if (mode !== 'update') return;
+
+    const updateData = (options as UpdateModeOptions).data;
     if (
-      mode === 'update' &&
       updateData?.theirPastor?.id !== changedPastorId &&
       changedPastorId !== undefined
     ) {
-      const timeoutId = setTimeout(() => {
-        setIsAlertDialogOpen(true);
-      }, 100);
-      return () => clearTimeout(timeoutId);
+      setIsAlertDialogOpen(true);
     }
-  }, [mode, updateData?.theirPastor?.id, changedPastorId]);
+  }, [mode, options, changedPastorId]);
 
   //* Mutations
   const ministryCreationMutation = useMinistryCreationMutation({
@@ -209,19 +196,16 @@ export const useMinistryForm = (options: UseMinistryFormOptions): UseMinistryFor
     setIsInputDisabled,
   });
 
-  //* Memoized callbacks for mutation options
-  const noop = useCallback(() => {}, []);
-
   const ministryUpdateMutation = useMinistryUpdateMutation({
-    dialogClose: dialogClose ?? noop,
-    scrollToTop: scrollToTop ?? noop,
+    dialogClose: mode === 'update' ? (options as UpdateModeOptions).dialogClose : NOOP,
+    scrollToTop: mode === 'update' ? (options as UpdateModeOptions).scrollToTop : NOOP,
     setIsInputDisabled,
   });
 
   const isPending =
     mode === 'create' ? ministryCreationMutation.isPending : ministryUpdateMutation.isPending;
 
-  //* Form handler with primitive dependencies
+  //* Form handler
   const handleSubmit = useCallback(
     (formData: MinistryFormData): void => {
       //* Disable inputs immediately when submitting
@@ -229,11 +213,12 @@ export const useMinistryForm = (options: UseMinistryFormOptions): UseMinistryFor
 
       if (mode === 'create') {
         ministryCreationMutation.mutate(formData);
-      } else if (updateId) {
+      } else {
+        const updateId = (options as UpdateModeOptions).id;
         ministryUpdateMutation.mutate({ id: updateId, formData });
       }
     },
-    [mode, updateId, ministryCreationMutation, ministryUpdateMutation]
+    [mode, options, ministryCreationMutation, ministryUpdateMutation]
   );
 
   return {

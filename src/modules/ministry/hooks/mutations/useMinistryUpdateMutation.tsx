@@ -29,20 +29,17 @@ export const useMinistryUpdateMutation = ({
     errorDelay: 1500,
     callbacks: {
       onSuccessCallback: () => {
-        //* Invalidate all ministry-related queries
-        setTimeout(() => {
-          queryClient.invalidateQueries({
-            predicate: (query) => {
-              const queryKey = query.queryKey[0];
-              return typeof queryKey === 'string' && queryKey.includes('ministr');
-            }
-          });
-        }, 700);
+        //* Invalidate queries immediately - no need for setTimeout
+        queryClient.invalidateQueries({
+          predicate: (query) => {
+            const queryKey = query.queryKey[0];
+            return typeof queryKey === 'string' && queryKey.includes('ministr');
+          },
+        });
 
+        //* Execute UI actions immediately
         scrollToTop();
-        setTimeout(() => {
-          dialogClose();
-        }, 800);
+        dialogClose();
       },
       onErrorCallback: () => {
         setIsInputDisabled(false);

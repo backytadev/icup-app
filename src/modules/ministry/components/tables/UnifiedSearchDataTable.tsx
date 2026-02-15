@@ -20,8 +20,6 @@ import {
   type MinistrySearchMode,
   useMinistryStore,
   selectFiltersDisabled,
-  selectSetFiltersDisabled,
-  selectSetSearchData,
 } from '@/modules/ministry/store';
 
 import { dateFormatterToDDMMYYYY } from '@/shared/helpers/date-formatter-to-ddmmyyyy.helper';
@@ -76,8 +74,7 @@ export function UnifiedMinistrySearchDataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>): JSX.Element {
   //* Store selectors
   const isFiltersDisabled = useMinistryStore(selectFiltersDisabled);
-  const setFiltersDisabled = useMinistryStore(selectSetFiltersDisabled);
-  const setSearchData = useMinistryStore(selectSetSearchData);
+  const { setFiltersDisabled, setSearchData } = useMinistryStore();
 
   //* Hooks (external libraries)
   const navigate = useNavigate();

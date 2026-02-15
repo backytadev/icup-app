@@ -20,8 +20,6 @@ import {
   type PastorSearchMode,
   usePastorStore,
   selectFiltersDisabled,
-  selectSetFiltersDisabled,
-  selectSetSearchData,
 } from '@/modules/pastor/store';
 
 import { dateFormatterToDDMMYYYY } from '@/shared/helpers/date-formatter-to-ddmmyyyy.helper';
@@ -76,8 +74,7 @@ export function UnifiedPastorSearchDataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>): JSX.Element {
   //* Store selectors
   const isFiltersDisabled = usePastorStore(selectFiltersDisabled);
-  const setFiltersDisabled = usePastorStore(selectSetFiltersDisabled);
-  const setSearchData = usePastorStore(selectSetSearchData);
+  const { setFiltersDisabled, setSearchData } = usePastorStore();
 
   //* Hooks (external libraries)
   const navigate = useNavigate();

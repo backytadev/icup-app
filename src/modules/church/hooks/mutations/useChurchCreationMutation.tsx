@@ -25,19 +25,16 @@ export const useChurchCreationMutation = ({
     successDelay: 1600,
     callbacks: {
       onSuccessCallback: () => {
-        //* Invalidate all church-related queries
-        setTimeout(() => {
-          queryClient.invalidateQueries({
-            predicate: (query) => {
-              const queryKey = query.queryKey[0];
-              return typeof queryKey === 'string' && queryKey.includes('churches');
-            }
-          });
-        }, 700);
+        //* Invalidate queries immediately - no need for setTimeout
+        queryClient.invalidateQueries({
+          predicate: (query) => {
+            const queryKey = query.queryKey[0];
+            return typeof queryKey === 'string' && queryKey.includes('churches');
+          },
+        });
 
-        setTimeout(() => {
-          churchCreationForm.reset();
-        }, 100);
+        //* Reset form immediately after success
+        churchCreationForm.reset();
       },
       onErrorCallback: () => {
         setIsInputDisabled(false);

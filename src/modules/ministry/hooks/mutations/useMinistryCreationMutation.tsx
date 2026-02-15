@@ -25,19 +25,16 @@ export const useMinistryCreationMutation = ({
     successDelay: 1600,
     callbacks: {
       onSuccessCallback: () => {
-        //* Invalidate all ministry-related queries
-        setTimeout(() => {
-          queryClient.invalidateQueries({
-            predicate: (query) => {
-              const queryKey = query.queryKey[0];
-              return typeof queryKey === 'string' && queryKey.includes('ministr');
-            }
-          });
-        }, 700);
+        //* Invalidate queries immediately - no need for setTimeout
+        queryClient.invalidateQueries({
+          predicate: (query) => {
+            const queryKey = query.queryKey[0];
+            return typeof queryKey === 'string' && queryKey.includes('ministr');
+          },
+        });
 
-        setTimeout(() => {
-          ministryCreationForm.reset();
-        }, 100);
+        //* Reset form immediately after success
+        ministryCreationForm.reset();
       },
       onErrorCallback: () => {
         setIsInputDisabled(false);

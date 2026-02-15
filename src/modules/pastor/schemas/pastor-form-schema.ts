@@ -2,18 +2,20 @@
 
 import * as z from 'zod';
 
-import { Gender } from '@/shared/enums/gender.enum';
-import { Country } from '@/shared/enums/country.enum';
-import { District } from '@/shared/enums/district.enum';
-import { Province } from '@/shared/enums/province.enum';
-import { Department } from '@/shared/enums/department.enum';
 import { MemberRole } from '@/shared/enums/member-role.enum';
-import { UrbanSector } from '@/shared/enums/urban-sector.enum';
 import { RecordStatus } from '@/shared/enums/record-status.enum';
-import { MaritalStatus } from '@/shared/enums/marital-status.enum';
 import { RelationType } from '@/shared/enums/relation-type.enum';
 
 import { MinistryAssignmentSchema } from '@/modules/ministry/schemas/ministry-assignment';
+
+//* Helper: Create required string field with trim validation
+const createRequiredStringField = (fieldName: string) =>
+  z
+    .string()
+    .min(1, { message: `${fieldName} es requerido.` })
+    .refine((value) => value.trim() !== '', {
+      message: `${fieldName} es requerido.`,
+    });
 
 export const pastorFormSchema = z
   .object({
@@ -27,15 +29,7 @@ export const pastorFormSchema = z
       .min(1, { message: 'El campo debe contener al menos 1 carácter.' })
       .max(40, { message: 'El campo debe contener máximo 40 caracteres' }),
 
-    gender: z
-      .string(
-        z.nativeEnum(Gender, {
-          required_error: 'El género es requerido.',
-        })
-      )
-      .refine((value) => value !== undefined && value.trim() !== '', {
-        message: 'El género es requerido.',
-      }),
+    gender: createRequiredStringField('El género'),
 
     originCountry: z
       .string()
@@ -46,15 +40,7 @@ export const pastorFormSchema = z
       required_error: 'La fecha de nacimiento es requerida.',
     }),
 
-    maritalStatus: z
-      .string(
-        z.nativeEnum(MaritalStatus, {
-          required_error: 'El estado civil es requerido.',
-        })
-      )
-      .refine((value) => value !== undefined && value.trim() !== '', {
-        message: 'El estado civil es requerido.',
-      }),
+    maritalStatus: createRequiredStringField('El estado civil'),
 
     numberChildren: z
       .string()
@@ -99,55 +85,15 @@ export const pastorFormSchema = z
         .optional()
     ),
 
-    residenceCountry: z
-      .string(
-        z.nativeEnum(Country, {
-          required_error: 'El país es requerido.',
-        })
-      )
-      .refine((value) => value !== undefined && value.trim() !== '', {
-        message: 'El país es requerido.',
-      }),
+    residenceCountry: createRequiredStringField('El país'),
 
-    residenceDepartment: z
-      .string(
-        z.nativeEnum(Department, {
-          required_error: 'El departamento es requerido.',
-        })
-      )
-      .refine((value) => value !== undefined && value.trim() !== '', {
-        message: 'El departamento es requerido.',
-      }),
+    residenceDepartment: createRequiredStringField('El departamento'),
 
-    residenceProvince: z
-      .string(
-        z.nativeEnum(Province, {
-          required_error: 'Debe seleccionar una opción.',
-        })
-      )
-      .refine((value) => value !== undefined && value.trim() !== '', {
-        message: 'Debe seleccionar una opción.',
-      }),
+    residenceProvince: createRequiredStringField('La provincia'),
 
-    residenceDistrict: z
-      .string(
-        z.nativeEnum(District, {
-          required_error: 'El distrito es requerido.',
-        })
-      )
-      .refine((value) => value !== undefined && value.trim() !== '', {
-        message: 'El distrito es requerido.',
-      }),
+    residenceDistrict: createRequiredStringField('El distrito'),
 
-    residenceUrbanSector: z
-      .string(
-        z.nativeEnum(UrbanSector, {
-          required_error: 'El sector urbano es requerido.',
-        })
-      )
-      .refine((value) => value !== undefined && value.trim() !== '', {
-        message: 'El sector urbano es requerido.',
-      }),
+    residenceUrbanSector: createRequiredStringField('El sector urbano'),
 
     residenceAddress: z
       .string()

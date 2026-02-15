@@ -6,8 +6,7 @@ import { getContextParams } from '@/shared/helpers/get-context-params';
 import { type PastorFormData } from '@/modules/pastor/types/pastor-form-data.interface';
 import { type PastorResponse } from '@/modules/pastor/types/pastor-response.interface';
 import { type PastorQueryParams } from '@/modules/pastor/types/pastor-query-params.interface';
-
-import { buildPastorSearchTerm, buildPastorQueryParams } from '@/modules/pastor/utils';
+import { PastorSearchType } from '@/modules/pastor/enums/pastor-search-type.enum';
 
 export interface UpdatePastorOptions {
   id: string;
@@ -19,6 +18,51 @@ export interface InactivatePastorOptions {
   memberInactivationCategory: string;
   memberInactivationReason: string;
 }
+
+//* Internal helpers - not exported
+const buildPastorSearchTerm = (params: PastorQueryParams): string | undefined => {
+  const { searchType, inputTerm, dateTerm, selectTerm, firstNamesTerm, lastNamesTerm } = params;
+
+  const mapping: Record<PastorSearchType, string | undefined> = {
+    [PastorSearchType.BirthDate]: dateTerm,
+    [PastorSearchType.BirthMonth]: selectTerm,
+    [PastorSearchType.Gender]: selectTerm,
+    [PastorSearchType.MaritalStatus]: selectTerm,
+    [PastorSearchType.OriginCountry]: inputTerm,
+    [PastorSearchType.ResidenceCountry]: inputTerm,
+    [PastorSearchType.ResidenceDepartment]: inputTerm,
+    [PastorSearchType.ResidenceProvince]: inputTerm,
+    [PastorSearchType.ResidenceDistrict]: inputTerm,
+    [PastorSearchType.ResidenceUrbanSector]: inputTerm,
+    [PastorSearchType.ResidenceAddress]: inputTerm,
+    [PastorSearchType.RecordStatus]: selectTerm,
+    [PastorSearchType.FirstNames]: firstNamesTerm,
+    [PastorSearchType.LastNames]: lastNamesTerm,
+    [PastorSearchType.FullNames]:
+      firstNamesTerm && lastNamesTerm ? `${firstNamesTerm}-${lastNamesTerm}` : undefined,
+  };
+
+  return mapping[searchType as PastorSearchType];
+};
+
+const buildPastorQueryParams = (params: PastorQueryParams, term?: string) => {
+  const { limit, offset, order, all, searchType, churchId } = params;
+
+  const base: Record<string, any> = {
+    term,
+    searchType,
+    order,
+  };
+
+  if (churchId) base.churchId = churchId;
+
+  if (!all) {
+    base.limit = limit;
+    base.offset = offset;
+  }
+
+  return base;
+};
 
 //* Create
 export const createPastor = async (formData: PastorFormData): Promise<PastorResponse> => {

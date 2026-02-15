@@ -26,20 +26,17 @@ export const useChurchUpdateMutation = ({
     errorDelay: 1500,
     callbacks: {
       onSuccessCallback: () => {
-        //* Invalidate all church-related queries
-        setTimeout(() => {
-          queryClient.invalidateQueries({
-            predicate: (query) => {
-              const queryKey = query.queryKey[0];
-              return typeof queryKey === 'string' && queryKey.includes('churches');
-            }
-          });
-        }, 700);
+        //* Invalidate queries immediately - no need for setTimeout
+        queryClient.invalidateQueries({
+          predicate: (query) => {
+            const queryKey = query.queryKey[0];
+            return typeof queryKey === 'string' && queryKey.includes('churches');
+          },
+        });
 
+        //* Execute UI actions immediately
         scrollToTop();
-        setTimeout(() => {
-          dialogClose();
-        }, 800);
+        dialogClose();
       },
       onErrorCallback: () => {
         setIsInputDisabled(false);

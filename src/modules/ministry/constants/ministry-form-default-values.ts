@@ -4,37 +4,34 @@ import { Department } from '@/shared/enums/department.enum';
 
 import { type MinistryFormData } from '@/modules/ministry/types';
 
-export const ministryCreateDefaultValues: MinistryFormData = {
+//* Base default values - shared between create and update modes
+const baseMinistryDefaultValues: Partial<MinistryFormData> = {
   customMinistryName: '',
   ministryType: '',
   email: '',
-  foundingDate: undefined as unknown as Date,
+  foundingDate: undefined,
+  serviceTimes: [],
   phoneNumber: '',
-  country: Country.Perú,
-  department: Department.Lima,
-  province: Province.Lima,
   district: '',
   urbanSector: '',
   address: '',
-  serviceTimes: [],
   referenceAddress: '',
   theirPastor: '',
 };
 
-export const ministryUpdateDefaultValues: MinistryFormData = {
-  customMinistryName: '',
-  ministryType: '',
-  email: '',
-  foundingDate: undefined as unknown as Date,
-  serviceTimes: [],
-  phoneNumber: '',
+//* Create mode: pre-filled with default location values
+export const ministryCreateDefaultValues = {
+  ...baseMinistryDefaultValues,
+  country: Country.Perú,
+  department: Department.Lima,
+  province: Province.Lima,
+} as MinistryFormData;
+
+//* Update mode: empty location values, includes recordStatus
+export const ministryUpdateDefaultValues = {
+  ...baseMinistryDefaultValues,
   country: '',
   department: '',
   province: '',
-  district: '',
-  urbanSector: '',
-  address: '',
-  referenceAddress: '',
   recordStatus: '',
-  theirPastor: '',
-};
+} as MinistryFormData;

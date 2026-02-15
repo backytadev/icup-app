@@ -2,7 +2,7 @@ import { apiRequest } from '@/shared/helpers/api-request';
 import { RecordOrder } from '@/shared/enums/record-order.enum';
 import { openPdfInNewTab } from '@/shared/helpers/open-pdf-tab';
 
-import { buildChurchQueryParams, buildChurchSearchTerm } from '@/modules/church/utils';
+import { ChurchSearchType } from '@/modules/church/enums';
 import { type ChurchResponse, type ChurchFormData, type ChurchQueryParams } from '@/modules/church/types';
 
 export interface UpdateChurchOptions {
@@ -15,6 +15,39 @@ export interface InactivateChurchOptions {
   churchInactivationCategory: string;
   churchInactivationReason: string;
 }
+
+//* Internal helpers - used only in this service
+const buildChurchSearchTerm = (params: ChurchQueryParams): string | undefined => {
+  const { searchType, inputTerm, dateTerm, selectTerm } = params;
+
+  const mapping: Record<ChurchSearchType, string | undefined> = {
+    [ChurchSearchType.ChurchName]: inputTerm,
+    [ChurchSearchType.Department]: inputTerm,
+    [ChurchSearchType.Province]: inputTerm,
+    [ChurchSearchType.District]: inputTerm,
+    [ChurchSearchType.UrbanSector]: inputTerm,
+    [ChurchSearchType.Address]: inputTerm,
+    [ChurchSearchType.FoundingDate]: dateTerm,
+    [ChurchSearchType.RecordStatus]: selectTerm,
+  };
+
+  return mapping[searchType as ChurchSearchType];
+};
+
+const buildChurchQueryParams = (
+  params: ChurchQueryParams,
+  term: string | undefined
+): Record<string, any> => {
+  const { limit, offset, order, all, searchType } = params;
+
+  const base: Record<string, any> = {
+    term,
+    searchType,
+    order,
+  };
+
+  return all ? base : { ...base, limit, offset };
+};
 
 //* Create
 export const createChurch = async (formData: ChurchFormData): Promise<ChurchResponse> => {

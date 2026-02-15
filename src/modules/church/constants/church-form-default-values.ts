@@ -4,39 +4,35 @@ import { Department } from '@/shared/enums/department.enum';
 
 import { type ChurchFormData } from '@/modules/church/types';
 
-export const churchCreateDefaultValues: ChurchFormData = {
+//* Base default values - shared between create and update modes
+const baseChurchDefaultValues: Partial<ChurchFormData> = {
   churchName: '',
   abbreviatedChurchName: '',
   email: '',
-  foundingDate: undefined as unknown as Date,
+  foundingDate: undefined,
+  serviceTimes: [],
   isAnexe: false,
   phoneNumber: '',
-  country: Country.Perú,
-  department: Department.Lima,
-  province: Province.Lima,
   district: '',
   urbanSector: '',
   address: '',
-  serviceTimes: [],
   referenceAddress: '',
   theirMainChurch: '',
 };
 
-export const churchUpdateDefaultValues: ChurchFormData = {
-  churchName: '',
-  abbreviatedChurchName: '',
-  email: '',
-  foundingDate: undefined as unknown as Date,
-  serviceTimes: [],
-  isAnexe: false,
-  phoneNumber: '',
+//* Create mode: pre-filled with default location values
+export const churchCreateDefaultValues = {
+  ...baseChurchDefaultValues,
+  country: Country.Perú,
+  department: Department.Lima,
+  province: Province.Lima,
+} as ChurchFormData;
+
+//* Update mode: empty location values, includes recordStatus
+export const churchUpdateDefaultValues = {
+  ...baseChurchDefaultValues,
   country: '',
   department: '',
   province: '',
-  district: '',
-  urbanSector: '',
-  address: '',
-  referenceAddress: '',
   recordStatus: '',
-  theirMainChurch: '',
-};
+} as ChurchFormData;

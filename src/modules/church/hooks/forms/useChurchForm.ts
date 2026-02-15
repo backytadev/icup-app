@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 
 import { useForm, type UseFormReturn } from 'react-hook-form';
 import { useLocation } from 'react-router-dom';
@@ -17,6 +17,9 @@ import {
   useChurchCreationMutation,
   useChurchUpdateMutation,
 } from '@/modules/church/hooks/mutations';
+
+//* Constant noop function - stable reference, no need for useCallback
+const NOOP = (): void => {};
 
 type FormMode = 'create' | 'update';
 
@@ -61,12 +64,6 @@ interface UseChurchFormReturn {
 export const useChurchForm = (options: UseChurchFormOptions): UseChurchFormReturn => {
   const { mode } = options;
 
-  //* Extract primitive values from options to use as stable dependencies
-  const updateId = mode === 'update' ? (options as UpdateModeOptions).id : undefined;
-  const updateData = mode === 'update' ? (options as UpdateModeOptions).data : undefined;
-  const dialogClose = mode === 'update' ? (options as UpdateModeOptions).dialogClose : undefined;
-  const scrollToTop = mode === 'update' ? (options as UpdateModeOptions).scrollToTop : undefined;
-
   //* States
   const [isLoadingData, setIsLoadingData] = useState(mode === 'update');
   const [isInputDisabled, setIsInputDisabled] = useState<boolean>(false);
@@ -108,10 +105,11 @@ export const useChurchForm = (options: UseChurchFormOptions): UseChurchFormRetur
     document.title = 'Modulo Iglesia - IcupApp';
   }, []);
 
-  //* Effects - Update Mode: Populate form with data (primitive dependency)
+  //* Effects - Update Mode: Populate form with data
   useEffect(() => {
     if (mode !== 'update') return;
 
+    const updateData = (options as UpdateModeOptions).data;
     if (updateData) {
       form.setValue('churchName', updateData.churchName!);
       form.setValue('abbreviatedChurchName', updateData.abbreviatedChurchName!);
@@ -131,42 +129,34 @@ export const useChurchForm = (options: UseChurchFormOptions): UseChurchFormRetur
       form.setValue('recordStatus', updateData.recordStatus);
     }
 
-    const timeoutId = setTimeout(() => {
-      setIsLoadingData(false);
-    }, 1200);
+    //* Set loading to false immediately after data is populated
+    setIsLoadingData(false);
+  }, [mode, options, form]);
+
+  //* Effects - Update Mode: Dynamic URL
+  useEffect(() => {
+    if (mode !== 'update') return;
+
+    const updateId = (options as UpdateModeOptions).id;
+    const originalUrl = window.location.href;
+    const url = new URL(window.location.href);
+    url.pathname = `/churches/search/${updateId}/edit`;
+    window.history.replaceState({}, '', url);
 
     return () => {
-      clearTimeout(timeoutId);
+      window.history.replaceState({}, '', originalUrl);
     };
-  }, [mode, updateData, form]);
+  }, [mode, options]);
 
-  //* Effects - Update Mode: Dynamic URL (primitive dependency)
-  useEffect(() => {
-    if (mode === 'update' && updateId) {
-      const originalUrl = window.location.href;
-      const url = new URL(window.location.href);
-      url.pathname = `/churches/search/${updateId}/edit`;
-      window.history.replaceState({}, '', url);
+  //* Helpers - pure functions, no need for useMemo (cheap computations)
+  const districtsValidation = validateDistrictsAllowedByModule(pathname);
+  const urbanSectorsValidation = validateUrbanSectorsAllowedByDistrict(district);
 
-      return () => {
-        window.history.replaceState({}, '', originalUrl);
-      };
-    }
-  }, [mode, updateId]);
-
-  //* Memoized helpers - only recalculate when dependencies change
-  const districtsValidation = useMemo(() => validateDistrictsAllowedByModule(pathname), [pathname]);
-
-  const urbanSectorsValidation = useMemo(
-    () => validateUrbanSectorsAllowedByDistrict(district),
-    [district]
-  );
-
-  //* Queries - stable queryKey
-  const queryKey = useMemo(
-    () => (mode === 'create' ? ['mainChurch'] : ['mainChurch', updateId]),
-    [mode, updateId]
-  );
+  //* Queries - direct array literal (no useMemo needed for simple arrays)
+  const queryKey =
+    mode === 'create'
+      ? ['mainChurch']
+      : ['mainChurch', (options as UpdateModeOptions).id];
 
   const { data: mainChurchData } = useSimpleQuery<ChurchResponse[]>({
     queryKey,
@@ -179,19 +169,16 @@ export const useChurchForm = (options: UseChurchFormOptions): UseChurchFormRetur
     setIsInputDisabled,
   });
 
-  //* Memoized callbacks for mutation options
-  const noop = useCallback(() => {}, []);
-
   const churchUpdateMutation = useChurchUpdateMutation({
-    dialogClose: dialogClose ?? noop,
-    scrollToTop: scrollToTop ?? noop,
+    dialogClose: mode === 'update' ? (options as UpdateModeOptions).dialogClose : NOOP,
+    scrollToTop: mode === 'update' ? (options as UpdateModeOptions).scrollToTop : NOOP,
     setIsInputDisabled,
   });
 
   const isPending =
     mode === 'create' ? churchCreationMutation.isPending : churchUpdateMutation.isPending;
 
-  //* Form handler with primitive dependencies
+  //* Form handler
   const handleSubmit = useCallback(
     (formData: ChurchFormData): void => {
       //* Disable inputs immediately when submitting
@@ -199,11 +186,12 @@ export const useChurchForm = (options: UseChurchFormOptions): UseChurchFormRetur
 
       if (mode === 'create') {
         churchCreationMutation.mutate(formData);
-      } else if (updateId) {
+      } else {
+        const updateId = (options as UpdateModeOptions).id;
         churchUpdateMutation.mutate({ id: updateId, formData });
       }
     },
-    [mode, updateId, churchCreationMutation, churchUpdateMutation]
+    [mode, options, churchCreationMutation, churchUpdateMutation]
   );
 
   return {

@@ -1,14 +1,18 @@
 import * as z from 'zod';
 
-import { Country } from '@/shared/enums/country.enum';
-import { Province } from '@/shared/enums/province.enum';
-import { District } from '@/shared/enums/district.enum';
-import { Department } from '@/shared/enums/department.enum';
-import { UrbanSector } from '@/shared/enums/urban-sector.enum';
 import { RecordStatus } from '@/shared/enums/record-status.enum';
 
 import { MinistryType } from '@/modules/ministry/enums/ministry-type.enum';
 import { MinistryServiceTime } from '@/modules/ministry/enums/ministry-service-time.enum';
+
+//* Helper: Create required string field with trim validation
+const createRequiredStringField = (fieldName: string) =>
+  z
+    .string()
+    .min(1, { message: `${fieldName} es requerido.` })
+    .refine((value) => value.trim() !== '', {
+      message: `${fieldName} es requerido.`,
+    });
 
 export const ministryFormSchema = z.object({
   //* General Info
@@ -57,55 +61,15 @@ export const ministryFormSchema = z.object({
       .optional()
   ),
 
-  country: z
-    .string(
-      z.nativeEnum(Country, {
-        required_error: 'El país es requerido.',
-      })
-    )
-    .refine((value) => value !== undefined && value.trim() !== '', {
-      message: 'El país es requerido.',
-    }),
+  country: createRequiredStringField('El país'),
 
-  department: z
-    .string(
-      z.nativeEnum(Department, {
-        required_error: 'El departamento es requerido.',
-      })
-    )
-    .refine((value) => value !== undefined && value.trim() !== '', {
-      message: 'El departamento es requerido.',
-    }),
+  department: createRequiredStringField('El departamento'),
 
-  province: z
-    .string(
-      z.nativeEnum(Province, {
-        required_error: 'La provincia es requerida.',
-      })
-    )
-    .refine((value) => value !== undefined && value.trim() !== '', {
-      message: 'La provincia es requerida.',
-    }),
+  province: createRequiredStringField('La provincia'),
 
-  district: z
-    .string(
-      z.nativeEnum(District, {
-        required_error: 'El distrito es requerido.',
-      })
-    )
-    .refine((value) => value !== undefined && value.trim() !== '', {
-      message: 'El distrito es requerido.',
-    }),
+  district: createRequiredStringField('El distrito'),
 
-  urbanSector: z
-    .string(
-      z.nativeEnum(UrbanSector, {
-        required_error: 'El sector urbano es requerido.',
-      })
-    )
-    .refine((value) => value !== undefined && value.trim() !== '', {
-      message: 'El sector urbano es requerido.',
-    }),
+  urbanSector: createRequiredStringField('El sector urbano'),
 
   address: z
     .string()

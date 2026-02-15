@@ -62,16 +62,9 @@ export const usePastorStore = create<PastorStore>()((set) => ({
   setFiltersDisabled: (value) => set({ isFiltersDisabled: value }),
 }));
 
-//* Unified selectors
+//* Selectors - only for state values, not for actions
+//* Actions should be accessed directly from the store
 export const selectSearchMode = (state: PastorStore): PastorSearchMode => state.searchMode;
-
 export const selectSearchData = (state: PastorStore): PastorResponse[] | undefined =>
   state.searchData;
-
 export const selectFiltersDisabled = (state: PastorStore): boolean => state.isFiltersDisabled;
-
-export const selectSetSearchMode = (state: PastorStore) => state.setSearchMode;
-
-export const selectSetSearchData = (state: PastorStore) => state.setSearchData;
-
-export const selectSetFiltersDisabled = (state: PastorStore) => state.setFiltersDisabled;

@@ -6,9 +6,7 @@ import {
   type MinistrySearchMode,
   useMinistryStore,
   selectFiltersDisabled,
-  selectSetFiltersDisabled,
   selectSearchMode,
-  selectSetSearchMode,
 } from '@/modules/ministry/store';
 
 import { type MinistryResponse, type MinistrySearchFormByTerm } from '@/modules/ministry/types';
@@ -57,9 +55,8 @@ const dataFictional: MinistryResponse[] = [
 export const MinistrySearchPage = (): JSX.Element => {
   //* Store
   const searchMode = useMinistryStore(selectSearchMode);
-  const setSearchMode = useMinistryStore(selectSetSearchMode);
   const isFiltersDisabled = useMinistryStore(selectFiltersDisabled);
-  const setFiltersDisabled = useMinistryStore(selectSetFiltersDisabled);
+  const { setSearchMode, setFiltersDisabled } = useMinistryStore();
 
   //* Local state
   const [generalSearchParams, setGeneralSearchParams] = useState<GeneralSearchFormType | undefined>();

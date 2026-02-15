@@ -29,18 +29,14 @@ export const usePastorCreationMutation = ({
     callbacks: {
       onSuccessCallback: () => {
         //* Invalidate all pastor-related queries
-        setTimeout(() => {
-          queryClient.invalidateQueries({
-            predicate: (query) => {
-              const queryKey = query.queryKey[0];
-              return typeof queryKey === 'string' && queryKey.includes('pastor');
-            }
-          });
-        }, 700);
+        queryClient.invalidateQueries({
+          predicate: (query) => {
+            const queryKey = query.queryKey[0];
+            return typeof queryKey === 'string' && queryKey.includes('pastor');
+          },
+        });
 
-        setTimeout(() => {
-          pastorCreationForm.reset();
-        }, 100);
+        pastorCreationForm.reset();
       },
       onErrorCallback: () => {
         setIsInputDisabled(false);

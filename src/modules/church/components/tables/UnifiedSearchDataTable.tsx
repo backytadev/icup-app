@@ -19,8 +19,6 @@ import {
   type ChurchSearchMode,
   useChurchStore,
   selectFiltersDisabled,
-  selectSetFiltersDisabled,
-  selectSetSearchData,
 } from '@/modules/church/store';
 
 import { dateFormatterToDDMMYYYY } from '@/shared/helpers/date-formatter-to-ddmmyyyy.helper';
@@ -75,8 +73,7 @@ export function UnifiedChurchSearchDataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>): JSX.Element {
   //* Store selectors
   const isFiltersDisabled = useChurchStore(selectFiltersDisabled);
-  const setFiltersDisabled = useChurchStore(selectSetFiltersDisabled);
-  const setSearchData = useChurchStore(selectSetSearchData);
+  const { setFiltersDisabled, setSearchData } = useChurchStore();
 
   //* Hooks (external libraries)
   const navigate = useNavigate();

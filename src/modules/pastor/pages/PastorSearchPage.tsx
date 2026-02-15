@@ -6,9 +6,7 @@ import {
   type PastorSearchMode,
   usePastorStore,
   selectFiltersDisabled,
-  selectSetFiltersDisabled,
   selectSearchMode,
-  selectSetSearchMode,
 } from '@/modules/pastor/store';
 
 import { pastorUnifiedColumns as columns } from '@/modules/pastor/components/tables/columns/base-columns';
@@ -67,9 +65,8 @@ const dataFictional: PastorResponse[] = [
 export const PastorSearchPage = (): JSX.Element => {
   //* Store
   const searchMode = usePastorStore(selectSearchMode);
-  const setSearchMode = usePastorStore(selectSetSearchMode);
   const isFiltersDisabled = usePastorStore(selectFiltersDisabled);
-  const setFiltersDisabled = usePastorStore(selectSetFiltersDisabled);
+  const { setSearchMode, setFiltersDisabled } = usePastorStore();
 
   //* Local state
   const [generalSearchParams, setGeneralSearchParams] = useState<GeneralSearchFormType | undefined>();

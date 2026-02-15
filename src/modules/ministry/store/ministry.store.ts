@@ -35,12 +35,9 @@ export const useMinistryStore = create<MinistryStore>()((set) => ({
   reset: () => set(initialState),
 }));
 
-// Selectors
+//* Selectors - only for state values, not for actions
+//* Actions should be accessed directly from the store
 export const selectSearchMode = (state: MinistryStore): MinistrySearchMode => state.searchMode;
 export const selectSearchData = (state: MinistryStore): MinistryResponse[] | undefined =>
   state.searchData;
 export const selectFiltersDisabled = (state: MinistryStore): boolean => state.isFiltersDisabled;
-
-export const selectSetSearchMode = (state: MinistryStore) => state.setSearchMode;
-export const selectSetSearchData = (state: MinistryStore) => state.setSearchData;
-export const selectSetFiltersDisabled = (state: MinistryStore) => state.setFiltersDisabled;

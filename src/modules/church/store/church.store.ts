@@ -35,11 +35,9 @@ export const useChurchStore = create<ChurchStore>()((set) => ({
   reset: () => set(initialState),
 }));
 
-//Selectors
+//* Selectors - only for state values, not for actions
+//* Actions should be accessed directly from the store
 export const selectSearchMode = (state: ChurchStore): ChurchSearchMode => state.searchMode;
 export const selectSearchData = (state: ChurchStore): ChurchResponse[] | undefined =>
   state.searchData;
 export const selectFiltersDisabled = (state: ChurchStore): boolean => state.isFiltersDisabled;
-export const selectSetSearchMode = (state: ChurchStore) => state.setSearchMode;
-export const selectSetSearchData = (state: ChurchStore) => state.setSearchData;
-export const selectSetFiltersDisabled = (state: ChurchStore) => state.setFiltersDisabled;

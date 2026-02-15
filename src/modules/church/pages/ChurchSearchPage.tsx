@@ -6,9 +6,7 @@ import {
   type ChurchSearchMode,
   useChurchStore,
   selectFiltersDisabled,
-  selectSetFiltersDisabled,
   selectSearchMode,
-  selectSetSearchMode,
 } from '@/modules/church/store';
 
 import { type ChurchResponse, type ChurchSearchFormByTerm } from '@/modules/church/types';
@@ -57,9 +55,8 @@ const dataFictional: ChurchResponse[] = [
 export const ChurchSearchPage = (): JSX.Element => {
   //* Store
   const searchMode = useChurchStore(selectSearchMode);
-  const setSearchMode = useChurchStore(selectSetSearchMode);
   const isFiltersDisabled = useChurchStore(selectFiltersDisabled);
-  const setFiltersDisabled = useChurchStore(selectSetFiltersDisabled);
+  const { setSearchMode, setFiltersDisabled } = useChurchStore();
 
   //* Local state
   const [generalSearchParams, setGeneralSearchParams] = useState<GeneralSearchFormType | undefined>();

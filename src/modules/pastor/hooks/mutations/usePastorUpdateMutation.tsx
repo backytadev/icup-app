@@ -29,20 +29,16 @@ export const usePastorUpdateMutation = ({
     callbacks: {
       onSuccessCallback: () => {
         //* Invalidate all pastor-related queries
-        setTimeout(() => {
-          queryClient.invalidateQueries({
-            predicate: (query) => {
-              const queryKey = query.queryKey[0];
-              return typeof queryKey === 'string' && queryKey.includes('pastor');
-            }
-          });
-        }, 700);
+        queryClient.invalidateQueries({
+          predicate: (query) => {
+            const queryKey = query.queryKey[0];
+            return typeof queryKey === 'string' && queryKey.includes('pastor');
+          },
+        });
 
         scrollToTop();
-        setTimeout(() => {
-          dialogClose();
-          setIsInputDisabled(false);
-        }, 800);
+        dialogClose();
+        setIsInputDisabled(false);
       },
       onErrorCallback: () => {
         setIsInputDisabled(false);
