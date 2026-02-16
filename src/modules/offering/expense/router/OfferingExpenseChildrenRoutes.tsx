@@ -8,17 +8,8 @@ import { LazyElement } from '@/shared/components/lazy/LazyElements';
 const LazyOfferingExpenseCreatePage = lazy(
   () => import('@/modules/offering/expense/pages/OfferingExpenseCreatePage')
 );
-const LazyOfferingExpenseUpdatePage = lazy(
-  () => import('@/modules/offering/expense/pages/OfferingExpenseUpdatePage')
-);
-const LazyOfferingExpenseInactivatePage = lazy(
-  () => import('@/modules/offering/expense/pages/OfferingExpenseInactivatePage')
-);
-const LazyOfferingsExpenseSearchPageByTerm = lazy(
-  () => import('@/modules/offering/expense/pages/OfferingsExpenseSearchPageByTerm')
-);
-const LazyOfferingsExpenseGeneralSearchPage = lazy(
-  () => import('@/modules/offering/expense/pages/OfferingsExpenseGeneralSearchPage')
+const LazyOfferingExpenseSearchPage = lazy(
+  () => import('@/modules/offering/expense/pages/OfferingExpenseSearchPage')
 );
 const LazyOfferingExpenseOptionsPage = lazy(
   () => import('@/modules/offering/expense/pages/OfferingExpenseOptionsPage')
@@ -42,34 +33,10 @@ export const OfferingExpenseChildrenRoutes: RouteObject[] = [
     ),
   },
   {
-    path: 'general-search',
+    path: 'search',
     element: (
       <LazyElement>
-        <LazyOfferingsExpenseGeneralSearchPage />
-      </LazyElement>
-    ),
-  },
-  {
-    path: 'search-by-term',
-    element: (
-      <LazyElement>
-        <LazyOfferingsExpenseSearchPageByTerm />
-      </LazyElement>
-    ),
-  },
-  {
-    path: 'update',
-    element: (
-      <LazyElement>
-        <LazyOfferingExpenseUpdatePage />
-      </LazyElement>
-    ),
-  },
-  {
-    path: 'inactivate',
-    element: (
-      <LazyElement>
-        <LazyOfferingExpenseInactivatePage />
+        <LazyOfferingExpenseSearchPage />
       </LazyElement>
     ),
   },

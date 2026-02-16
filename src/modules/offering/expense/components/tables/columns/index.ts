@@ -1,1 +1,1 @@
-export * from './base-columns';
+export { offeringExpenseUnifiedColumns } from './base-columns';

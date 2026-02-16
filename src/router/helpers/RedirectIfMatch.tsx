@@ -162,16 +162,7 @@ export const RedirectIfMatch = (): JSX.Element => {
 
   // If starts with offering expense
   if (location.pathname.startsWith('/offerings/expenses/general-search/')) {
-    return <Navigate to='/offerings/expenses/general-search' />;
-  }
-  if (location.pathname.startsWith('/offerings/expenses/search-by-term/')) {
-    return <Navigate to='/offerings/expenses/search-by-term' />;
-  }
-  if (location.pathname.startsWith('/offerings/expenses/update/')) {
-    return <Navigate to='/offerings/expenses/update' />;
-  }
-  if (location.pathname.startsWith('/offerings/expenses/inactivate/')) {
-    return <Navigate to='/offerings/expenses/inactivate' />;
+    return <Navigate to='/offerings/expenses/search' />;
   }
 
   // If it doesn't match the pattern, show the 404 component or redirect in another way

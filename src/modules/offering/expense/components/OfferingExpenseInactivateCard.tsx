@@ -7,7 +7,7 @@ import { type z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 
-import { MdDeleteForever } from 'react-icons/md';
+import { Trash2 } from 'lucide-react';
 
 import { offeringInactivateFormSchema } from '@/modules/offering/shared/validations/offering-inactivate-form-schema';
 import { useOfferingExpenseInactivationMutation } from '@/modules/offering/expense/hooks/useOfferingExpenseInactivationMutation';
@@ -40,10 +40,10 @@ import { Button } from '@/shared/components/ui/button';
 import { Textarea } from '@/shared/components/ui/textarea';
 
 interface OfferingExpenseInactivateCardProps {
-  idRow: string;
+  id: string;
 }
 export const OfferingExpenseInactivateCard = ({
-  idRow,
+  id,
 }: OfferingExpenseInactivateCardProps): JSX.Element => {
   //* States
   const [isCardOpen, setIsCardOpen] = useState<boolean>(false);
@@ -83,9 +83,9 @@ export const OfferingExpenseInactivateCard = ({
   useEffect(() => {
     const originalUrl = window.location.href;
 
-    if (idRow && isCardOpen) {
+    if (id && isCardOpen) {
       const url = new URL(window.location.href);
-      url.pathname = `/offerings/expenses/inactivate/${idRow}/remove`;
+      url.pathname = `/offerings/expenses/inactivate/${id}/remove`;
 
       window.history.replaceState({}, '', url);
 
@@ -93,7 +93,7 @@ export const OfferingExpenseInactivateCard = ({
         window.history.replaceState({}, '', originalUrl);
       };
     }
-  }, [idRow, isCardOpen]);
+  }, [id, isCardOpen]);
 
   //* Functions
   const handleContainerScroll = useCallback((): void => {
@@ -118,7 +118,7 @@ export const OfferingExpenseInactivateCard = ({
     setIsButtonDisabled(true);
 
     offeringExpenseInactivationMutation.mutate({
-      id: idRow,
+      id: id,
       offeringInactivationReason: formData.offeringInactivationReason,
       offeringInactivationDescription: formData.offeringInactivationDescription ?? '',
     });
@@ -128,12 +128,13 @@ export const OfferingExpenseInactivateCard = ({
     <Dialog open={isCardOpen} onOpenChange={setIsCardOpen}>
       <DialogTrigger asChild>
         <Button
+          variant='ghost'
           onClick={() => {
             form.reset();
           }}
-          className='mt-2 py-2 px-1 h-[2rem] bg-red-400 text-white hover:bg-red-500 hover:text-red-950  dark:text-red-950 dark:hover:bg-red-500 dark:hover:text-white'
+          className='h-8 w-8 p-0 text-red-600 hover:text-red-700 hover:bg-red-50 dark:text-red-400 dark:hover:text-red-300 dark:hover:bg-red-900/20'
         >
-          <MdDeleteForever className='w-8 h-[1.65rem]' />
+          <Trash2 className='h-4 w-4' />
         </Button>
       </DialogTrigger>
       <DialogContent

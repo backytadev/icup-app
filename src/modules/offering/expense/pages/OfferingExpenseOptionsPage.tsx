@@ -1,15 +1,10 @@
 import { useEffect } from 'react';
 
 import { FaSearch } from 'react-icons/fa';
-import { GiExpense } from 'react-icons/gi';
-import { FcClearFilters } from 'react-icons/fc';
-import { FcSupport } from 'react-icons/fc';
-import { RiDeleteBin2Fill } from 'react-icons/ri';
+import { GiPayMoney } from 'react-icons/gi';
 
 import { useAuthStore } from '@/stores/auth/auth.store';
 import { UserRole } from '@/modules/user/enums/user-role.enum';
-
-import { GiReceiveMoney } from 'react-icons/gi';
 
 import { ModuleHeader } from '@/shared/components/page-header/ModuleHeader';
 import { ModuleOptionCard } from '@/shared/components/page-header/ModuleOptionCard';
@@ -18,9 +13,14 @@ export const OfferingExpenseOptionsPage = (): JSX.Element => {
   const user = useAuthStore((state) => state.user);
 
   const allowedFullAccessRoles = [UserRole.SuperUser, UserRole.TreasurerUser];
+  const allowedPartialAccessRoles = [UserRole.MinistryUser];
+
   const userRoles = user?.roles ?? [];
 
   const hasFullAccess = userRoles.some((role) => allowedFullAccessRoles.includes(role as UserRole));
+  const hasPartAccess = userRoles.some((role) =>
+    allowedPartialAccessRoles.includes(role as UserRole)
+  );
 
   useEffect(() => {
     document.title = 'Modulo Ofrenda - IcupApp';
@@ -35,7 +35,7 @@ export const OfferingExpenseOptionsPage = (): JSX.Element => {
           description='Administra y gestiona los registros de salida de ofrendas en el sistema.'
           badge='Ofrenda'
           badgeColor='amber'
-          icon={GiReceiveMoney}
+          icon={GiPayMoney}
           accentColor='amber'
         />
 
@@ -48,53 +48,24 @@ export const OfferingExpenseOptionsPage = (): JSX.Element => {
           </p>
         </div>
 
-        <div className='grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5 gap-6'>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto'>
           <ModuleOptionCard
             to='/offerings/expenses/create'
-            icon={<GiExpense />}
+            icon={<GiPayMoney />}
             title='Registrar Salida'
             description='Crear nuevo registro de salida de una ofrenda.'
             color='green'
-            disabled={!hasFullAccess}
+            disabled={!hasFullAccess && !hasPartAccess}
             delay='0.2s'
           />
 
           <ModuleOptionCard
-            to='/offerings/expenses/general-search'
+            to='/offerings/expenses/search'
             icon={<FaSearch />}
-            title='Consultar Salidas'
-            description='Consultar registros de salida de ofrendas en general.'
+            title='Gestionar Salidas'
+            description='Busca, consulta, actualiza e inactiva registros de salidas de ofrendas.'
             color='blue'
             delay='0.25s'
-          />
-
-          <ModuleOptionCard
-            to='/offerings/expenses/search-by-term'
-            icon={<FcClearFilters />}
-            title='Buscar por Filtros'
-            description='Consultar registros de salida de ofrendas por filtros.'
-            color='sky'
-            delay='0.3s'
-          />
-
-          <ModuleOptionCard
-            to='/offerings/expenses/update'
-            icon={<FcSupport />}
-            title='Actualizar Salida'
-            description='Actualizar registro de salida de una ofrenda.'
-            color='orange'
-            disabled={!hasFullAccess}
-            delay='0.35s'
-          />
-
-          <ModuleOptionCard
-            to='/offerings/expenses/inactivate'
-            icon={<RiDeleteBin2Fill />}
-            title='Inactivar Salida'
-            description='Inactivar registro de salida de una ofrenda.'
-            color='red'
-            disabled={!hasFullAccess}
-            delay='0.4s'
           />
         </div>
 

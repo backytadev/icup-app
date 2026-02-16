@@ -43,7 +43,7 @@ import { useImagesUploadMutation } from '@/modules/offering/shared/hooks/useImag
 
 import { offeringExpenseFormSchema } from '@/modules/offering/expense/validations/offering-expense-form-schema';
 import { type OfferingExpenseResponse } from '@/modules/offering/expense/interfaces/offering-expense-response.interface';
-import { OfferingExpenseFormSkeleton } from '@/modules/offering/expense/components/cards/update/OfferingExpenseFormSkeleton';
+import { OfferingExpenseFormSkeleton } from '@/modules/offering/expense/components';
 
 import { cn } from '@/shared/lib/utils';
 import { RecordStatus } from '@/shared/enums/record-status.enum';

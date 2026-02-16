@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 
-import { Menu, ChevronDown, LogOut, Users, Moon, Sun, Monitor } from 'lucide-react';
+import { Menu, ChevronDown, LogOut, Users, Moon, Sun, Monitor, Settings } from 'lucide-react';
 import type { IconType } from 'react-icons';
 
 import { cn } from '@/shared/lib/utils';
@@ -10,6 +10,7 @@ import { useAuthStore } from '@/stores/auth/auth.store';
 import { useSidebarStore } from '@/stores/sidebar/sidebar.store';
 import { useTheme } from '@/core/theme/theme-provider';
 import { UserRoleNames } from '@/modules/user/enums/user-role.enum';
+import { type MenuItem } from '@/shared/interfaces/menu-item.interface';
 
 import {
   Collapsible,
@@ -68,6 +69,7 @@ export const SidebarMobile = (): JSX.Element => {
   const { theme, setTheme } = useTheme();
 
   const [membershipOpen, setMembershipOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
 
   const userNames = userInfo?.firstNames ?? 'Usuario';
   const userLastNames = userInfo?.lastNames ?? '';
@@ -79,7 +81,6 @@ export const SidebarMobile = (): JSX.Element => {
   );
 
   const membershipPaths = [
-    '/churches',
     '/pastors',
     '/copastors',
     '/supervisors',
@@ -87,14 +88,17 @@ export const SidebarMobile = (): JSX.Element => {
     '/family-groups',
     '/disciples',
     '/zones',
-    '/ministries',
   ];
 
+  const settingsPaths = ['/churches', '/ministries', '/users'];
+
   const membershipItems = filteredItems.filter((i) => membershipPaths.includes(i.href));
+  const settingsItems = settingsPaths
+    .map((path) => filteredItems.find((i) => i.href === path))
+    .filter((item): item is MenuItem => item !== undefined);
   const dashboardItem = filteredItems.find((i) => i.href === '/dashboard');
   const offeringsItem = filteredItems.find((i) => i.href === '/offerings');
   const metricsItem = filteredItems.find((i) => i.href === '/metrics');
-  const usersItem = filteredItems.find((i) => i.href === '/users');
 
   const avatarSrc = gender === 'male' ? '/images/boy.webp' : '/images/girl.webp';
 
@@ -256,14 +260,43 @@ export const SidebarMobile = (): JSX.Element => {
                     />
                   )}
 
-                  {/* Users */}
-                  {usersItem && (
-                    <MobileNavItem
-                      href={usersItem.href}
-                      Icon={usersItem.Icon}
-                      title={usersItem.title}
-                      onClose={closeMobile}
-                    />
+                  {/* Settings Section */}
+                  {settingsItems.length > 0 && (
+                    <Collapsible open={settingsOpen} onOpenChange={setSettingsOpen}>
+                      <CollapsibleTrigger asChild>
+                        <button
+                          className={cn(
+                            'w-full flex items-center justify-between gap-3 px-4 py-3 rounded-xl',
+                            'text-slate-300 hover:bg-white/10 active:bg-white/15',
+                            'transition-all duration-200',
+                            settingsOpen && 'bg-white/5'
+                          )}
+                        >
+                          <div className='flex items-center gap-3'>
+                            <Settings className='w-6 h-6 text-amber-400' />
+                            <span className='text-base font-medium'>Configuraciones</span>
+                          </div>
+                          <ChevronDown
+                            className={cn(
+                              'w-5 h-5 transition-transform duration-200',
+                              settingsOpen && 'rotate-180'
+                            )}
+                          />
+                        </button>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className='pt-1 pl-4 space-y-0.5 border-l border-slate-700/50 ml-7'>
+                        {settingsItems.map((item) => (
+                          <MobileNavItem
+                            key={item.href}
+                            href={item.href}
+                            Icon={item.Icon}
+                            title={item.title}
+                            isNested
+                            onClose={closeMobile}
+                          />
+                        ))}
+                      </CollapsibleContent>
+                    </Collapsible>
                   )}
                 </nav>
 

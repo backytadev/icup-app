@@ -102,7 +102,7 @@ export const useOfferingIncomeCreationMutation = ({
       }
     },
     onSuccess: async (data) => {
-      if (shouldOpenReceiptInBrowser) {
+      if (shouldOpenReceiptInBrowser === 'yes') {
         toast.success('Registro creado exitosamente.', {
           position: 'top-center',
           className: 'justify-center',
@@ -125,6 +125,17 @@ export const useOfferingIncomeCreationMutation = ({
         if (!onReceiptGenerated) {
           navigate('/offerings/income');
         }
+      } else {
+        toast.success('Registro creado exitosamente.', {
+          position: 'top-center',
+          className: 'justify-center',
+        });
+
+        queryClient.invalidateQueries({ queryKey: ['general-offering-income'] });
+
+        setTimeout(() => {
+          navigate('/offerings/income');
+        }, 300);
       }
     },
   });
