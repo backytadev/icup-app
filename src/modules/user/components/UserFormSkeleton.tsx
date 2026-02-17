@@ -2,7 +2,7 @@ import { Skeleton } from '@/shared/components/ui/skeleton';
 
 export const UserFormSkeleton = (): JSX.Element => {
   return (
-    <div className='w-full'>
+    <div className='w-[340px] sm:min-w-[520px] md:min-w-[980px] xl:min-w-[980px]'>
       {/* Header Skeleton */}
       <div className='relative overflow-hidden rounded-t-xl bg-gradient-to-r from-amber-500/70 via-orange-500/70 to-orange-600/70 dark:from-amber-600/50 dark:via-orange-600/50 dark:to-orange-700/50 px-6 py-5'>
         <div className='flex flex-col gap-2'>

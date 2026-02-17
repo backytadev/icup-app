@@ -1,101 +1,99 @@
-import { CardContent } from '@/shared/components/ui/card';
 import { Skeleton } from '@/shared/components/ui/skeleton';
 
 export const OfferingExpenseFormSkeleton = (): JSX.Element => {
   return (
-    <CardContent className='py-3 px-2 md:px-4'>
-      <div className='dark:text-slate-300 text-slate-500 font-bold text-[16px] mb-4 md:pl-4'>
-        <Skeleton className='ml-2 h-7 w-auto md:w-[40rem]' />
-        <Skeleton className='ml-2 h-4 w-auto md:w-[40rem] mt-2' />
+    <div className='w-[340px] sm:min-w-[520px] md:min-w-[980px] xl:min-w-[980px]'>
+      {/* Header Skeleton */}
+      <div className='relative overflow-hidden rounded-t-xl bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 dark:from-orange-600 dark:via-amber-600 dark:to-orange-700 px-6 py-5'>
+        <div className='flex flex-col gap-2'>
+          <div className='flex items-center gap-2 mb-1'>
+            <Skeleton className='h-5 w-24 bg-white/20' />
+            <Skeleton className='h-5 w-20 bg-white/20' />
+          </div>
+          <Skeleton className='h-7 w-56 bg-white/20' />
+          <Skeleton className='h-4 w-48 bg-white/20' />
+          <Skeleton className='h-4 w-40 bg-white/20' />
+        </div>
       </div>
-      <div>
-        <form className='w-full flex flex-col md:grid sm:grid-cols-2 gap-x-8 gap-y-6 px-2 sm:px-8'>
-          <div className='col-start-1 col-end-2'>
-            <div>
-              <Skeleton className='h-4 w-24 mt-5' />
-              <Skeleton className='h-3 w-56 mt-3' />
-              <Skeleton className='h-8 w-full mt-2' />
+
+      {/* Form Content Skeleton */}
+      <div className='bg-white dark:bg-slate-900 border border-t-0 border-slate-200/80 dark:border-slate-700/50 rounded-b-xl'>
+        <div className='p-5 md:p-4'>
+          {/* Sección: Clasificación */}
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4'>
+            {/* Campo 1 - Tipo */}
+            <div className='space-y-2'>
+              <Skeleton className='h-4 w-32' />
+              <Skeleton className='h-3 w-44' />
+              <Skeleton className='h-10 w-full' />
             </div>
 
-            <div>
-              <Skeleton className='h-4 w-24 mt-5' />
-              <Skeleton className='h-3 w-56 mt-3' />
-              <Skeleton className='h-8 w-full mt-2' />
+            {/* Campo 2 - Sub-tipo */}
+            <div className='space-y-2'>
+              <Skeleton className='h-4 w-28' />
+              <Skeleton className='h-3 w-36' />
+              <Skeleton className='h-10 w-full' />
             </div>
 
-            <div>
-              <Skeleton className='h-4 w-24 mt-6' />
-              <Skeleton className='h-3 w-56 mt-3' />
-              <Skeleton className='h-8 w-full mt-2' />
+            {/* Campo 3 - Monto */}
+            <div className='space-y-2'>
+              <Skeleton className='h-4 w-24' />
+              <Skeleton className='h-3 w-32' />
+              <Skeleton className='h-10 w-full' />
             </div>
 
-            <div className='flex flex-row gap-x-6'>
-              <div className='w-full'>
-                <Skeleton className='h-4 w-24 mt-6' />
-                <Skeleton className='h-3 w-full mt-3' />
-                <Skeleton className='h-8 w-full mt-2' />
-              </div>
-              <div className='w-full'>
-                <Skeleton className='h-4 w-24 mt-6' />
-                <Skeleton className='h-3 w-full mt-3' />
-                <Skeleton className='h-8 w-full mt-2' />
-              </div>
+            {/* Campo 4 - Divisa */}
+            <div className='space-y-2'>
+              <Skeleton className='h-4 w-28' />
+              <Skeleton className='h-3 w-36' />
+              <Skeleton className='h-10 w-full' />
             </div>
 
-            <div>
-              <Skeleton className='h-4 w-24 mt-5' />
-              <Skeleton className='h-3 w-56 mt-3' />
-              <Skeleton className='h-8 w-full mt-2' />
-            </div>
-
-            <div>
-              <div className='md:flex'>
-                <Skeleton className='h-4 w-24 mt-5' />
-                <Skeleton className='ml-2 h-4 w-20 mt-5' />
-              </div>
-              <Skeleton className='h-3 w-56 mt-3' />
-              <Skeleton className='h-[6.5rem] w-full mt-2' />
+            {/* Campo 5 - Fecha */}
+            <div className='space-y-2'>
+              <Skeleton className='h-4 w-32' />
+              <Skeleton className='h-3 w-40' />
+              <Skeleton className='h-10 w-full' />
             </div>
           </div>
+        </div>
 
-          <div className='col-start-2 col-end-3'>
-            <div>
-              <div className='flex'>
-                <Skeleton className='h-4 w-24 mt-5' />
-                <Skeleton className='ml-2 h-4 w-20 mt-5' />
-              </div>
-              <Skeleton className='h-40 w-full md:w-[80%] mx-auto mt-3' />
-              <Skeleton className='ml-10 h-4 w-56 mt-3' />
-              <Skeleton className='ml-10 h-4 w-56 mt-2' />
-            </div>
+        {/* Divider */}
+        <div className='border-t border-slate-200 dark:border-slate-700/50 my-5'></div>
 
-            <div>
-              <div className='md:flex md:justify-between mt-6'>
-                <Skeleton className='h-6 w-44 mt-5' />
-                <Skeleton className='h-10 w-40 mt-5' />
-              </div>
-            </div>
-
-            <div>
-              <Skeleton className='h-5 w-40 mt-7' />
-              <Skeleton className='h-1 w-full mt-2' />
-            </div>
-
-            <div>
-              <Skeleton className='h-5 w-40 mt-60' />
-              <Skeleton className='h-1 w-full mt-2' />
-            </div>
+        {/* Sección: Detalles y Archivos */}
+        <div className='mb-6 px-4'>
+          <div className='mb-4'>
+            <Skeleton className='h-3 w-40' />
           </div>
 
-          <div className='col-start-1 col-end-3 md:w-[20rem] mx-auto'>
-            <Skeleton className='h-10 mt-3' />
-            <div className='md:flex md:flex-col md:justify-center md:items-center mt-1'>
-              <Skeleton className='text-center h-4 w-64 mt-2' />
-              <Skeleton className='text-center h-4 w-60 mt-2' />
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4'>
+            {/* Observaciones */}
+            <div className='space-y-2'>
+              <Skeleton className='h-4 w-40' />
+              <Skeleton className='h-24 w-full' />
+            </div>
+
+            {/* Imagen del recibo */}
+            <div className='space-y-2'>
+              <div className='flex items-center gap-2'>
+                <Skeleton className='h-4 w-32' />
+                <Skeleton className='h-5 w-24' />
+              </div>
+              <Skeleton className='h-48 w-full rounded-lg' />
             </div>
           </div>
-        </form>
+        </div>
+
+        {/* Divider */}
+        <div className='border-t border-slate-200 dark:border-slate-700/50 my-5'></div>
+
+        {/* Footer */}
+        <div className='flex flex-col items-center gap-4 pb-6'>
+          <Skeleton className='h-10 w-full max-w-md rounded-lg' />
+          <Skeleton className='h-10 w-full md:w-[280px]' />
+        </div>
       </div>
-    </CardContent>
+    </div>
   );
 };

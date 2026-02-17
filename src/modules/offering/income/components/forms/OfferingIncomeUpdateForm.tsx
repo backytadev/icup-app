@@ -93,7 +93,7 @@ export const OfferingIncomeUpdateForm = ({
   };
 
   return (
-    <div className='w-full max-w-[1120px] '>
+    <div className='w-full max-w-[1120px]'>
       {isLoadingData ? (
 
         <div className='w-full'>

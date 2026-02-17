@@ -1,13 +1,9 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useEffect, useState } from 'react';
 
 import type * as z from 'zod';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { toast, Toaster } from 'sonner';
+import { toast } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { useDropzone } from 'react-dropzone';
 import { useQuery } from '@tanstack/react-query';
@@ -35,7 +31,7 @@ import { useOfferingExpenseFileDropZone } from '@/modules/offering/expense/hooks
 import { useOfferingExpenseCreationMutation } from '@/modules/offering/expense/hooks/useOfferingExpenseCreationMutation';
 import { useOfferingExpenseCreationSubmitButtonLogic } from '@/modules/offering/expense/hooks/useOfferingExpenseCreationSubmitButtonLogic';
 
-import { offeringExpenseFormSchema } from '@/modules/offering/expense/validations/offering-expense-form-schema';
+import { offeringExpenseFormSchema } from '@/modules/offering/expense/schemas/offering-expense-form-schema';
 
 import { CurrencyTypeNames } from '@/modules/offering/shared/enums/currency-type.enum';
 import { OfferingFileType } from '@/modules/offering/shared/enums/offering-file-type.enum';
@@ -216,8 +212,6 @@ export const OfferingExpenseCreatePage = (): JSX.Element => {
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950'>
-      <Toaster position='top-center' richColors />
-
       <div className='max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6'>
         <ModuleHeader
           title='Registrar Nueva Salida'
@@ -553,8 +547,8 @@ export const OfferingExpenseCreatePage = (): JSX.Element => {
                           <Textarea
                             disabled={isInputDisabled}
                             placeholder={`${type === OfferingExpenseSearchType.ExpensesAdjustment
-                                ? `Detalles y/u observaciones sobre el ajuste de salida...`
-                                : 'Detalles y/u observaciones sobre el registro de salida...'
+                              ? `Detalles y/u observaciones sobre el ajuste de salida...`
+                              : 'Detalles y/u observaciones sobre el registro de salida...'
                               }`}
                             {...field}
                           />

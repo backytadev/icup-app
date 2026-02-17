@@ -119,7 +119,7 @@ export const ReceiptPreviewModal = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className='max-w-2xl h-[80vh] p-0 gap-0 flex flex-col'>
-        <DialogHeader className='px-6 py-4 border-b border-slate-200 dark:border-slate-700 '>
+        <DialogHeader className='px-6 py-4 border-b border-slate-200 dark:border-slate-700'>
           <div className='flex items-center justify-between'>
             <div>
               <DialogTitle className='text-xl font-bold text-slate-900 dark:text-slate-100'>

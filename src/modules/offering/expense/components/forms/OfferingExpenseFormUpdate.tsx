@@ -41,7 +41,7 @@ import {
 import { OfferingFileType } from '@/modules/offering/shared/enums/offering-file-type.enum';
 import { useImagesUploadMutation } from '@/modules/offering/shared/hooks/useImagesUploadMutation';
 
-import { offeringExpenseFormSchema } from '@/modules/offering/expense/validations/offering-expense-form-schema';
+import { offeringExpenseFormSchema } from '@/modules/offering/expense/schemas/offering-expense-form-schema';
 import { type OfferingExpenseResponse } from '@/modules/offering/expense/interfaces/offering-expense-response.interface';
 import { OfferingExpenseFormSkeleton } from '@/modules/offering/expense/components';
 
@@ -75,8 +75,6 @@ import { Input } from '@/shared/components/ui/input';
 import { Button } from '@/shared/components/ui/button';
 import { Calendar } from '@/shared/components/ui/calendar';
 import { Textarea } from '@/shared/components/ui/textarea';
-import { Tabs, TabsContent } from '@/shared/components/ui/tabs';
-import { Card, CardContent } from '@/shared/components/ui/card';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
 import { getSimpleChurches } from '@/modules/church/services/church.service';
 import { useQuery } from '@tanstack/react-query';
@@ -248,32 +246,39 @@ export const OfferingExpenseFormUpdate = ({
   };
 
   return (
-    <Tabs
-      defaultValue='general-info'
-      className='w-auto -mt-8 sm:w-[520px] md:w-[680px] lg:w-[990px] xl:w-[1100px]'
-    >
-      <div className='text-center'>
-        <h2 className='text-orange-500  font-bold text-[20px] sm:text-[22px] md:text-[24px]'>
-          Modificar datos del registro
-        </h2>
-      </div>
-
-      <TabsContent value='general-info'>
-        <Card className='w-full'>
-          {isLoadingData && <OfferingExpenseFormSkeleton />}
-
-          {!isLoadingData && (
-            <CardContent className='py-3 px-4'>
-              <div className='flex flex-col mb-4 md:pl-4'>
-                <span className='italic dark:text-yellow-500 font-bold text-[16.5px] md:text-[18px] text-amber-500'>
-                  Tipo de registro:{' '}
-                  {`${OfferingExpenseSearchTypeNames[data?.type as OfferingExpenseSearchType]} ${data?.subType ? '-' : ''} ${OfferingExpenseSearchSubTypeNames[data?.subType as OfferingExpenseSearchSubType] ?? ''}`}
+    <div className='w-full max-w-[1120px] -mt-2'>
+      {isLoadingData ? (
+        <div className='w-full'>
+          <OfferingExpenseFormSkeleton />
+        </div>
+      ) : (
+        <div className='w-full'>
+          {/* Header */}
+          <div className='relative overflow-hidden rounded-t-xl bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 dark:from-orange-600 dark:via-amber-600 dark:to-orange-700 px-6 py-5'>
+            <div className='flex flex-col gap-1'>
+              <div className='flex items-center gap-2 mb-1'>
+                <span className='px-2.5 py-0.5 text-[10px] font-semibold bg-white/20 text-white rounded font-inter'>
+                  Actualización
                 </span>
-                <span className='italic dark:text-slate-300 text-slate-500 font-bold text-[16px] md:text-[17px] md:ml-1'>
-                  Pertenencia: {`${data?.church?.abbreviatedChurchName}`}
+                <span className='px-2.5 py-0.5 text-[10px] font-semibold bg-white/20 text-white rounded font-inter'>
+                  Gasto
                 </span>
               </div>
+              <h2 className='text-xl md:text-2xl font-bold text-white font-outfit leading-tight'>
+                Modificar Registro de Salida
+              </h2>
+              <p className='text-white/90 text-[13px] md:text-[14px] font-inter font-medium'>
+                {`${OfferingExpenseSearchTypeNames[data?.type as OfferingExpenseSearchType]} ${data?.subType ? '-' : ''} ${OfferingExpenseSearchSubTypeNames[data?.subType as OfferingExpenseSearchSubType] ?? ''}`}
+              </p>
+              <p className='text-white/80 text-[12.5px] md:text-[13.5px] font-inter'>
+                Pertenencia: {data?.church?.abbreviatedChurchName}
+              </p>
+            </div>
+          </div>
 
+          {/* Form Content */}
+          <div className='bg-white dark:bg-slate-900 border border-t-0 border-slate-200/80 dark:border-slate-700/50 rounded-b-xl'>
+            <div className='p-5 md:p-6'>
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(handleSubmit)}
@@ -305,7 +310,7 @@ export const OfferingExpenseFormUpdate = ({
                                 >
                                   {field.value
                                     ? churchesQuery?.data?.find((zone) => zone.id === field.value)
-                                        ?.abbreviatedChurchName
+                                      ?.abbreviatedChurchName
                                     : 'Busque y seleccione una iglesia'}
                                   <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-5' />
                                 </Button>
@@ -441,7 +446,7 @@ export const OfferingExpenseFormUpdate = ({
                       className={cn(
                         'md:flex md:gap-5',
                         type === OfferingExpenseSearchType.ExpensesAdjustment &&
-                          'md:flex-col md:gap-0'
+                        'md:flex-col md:gap-0'
                       )}
                     >
                       <FormField
@@ -584,11 +589,10 @@ export const OfferingExpenseFormUpdate = ({
                               <Textarea
                                 className={cn(comments && 'h-full')}
                                 disabled={isInputDisabled}
-                                placeholder={`${
-                                  type === OfferingExpenseSearchType.ExpensesAdjustment
-                                    ? `Detalles y/u observaciones sobre el ajuste de salida...`
-                                    : 'Detalles y/u observaciones sobre el registro de salida...'
-                                }`}
+                                placeholder={`${type === OfferingExpenseSearchType.ExpensesAdjustment
+                                  ? `Detalles y/u observaciones sobre el ajuste de salida...`
+                                  : 'Detalles y/u observaciones sobre el registro de salida...'
+                                  }`}
                                 {...field}
                               />
                             </FormControl>
@@ -775,7 +779,7 @@ export const OfferingExpenseFormUpdate = ({
                       className={cn(
                         'w-full text-[14px]',
                         uploadImagesMutation?.isPending &&
-                          'bg-emerald-500 hover:bg-emerald-500 disabled:opacity-100 disabled:md:text-[15px] text-white'
+                        'bg-emerald-500 hover:bg-emerald-500 disabled:opacity-100 disabled:md:text-[15px] text-white'
                       )}
                       onClick={() => {
                         setTimeout(() => {
@@ -793,10 +797,10 @@ export const OfferingExpenseFormUpdate = ({
                   </div>
                 </form>
               </Form>
-            </CardContent>
-          )}
-        </Card>
-      </TabsContent>
-    </Tabs>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };

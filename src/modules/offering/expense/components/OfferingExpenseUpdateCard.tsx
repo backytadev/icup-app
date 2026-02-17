@@ -38,7 +38,7 @@ export const OfferingExpenseUpdateCard = ({ idRow }: OfferingExpenseUpdateCardPr
     <FormModal
       open={isOpen}
       onOpenChange={setIsOpen}
-      maxWidth='2xl'
+      maxWidth='xl'
       trigger={
         <Button
           variant='ghost'

@@ -29,7 +29,7 @@ import {
 } from '@/modules/offering/expense/enums/offering-expense-search-select-option.enum';
 
 import { type OfferingExpenseSearchFormByTerm } from '@/modules/offering/expense/interfaces/offering-expense-search-form-by-term.interface';
-import { offeringExpenseSearchByTermFormSchema } from '@/modules/offering/expense/validations/offering-expense-search-by-term-form-schema';
+import { offeringExpenseSearchByTermFormSchema } from '@/modules/offering/expense/schemas/offering-expense-search-by-term-form-schema';
 
 import { cn } from '@/shared/lib/utils';
 import { RecordOrder, RecordOrderNames } from '@/shared/enums/record-order.enum';

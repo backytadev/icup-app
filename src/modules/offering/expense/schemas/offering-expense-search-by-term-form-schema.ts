@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import * as z from 'zod';
 
 import { RecordOrder } from '@/shared/enums/record-order.enum';

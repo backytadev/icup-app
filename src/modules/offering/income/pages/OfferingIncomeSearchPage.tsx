@@ -80,10 +80,19 @@ export const OfferingIncomeSearchPage = (): JSX.Element => {
     // Always reset to general mode when mounting to prevent stale state
     setSearchMode('general');
 
+    const from = startOfWeek(new Date(), { weekStartsOn: 1 });
+    const to = endOfWeek(new Date(), { weekStartsOn: 1 });
+
+    const dateTermTimestamp = dateFormatterTermToTimestamp({
+      from,
+      to,
+    });
+
     const defaultParams: GeneralSearchFormType = {
       limit: '10',
       offset: '0',
       order: RecordOrder.Descending,
+      dateTerm: dateTermTimestamp as any,
       all: false,
     };
 
@@ -98,25 +107,27 @@ export const OfferingIncomeSearchPage = (): JSX.Element => {
 
       setSearchMode(mode);
 
+      const from = startOfWeek(new Date(), { weekStartsOn: 1 });
+      const to = endOfWeek(new Date(), { weekStartsOn: 1 });
+
+      const dateTermTimestamp = dateFormatterTermToTimestamp({
+        from,
+        to,
+      });
+
       if (mode === 'general') {
+        console.log(dateTermTimestamp)
         const defaultGeneralParams: GeneralSearchFormType = {
           limit: '10',
           offset: '0',
           order: RecordOrder.Descending,
+          dateTerm: dateTermTimestamp as any,
           all: false,
         };
         setFilterSearchParams(undefined);
         setDataForm(undefined);
         setGeneralSearchParams(defaultGeneralParams);
       } else {
-        const from = startOfWeek(new Date(), { weekStartsOn: 1 });
-        const to = endOfWeek(new Date(), { weekStartsOn: 1 });
-
-        const dateTermTimestamp = dateFormatterTermToTimestamp({
-          from,
-          to,
-        });
-
         const defaultFilterParams: OfferingIncomeSearchFormByTerm = {
           searchType: OfferingIncomeSearchType.FamilyGroup,
           searchSubType: OfferingIncomeSearchSubType.OfferingByDate,

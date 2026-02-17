@@ -161,7 +161,7 @@ export const RedirectIfMatch = (): JSX.Element => {
   }
 
   // If starts with offering expense
-  if (location.pathname.startsWith('/offerings/expenses/general-search/')) {
+  if (location.pathname.startsWith('/offerings/expenses/search/')) {
     return <Navigate to='/offerings/expenses/search' />;
   }
 

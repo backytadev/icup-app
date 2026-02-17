@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import * as z from 'zod';
 
 import { RecordStatus } from '@/shared/enums/record-status.enum';

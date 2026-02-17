@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { isAxiosError } from 'axios';
 
 import { icupApi } from '@/core/api/icupApi';
@@ -62,6 +60,8 @@ export const getOfferingsIncome = async ({
   dateTerm,
   churchId,
 }: OfferingIncomeQueryParams): Promise<OfferingIncomeResponse[]> => {
+  console.log(dateTerm);
+
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurchId = churchId ?? contextChurchId;
   let result: OfferingIncomeResponse[];
