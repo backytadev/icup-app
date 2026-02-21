@@ -1,17 +1,15 @@
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+import { useMemo } from 'react';
 
-import { useEffect, useState } from 'react';
-
-import { useQuery } from '@tanstack/react-query';
-import { FcDataBackup, FcDeleteDatabase } from 'react-icons/fc';
 import { BarChart, Bar, CartesianGrid, XAxis, YAxis } from 'recharts';
 
-import { getSimpleChurches } from '@/modules/church/services/church.service';
-import { type ChurchResponse } from '@/modules/church/types';
+import { TbHeart } from 'react-icons/tb';
+
+import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
 
 import { MetricSearchType } from '@/modules/metrics/enums/metrics-search-type.enum';
 import { getMembersByMaritalStatus } from '@/modules/metrics/services/member-metrics.service';
+import { useMetricsQuery } from '@/modules/metrics/hooks';
+import { MetricCard } from '@/modules/metrics/components/shared/MetricCard';
 
 import { cn } from '@/shared/lib/utils';
 import { RecordOrder } from '@/shared/enums/record-order.enum';
@@ -23,7 +21,6 @@ import {
   ChartTooltipContent,
 } from '@/shared/components/ui/chart';
 import { Badge } from '@/shared/components/ui/badge';
-import { Card, CardContent, CardTitle } from '@/shared/components/ui/card';
 
 const chartConfig = {
   membersCount: {
@@ -57,133 +54,85 @@ interface ResultDataOptions {
   fill: string;
 }
 
-interface Props {
-  churchId: string | undefined;
-}
-
-export const MemberAnalysisCardByMaritalStatus = ({ churchId }: Props): JSX.Element => {
-  //* States
-  const [mappedData, setMappedData] = useState<ResultDataOptions[]>();
-  const [church, setChurch] = useState<ChurchResponse>();
+export const MemberAnalysisCardByMaritalStatus = (): JSX.Element => {
+  //* Context
+  const activeChurchId = useChurchMinistryContextStore((s) => s.activeChurchId);
 
   //* Queries
-  const membersByMaritalStatusQuery = useQuery({
-    queryKey: ['members-by-marital-status', churchId],
+  const { data, isLoading, isEmpty } = useMetricsQuery({
+    queryKey: ['members-by-marital-status', activeChurchId],
     queryFn: () =>
       getMembersByMaritalStatus({
         searchType: MetricSearchType.MembersByMaritalStatus,
         year: String(new Date().getFullYear()),
         order: RecordOrder.Ascending,
-        church: churchId ?? '',
+        church: activeChurchId ?? '',
       }),
-    retry: false,
-    enabled: !!churchId,
+    activeChurchId,
   });
 
-  const { data } = useQuery({
-    queryKey: ['churches'],
-    queryFn: () => getSimpleChurches({ isSimpleQuery: true }),
-    staleTime: 1000 * 60,
-    retry: false,
-  });
-
-  useEffect(() => {
-    const church = data?.find((church) => church?.id === churchId);
-    setChurch(church);
-  }, [data, churchId]);
-
-  //* Effects
-  useEffect(() => {
-    if (membersByMaritalStatusQuery?.data) {
-      const transformedData = Object.entries(membersByMaritalStatusQuery?.data).map(
-        ([maritalStatus, membersCount]) => {
-          return {
-            maritalStatus,
-            membersCount,
-            fill: `var(--color-${maritalStatus})`,
-          };
-        }
-      );
-
-      setMappedData(transformedData);
-    }
-  }, [membersByMaritalStatusQuery?.data]);
+  //* Mapped data
+  const mappedData = useMemo<ResultDataOptions[]>(() => {
+    if (!data) return [];
+    return Object.entries(data).map(([maritalStatus, membersCount]) => ({
+      maritalStatus,
+      membersCount: membersCount as number,
+      fill: `var(--color-${maritalStatus})`,
+    }));
+  }, [data]);
 
   return (
-    <Card className='bg-slate-50/40 dark:bg-slate-900/40 flex flex-col col-start-2 col-end-3 h-[22rem] md:h-[25rem] lg:h-[25rem] 2xl:h-[26rem] m-0 border-slate-200 dark:border-slate-800'>
-      <CardTitle className='flex justify-center items-center gap-2.5 px-4 py-2.5 text-center font-bold text-[22px] sm:text-[25px] md:text-[28px] 2xl:text-[30px]'>
-        <span className='ml-12 md:ml-20'>Estado civil</span>
-        <Badge
-          variant='active'
-          className='mt-1 text-[11px] text-white md:text-[11px] py-0.3 md:py-0.35 tracking-wide'
+    <MetricCard
+      title={
+        <>
+          <span>Estado civil</span>
+          <Badge
+            variant='active'
+            className='mt-1 text-[11px] text-white md:text-[11px] py-0.3 md:py-0.35 tracking-wide'
+          >
+            Activos
+          </Badge>
+        </>
+      }
+      icon={<TbHeart className='w-5 h-5 text-amber-600 dark:text-amber-400' />}
+      // subTitle={church?.abbreviatedChurchName}
+      isLoading={isLoading}
+      isEmpty={isEmpty || !mappedData.length}
+      className='col-start-2 col-end-3'
+    >
+      <ChartContainer
+        config={chartConfig}
+        className={cn(
+          'w-full h-[240px] sm:h-[270px] md:h-[310px] xl:h-[320px]'
+        )}
+      >
+        <BarChart
+          accessibilityLayer
+          data={mappedData}
+          layout='vertical'
+          margin={{ top: 5, right: 5, left: 38, bottom: 10 }}
+          className='-ml-3 md:ml-0'
         >
-          Activos
-        </Badge>
-      </CardTitle>
-      <span className='-mt-3 -ml-8 text-[14px] md:text-[14px] pl-3 text-center font-medium text-slate-500 dark:text-slate-400'>
-        {church?.abbreviatedChurchName}
-      </span>
+          <CartesianGrid horizontal={false} strokeDasharray='3 3' className='stroke-slate-200 dark:stroke-slate-700' />
+          <YAxis
+            dataKey='maritalStatus'
+            type='category'
+            tickLine={false}
+            tickMargin={10}
+            axisLine={false}
+            className='text-xs fill-slate-500 dark:fill-slate-400'
+            tickFormatter={(value) => chartConfig[value as keyof typeof chartConfig]?.label}
+          />
+          <XAxis dataKey='membersCount' type='number' hide />
 
-      {!mappedData?.length ? (
-        <CardContent className='h-full px-2 sm:px-4 py-0'>
-          <div className='text-blue-500 text-[14px] md:text-lg flex flex-col justify-center items-center h-full -mt-6'>
-            <FcDataBackup className='text-[6rem] pb-2' />
-            <p className='font-medium text-[15px] md:text-[16px]'>Consultando datos....</p>
-          </div>
-        </CardContent>
-      ) : (
-        <CardContent className='h-full px-2 sm:px-4 py-0'>
-          {membersByMaritalStatusQuery?.isFetching && !mappedData?.length && (
-            <div className='text-blue-500 text-[14px] md:text-lg flex flex-col justify-center items-center h-full -mt-6'>
-              <FcDataBackup className='text-[6rem] pb-2' />
-              <p className='font-medium text-[15px] md:text-[16px]'>Consultando datos....</p>
-            </div>
-          )}
-          {mappedData?.length && (
-            <ChartContainer
-              config={chartConfig}
-              className={cn(
-                'w-full h-[290px] sm:h-[290px] md:h-[330px] lg:h-[330px] xl:h-[330px] 2xl:h-[345px]'
-              )}
-            >
-              <BarChart
-                accessibilityLayer
-                data={mappedData}
-                layout='vertical'
-                margin={{ top: 5, right: 5, left: 38, bottom: 10 }}
-                className='-ml-3 md:ml-0'
-              >
-                <CartesianGrid horizontal={false} />
-                <YAxis
-                  dataKey='maritalStatus'
-                  type='category'
-                  tickLine={false}
-                  tickMargin={10}
-                  axisLine={false}
-                  className='text-[12.5px] md:text-[14px]'
-                  tickFormatter={(value) => chartConfig[value as keyof typeof chartConfig]?.label}
-                />
-                <XAxis dataKey='membersCount' type='number' hide />
+          <ChartTooltip
+            cursor={{ fill: 'rgba(0,0,0,0.05)' }}
+            content={<ChartTooltipContent className='text-[13.5px] md:text-[13.5px]' />}
+          />
 
-                <ChartTooltip
-                  cursor={false}
-                  content={<ChartTooltipContent className='text-[13.5px] md:text-[13.5px]' />}
-                />
-
-                <Bar dataKey='membersCount' layout='vertical' radius={5}></Bar>
-              </BarChart>
-            </ChartContainer>
-          )}
-          {!membersByMaritalStatusQuery?.isFetching && !mappedData?.length && (
-            <div className='text-red-500 flex flex-col justify-center items-center h-full -mt-6'>
-              <FcDeleteDatabase className='text-[6rem] pb-2' />
-              <p className='font-medium text-[15px] md:text-[16px]'>
-                No hay datos disponibles para mostrar.
-              </p>
-            </div>
-          )}
-        </CardContent>
-      )}
-    </Card>
+          <Bar dataKey='membersCount' layout='vertical' radius={5}></Bar>
+        </BarChart>
+      </ChartContainer>
+    </MetricCard>
   );
 };

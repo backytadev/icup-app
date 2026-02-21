@@ -15,9 +15,9 @@ import { Card } from '@/shared/components/ui/card';
 import { getIncomeDetailByType } from '@/modules/metrics/services/offering-comparative-metrics.service';
 import { OfferingIncomeCreationTypeNames } from '@/modules/offering/income/enums/offering-income-creation-type.enum';
 import { OfferingIncomeCreationSubTypeNames } from '@/modules/offering/income/enums/offering-income-creation-sub-type.enum';
+import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
 
 interface IncomeSummaryCardProps {
-  churchId?: string;
   year?: string;
   startMonth?: string;
   endMonth?: string;
@@ -41,22 +41,23 @@ const getKeyBySpanishValue = (label: string): string | undefined => {
 };
 
 export const IncomeSummaryCard = ({
-  churchId,
   year,
   startMonth,
   endMonth,
   data,
 }: IncomeSummaryCardProps) => {
+  const activeChurchId = useChurchMinistryContextStore((s) => s.activeChurchId);
+
   const [open, setOpen] = useState<boolean>(false);
 
   const offeringType = getKeyBySpanishValue(data.label) ?? '';
 
   //* Query
   const getIncomeDetailByTypeQuery = useQuery({
-    queryKey: ['income-detail-by-type', startMonth, endMonth, offeringType, churchId],
+    queryKey: ['income-detail-by-type', startMonth, endMonth, offeringType, activeChurchId],
     queryFn: () =>
       getIncomeDetailByType({
-        churchId: churchId ?? '',
+        churchId: activeChurchId ?? '',
         year: year ?? '',
         startMonth: startMonth ?? '',
         endMonth: endMonth ?? '',

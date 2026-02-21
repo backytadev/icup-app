@@ -18,21 +18,22 @@ import { IncomeSummaryCard } from '@/modules/metrics/components/financial-balanc
 import { ExpenseSummaryCard } from '@/modules/metrics/components/financial-balance-comparative/screens/ExpenseSummaryCard';
 
 import { buildScaledData } from '@/modules/metrics/helpers/color-scale';
-import { metricsFormSchema } from '@/modules/metrics/validations/metrics-form-schema';
+import { metricsFormSchema } from '@/modules/metrics/schemas/metrics-form-schema';
 import { getFinancialBalanceSummary } from '@/modules/metrics/services/offering-comparative-metrics.service';
 import { FinancialBalanceSummaryForm } from '@/modules/metrics/components/financial-balance-comparative/screens/FinancialBalanceSummaryForm';
 import { ChartBarFinancialBalanceSummary } from '@/modules/metrics/components/financial-balance-comparative/screens/ChartBarFinancialBalanceSummary';
 import { ChartDonutFinancialBalanceSummary } from '@/modules/metrics/components/financial-balance-comparative/screens/ChartDonutFinancialBalanceSummary';
+import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
 
 const INCOME_BASE = '#22C55E';
 const EXPENSE_BASE = '#EF4444';
 const BALANCE_BASE = '#FACC15';
 
-interface FinancialReportCanvasProps {
-  churchId: string;
-}
 
-export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasProps) => {
+export const ViewFinancialBalanceSummary = () => {
+  //* Context
+  const activeChurchId = useChurchMinistryContextStore((s) => s.activeChurchId);
+
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState<number>(1);
   const [isInputDisabled, setIsInputDisabled] = useState<boolean>(false);
@@ -62,24 +63,24 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
 
   //* Queries
   const financialSummaryBalanceQuery = useQuery({
-    queryKey: ['summary-financial-balance-screen', startMonth, endMonth, currency, churchId],
+    queryKey: ['summary-financial-balance-screen', startMonth, endMonth, currency, activeChurchId],
     queryFn: () =>
       getFinancialBalanceSummary({
-        churchId: churchId ?? '',
+        churchId: activeChurchId ?? '',
         year: year ?? '',
         startMonth: startMonth ?? '',
         endMonth: endMonth ?? '',
         currency: currency ?? '',
       }),
     retry: false,
-    enabled: Boolean(startMonth && endMonth && currency && churchId),
+    enabled: Boolean(startMonth && endMonth && currency && activeChurchId),
   });
 
   //* Effects
   useEffect(() => {
     form.reset();
     queryClient.removeQueries({
-      queryKey: ['view-balance-report', startMonth, endMonth, currency, churchId],
+      queryKey: ['view-balance-report', startMonth, endMonth, currency, activeChurchId],
     });
     setPage(1);
     setIsInputDisabled(false);
@@ -102,7 +103,7 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
       setIsSubmitButtonDisabled(true);
       setIsMessageErrorDisabled(true);
     }
-  }, [churchId, startMonth, endMonth, year, form.formState.errors]);
+  }, [activeChurchId, startMonth, endMonth, year, form.formState.errors]);
 
   //* Mappers
   const dataBalanceSummary = financialSummaryBalanceQuery.data?.calculateBalanceSummary ?? [];
@@ -325,7 +326,7 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
                         data={card}
                         startMonth={startMonth}
                         endMonth={endMonth}
-                        churchId={churchId}
+
                         year={year}
                       />
                     ))}
@@ -345,7 +346,7 @@ export const ViewFinancialBalanceSummary = ({ churchId }: FinancialReportCanvasP
                         data={card}
                         startMonth={startMonth}
                         endMonth={endMonth}
-                        churchId={churchId}
+
                         year={year}
                       />
                     ))}

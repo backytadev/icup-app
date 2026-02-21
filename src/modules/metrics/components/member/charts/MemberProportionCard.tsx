@@ -1,22 +1,21 @@
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { PieChart, Pie } from 'recharts';
 
 import { useEffect, useState } from 'react';
 
 import CountUp from 'react-countup';
 import { FaPeopleRoof } from 'react-icons/fa6';
-import { useQuery } from '@tanstack/react-query';
 import { BsGenderFemale, BsGenderMale } from 'react-icons/bs';
+
+import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
 
 import { RecordOrder } from '@/shared/enums/record-order.enum';
 
 import { MetricSearchType } from '@/modules/metrics/enums/metrics-search-type.enum';
 import { getMembersProportion } from '@/modules/metrics/services/member-metrics.service';
+import { useMetricsQuery } from '@/modules/metrics/hooks';
 
 import { type ChartConfig, ChartContainer } from '@/shared/components/ui/chart';
-import { Card, CardDescription, CardHeader, CardTitle } from '@/shared/components/ui/card';
+import { Card, CardContent } from '@/shared/components/ui/card';
 
 const chartConfigActive = {
   active: {
@@ -42,26 +41,24 @@ interface MappedDataOptions {
   fill: string;
 }
 
-interface Props {
-  churchId: string | undefined;
-}
+export const MemberProportionCard = (): JSX.Element => {
+  //* Context
+  const activeChurchId = useChurchMinistryContextStore((s) => s.activeChurchId);
 
-export const MemberProportionCard = ({ churchId }: Props): JSX.Element => {
   //* States
   const [activeMemberDataMapped, setActiveMemberDataMapped] = useState<MappedDataOptions[]>();
   const [inactiveMemberDataMapped, setInactiveMemberDataMapped] = useState<MappedDataOptions[]>();
 
   //* Queries
-  const { data } = useQuery({
-    queryKey: ['members-proportion', churchId],
+  const { data } = useMetricsQuery({
+    queryKey: ['members-proportion', activeChurchId],
     queryFn: () =>
       getMembersProportion({
         searchType: MetricSearchType.MembersByProportion,
         order: RecordOrder.Ascending,
-        church: churchId ?? '',
+        church: activeChurchId ?? '',
       }),
-    retry: false,
-    enabled: !!churchId,
+    activeChurchId,
   });
 
   //* Effects
@@ -94,125 +91,132 @@ export const MemberProportionCard = ({ churchId }: Props): JSX.Element => {
   }, [data]);
 
   return (
-    <div className='grid gap-6 xl:flex xl:gap-10 justify-center px-2'>
-      <div className='flex gap-4 justify-center mx-auto w-[90%] sm:w-auto sm:mx-0'>
-        {/* Total and Total by Gender */}
-        <Card className='w-auto h-auto shadow-md dark:shadow-slate-700 dark:bg-slate-900 bg-slate-50'>
-          <CardHeader className='p-2 pt-4'>
-            <div className='flex flex-col justify-center items-center gap-6 md:gap-3'>
-              <div className='flex justify-center items-center gap-1.5'>
-                <BsGenderMale className='text-blue-500 font-bold text-[1.8rem] md:text-[2rem]' />
-                <span className='text-[22px] md:text-[26px] font-extrabold'>
-                  {<CountUp end={Number(data?.countMembersMale)} start={0} duration={4} />}
-                </span>
-              </div>
+    <div className='grid gap-5 xl:flex xl:gap-6 justify-center px-2'>
 
-              <div className='flex justify-center gap-1.5 items-center'>
-                <BsGenderFemale className='text-pink-500 font-bold text-[1.8rem] md:text-[2rem]' />
-                <span className='text-[22px] md:text-[26px] font-extrabold'>
-                  {<CountUp end={Number(data?.countMembersFemale)} start={0} duration={4} />}
-                </span>
+      {/* Fila 1: Género + Total */}
+      <div className='flex gap-4 justify-center mx-auto w-[90%] sm:w-auto sm:mx-0'>
+
+        {/* Género */}
+        <Card className='w-auto border-slate-200/80 dark:border-slate-700/50 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-shadow duration-300'>
+          <CardContent className='p-4 pt-5 flex flex-col gap-4'>
+            <div className='flex flex-col gap-3'>
+              <div className='flex items-center gap-3'>
+                <div className='p-2 rounded-lg bg-blue-50 dark:bg-blue-900/20'>
+                  <BsGenderMale className='text-blue-500 text-[1.5rem]' />
+                </div>
+                <div>
+                  <p className='text-[11px] font-inter text-slate-500 dark:text-slate-400'>Varones</p>
+                  <p className='text-[1.6rem] font-extrabold font-outfit text-slate-800 dark:text-slate-100 leading-none'>
+                    <CountUp end={Number(data?.countMembersMale)} start={0} duration={4} />
+                  </p>
+                </div>
+              </div>
+              <div className='flex items-center gap-3'>
+                <div className='p-2 rounded-lg bg-pink-50 dark:bg-pink-900/20'>
+                  <BsGenderFemale className='text-pink-500 text-[1.5rem]' />
+                </div>
+                <div>
+                  <p className='text-[11px] font-inter text-slate-500 dark:text-slate-400'>Mujeres</p>
+                  <p className='text-[1.6rem] font-extrabold font-outfit text-slate-800 dark:text-slate-100 leading-none'>
+                    <CountUp end={Number(data?.countMembersFemale)} start={0} duration={4} />
+                  </p>
+                </div>
               </div>
             </div>
-          </CardHeader>
+          </CardContent>
         </Card>
 
-        <Card className='w-[270px] md:w-[300px] shadow-md dark:shadow-slate-700 dark:bg-slate-900 bg-slate-50'>
-          <CardHeader className='py-5'>
-            <div className='flex justify-center gap-4'>
-              <FaPeopleRoof className='text-[5rem] text-sky-500' />
-              <div className='flex flex-col gap-2 items-top justify-center'>
-                <CardTitle className='text-center text-[3rem] md:text-[3rem] lg:text-[3.2rem] xl:text-[3.5rem] font-extrabold leading-10'>
-                  {<CountUp end={Number(data?.totalCountMembers)} start={0} duration={4} />}
-                </CardTitle>
-                <CardDescription className='text-[15px] md:text-[15px] xl:text-[16px] font-bold text-center'>
-                  Miembros totales
-                </CardDescription>
-              </div>
+        {/* Total Members */}
+        <Card className='w-[240px] md:w-[270px] border-slate-200/80 dark:border-slate-700/50 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-shadow duration-300'>
+          <CardContent className='py-5 px-4 flex flex-row items-center justify-center gap-4 h-full'>
+            <div className='p-3 rounded-full bg-sky-50 dark:bg-sky-900/20'>
+              <FaPeopleRoof className='text-sky-500 text-[3.5rem]' />
             </div>
-          </CardHeader>
+            <div className='flex flex-col items-center'>
+              <p className='text-[3rem] font-extrabold font-outfit text-slate-800 dark:text-slate-100 leading-none'>
+                <CountUp end={Number(data?.totalCountMembers)} start={0} duration={4} />
+              </p>
+              <p className='text-[12px] font-inter text-slate-500 dark:text-slate-400 text-center font-medium'>
+                Miembros totales
+              </p>
+            </div>
+          </CardContent>
         </Card>
       </div>
 
-      <div className='flex flex-col justify-center items-center sm:flex-row gap-6 sm:gap-4 md:gap-8 xl:gap-10'>
-        {/* Active Members */}
-        <Card className='w-[270px] md:w-[300px] cursor-default shadow-md dark:shadow-slate-700 dark:bg-slate-900 bg-slate-50'>
-          <CardHeader className='py-5'>
-            <div className='flex justify-center gap-4 h-[5rem] relative'>
-              <span className='absolute -top-3 left-[3.2rem] md:left-14 font-bold text-[15px] md:text-[15px]'>
-                {(() => {
-                  const activeMembers = data?.countMembersActive ?? 0;
-                  const inactiveMembers = data?.countMembersInactive ?? 0;
-                  const totalMembers = activeMembers + inactiveMembers;
+      {/* Fila 2: Tasa Activos + Tasa Inactivos */}
+      <div className='flex flex-col justify-center items-center sm:flex-row gap-4 md:gap-5'>
 
-                  return totalMembers > 0 ? (
-                    <CountUp
-                      end={Number(((activeMembers / totalMembers) * 100).toFixed(0))}
-                      start={0}
-                      duration={4}
-                    />
-                  ) : (
-                    0
-                  );
-                })()}
-                %
-              </span>
-
-              <ChartContainer config={chartConfigActive} className='w-[55%] h-[130%]'>
+        {/* Active Rate */}
+        <Card className='w-[240px] md:w-[270px] cursor-default border-slate-200/80 dark:border-slate-700/50 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-shadow duration-300'>
+          <CardContent className='py-5 px-4 flex flex-col gap-3'>
+            <div className='flex items-center gap-10'>
+              <ChartContainer config={chartConfigActive} className='w-[95px] h-[95px] flex-shrink-0'>
                 <PieChart>
-                  <Pie data={activeMemberDataMapped} dataKey='value' nameKey='name'></Pie>
+                  <Pie data={activeMemberDataMapped} dataKey='value' nameKey='name' />
                 </PieChart>
               </ChartContainer>
-
-              <div className='flex flex-col  items-center justify-center'>
-                <CardDescription className='text-[15px] md:text-[15px] font-bold text-center'>
-                  Tasa de miembros <span className='text-green-500'>Activos</span>
-                </CardDescription>
-                <CardTitle className='text-center text-[2.2rem] xl:text-[2.4rem] font-extrabold leading-10'>
-                  {<CountUp end={Number(data?.countMembersActive)} start={0} duration={4} />}
-                </CardTitle>
+              <div className='flex flex-col justify-center items-center'>
+                <p className='text-[2.5rem] font-extrabold font-outfit text-slate-800 dark:text-slate-100 leading-none'>
+                  <CountUp end={Number(data?.countMembersActive)} start={0} duration={4} />
+                </p>
+                <p className='text-[12px] font-inter text-emerald-500 font-semibold mt-0.5'>Activos</p>
+                <p className='text-[1.1rem] font-bold font-outfit text-emerald-500 leading-none mt-1'>
+                  {(() => {
+                    const activeMembers = data?.countMembersActive ?? 0;
+                    const inactiveMembers = data?.countMembersInactive ?? 0;
+                    const totalMembers = activeMembers + inactiveMembers;
+                    return totalMembers > 0 ? (
+                      <CountUp
+                        end={Number(((activeMembers / totalMembers) * 100).toFixed(0))}
+                        start={0}
+                        duration={4}
+                      />
+                    ) : (
+                      0
+                    );
+                  })()}
+                  %
+                </p>
               </div>
             </div>
-          </CardHeader>
+          </CardContent>
         </Card>
 
-        {/* Inactive Members */}
-        <Card className='w-[270px] md:w-[300px] cursor-default shadow-md dark:shadow-slate-700 dark:bg-slate-900 bg-slate-50'>
-          <CardHeader className='py-5'>
-            <div className='flex justify-center gap-4 h-[5rem] relative'>
-              <span className='absolute -top-3 left-[3.2rem] md:left-14 font-bold text-[15px] md:text-[15px]'>
-                {(() => {
-                  const activeMembers = data?.countMembersActive ?? 0;
-                  const inactiveMembers = data?.countMembersInactive ?? 0;
-                  const totalMembers = activeMembers + inactiveMembers;
-
-                  return totalMembers > 0 ? (
-                    <CountUp
-                      end={Number(((inactiveMembers / totalMembers) * 100).toFixed(0))}
-                      start={0}
-                      duration={4}
-                    />
-                  ) : (
-                    0
-                  );
-                })()}
-                %
-              </span>
-              <ChartContainer config={chartConfigInactive} className='w-[55%] h-[130%]'>
+        {/* Inactive Rate */}
+        <Card className='w-[240px] md:w-[270px] cursor-default border-slate-200/80 dark:border-slate-700/50 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-shadow duration-300'>
+          <CardContent className='py-5 px-4 flex flex-col gap-3'>
+            <div className='flex items-center gap-10'>
+              <ChartContainer config={chartConfigInactive} className='w-[95px] h-[95px] flex-shrink-0'>
                 <PieChart>
-                  <Pie data={inactiveMemberDataMapped} dataKey='value' nameKey='name'></Pie>
+                  <Pie data={inactiveMemberDataMapped} dataKey='value' nameKey='name' />
                 </PieChart>
               </ChartContainer>
-              <div className='flex flex-col  items-center justify-center'>
-                <CardDescription className='text-[15px] md:text-[15px] font-bold text-center'>
-                  Tasa de miembros <span className='text-red-500'>Inactivos</span>
-                </CardDescription>
-                <CardTitle className='text-center text-[2.2rem] xl:text-[2.4rem] font-extrabold leading-10'>
-                  {<CountUp end={Number(data?.countMembersInactive)} start={0} duration={4} />}
-                </CardTitle>
+              <div className='flex flex-col justify-center items-center'>
+                <p className='text-[2.5rem] font-extrabold font-outfit text-slate-800 dark:text-slate-100 leading-none'>
+                  <CountUp end={Number(data?.countMembersInactive)} start={0} duration={4} />
+                </p>
+                <p className='text-[12px] font-inter text-red-500 font-semibold mt-0.5'>Inactivos</p>
+                <p className='text-[1.1rem] font-bold font-outfit text-red-500 leading-none mt-1'>
+                  {(() => {
+                    const activeMembers = data?.countMembersActive ?? 0;
+                    const inactiveMembers = data?.countMembersInactive ?? 0;
+                    const totalMembers = activeMembers + inactiveMembers;
+                    return totalMembers > 0 ? (
+                      <CountUp
+                        end={Number(((inactiveMembers / totalMembers) * 100).toFixed(0))}
+                        start={0}
+                        duration={4}
+                      />
+                    ) : (
+                      0
+                    );
+                  })()}
+                  %
+                </p>
               </div>
             </div>
-          </CardHeader>
+          </CardContent>
         </Card>
       </div>
     </div>

@@ -1,26 +1,22 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-/* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
-
 import { useEffect, useState } from 'react';
 
 import { type z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMediaQuery } from '@react-hook/media-query';
-import { FcDataBackup, FcDeleteDatabase } from 'react-icons/fc';
+import { TbUsersGroup } from 'react-icons/tb';
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
 import { Bar, XAxis, YAxis, CartesianGrid, BarChart } from 'recharts';
 
-import { metricsFormSchema } from '@/modules/metrics/validations/metrics-form-schema';
+import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
+
+import { metricsFormSchema } from '@/modules/metrics/schemas/metrics-form-schema';
 
 import { MetricSearchType } from '@/modules/metrics/enums/metrics-search-type.enum';
 import { getSimpleCopastors } from '@/modules/copastor/services/copastor.service';
 import { getFamilyGroupsByCopastorAndZone } from '@/modules/metrics/services/family-group-metrics.service';
 import { FamilyGroupsByCopastorAndZoneTooltipContent } from '@/modules/metrics/components/family-group/tooltips/components/FamilyGroupsByCopastorAndZoneTooltipContent';
+import { MetricCard } from '@/modules/metrics/components/shared/MetricCard';
 
 import { cn } from '@/shared/lib/utils';
 
@@ -53,13 +49,6 @@ import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
 import { Checkbox } from '@/shared/components/ui/checkbox';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/shared/components/ui/card';
 
 const chartConfig = {
   familyGroupsCount: {
@@ -84,21 +73,14 @@ interface SearchParamsOptions {
   all?: boolean;
 }
 
-interface Props {
-  churchId: string | undefined;
-}
+export const FamilyGroupAnalysisCardByCopastorAndZone = (): JSX.Element => {
+  //* Context
+  const activeChurchId = useChurchMinistryContextStore((s) => s.activeChurchId);
 
-export const FamilyGroupAnalysisCardByCopastorAndZone = ({ churchId }: Props): JSX.Element => {
   //* States
   const [mappedData, setMappedData] = useState<ResultDataOptions[]>();
   const [isInputSearchCopastorOpen, setIsInputSearchCopastorOpen] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useState<SearchParamsOptions | undefined>(undefined);
-
-  //* Media Queries
-  const intermediateSM = useMediaQuery('(min-width: 640px)');
-  const intermediateLG = useMediaQuery('(min-width: 1280px)');
-  const intermediateXL = useMediaQuery('(min-width: 1375px)');
-  const intermediate2XL = useMediaQuery('(min-width: 1450px)');
 
   //* Form
   const form = useForm<z.infer<typeof metricsFormSchema>>({
@@ -116,26 +98,27 @@ export const FamilyGroupAnalysisCardByCopastorAndZone = ({ churchId }: Props): J
 
   //* Queries
   const copastorsQuery = useQuery({
-    queryKey: ['copastors-for-zone', churchId],
-    queryFn: () => getSimpleCopastors({ churchId: churchId ?? '', isSimpleQuery: true }),
+    queryKey: ['copastors-for-zone', activeChurchId],
+    queryFn: () => getSimpleCopastors({ churchId: activeChurchId ?? '', isSimpleQuery: true }),
     retry: false,
+    enabled: !!activeChurchId,
   });
 
   const familyGroupsByZoneQuery = useQuery({
-    queryKey: ['family-groups-by-zone', { ...searchParams, church: churchId }],
+    queryKey: ['family-groups-by-zone', { ...searchParams, church: activeChurchId }],
     queryFn: () => {
       return getFamilyGroupsByCopastorAndZone({
         searchType: MetricSearchType.FamilyGroupsByCopastorAndZone,
         copastor: searchParams?.copastor ?? copastor,
         allZones: searchParams?.all ?? all,
         order: RecordOrder.Ascending,
-        church: churchId ?? '',
+        church: activeChurchId ?? '',
       });
     },
     retry: false,
     enabled:
       !!searchParams?.copastor &&
-      !!churchId &&
+      !!activeChurchId &&
       !!copastorsQuery?.data &&
       !!copastorsQuery.data.length,
   });
@@ -187,35 +170,30 @@ export const FamilyGroupAnalysisCardByCopastorAndZone = ({ churchId }: Props): J
     setSearchParams(formData);
   };
 
+  const isFetchingData = !searchParams || (familyGroupsByZoneQuery?.isFetching && !mappedData?.length);
+  const isEmptyData = !isFetchingData && !mappedData?.length;
+
   return (
-    <Card className='bg-slate-50/40 dark:bg-slate-900/40 flex flex-col col-start-1 col-end-2 h-[24rem] md:h-[27rem] lg:h-[27rem] 2xl:h-[27rem] m-0 border-slate-200 dark:border-slate-800'>
-      <CardHeader className='z-10 flex flex-col sm:flex-row items-center justify-between px-4 pt-1.5 pb-2'>
-        <div className='flex flex-col'>
-          <CardTitle className='flex justify-center items-center gap-2 font-bold text-[22px] sm:text-[25px] md:text-[28px] 2xl:text-[30px]'>
-            {intermediate2XL ? (
-              <span>Grupos Familiares</span>
-            ) : intermediateXL ? (
-              <span> Grupos Fam.</span>
-            ) : intermediateLG ? (
-              <span>Grup. Fam.</span>
-            ) : intermediateSM ? (
-              <span>Grupos Familiares</span>
-            ) : (
-              <span>Grupos Familiares</span>
-            )}
-            {!!copastorsQuery?.data?.length && (
-              <Badge
-                variant='active'
-                className='mt-1 text-[11px] text-white md:text-[11px] py-0.3 md:py-0.35 tracking-wide'
-              >
-                Activos
-              </Badge>
-            )}
-          </CardTitle>
-          <CardDescription className='-ml-6 sm:ml-1 text-center sm:text-left text-[14px] md:text-[14.5px] italic'>
-            Por Co-Pastor y Zona.
-          </CardDescription>
-        </div>
+    <MetricCard
+      className='col-start-1 col-end-2'
+      title={
+        <>
+          Grupos Familiares
+          {!!copastorsQuery?.data?.length && (
+            <Badge
+              variant='active'
+              className='mt-1 text-white text-[11px] py-0.3 tracking-wide'
+            >
+              Activos
+            </Badge>
+          )}
+        </>
+      }
+      description='Por Co-Pastor y Zona.'
+      icon={<TbUsersGroup className='w-5 h-5 text-blue-600 dark:text-blue-400' />}
+      isFetching={isFetchingData}
+      isEmpty={isEmptyData}
+      headerAction={
         <Form {...form}>
           <form className='flex'>
             <FormField
@@ -323,69 +301,37 @@ export const FamilyGroupAnalysisCardByCopastorAndZone = ({ churchId }: Props): J
             />
           </form>
         </Form>
-      </CardHeader>
-
-      {!mappedData?.length && !searchParams ? (
-        <CardContent className='h-full px-2 sm:px-4 py-0'>
-          <div className='text-blue-500 text-[14px] md:text-lg flex flex-col justify-center items-center h-full -mt-6'>
-            <FcDataBackup className='text-[6rem] pb-2' />
-            <p className='font-medium text-[15px] md:text-[16px]'>Consultando datos....</p>
-          </div>
-        </CardContent>
-      ) : (
-        <CardContent className='h-full px-2 sm:px-4 py-0'>
-          {familyGroupsByZoneQuery?.isFetching && !mappedData?.length && (
-            <div className='text-blue-500 text-[14px] md:text-lg flex flex-col justify-center items-center h-full -mt-6'>
-              <FcDataBackup className='text-[6rem] pb-2' />
-              <p className='font-medium text-[15px] md:text-[16px]'>Consultando datos....</p>
-            </div>
-          )}
-          {!!mappedData?.length && searchParams && (
-            <ChartContainer
-              config={chartConfig}
-              className={cn(
-                'w-full h-[270px] sm:h-[310px] md:h-[350px] lg:h-[350px] xl:h-[350px] 2xl:h-[345px]'
-              )}
-            >
-              <BarChart
-                accessibilityLayer
-                data={mappedData}
-                margin={{ top: 5, right: 5, left: -35, bottom: 10 }}
-              >
-                <CartesianGrid vertical={true} />
-                <XAxis
-                  dataKey='zoneName'
-                  tickLine={false}
-                  tickMargin={10}
-                  axisLine={true}
-                  tickFormatter={(value) => value.slice(0, 10)}
-                  className='text-[12.5px] md:text-[14px]'
-                />
-
-                <YAxis className='text-[12.5px] md:text-[14px]' />
-                <ChartTooltip
-                  cursor={false}
-                  content={FamilyGroupsByCopastorAndZoneTooltipContent as any}
-                />
-
-                <ChartLegend
-                  content={<ChartLegendContent className='ml-8 text-[13px] md:text-[14px]' />}
-                />
-
-                <Bar dataKey='familyGroupsCount' fill='var(--color-familyGroupsCount)' radius={4} />
-              </BarChart>
-            </ChartContainer>
-          )}
-          {!familyGroupsByZoneQuery?.isFetching && !mappedData?.length && (
-            <div className='text-red-500 flex flex-col justify-center items-center h-full -mt-6'>
-              <FcDeleteDatabase className='text-[6rem] pb-2' />
-              <p className='font-medium text-[15px] md:text-[16px]'>
-                No hay datos disponibles para mostrar.
-              </p>
-            </div>
-          )}
-        </CardContent>
-      )}
-    </Card>
+      }
+    >
+      <ChartContainer
+        config={chartConfig}
+        className='w-full h-[240px] sm:h-[270px] md:h-[310px] xl:h-[320px]'
+      >
+        <BarChart
+          accessibilityLayer
+          data={mappedData}
+          margin={{ top: 5, right: 5, left: -35, bottom: 10 }}
+        >
+          <CartesianGrid vertical={false} strokeDasharray='3 3' className='stroke-slate-200 dark:stroke-slate-700' />
+          <XAxis
+            dataKey='zoneName'
+            tickLine={false}
+            tickMargin={10}
+            axisLine={false}
+            tickFormatter={(value) => value.slice(0, 10)}
+            className='text-xs fill-slate-500 dark:fill-slate-400'
+          />
+          <YAxis tickLine={false} axisLine={false} className='text-xs fill-slate-500 dark:fill-slate-400' />
+          <ChartTooltip
+            cursor={{ fill: 'rgba(0,0,0,0.05)' }}
+            content={FamilyGroupsByCopastorAndZoneTooltipContent as any}
+          />
+          <ChartLegend
+            content={<ChartLegendContent className='flex flex-wrap justify-center gap-x-3 gap-y-1 text-xs' />}
+          />
+          <Bar dataKey='familyGroupsCount' fill='var(--color-familyGroupsCount)' radius={4} />
+        </BarChart>
+      </ChartContainer>
+    </MetricCard>
   );
 };

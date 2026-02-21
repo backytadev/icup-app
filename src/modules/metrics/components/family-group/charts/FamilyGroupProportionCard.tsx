@@ -1,20 +1,19 @@
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useEffect, useState } from 'react';
 
 import CountUp from 'react-countup';
 import { GiHouse } from 'react-icons/gi';
 import { PieChart, Pie } from 'recharts';
-import { useQuery } from '@tanstack/react-query';
+
+import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
 
 import { RecordOrder } from '@/shared/enums/record-order.enum';
 
 import { MetricSearchType } from '@/modules/metrics/enums/metrics-search-type.enum';
+import { useMetricsQuery } from '@/modules/metrics/hooks';
 import { getFamilyGroupsProportion } from '@/modules/metrics/services/family-group-metrics.service';
 
 import { ChartContainer, type ChartConfig } from '@/shared/components/ui/chart';
-import { Card, CardDescription, CardHeader, CardTitle } from '@/shared/components/ui/card';
+import { Card, CardContent } from '@/shared/components/ui/card';
 
 const chartConfigActive = {
   active: {
@@ -40,11 +39,10 @@ interface MappedDataOptions {
   fill: string;
 }
 
-interface Props {
-  churchId: string | undefined;
-}
+export const FamilyGroupProportionCard = (): JSX.Element => {
+  //* Context
+  const activeChurchId = useChurchMinistryContextStore((s) => s.activeChurchId);
 
-export const FamilyGroupProportionCard = ({ churchId }: Props): JSX.Element => {
   //* States
   const [activeFamilyGroupsDataMapped, setActiveFamilyGroupsDataMapped] =
     useState<MappedDataOptions[]>();
@@ -52,24 +50,23 @@ export const FamilyGroupProportionCard = ({ churchId }: Props): JSX.Element => {
     useState<MappedDataOptions[]>();
 
   //* Queries
-  const { data } = useQuery({
-    queryKey: ['family-groups-proportion', churchId],
+  const { data } = useMetricsQuery({
+    queryKey: ['family-groups-proportion', activeChurchId],
     queryFn: () =>
       getFamilyGroupsProportion({
         searchType: MetricSearchType.FamilyGroupsByProportion,
         year: String(new Date().getFullYear()),
         order: RecordOrder.Ascending,
-        church: churchId ?? '',
+        church: activeChurchId ?? '',
       }),
-    retry: false,
-    enabled: !!churchId,
+    activeChurchId,
   });
 
   //* Effects
   useEffect(() => {
     const newData = {
-      countMembersActive: data?.countFamilyGroupsActive,
-      countMembersInactive: data?.countFamilyGroupsInactive,
+      countFamilyGroupsActive: data?.countFamilyGroupsActive,
+      countFamilyGroupsInactive: data?.countFamilyGroupsInactive,
     };
 
     if (data) {
@@ -95,101 +92,98 @@ export const FamilyGroupProportionCard = ({ churchId }: Props): JSX.Element => {
   }, [data]);
 
   return (
-    <div className='w-full grid gap-6 xl:flex xl:gap-10 justify-center items-center px-5'>
-      <Card className='w-[270px] md:w-[300px] mx-auto xl:mx-0 cursor-default shadow-md dark:shadow-slate-700 dark:bg-slate-900 bg-slate-50'>
-        <CardHeader className='py-5'>
-          <div className='flex justify-center gap-4'>
-            <GiHouse className='text-[5rem] text-orange-500' />
-            <div className='flex flex-col gap-2 items-top justify-center'>
-              <CardTitle className='text-center text-[3rem] md:text-[3rem] lg:text-[3.2rem] xl:text-[3.5rem] font-extrabold leading-10'>
-                {<CountUp end={Number(data?.totalCountFamilyGroups)} start={0} duration={4} />}
-              </CardTitle>
-              <CardDescription className='text-[14.5px] md:text-[15px] xl:text-[16px] font-bold text-center'>
-                Grupos Fam. totales
-              </CardDescription>
-            </div>
+    <div className='grid gap-5 xl:flex xl:gap-6 justify-center px-2'>
+
+      {/* Total Grupos Familiares */}
+      <Card className='w-[240px] md:w-[270px] mx-auto xl:mx-0 border-slate-200/80 dark:border-slate-700/50 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-shadow duration-300'>
+        <CardContent className='py-5 px-4 flex flex-row items-center justify-center gap-4 h-full'>
+          <div className='p-3 rounded-full bg-orange-50 dark:bg-orange-900/20'>
+            <GiHouse className='text-orange-500 text-[3.5rem]' />
           </div>
-        </CardHeader>
+          <div className='flex flex-col items-center justify-center gap-2'>
+            <p className='text-[3rem] font-extrabold font-outfit text-slate-800 dark:text-slate-100 leading-none'>
+              <CountUp end={Number(data?.totalCountFamilyGroups)} start={0} duration={4} />
+            </p>
+            <p className='text-[12px] font-inter text-slate-500 dark:text-slate-400 text-center font-medium'>
+              Grupos Fam. totales
+            </p>
+          </div>
+        </CardContent>
       </Card>
 
-      <div className='flex flex-col justify-center items-center sm:flex-row gap-6 sm:gap-4 md:gap-8 xl:gap-10'>
-        {/* Active family groups */}
-        <Card className='w-[270px] md:w-[300px] cursor-default shadow-md dark:shadow-slate-700 dark:bg-slate-900 bg-slate-50'>
-          <CardHeader className='py-5'>
-            <div className='flex justify-center gap-4 h-[5rem] relative'>
-              <span className='absolute -top-3 left-12 md:left-14 font-bold text-[15px] md:text-[15px]'>
-                {(() => {
-                  const activeFamilyGroups = data?.countFamilyGroupsActive ?? 0;
-                  const inactiveFamilyGroups = data?.countFamilyGroupsInactive ?? 0;
-                  const totalFamilyGroups = activeFamilyGroups + inactiveFamilyGroups;
+      {/* Active + Inactive rate cards */}
+      <div className='flex flex-col justify-center items-center sm:flex-row gap-4 md:gap-5'>
 
-                  return totalFamilyGroups > 0 ? (
-                    <CountUp
-                      end={Number(((activeFamilyGroups / totalFamilyGroups) * 100).toFixed(0))}
-                      start={0}
-                      duration={4}
-                    />
-                  ) : (
-                    0
-                  );
-                })()}
-                %
-              </span>
-              <ChartContainer config={chartConfigActive} className='w-[55%] h-[130%]'>
+        {/* Active Rate */}
+        <Card className='w-[240px] md:w-[270px] cursor-default border-slate-200/80 dark:border-slate-700/50 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-shadow duration-300'>
+          <CardContent className='py-5 px-4 flex flex-col gap-3'>
+            <div className='flex items-center gap-10'>
+              <ChartContainer config={chartConfigActive} className='w-[90px] h-[90px] flex-shrink-0'>
                 <PieChart>
-                  <Pie data={activeFamilyGroupsDataMapped} dataKey='value' nameKey='name'></Pie>
+                  <Pie data={activeFamilyGroupsDataMapped} dataKey='value' nameKey='name' />
                 </PieChart>
               </ChartContainer>
-
-              <div className='flex flex-col  items-center justify-center'>
-                <CardDescription className='text-[15px] md:text-[15px] font-bold text-center'>
-                  Tasa de grupos fam. <span className='text-green-500'>Activas</span>
-                </CardDescription>
-                <CardTitle className='text-center text-[2.2rem] xl:text-[2.5rem] font-extrabold leading-10'>
-                  {<CountUp end={Number(data?.countFamilyGroupsActive)} start={0} duration={4} />}
-                </CardTitle>
+              <div className='flex flex-col items-center'>
+                <p className='text-[2.5rem] font-extrabold font-outfit text-slate-800 dark:text-slate-100 leading-none'>
+                  <CountUp end={Number(data?.countFamilyGroupsActive)} start={0} duration={4} />
+                </p>
+                <p className='text-[12px] font-inter text-emerald-500 font-semibold mt-0.5'>Activos</p>
+                <p className='text-[1.1rem] font-bold font-outfit text-emerald-500 leading-none mt-1'>
+                  {(() => {
+                    const activeFamilyGroups = data?.countFamilyGroupsActive ?? 0;
+                    const inactiveFamilyGroups = data?.countFamilyGroupsInactive ?? 0;
+                    const totalFamilyGroups = activeFamilyGroups + inactiveFamilyGroups;
+                    return totalFamilyGroups > 0 ? (
+                      <CountUp
+                        end={Number(((activeFamilyGroups / totalFamilyGroups) * 100).toFixed(0))}
+                        start={0}
+                        duration={4}
+                      />
+                    ) : (
+                      0
+                    );
+                  })()}
+                  %
+                </p>
               </div>
             </div>
-          </CardHeader>
+          </CardContent>
         </Card>
 
-        {/* Inactive family groups */}
-        <Card className='w-[270px] md:w-[300px] cursor-default shadow-md dark:shadow-slate-700 dark:bg-slate-900 bg-slate-50'>
-          <CardHeader className='py-5'>
-            <div className='flex justify-center gap-4 h-[5rem] relative'>
-              <span className='absolute -top-3 left-12 md:left-14 font-bold text-[15px] md:text-[15px]'>
-                {(() => {
-                  const activeFamilyGroups = data?.countFamilyGroupsActive ?? 0;
-                  const inactiveFamilyGroups = data?.countFamilyGroupsInactive ?? 0;
-                  const totalFamilyGroups = activeFamilyGroups + inactiveFamilyGroups;
-
-                  return totalFamilyGroups > 0 ? (
-                    <CountUp
-                      end={Number(((inactiveFamilyGroups / totalFamilyGroups) * 100).toFixed(0))}
-                      start={0}
-                      duration={4}
-                    />
-                  ) : (
-                    0
-                  );
-                })()}
-                %
-              </span>
-              <ChartContainer config={chartConfigInactive} className='w-[55%] h-[130%]'>
+        {/* Inactive Rate */}
+        <Card className='w-[240px] md:w-[270px] cursor-default border-slate-200/80 dark:border-slate-700/50 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-shadow duration-300'>
+          <CardContent className='py-5 px-4 flex flex-col gap-3'>
+            <div className='flex items-center gap-10'>
+              <ChartContainer config={chartConfigInactive} className='w-[90px] h-[90px] flex-shrink-0'>
                 <PieChart>
-                  <Pie data={inactiveFamilyGroupsDataMapped} dataKey='value' nameKey='name'></Pie>
+                  <Pie data={inactiveFamilyGroupsDataMapped} dataKey='value' nameKey='name' />
                 </PieChart>
               </ChartContainer>
-              <div className='flex flex-col  items-center justify-center'>
-                <CardDescription className='text-[15px] md:text-[15px] font-bold text-center'>
-                  Tasa de grupos fam. <span className='text-red-500'>Inactivas</span>
-                </CardDescription>
-                <CardTitle className='text-center text-[2.2rem] xl:text-[2.5rem] font-extrabold leading-10'>
-                  {<CountUp end={Number(data?.countFamilyGroupsInactive)} start={0} duration={4} />}
-                </CardTitle>
+              <div className='flex flex-col items-center'>
+                <p className='text-[2.5rem] font-extrabold font-outfit text-slate-800 dark:text-slate-100 leading-none'>
+                  <CountUp end={Number(data?.countFamilyGroupsInactive)} start={0} duration={4} />
+                </p>
+                <p className='text-[12px] font-inter text-red-500 font-semibold mt-0.5'>Inactivos</p>
+                <p className='text-[1.1rem] font-bold font-outfit text-red-500 leading-none mt-1'>
+                  {(() => {
+                    const activeFamilyGroups = data?.countFamilyGroupsActive ?? 0;
+                    const inactiveFamilyGroups = data?.countFamilyGroupsInactive ?? 0;
+                    const totalFamilyGroups = activeFamilyGroups + inactiveFamilyGroups;
+                    return totalFamilyGroups > 0 ? (
+                      <CountUp
+                        end={Number(((inactiveFamilyGroups / totalFamilyGroups) * 100).toFixed(0))}
+                        start={0}
+                        duration={4}
+                      />
+                    ) : (
+                      0
+                    );
+                  })()}
+                  %
+                </p>
               </div>
             </div>
-          </CardHeader>
+          </CardContent>
         </Card>
       </div>
     </div>

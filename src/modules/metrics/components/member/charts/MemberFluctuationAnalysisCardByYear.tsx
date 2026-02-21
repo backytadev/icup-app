@@ -1,21 +1,17 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 import { type z } from 'zod';
 import { useForm } from 'react-hook-form';
-import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FcDataBackup, FcDeleteDatabase } from 'react-icons/fc';
 import { Bar, YAxis, XAxis, BarChart, CartesianGrid } from 'recharts';
 
-import { metricsFormSchema } from '@/modules/metrics/validations/metrics-form-schema';
+import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
 
+import { metricsFormSchema } from '@/modules/metrics/schemas/metrics-form-schema';
 import { MetricSearchType } from '@/modules/metrics/enums/metrics-search-type.enum';
 import { getFluctuationMembersByYear } from '@/modules/metrics/services/member-metrics.service';
+import { useMetricsQuery } from '@/modules/metrics/hooks';
+import { MetricCard } from '@/modules/metrics/components/shared/MetricCard';
 import { MembersFluctuationByYearTooltipContent } from '@/modules/metrics/components/member/tooltips/components/MembersFluctuationByYearTooltipContent';
 
 import { cn } from '@/shared/lib/utils';
@@ -37,8 +33,8 @@ import {
   SelectContent,
   SelectTrigger,
 } from '@/shared/components/ui/select';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/shared/components/ui/form';
+import { TbChartBar } from 'react-icons/tb';
 
 const chartConfig = {
   newMembers: {
@@ -55,13 +51,14 @@ interface SearchParamsOptions {
   year?: string;
 }
 
-interface Props {
-  churchId: string | undefined;
-}
+export const MemberFluctuationAnalysisCardByYear = (): JSX.Element => {
+  //* Context
+  const activeChurchId = useChurchMinistryContextStore((s) => s.activeChurchId);
 
-export const MemberFluctuationAnalysisCardByYear = ({ churchId }: Props): JSX.Element => {
   //* States
-  const [searchParams, setSearchParams] = useState<SearchParamsOptions | undefined>(undefined);
+  const [searchParams, setSearchParams] = useState<SearchParamsOptions>({
+    year: new Date().getFullYear().toString(),
+  });
 
   //* Form
   const form = useForm<z.infer<typeof metricsFormSchema>>({
@@ -72,32 +69,21 @@ export const MemberFluctuationAnalysisCardByYear = ({ churchId }: Props): JSX.El
     },
   });
 
-  //* Watchers
-  const year = form.getValues('year');
-
   //* Helpers
   const years = generateYearOptions(2024);
 
   //* Queries
-  const membersFluctuationByYearQuery = useQuery({
-    queryKey: ['members-fluctuation-by-year', { ...searchParams, church: churchId }],
+  const { data, isLoading, isEmpty } = useMetricsQuery({
+    queryKey: ['members-fluctuation-by-year', { ...searchParams, church: activeChurchId }],
     queryFn: () =>
       getFluctuationMembersByYear({
         searchType: MetricSearchType.MembersFluctuationByYear,
-        year: searchParams?.year ?? year,
+        year: searchParams.year,
         order: RecordOrder.Ascending,
-        church: churchId ?? '',
+        church: activeChurchId ?? '',
       }),
-    retry: false,
-    enabled: !!churchId,
+    activeChurchId,
   });
-
-  //* Effects
-  // Default value
-  useEffect(() => {
-    setSearchParams({ year });
-    form.setValue('year', year);
-  }, [membersFluctuationByYearQuery?.data]);
 
   //* Form handler
   function handleSubmit(formData: z.infer<typeof metricsFormSchema>): void {
@@ -105,11 +91,13 @@ export const MemberFluctuationAnalysisCardByYear = ({ churchId }: Props): JSX.El
   }
 
   return (
-    <Card className='bg-slate-50/40 dark:bg-slate-900/40 flex flex-col col-start-1 col-end-2 h-[22rem] md:h-[25rem] lg:h-[25rem] 2xl:h-[26rem] m-0 border-slate-200 dark:border-slate-800'>
-      <CardHeader className='flex flex-col sm:flex-row items-center justify-between px-4 py-2.5'>
-        <CardTitle className='font-bold text-[22px] sm:text-[25px] md:text-[28px] 2xl:text-[30px] inline-block'>
-          Fluctuación de Miembros
-        </CardTitle>
+    <MetricCard
+      title='Fluctuación de Miembros'
+      isLoading={isLoading}
+      icon={<TbChartBar className='w-5 h-5 text-green-600 dark:text-green-400' />}
+      isEmpty={isEmpty}
+      className='col-start-1 col-end-2'
+      headerAction={
         <Form {...form}>
           <form>
             <FormField
@@ -145,73 +133,44 @@ export const MemberFluctuationAnalysisCardByYear = ({ churchId }: Props): JSX.El
             />
           </form>
         </Form>
-      </CardHeader>
+      }
+    >
+      <ChartContainer
+        config={chartConfig}
+        className={cn(
+          'w-full h-[240px] sm:h-[270px] md:h-[310px] xl:h-[320px]'
+        )}
+      >
+        <BarChart
+          accessibilityLayer
+          data={data}
+          margin={{ top: 5, right: 5, left: -32, bottom: 10 }}
+        >
+          <CartesianGrid vertical={false} strokeDasharray='3 3' className='stroke-slate-200 dark:stroke-slate-700' />
+          <XAxis
+            dataKey='month'
+            tickLine={false}
+            tickMargin={10}
+            axisLine={false}
+            tickFormatter={(value) => value.slice(0, 3)}
+            className='text-xs fill-slate-500 dark:fill-slate-400'
+          />
 
-      {!membersFluctuationByYearQuery?.data?.length ? (
-        <CardContent className='h-full px-2 sm:px-4 py-0'>
-          <div className='text-blue-500 text-[14px] md:text-lg flex flex-col justify-center items-center h-full -mt-6'>
-            <FcDataBackup className='text-[6rem] pb-2' />
-            <p className='font-medium text-[15px] md:text-[16px]'>Consultando datos....</p>
-          </div>
-        </CardContent>
-      ) : (
-        <CardContent className='h-full px-2 sm:px-4 py-0'>
-          {membersFluctuationByYearQuery?.isFetching &&
-            !membersFluctuationByYearQuery?.data?.length && (
-              <div className='text-blue-500 text-[14px] md:text-lg flex flex-col justify-center items-center h-full -mt-6'>
-                <FcDataBackup className='text-[6rem] pb-2' />
-                <p className='font-medium text-[15px] md:text-[16px]'>Consultando datos....</p>
-              </div>
-            )}
-          {!!membersFluctuationByYearQuery?.data?.length && searchParams && (
-            <ChartContainer
-              config={chartConfig}
-              className={cn(
-                'w-full h-[255px] sm:h-[285px] md:h-[330px] lg:h-[330px] xl:h-[330px] 2xl:h-[345px]'
-              )}
-            >
-              <BarChart
-                accessibilityLayer
-                data={membersFluctuationByYearQuery?.data}
-                margin={{ top: 5, right: 5, left: -32, bottom: 10 }}
-              >
-                <CartesianGrid vertical={true} />
-                <XAxis
-                  dataKey='month'
-                  tickLine={false}
-                  tickMargin={10}
-                  axisLine={true}
-                  tickFormatter={(value) => value.slice(0, 3)}
-                  className='text-[12.5px] md:text-[14px]'
-                />
+          <YAxis tickLine={false} axisLine={false} className='text-xs fill-slate-500 dark:fill-slate-400' />
 
-                <YAxis className='text-[12.5px] md:text-[14px]' />
+          <ChartTooltip
+            cursor={{ fill: 'rgba(0,0,0,0.05)' }}
+            content={MembersFluctuationByYearTooltipContent as any}
+          />
 
-                <ChartTooltip
-                  cursor={false}
-                  content={MembersFluctuationByYearTooltipContent as any}
-                />
+          <ChartLegend
+            content={<ChartLegendContent className='flex flex-wrap justify-center gap-x-3 gap-y-1 text-xs' />}
+          />
 
-                <ChartLegend
-                  content={<ChartLegendContent className='ml-8 text-[13px] md:text-[14px]' />}
-                />
-
-                <Bar dataKey='newMembers' fill='var(--color-newMembers)' radius={4} />
-                <Bar dataKey='inactiveMembers' fill='var(--color-inactiveMembers)' radius={4} />
-              </BarChart>
-            </ChartContainer>
-          )}
-          {!membersFluctuationByYearQuery?.isFetching &&
-            !membersFluctuationByYearQuery?.data?.length && (
-              <div className='text-red-500 flex flex-col justify-center items-center h-full -mt-6'>
-                <FcDeleteDatabase className='text-[6rem] pb-2' />
-                <p className='font-medium text-[15px] md:text-[16px]'>
-                  No hay datos disponibles para mostrar.
-                </p>
-              </div>
-            )}
-        </CardContent>
-      )}
-    </Card>
+          <Bar dataKey='newMembers' fill='var(--color-newMembers)' radius={4} />
+          <Bar dataKey='inactiveMembers' fill='var(--color-inactiveMembers)' radius={4} />
+        </BarChart>
+      </ChartContainer>
+    </MetricCard>
   );
 };

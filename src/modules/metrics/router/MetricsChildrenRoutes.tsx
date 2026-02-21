@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/promise-function-async */
-
 import { lazy } from 'react';
 import { RouteObject } from 'react-router-dom';
 import { LazyElement } from '@/shared/components/lazy/LazyElements';

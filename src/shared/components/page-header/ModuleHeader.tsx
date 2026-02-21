@@ -2,9 +2,9 @@ import { type IconType } from 'react-icons';
 
 import { cn } from '@/shared/lib/utils';
 
-type TitleColor = 'slate' | 'green' | 'blue' | 'sky' | 'orange' | 'red';
-type BadgeColor = 'blue' | 'amber' | 'green' | 'purple' | 'red';
-type AccentColor = 'blue' | 'amber' | 'green' | 'purple' | 'red';
+type TitleColor = 'slate' | 'green' | 'blue' | 'sky' | 'orange' | 'red' | 'amber' | 'cyan';
+type BadgeColor = 'blue' | 'amber' | 'green' | 'purple' | 'red' | 'orange' | 'cyan';
+type AccentColor = 'blue' | 'amber' | 'green' | 'purple' | 'red' | 'amber' | 'orange' | 'cyan';
 
 interface ModuleHeaderProps {
   title: string;
@@ -24,6 +24,8 @@ const titleColorVariantsLight: Record<TitleColor, string> = {
   sky: 'text-sky-600',
   orange: 'text-orange-600',
   red: 'text-red-600',
+  amber: 'text-amber-600',
+  cyan: 'text-cyan-600',
 };
 
 const titleColorVariantsDark: Record<TitleColor, string> = {
@@ -33,6 +35,8 @@ const titleColorVariantsDark: Record<TitleColor, string> = {
   sky: 'dark:text-sky-400',
   orange: 'dark:text-orange-400',
   red: 'dark:text-red-400',
+  amber: 'dark:text-amber-400',
+  cyan: 'dark:text-cyan-400',
 };
 
 const badgeColorVariants: Record<BadgeColor, string> = {
@@ -41,6 +45,8 @@ const badgeColorVariants: Record<BadgeColor, string> = {
   green: 'text-emerald-700 bg-emerald-100 dark:text-emerald-300 dark:bg-emerald-500/20',
   purple: 'text-purple-700 bg-purple-100 dark:text-purple-300 dark:bg-purple-500/20',
   red: 'text-red-700 bg-red-100 dark:text-red-300 dark:bg-red-500/20',
+  orange: 'text-orange-700 bg-orange-100 dark:text-orange-300 dark:bg-orange-500/20',
+  cyan: 'text-cyan-700 bg-cyan-100 dark:text-cyan-300 dark:bg-cyan-500/20',
 };
 
 const accentColorVariants: Record<AccentColor, string> = {
@@ -49,6 +55,8 @@ const accentColorVariants: Record<AccentColor, string> = {
   green: 'bg-emerald-200/30 dark:bg-emerald-500/10',
   purple: 'bg-purple-200/30 dark:bg-purple-500/10',
   red: 'bg-red-200/30 dark:bg-red-500/10',
+  orange: 'bg-orange-200/30 dark:bg-orange-500/10',
+  cyan: 'bg-cyan-200/30 dark:bg-cyan-500/10',
 };
 
 export const ModuleHeader = ({

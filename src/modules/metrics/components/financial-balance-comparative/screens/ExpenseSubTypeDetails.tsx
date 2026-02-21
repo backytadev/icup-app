@@ -9,9 +9,9 @@ import {
   DialogTitle,
 } from '@/shared/components/ui/dialog';
 import { getExpenseDetailBySubType } from '@/modules/metrics/services/offering-comparative-metrics.service';
+import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
 
 interface ExpenseSubTypeDetailProps {
-  churchId?: string;
   year?: string;
   selectedMonth: string | null;
   offeringType: string;
@@ -20,18 +20,19 @@ interface ExpenseSubTypeDetailProps {
 }
 
 export const ExpenseSubTypeDetails = ({
-  churchId,
   year,
   selectedMonth,
   offeringType,
   open,
   setOpen,
 }: ExpenseSubTypeDetailProps) => {
+  const activeChurchId = useChurchMinistryContextStore((s) => s.activeChurchId);
+
   const { data, isLoading } = useQuery({
-    queryKey: ['expense-detail-by-sub-type', selectedMonth, offeringType, churchId],
+    queryKey: ['expense-detail-by-sub-type', selectedMonth, offeringType, activeChurchId],
     queryFn: () =>
       getExpenseDetailBySubType({
-        churchId: churchId!,
+        churchId: activeChurchId!,
         year: year!,
         startMonth: selectedMonth!,
         endMonth: selectedMonth!,

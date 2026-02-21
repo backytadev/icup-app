@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useEffect, useState } from 'react';
 
 import { type z } from 'zod';
@@ -12,15 +7,17 @@ import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
 import { XAxis, YAxis, CartesianGrid, BarChart, Bar } from 'recharts';
-import { FcDataBackup, FcDataConfiguration, FcDeleteDatabase } from 'react-icons/fc';
+import { TbArrowsUpDown } from 'react-icons/tb';
 
 import { cn } from '@/shared/lib/utils';
 
+import { OfferingExpenseAdjustmentTooltipContent } from '@/modules/metrics/components/offering-expense/tooltips/components/OfferingExpenseAdjustmentTooltipContent';
+import { MetricCard } from '@/modules/metrics/components/shared/MetricCard';
+
 import { RecordOrder } from '@/shared/enums/record-order.enum';
 import { MetricSearchType } from '@/modules/metrics/enums/metrics-search-type.enum';
-import { metricsFormSchema } from '@/modules/metrics/validations/metrics-form-schema';
+import { metricsFormSchema } from '@/modules/metrics/schemas/metrics-form-schema';
 import { getOfferingExpensesAdjustment } from '@/modules/metrics/services/offering-expense-metrics.service';
-import { OfferingExpenseAdjustmentTooltipContent } from '@/modules/metrics/components/offering-expense/tooltips/components/OfferingExpenseAdjustmentTooltipContent';
 
 import { months } from '@/shared/data/months-data';
 import { generateYearOptions } from '@/shared/helpers/generate-year-options.helper';
@@ -49,9 +46,9 @@ import {
 } from '@/shared/components/ui/select';
 import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/shared/components/ui/form';
+import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
 
 const chartConfig = {
   accumulatedOfferingPEN: {
@@ -73,13 +70,10 @@ interface SearchParamsOptions {
   year?: string;
 }
 
-interface Props {
-  churchId: string | undefined;
-}
+export const OfferingExpenseAnalysisCardByExpensesAdjustment = (): JSX.Element => {
+  //* Context
+  const activeChurchId = useChurchMinistryContextStore((s) => s.activeChurchId);
 
-export const OfferingExpenseAnalysisCardByExpensesAdjustment = ({
-  churchId,
-}: Props): JSX.Element => {
   //* States
   const [isInputSearchMonthOpen, setIsInputSearchMonthOpen] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useState<SearchParamsOptions | undefined>(undefined);
@@ -103,23 +97,22 @@ export const OfferingExpenseAnalysisCardByExpensesAdjustment = ({
 
   //* Queries
   const offeringExpensesAdjustment = useQuery({
-    queryKey: ['offering-expenses-adjustment', { ...searchParams, church: churchId }],
+    queryKey: ['offering-expenses-adjustment', { ...searchParams, church: activeChurchId }],
     queryFn: () => {
       return getOfferingExpensesAdjustment({
         searchType: MetricSearchType.OfferingExpensesAdjustment,
         month: searchParams?.month ?? month,
         year: searchParams?.year ?? year,
         isSingleMonth: true,
-        church: churchId ?? '',
+        church: activeChurchId ?? '',
         order: RecordOrder.Ascending,
       });
     },
     retry: false,
-    enabled: !!searchParams?.year && !!searchParams?.month && !!churchId,
+    enabled: !!searchParams?.year && !!searchParams?.month && !!activeChurchId,
   });
 
   //* Effects
-  // Default value
   useEffect(() => {
     setSearchParams({ year, month });
   }, [offeringExpensesAdjustment?.data, year]);
@@ -129,21 +122,27 @@ export const OfferingExpenseAnalysisCardByExpensesAdjustment = ({
     setSearchParams(formData);
   };
 
+  const isFetchingData = !searchParams || (offeringExpensesAdjustment?.isFetching && !offeringExpensesAdjustment?.data?.length);
+  const isEmptyData = !isFetchingData && !offeringExpensesAdjustment?.data?.length;
+
   return (
-    <Card className='bg-slate-50/40 dark:bg-slate-900/40 flex flex-col col-start-1 col-end-2 h-[24rem] sm:h-[26rem] md:h-[28rem] lg:h-[30rem] 2xl:h-[30rem] m-0 border-slate-200 dark:border-slate-800'>
-      <CardHeader className='z-10 flex flex-col sm:flex-row items-center justify-between px-4 py-2.5'>
-        <CardTitle className='flex justify-center items-center gap-2 font-bold text-[22px] sm:text-[25px] md:text-[28px] 2xl:text-[30px]'>
-          <span>Ajustes por Salidas</span>
-          {offeringExpensesAdjustment?.data &&
-            Object.entries(offeringExpensesAdjustment?.data)?.length > 0 && (
-              <Badge
-                variant='active'
-                className='mt-1 text-[11px] text-white md:text-[11px] py-0.3 md:py-0.35 tracking-wide'
-              >
-                Activos
-              </Badge>
-            )}
-        </CardTitle>
+    <MetricCard
+      className='col-start-1 col-end-2'
+      title={
+        <>
+          Ajustes por Salidas
+          {!!offeringExpensesAdjustment?.data?.length && (
+            <Badge variant='active' className='mt-1 text-white text-[11px] py-0.3 tracking-wide'>
+              Activos
+            </Badge>
+          )}
+        </>
+      }
+      description='Registros de ajuste de salidas.'
+      icon={<TbArrowsUpDown className='w-5 h-5 text-teal-600 dark:text-teal-400' />}
+      isFetching={isFetchingData}
+      isEmpty={isEmptyData}
+      headerAction={
         <Form {...form}>
           <form className='flex'>
             <FormField
@@ -156,9 +155,7 @@ export const OfferingExpenseAnalysisCardByExpensesAdjustment = ({
                       open={isInputSearchMonthOpen}
                       onOpenChange={(e) => {
                         setIsInputSearchMonthOpen(e);
-                        form.resetField('year', {
-                          defaultValue: '',
-                        });
+                        form.resetField('year', { defaultValue: '' });
                       }}
                     >
                       <PopoverTrigger asChild>
@@ -173,17 +170,14 @@ export const OfferingExpenseAnalysisCardByExpensesAdjustment = ({
                           >
                             {field.value
                               ? months.find((month) => month.value === field.value)?.label
-                              : 'Elige un mes'}
+                              : 'Mes'}
                             <CaretSortIcon className='h-4 w-4 shrink-0' />
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
                       <PopoverContent align='center' className='w-auto px-4 py-2'>
                         <Command className='w-[10rem]'>
-                          <CommandInput
-                            placeholder='Busque un mes'
-                            className='h-9 text-[14px] md:text-[14px]'
-                          />
+                          <CommandInput placeholder='Busque un mes' className='h-9 text-[14px] md:text-[14px]' />
                           <CommandEmpty>Mes no encontrado.</CommandEmpty>
                           <CommandGroup className='max-h-[100px] h-auto'>
                             {months.map((month) => (
@@ -235,7 +229,7 @@ export const OfferingExpenseAnalysisCardByExpensesAdjustment = ({
                       </FormControl>
                       <SelectContent className={cn(years.length >= 3 ? 'h-[8rem]' : 'h-auto')}>
                         {Object.values(years).map(({ label, value }) => (
-                          <SelectItem className={`text-[14px]`} key={value} value={label}>
+                          <SelectItem className='text-[14px]' key={value} value={label}>
                             {label}
                           </SelectItem>
                         ))}
@@ -248,98 +242,30 @@ export const OfferingExpenseAnalysisCardByExpensesAdjustment = ({
             />
           </form>
         </Form>
-      </CardHeader>
-
-      {!offeringExpensesAdjustment?.data?.length && !searchParams ? (
-        <CardContent className='h-full px-2 sm:px-4 py-0'>
-          <div className='text-blue-500 text-[14px] md:text-lg flex flex-col justify-center items-center h-full -mt-6'>
-            <FcDataBackup className='text-[6rem] pb-2' />
-            <p className='font-medium text-[15px] md:text-[16px]'>Consultando datos....</p>
-          </div>
-        </CardContent>
-      ) : (
-        <CardContent className='h-full px-2 sm:px-4 py-0'>
-          {offeringExpensesAdjustment?.isFetching &&
-            !offeringExpensesAdjustment?.data?.length &&
-            year && (
-              <div className='text-blue-500 text-[14px] md:text-lg flex flex-col justify-center items-center h-full -mt-6'>
-                <FcDataBackup className='text-[6rem] pb-2' />
-                <p className='font-medium text-[15px] md:text-[16px]'>Consultando datos....</p>
-              </div>
-            )}
-          {!!offeringExpensesAdjustment?.data?.length && searchParams && (
-            <ChartContainer
-              config={chartConfig}
-              className={cn(
-                'w-full h-[283px] sm:h-[345px] md:h-[380px] lg:h-[410px] xl:h-[410px] 2xl:h-[410px]'
-              )}
-            >
-              <BarChart
-                accessibilityLayer
-                data={offeringExpensesAdjustment?.data}
-                margin={{ top: 5, right: 5, left: -25, bottom: 10 }}
-              >
-                <CartesianGrid vertical={true} />
-                <XAxis
-                  dataKey='date'
-                  tickLine={false}
-                  tickMargin={10}
-                  axisLine={true}
-                  tickFormatter={(value) => formatDateToLimaDayMonthYear(value)}
-                  className='text-[12.5px] sm:text-[14px]'
-                />
-
-                <YAxis className='text-[12.5px] sm:text-[14px]' />
-                <ChartTooltip
-                  cursor={false}
-                  content={OfferingExpenseAdjustmentTooltipContent as any}
-                />
-
-                <ChartLegend
-                  content={
-                    <ChartLegendContent className='ml-6 sm:ml-8 text-[13px] md:text-[14px] gap-2 sm:gap-5' />
-                  }
-                />
-
-                <Bar
-                  dataKey='accumulatedOfferingPEN'
-                  stackId='offering'
-                  fill='var(--color-accumulatedOfferingPEN)'
-                  radius={[2, 2, 2, 2]}
-                />
-                <Bar
-                  dataKey='accumulatedOfferingEUR'
-                  stackId='offering'
-                  fill='var(--color-accumulatedOfferingEUR)'
-                  radius={[2, 2, 0, 0]}
-                />
-                <Bar
-                  dataKey='accumulatedOfferingUSD'
-                  stackId='offering'
-                  fill='var(--color-accumulatedOfferingUSD)'
-                  radius={[2, 2, 0, 0]}
-                />
-              </BarChart>
-            </ChartContainer>
-          )}
-          {!year && !offeringExpensesAdjustment?.data?.length && (
-            <div className='text-emerald-500 text-[14px] md:text-lg flex flex-col justify-center items-center h-full -mt-6'>
-              <FcDataConfiguration className='text-[6rem] pb-2' />
-              <p>Esperando parámetros de consulta...</p>
-            </div>
-          )}
-          {!offeringExpensesAdjustment?.isFetching &&
-            !offeringExpensesAdjustment?.data?.length &&
-            year && (
-              <div className='text-red-500 flex flex-col justify-center items-center h-full -mt-6'>
-                <FcDeleteDatabase className='text-[6rem] pb-2' />
-                <p className='font-medium text-[15px] md:text-[16px]'>
-                  No hay datos disponibles para mostrar.
-                </p>
-              </div>
-            )}
-        </CardContent>
-      )}
-    </Card>
+      }
+    >
+      <ChartContainer config={chartConfig} className='w-full h-[240px] sm:h-[270px] md:h-[310px] xl:h-[320px]'>
+        <BarChart accessibilityLayer data={offeringExpensesAdjustment?.data} margin={{ top: 5, right: 5, left: -25, bottom: 10 }}>
+          <CartesianGrid vertical={false} strokeDasharray='3 3' className='stroke-slate-200 dark:stroke-slate-700' />
+          <XAxis
+            dataKey='date'
+            tickLine={false}
+            tickMargin={10}
+            axisLine={false}
+            className='text-xs fill-slate-500 dark:fill-slate-400'
+            tickFormatter={(value) => formatDateToLimaDayMonthYear(value)}
+          />
+          <YAxis tickLine={false} axisLine={false} className='text-xs fill-slate-500 dark:fill-slate-400' />
+          <ChartTooltip
+            cursor={{ fill: 'rgba(0,0,0,0.05)' }}
+            content={OfferingExpenseAdjustmentTooltipContent as any}
+          />
+          <ChartLegend content={<ChartLegendContent className='flex flex-wrap justify-center gap-x-3 gap-y-1 text-xs' />} />
+          <Bar dataKey='accumulatedOfferingPEN' stackId='offering' fill='var(--color-accumulatedOfferingPEN)' radius={[2, 2, 2, 2]} />
+          <Bar dataKey='accumulatedOfferingEUR' stackId='offering' fill='var(--color-accumulatedOfferingEUR)' radius={[2, 2, 0, 0]} />
+          <Bar dataKey='accumulatedOfferingUSD' stackId='offering' fill='var(--color-accumulatedOfferingUSD)' radius={[2, 2, 0, 0]} />
+        </BarChart>
+      </ChartContainer>
+    </MetricCard>
   );
 };

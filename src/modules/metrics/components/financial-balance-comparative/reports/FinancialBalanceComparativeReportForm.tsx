@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useEffect, useState } from 'react';
 
 import { type z } from 'zod';
@@ -20,7 +15,7 @@ import {
   MetricFinancialBalanceComparisonSearchType,
   MetricFinancialBalanceComparisonSearchTypeNames,
 } from '@/modules/metrics/enums/metrics-search-type.enum';
-import { FinancialBalanceComparativeReportFormSchema } from '@/modules/metrics/validations/report-form-schema';
+import { FinancialBalanceComparativeReportFormSchema } from '@/modules/metrics/schemas/report-form-schema';
 import { getFinancialBalanceComparativeMetricsReport } from '@/modules/metrics/services/offering-comparative-metrics.service';
 
 import {
@@ -51,16 +46,15 @@ import { Checkbox } from '@/shared/components/ui/checkbox';
 import { Card, CardContent } from '@/shared/components/ui/card';
 import { Tabs, TabsContent } from '@/shared/components/ui/tabs';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
+import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
 
 interface Props {
-  churchId: string | undefined;
   dialogClose: () => void;
 }
 
-export const FinancialBalanceComparativeReportForm = ({
-  churchId,
-  dialogClose,
-}: Props): JSX.Element => {
+export const FinancialBalanceComparativeReportForm = ({ dialogClose }: Props): JSX.Element => {
+  const activeChurchId = useChurchMinistryContextStore((s) => s.activeChurchId);
+
   //* States
   const [isInputDisabled, setIsInputDisabled] = useState<boolean>(false);
   const [isSubmitButtonDisabled, setIsSubmitButtonDisabled] = useState<boolean>(true);
@@ -74,7 +68,7 @@ export const FinancialBalanceComparativeReportForm = ({
     resolver: zodResolver(FinancialBalanceComparativeReportFormSchema),
     defaultValues: {
       types: [MetricFinancialBalanceComparisonSearchType.IncomeAndExpensesComparativeByYear],
-      church: churchId,
+      church: activeChurchId ?? undefined,
       year: new Date().getFullYear().toString(),
       startMonth: months[new Date().getMonth()]?.value,
       endMonth: months[new Date().getMonth()]?.value,
@@ -93,8 +87,8 @@ export const FinancialBalanceComparativeReportForm = ({
 
   //* Effects
   useEffect(() => {
-    form.setValue('church', churchId ?? '');
-  }, [churchId]);
+    form.setValue('church', activeChurchId ?? '');
+  }, [activeChurchId]);
 
   //* Effects
   useEffect(() => {
@@ -112,7 +106,7 @@ export const FinancialBalanceComparativeReportForm = ({
       setIsSubmitButtonDisabled(true);
       setIsMessageErrorDisabled(true);
     }
-  }, [churchId, types]);
+  }, [activeChurchId, types]);
 
   //* Query Report and Event trigger
   const generateReportQuery = useQuery({
@@ -225,7 +219,7 @@ export const FinancialBalanceComparativeReportForm = ({
                                     className={cn(
                                       'justify-center w-full text-center px-2 text-[14px] md:text-[14px] ',
                                       !field.value &&
-                                        'text-slate-500  dark:text-slate-200 font-normal px-2'
+                                      'text-slate-500  dark:text-slate-200 font-normal px-2'
                                     )}
                                   >
                                     {field.value
@@ -292,7 +286,7 @@ export const FinancialBalanceComparativeReportForm = ({
                                     className={cn(
                                       'justify-center w-full text-center px-2 text-[14px] md:text-[14px]',
                                       !field.value &&
-                                        'text-slate-500  dark:text-slate-200 font-normal px-2'
+                                      'text-slate-500  dark:text-slate-200 font-normal px-2'
                                     )}
                                   >
                                     {field.value
@@ -374,10 +368,10 @@ export const FinancialBalanceComparativeReportForm = ({
                                           [];
                                         checked
                                           ? (updatedTypes = field.value
-                                              ? [...field.value, type]
-                                              : [type])
+                                            ? [...field.value, type]
+                                            : [type])
                                           : (updatedTypes =
-                                              field.value?.filter((value) => value !== type) ?? []);
+                                            field.value?.filter((value) => value !== type) ?? []);
 
                                         field.onChange(updatedTypes);
                                       }}
@@ -417,9 +411,9 @@ export const FinancialBalanceComparativeReportForm = ({
                     className={cn(
                       'w-full px-4 py-3 text-[14px] font-semibold rounded-lg shadow-lg transition-transform transform focus:outline-none focus:ring-red-300',
                       !generateReportQuery.isFetching &&
-                        'text-white hover:text-white dark:text-white bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:via-amber-700 hover:to-amber-800',
+                      'text-white hover:text-white dark:text-white bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:via-amber-700 hover:to-amber-800',
                       generateReportQuery.isFetching &&
-                        'bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-200 cursor-not-allowed animate-pulse'
+                      'bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-200 cursor-not-allowed animate-pulse'
                     )}
                   >
                     <FaRegFilePdf

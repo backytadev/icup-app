@@ -1,19 +1,18 @@
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useEffect, useState } from 'react';
 
 import CountUp from 'react-countup';
 import { PieChart, Pie } from 'recharts';
 import { FaDonate } from 'react-icons/fa';
-import { useQuery } from '@tanstack/react-query';
+
+import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
 
 import { ChartContainer, type ChartConfig } from '@/shared/components/ui/chart';
-import { Card, CardDescription, CardHeader, CardTitle } from '@/shared/components/ui/card';
+import { Card, CardContent } from '@/shared/components/ui/card';
 
 import { RecordOrder } from '@/shared/enums/record-order.enum';
 
 import { MetricSearchType } from '@/modules/metrics/enums/metrics-search-type.enum';
+import { useMetricsQuery } from '@/modules/metrics/hooks';
 import { getOfferingIncomeProportion } from '@/modules/metrics/services/offering-income-metrics.service';
 
 const chartConfigActive = {
@@ -40,11 +39,10 @@ interface MappedDataOptions {
   fill: string;
 }
 
-interface Props {
-  churchId: string | undefined;
-}
+export const OfferingIncomeProportionCard = (): JSX.Element => {
+  //* Context
+  const activeChurchId = useChurchMinistryContextStore((s) => s.activeChurchId);
 
-export const OfferingIncomeProportionCard = ({ churchId }: Props): JSX.Element => {
   //* States
   const [activeOfferingIncomeDataMapped, setActiveOfferingIncomeDataMapped] =
     useState<MappedDataOptions[]>();
@@ -52,17 +50,16 @@ export const OfferingIncomeProportionCard = ({ churchId }: Props): JSX.Element =
     useState<MappedDataOptions[]>();
 
   //* Queries
-  const { data } = useQuery({
-    queryKey: ['offering-income-proportion', churchId],
+  const { data } = useMetricsQuery({
+    queryKey: ['offering-income-proportion', activeChurchId],
     queryFn: () =>
       getOfferingIncomeProportion({
         searchType: MetricSearchType.OfferingIncomeByProportion,
         year: String(new Date().getFullYear()),
         order: RecordOrder.Ascending,
-        church: churchId ?? '',
+        church: activeChurchId ?? '',
       }),
-    retry: false,
-    enabled: !!churchId,
+    activeChurchId,
   });
 
   //* Effects
@@ -101,124 +98,114 @@ export const OfferingIncomeProportionCard = ({ churchId }: Props): JSX.Element =
   }, [data]);
 
   return (
-    <div className='w-full grid gap-6 xl:flex xl:gap-10 justify-center items-center px-5'>
-      <Card className='w-[270px] md:w-[300px] mx-auto xl:mx-0 cursor-default shadow-md dark:shadow-slate-700 dark:bg-slate-900 bg-slate-50'>
-        <CardHeader className='py-5'>
-          <div className='flex justify-center gap-4'>
-            <FaDonate className='text-[5rem] text-lime-500' />
-            <div className='flex flex-col gap-2 items-top justify-center'>
-              <CardTitle className='text-center text-[3rem] md:text-[3rem] lg:text-[3.2rem] xl:text-[3.5rem] font-extrabold leading-10'>
-                {
+    <div className='grid gap-5 xl:flex xl:gap-6 justify-center px-2'>
+
+      {/* Total registros */}
+      <Card className='w-[240px] md:w-[270px] mx-auto xl:mx-0 border-slate-200/80 dark:border-slate-700/50 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-shadow duration-300'>
+        <CardContent className='py-5 px-4 flex flex-row items-center justify-center gap-3 h-full'>
+          <div className='p-3 rounded-full bg-lime-50 dark:bg-lime-900/20'>
+            <FaDonate className='text-lime-500 text-[3.5rem]' />
+          </div>
+
+          <div className='flex flex-col items-center'>
+            <p className='text-[3rem] font-extrabold font-outfit text-slate-800 dark:text-slate-100 leading-none'>
+              <CountUp
+                end={Number(data?.totalOfferingIncomeRecordsCount)}
+                start={0}
+                duration={4}
+              />
+            </p>
+            <p className='text-[12px] font-inter text-slate-500 dark:text-slate-400 text-center font-medium'>
+              Registros totales
+            </p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Active + Inactive rate cards */}
+      <div className='flex flex-col justify-center items-center sm:flex-row gap-4 md:gap-5'>
+        {/* Active Rate */}
+        <Card className='w-[240px] md:w-[270px] cursor-default border-slate-200/80 dark:border-slate-700/50 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-shadow duration-300'>
+          <CardContent className='py-5 px-4 flex flex-col gap-3'>
+            <div className='flex items-center gap-10'>
+              <ChartContainer config={chartConfigActive} className='w-[90px] h-[90px] flex-shrink-0'>
+                <PieChart>
+                  <Pie data={activeOfferingIncomeDataMapped} dataKey='value' nameKey='name' />
+                </PieChart>
+              </ChartContainer>
+              <div className='flex flex-col items-center'>
+                <p className='text-[2.5rem] font-extrabold font-outfit text-slate-800 dark:text-slate-100 leading-none'>
                   <CountUp
-                    end={Number(data?.totalOfferingIncomeRecordsCount)}
+                    end={Number(data?.activeOfferingIncomeRecordsCount)}
                     start={0}
                     duration={4}
                   />
-                }
-              </CardTitle>
-              <CardDescription className='text-[15px] md:text-[15px] xl:text-[16px] font-bold text-center'>
-                Registros Totales
-              </CardDescription>
-            </div>
-          </div>
-        </CardHeader>
-      </Card>
-
-      <div className='flex flex-col justify-center items-center sm:flex-row gap-6 sm:gap-4 md:gap-8 xl:gap-10'>
-        {/* Active offerings */}
-        <Card className='w-[270px] md:w-[300px] cursor-default shadow-md dark:shadow-slate-700 dark:bg-slate-900 bg-slate-50'>
-          <CardHeader className='py-5'>
-            <div className='flex justify-center gap-4 h-[5rem] relative'>
-              <span className='absolute -top-3 left-12 md:left-14 font-bold text-[15px] md:text-[15px]'>
-                {(() => {
-                  const activeOfferingsIncome = data?.activeOfferingIncomeRecordsCount ?? 0;
-                  const inactiveOfferingsIncome = data?.inactiveOfferingIncomeRecordsCount ?? 0;
-                  const totalOfferingsIncome = activeOfferingsIncome + inactiveOfferingsIncome;
-
-                  return totalOfferingsIncome > 0 ? (
-                    <CountUp
-                      end={Number(
-                        ((activeOfferingsIncome / totalOfferingsIncome) * 100).toFixed(0)
-                      )}
-                      start={0}
-                      duration={4}
-                    />
-                  ) : (
-                    0
-                  );
-                })()}
-                %
-              </span>
-
-              <ChartContainer config={chartConfigActive} className='w-[55%] h-[130%]'>
-                <PieChart>
-                  <Pie data={activeOfferingIncomeDataMapped} dataKey='value' nameKey='name'></Pie>
-                </PieChart>
-              </ChartContainer>
-
-              <div className='flex flex-col  items-center justify-center'>
-                <CardDescription className='text-[15px] md:text-[15px] font-bold text-center'>
-                  Tasa de registros <span className='text-green-500'>Activas</span>
-                </CardDescription>
-                <CardTitle className='text-center text-[2.2rem] xl:text-[2.5rem] font-extrabold leading-10'>
-                  {
-                    <CountUp
-                      end={Number(data?.activeOfferingIncomeRecordsCount)}
-                      start={0}
-                      duration={4}
-                    />
-                  }
-                </CardTitle>
+                </p>
+                <p className='text-[12px] font-inter text-emerald-500 font-semibold mt-0.5'>Activos</p>
+                <p className='text-[1.1rem] font-bold font-outfit text-emerald-500 leading-none mt-1'>
+                  {(() => {
+                    const activeOfferingsIncome = data?.activeOfferingIncomeRecordsCount ?? 0;
+                    const inactiveOfferingsIncome = data?.inactiveOfferingIncomeRecordsCount ?? 0;
+                    const totalOfferingsIncome = activeOfferingsIncome + inactiveOfferingsIncome;
+                    return totalOfferingsIncome > 0 ? (
+                      <CountUp
+                        end={Number(
+                          ((activeOfferingsIncome / totalOfferingsIncome) * 100).toFixed(0)
+                        )}
+                        start={0}
+                        duration={4}
+                      />
+                    ) : (
+                      0
+                    );
+                  })()}
+                  %
+                </p>
               </div>
             </div>
-          </CardHeader>
+          </CardContent>
         </Card>
 
-        {/* Inactive Offerings */}
-        <Card className='w-[270px] md:w-[300px] cursor-default shadow-md dark:shadow-slate-700 dark:bg-slate-900 bg-slate-50'>
-          <CardHeader className='py-5'>
-            <div className='flex justify-center gap-4 h-[5rem] relative'>
-              <span className='absolute -top-3 left-12 md:left-14 font-bold text-[15px] md:text-[15px]'>
-                {(() => {
-                  const activeOfferingsIncome = data?.activeOfferingIncomeRecordsCount ?? 0;
-                  const inactiveOfferingsIncome = data?.inactiveOfferingIncomeRecordsCount ?? 0;
-                  const totalOfferingsIncome = activeOfferingsIncome + inactiveOfferingsIncome;
-
-                  return totalOfferingsIncome > 0 ? (
-                    <CountUp
-                      end={Number(
-                        ((inactiveOfferingsIncome / totalOfferingsIncome) * 100).toFixed(0)
-                      )}
-                      start={0}
-                      duration={4}
-                    />
-                  ) : (
-                    0
-                  );
-                })()}
-                %
-              </span>
-              <ChartContainer config={chartConfigInactive} className='w-[55%] h-[130%]'>
+        {/* Inactive Rate */}
+        <Card className='w-[240px] md:w-[270px] cursor-default border-slate-200/80 dark:border-slate-700/50 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-shadow duration-300'>
+          <CardContent className='py-5 px-4 flex flex-col gap-3'>
+            <div className='flex items-center gap-10'>
+              <ChartContainer config={chartConfigInactive} className='w-[90px] h-[90px] flex-shrink-0'>
                 <PieChart>
-                  <Pie data={inactiveOfferingIncomeDataMapped} dataKey='value' nameKey='name'></Pie>
+                  <Pie data={inactiveOfferingIncomeDataMapped} dataKey='value' nameKey='name' />
                 </PieChart>
               </ChartContainer>
-              <div className='flex flex-col  items-center justify-center'>
-                <CardDescription className='text-[15px] md:text-[15px] font-bold text-center'>
-                  Tasa de registros <span className='text-red-500'>Inactivas</span>
-                </CardDescription>
-                <CardTitle className='text-center text-[2.2rem] xl:text-[2.5rem] font-extrabold leading-10'>
-                  {
-                    <CountUp
-                      end={Number(data?.inactiveOfferingIncomeRecordsCount)}
-                      start={0}
-                      duration={4}
-                    />
-                  }
-                </CardTitle>
+              <div className='flex flex-col items-center'>
+                <p className='text-[2rem] font-extrabold font-outfit text-slate-800 dark:text-slate-100 leading-none'>
+                  <CountUp
+                    end={Number(data?.inactiveOfferingIncomeRecordsCount)}
+                    start={0}
+                    duration={4}
+                  />
+                </p>
+                <p className='text-[12px] font-inter text-red-500 font-semibold mt-0.5'>Inactivos</p>
+                <p className='text-[1.1rem] font-bold font-outfit text-red-500 leading-none mt-1'>
+                  {(() => {
+                    const activeOfferingsIncome = data?.activeOfferingIncomeRecordsCount ?? 0;
+                    const inactiveOfferingsIncome = data?.inactiveOfferingIncomeRecordsCount ?? 0;
+                    const totalOfferingsIncome = activeOfferingsIncome + inactiveOfferingsIncome;
+                    return totalOfferingsIncome > 0 ? (
+                      <CountUp
+                        end={Number(
+                          ((inactiveOfferingsIncome / totalOfferingsIncome) * 100).toFixed(0)
+                        )}
+                        start={0}
+                        duration={4}
+                      />
+                    ) : (
+                      0
+                    );
+                  })()}
+                  %
+                </p>
               </div>
             </div>
-          </CardHeader>
+          </CardContent>
         </Card>
       </div>
     </div>

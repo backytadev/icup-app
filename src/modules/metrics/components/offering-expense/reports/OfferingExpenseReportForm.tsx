@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useEffect, useState } from 'react';
 
 import { type z } from 'zod';
@@ -20,7 +15,7 @@ import {
   MetricOfferingExpenseSearchType,
   MetricOfferingExpenseSearchTypeNames,
 } from '@/modules/metrics/enums/metrics-search-type.enum';
-import { offeringExpenseReportFormSchema } from '@/modules/metrics/validations/report-form-schema';
+import { offeringExpenseReportFormSchema } from '@/modules/metrics/schemas/report-form-schema';
 import { getOfferingExpenseMetricsReport } from '@/modules/metrics/services/offering-expense-metrics.service';
 
 import {
@@ -48,22 +43,22 @@ import {
 } from '@/shared/components/ui/select';
 import { Button } from '@/shared/components/ui/button';
 import { Checkbox } from '@/shared/components/ui/checkbox';
-import { Card, CardContent } from '@/shared/components/ui/card';
-import { Tabs, TabsContent } from '@/shared/components/ui/tabs';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
+import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
 
 interface Props {
-  churchId: string | undefined;
   dialogClose: () => void;
 }
 
-export const OfferingExpenseReportForm = ({ churchId, dialogClose }: Props): JSX.Element => {
+export const OfferingExpenseReportForm = ({ dialogClose }: Props): JSX.Element => {
+  const activeChurchId = useChurchMinistryContextStore((s) => s.activeChurchId);
+
   //* States
   const [isInputDisabled, setIsInputDisabled] = useState<boolean>(false);
   const [isSubmitButtonDisabled, setIsSubmitButtonDisabled] = useState<boolean>(true);
   const [isMessageErrorDisabled, setIsMessageErrorDisabled] = useState<boolean>(true);
-  const [isInputSearchEndMonthOpen, setIsInputSearchEndMonthOpen] = useState<boolean>(false);
   const [isInputSearchStartMonthOpen, setIsInputSearchStartMonthOpen] = useState<boolean>(false);
+  const [isInputSearchEndMonthOpen, setIsInputSearchEndMonthOpen] = useState<boolean>(false);
 
   //* Form
   const form = useForm<z.infer<typeof offeringExpenseReportFormSchema>>({
@@ -71,7 +66,7 @@ export const OfferingExpenseReportForm = ({ churchId, dialogClose }: Props): JSX
     resolver: zodResolver(offeringExpenseReportFormSchema),
     defaultValues: {
       types: [MetricOfferingExpenseSearchType.OperationalOfferingExpenses],
-      church: churchId,
+      church: activeChurchId ?? undefined,
       year: new Date().getFullYear().toString(),
       startMonth: months[new Date().getMonth()]?.value,
       endMonth: months[new Date().getMonth()]?.value,
@@ -90,10 +85,9 @@ export const OfferingExpenseReportForm = ({ churchId, dialogClose }: Props): JSX
 
   //* Effects
   useEffect(() => {
-    form.setValue('church', churchId ?? '');
-  }, [churchId]);
+    form.setValue('church', activeChurchId ?? '');
+  }, [activeChurchId]);
 
-  //* Effects
   useEffect(() => {
     if (form.formState.errors && Object.values(form.formState.errors).length > 0) {
       setIsSubmitButtonDisabled(true);
@@ -109,7 +103,7 @@ export const OfferingExpenseReportForm = ({ churchId, dialogClose }: Props): JSX
       setIsSubmitButtonDisabled(true);
       setIsMessageErrorDisabled(true);
     }
-  }, [churchId, types]);
+  }, [activeChurchId, types]);
 
   //* Query Report and Event trigger
   const generateReportQuery = useQuery({
@@ -133,319 +127,348 @@ export const OfferingExpenseReportForm = ({ churchId, dialogClose }: Props): JSX
   };
 
   return (
-    <Tabs
-      defaultValue='general-info'
-      className='w-auto -mt-8 sm:w-[480px] md:w-[550px] lg:w-[550px] xl:w-[600px]'
-    >
-      <h2 className='text-center text-yellow-500  leading-6 pb-1 font-bold text-[24px] sm:text-[26px] md:text-[28px]'>
-        Generar Reporte
-      </h2>
+    <div className='w-full -mt-2 md:-mt-6'>
 
-      <TabsContent value='general-info' className='overflow-y-auto'>
-        <Card className='w-full'>
-          <CardContent className='py-3 px-3'>
-            <span className='text-[13.5px] md:text-[14px] font-medium dark:text-slate-400 text-slate-500'>
-              👋🏻 Bienvenido al generador de reportes, por favor selecciona las opciones que quieres
-              agregar al reporte.
-            </span>
+      {/* Header */}
+      <div className='relative overflow-hidden rounded-t-xl bg-gradient-to-r from-amber-500 via-amber-600 to-orange-600 dark:from-amber-700 dark:via-amber-800 dark:to-orange-800 px-5 py-4'>
+        <div className='flex items-center justify-between gap-3'>
+          <div className='flex-1 min-w-0'>
+            <h2 className='text-base md:text-xl font-bold text-white font-outfit'>
+              Generar Reporte
+            </h2>
+            <p className='text-amber-100/80 text-[12px] md:text-[13px] font-inter mt-0.5'>
+              Selecciona las opciones para el reporte PDF de gastos de ofrendas.
+            </p>
+          </div>
+          <div className='flex-shrink-0 p-2 md:p-2.5 bg-white/10 rounded-lg'>
+            <FaRegFilePdf className='w-5 h-5 md:w-6 md:h-6 text-white/90' />
+          </div>
+        </div>
+      </div>
 
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(handleSubmit)}
-                className='w-full pt-2 flex flex-col gap-x-10 gap-y-4 md:gap-y-4 px-2 md:px-4'
-              >
-                <FormField
-                  control={form.control}
-                  name='year'
-                  render={({ field }) => {
-                    return (
-                      <FormItem className='flex justify-start gap-5 items-center'>
-                        <div className='w-auto'>
-                          <FormLabel className='text-[14.5px] md:text-[14.5px] font-bold'>
-                            Año de búsqueda
-                          </FormLabel>
-                          <FormDescription className='text-[13px] md:text-[13px] font-medium'>
-                            Selecciona el año de búsqueda que tendrán los reportes.
-                          </FormDescription>
-                        </div>
-                        <Select
-                          onValueChange={field.onChange}
-                          value={field.value}
-                          disabled={isInputDisabled}
-                        >
-                          <FormControl className='text-[14px] md:text-[14px] w-[5rem]'>
-                            <SelectTrigger>
-                              {field.value ? <SelectValue placeholder='Año' /> : 'Año'}
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent className={cn(years.length >= 3 ? 'h-[8rem]' : 'h-auto')}>
-                            {Object.values(years).map(({ label, value }) => (
-                              <SelectItem className={`text-[14px]`} key={value} value={label}>
-                                {label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage className='text-[13px]' />
-                      </FormItem>
-                    );
-                  }}
-                />
+      {/* Form Content */}
+      <div className='bg-white dark:bg-slate-900 border border-t-0 border-slate-200/80 dark:border-slate-700/50 rounded-b-xl'>
+        <div className='p-4 md:p-5 space-y-5'>
 
-                <div className='flex flex-col gap-2 w-full'>
-                  <FormLabel className='text-[14.5px] md:text-[14.5px] font-bold'>
-                    Rango de meses de búsqueda
-                  </FormLabel>
-                  <FormDescription className='-mt-2 text-[13px] md:text-[13px] font-medium'>
-                    Selecciona el rango de meses de búsqueda que tendrán los reportes.
-                  </FormDescription>
+          <span className='text-[13px] md:text-[14px] font-medium dark:text-slate-400 text-slate-500 font-inter'>
+            👋🏻 Bienvenido al generador de reportes, por favor selecciona las opciones que quieres
+            agregar al reporte.
+          </span>
 
-                  <div className='flex gap-4 w-full'>
-                    <FormField
-                      control={form.control}
-                      name='startMonth'
-                      render={({ field }) => {
-                        return (
-                          <FormItem className='w-full'>
-                            <Popover
-                              open={isInputSearchStartMonthOpen}
-                              onOpenChange={setIsInputSearchStartMonthOpen}
-                            >
-                              <PopoverTrigger asChild>
-                                <FormControl className='text-[14px] md:text-[14px]'>
-                                  <Button
-                                    disabled={isInputDisabled}
-                                    variant='outline'
-                                    role='combobox'
-                                    className={cn(
-                                      'justify-center w-full text-center px-2 text-[14px] md:text-[14px] ',
-                                      !field.value &&
-                                        'text-slate-500  dark:text-slate-200 font-normal px-2'
-                                    )}
-                                  >
-                                    {field.value
-                                      ? months.find((month) => month.value === field.value)?.label
-                                      : 'Elige un mes'}
-                                    <CaretSortIcon className='h-4 w-4 shrink-0' />
-                                  </Button>
-                                </FormControl>
-                              </PopoverTrigger>
-                              <PopoverContent align='center' className='w-auto px-4 py-2'>
-                                <Command>
-                                  <CommandInput
-                                    placeholder='Busque un mes'
-                                    className='h-9 text-[14px] md:text-[14px]'
-                                  />
-                                  <CommandEmpty>Mes no encontrado.</CommandEmpty>
-                                  <CommandGroup className='max-h-[100px] h-auto'>
-                                    {months.map((month) => (
-                                      <CommandItem
-                                        className='text-[14px] md:text-[14px]'
-                                        value={month.label}
-                                        key={month.value}
-                                        onSelect={() => {
-                                          form.setValue('startMonth', month.value);
-                                          setIsInputSearchStartMonthOpen(false);
-                                        }}
-                                      >
-                                        {month.label}
-                                        <CheckIcon
-                                          className={cn(
-                                            'mr-auto h-4 w-4',
-                                            month.value === field.value
-                                              ? 'opacity-100'
-                                              : 'opacity-0'
-                                          )}
-                                        />
-                                      </CommandItem>
-                                    ))}
-                                  </CommandGroup>
-                                </Command>
-                              </PopoverContent>
-                            </Popover>
-                            <FormMessage className='text-[13px]' />
-                          </FormItem>
-                        );
-                      }}
-                    />
-                    <FormField
-                      control={form.control}
-                      name='endMonth'
-                      render={({ field }) => {
-                        return (
-                          <FormItem className='w-full'>
-                            <Popover
-                              open={isInputSearchEndMonthOpen}
-                              onOpenChange={setIsInputSearchEndMonthOpen}
-                            >
-                              <PopoverTrigger asChild>
-                                <FormControl className='text-[14px] md:text-[14px]'>
-                                  <Button
-                                    disabled={isInputDisabled}
-                                    variant='outline'
-                                    role='combobox'
-                                    className={cn(
-                                      'justify-center w-full text-center px-2 text-[14px] md:text-[14px] ',
-                                      !field.value &&
-                                        'text-slate-500  dark:text-slate-200 font-normal px-2'
-                                    )}
-                                  >
-                                    {field.value
-                                      ? months.find((month) => month.value === field.value)?.label
-                                      : 'Elige un mes'}
-                                    <CaretSortIcon className='h-4 w-4 shrink-0' />
-                                  </Button>
-                                </FormControl>
-                              </PopoverTrigger>
-                              <PopoverContent align='center' className='w-auto px-4 py-2'>
-                                <Command>
-                                  <CommandInput
-                                    placeholder='Busque un mes'
-                                    className='h-9 text-[14px] md:text-[14px]'
-                                  />
-                                  <CommandEmpty>Mes no encontrado.</CommandEmpty>
-                                  <CommandGroup className='max-h-[100px] h-auto'>
-                                    {months.map((month) => (
-                                      <CommandItem
-                                        className='text-[14px] md:text-[14px]'
-                                        value={month.label}
-                                        key={month.value}
-                                        onSelect={() => {
-                                          form.setValue('endMonth', month.value);
-                                          setIsInputSearchEndMonthOpen(false);
-                                        }}
-                                      >
-                                        {month.label}
-                                        <CheckIcon
-                                          className={cn(
-                                            'ml-auto h-4 w-4',
-                                            month.value === field.value
-                                              ? 'opacity-100'
-                                              : 'opacity-0'
-                                          )}
-                                        />
-                                      </CommandItem>
-                                    ))}
-                                  </CommandGroup>
-                                </Command>
-                              </PopoverContent>
-                            </Popover>
-                            <FormMessage className='text-[13px]' />
-                          </FormItem>
-                        );
-                      }}
-                    />
-                  </div>
-                </div>
-
-                <FormField
-                  control={form.control}
-                  name='types'
-                  render={() => (
-                    <FormItem>
-                      <div>
-                        <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>
-                          Opciones
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(handleSubmit)}
+              className='space-y-5'
+            >
+              {/* Año de búsqueda */}
+              <FormField
+                control={form.control}
+                name='year'
+                render={({ field }) => {
+                  return (
+                    <FormItem className='flex justify-start gap-5 items-center'>
+                      <div className='w-auto'>
+                        <FormLabel className='text-[13px] md:text-[14px] font-semibold text-slate-700 dark:text-slate-300 font-inter'>
+                          Año de búsqueda
                         </FormLabel>
+                        <FormDescription className='text-[12px] md:text-[13px] text-slate-500 dark:text-slate-400 font-inter'>
+                          Selecciona el año de búsqueda que tendrán los reportes.
+                        </FormDescription>
                       </div>
-                      <div className='flex flex-col md:grid md:grid-cols-2 items-start md:items-center mx-auto gap-x-[5rem] justify-between gap-y-2'>
-                        {Object.values(MetricOfferingExpenseSearchType).map((type) => (
-                          <FormField
-                            key={type}
-                            control={form.control}
-                            name='types'
-                            render={({ field }) => {
-                              return (
-                                <FormItem
-                                  key={type}
-                                  className='flex flex-row items-center space-x-3 space-y-0'
-                                >
-                                  <FormControl className='text-[14px] md:text-[14px]'>
-                                    <Checkbox
-                                      disabled={isInputDisabled}
-                                      checked={field.value?.includes(type)}
-                                      onCheckedChange={(checked) => {
-                                        let updatedTypes: MetricOfferingExpenseSearchType[] = [];
-                                        checked
-                                          ? (updatedTypes = field.value
-                                              ? [...field.value, type]
-                                              : [type])
-                                          : (updatedTypes =
-                                              field.value?.filter((value) => value !== type) ?? []);
-
-                                        field.onChange(updatedTypes);
-                                      }}
-                                    />
-                                  </FormControl>
-                                  <FormLabel
-                                    className={`text-[14px] md:text-[14px] font-medium cursor-pointer`}
-                                  >
-                                    {MetricOfferingExpenseSearchTypeNames[type]}
-                                  </FormLabel>
-                                </FormItem>
-                              );
-                            }}
-                          />
-                        ))}
-                      </div>
+                      <Select
+                        onValueChange={field.onChange}
+                        value={field.value}
+                        disabled={isInputDisabled}
+                      >
+                        <FormControl className='text-[14px] md:text-[14px] w-[4.8rem] font-medium'>
+                          <SelectTrigger>
+                            {field.value ? <SelectValue placeholder='Año' /> : 'Año'}
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className={cn(years.length >= 3 ? 'h-[8rem]' : 'h-auto')}>
+                          {Object.values(years).map(({ label, value }) => (
+                            <SelectItem className='text-[14px]' key={value} value={label}>
+                              {label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                       <FormMessage className='text-[13px]' />
                     </FormItem>
-                  )}
-                />
+                  );
+                }}
+              />
 
+              {/* Divider */}
+              <div className='border-t border-slate-200 dark:border-slate-700/50' />
+
+              {/* Rango de meses */}
+              <div className='flex flex-col gap-2 w-full'>
+                <FormLabel className='text-[13px] md:text-[14px] font-semibold text-slate-700 dark:text-slate-300 font-inter'>
+                  Rango de meses de búsqueda
+                </FormLabel>
+                <FormDescription className='-mt-1 text-[12px] md:text-[13px] text-slate-500 dark:text-slate-400 font-inter'>
+                  Selecciona el rango de meses de búsqueda que tendrán los reportes.
+                </FormDescription>
+
+                <div className='flex gap-4 w-full'>
+                  <FormField
+                    control={form.control}
+                    name='startMonth'
+                    render={({ field }) => {
+                      return (
+                        <FormItem className='w-full'>
+                          <Popover
+                            open={isInputSearchStartMonthOpen}
+                            onOpenChange={setIsInputSearchStartMonthOpen}
+                          >
+                            <PopoverTrigger asChild>
+                              <FormControl className='text-[14px] md:text-[14px]'>
+                                <Button
+                                  disabled={isInputDisabled}
+                                  variant='outline'
+                                  role='combobox'
+                                  className={cn(
+                                    'justify-center w-full text-center px-2 text-[14px] md:text-[14px]',
+                                    !field.value &&
+                                    'text-slate-500 dark:text-slate-200 font-normal px-2'
+                                  )}
+                                >
+                                  {field.value
+                                    ? months.find((month) => month.value === field.value)?.label
+                                    : 'Elige un mes'}
+                                  <CaretSortIcon className='h-4 w-4 shrink-0' />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent align='center' className='w-auto px-4 py-2'>
+                              <Command>
+                                <CommandInput
+                                  placeholder='Busque un mes'
+                                  className='h-9 text-[14px] md:text-[14px]'
+                                />
+                                <CommandEmpty>Mes no encontrado.</CommandEmpty>
+                                <CommandGroup className='max-h-[100px] h-auto'>
+                                  {months.map((month) => (
+                                    <CommandItem
+                                      className='text-[14px] md:text-[14px]'
+                                      value={month.label}
+                                      key={month.value}
+                                      onSelect={() => {
+                                        form.setValue('startMonth', month.value);
+                                        setIsInputSearchStartMonthOpen(false);
+                                      }}
+                                    >
+                                      {month.label}
+                                      <CheckIcon
+                                        className={cn(
+                                          'ml-auto h-4 w-4',
+                                          month.value === field.value
+                                            ? 'opacity-100'
+                                            : 'opacity-0'
+                                        )}
+                                      />
+                                    </CommandItem>
+                                  ))}
+                                </CommandGroup>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                          <FormMessage className='text-[13px]' />
+                        </FormItem>
+                      );
+                    }}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name='endMonth'
+                    render={({ field }) => {
+                      return (
+                        <FormItem className='w-full'>
+                          <Popover
+                            open={isInputSearchEndMonthOpen}
+                            onOpenChange={setIsInputSearchEndMonthOpen}
+                          >
+                            <PopoverTrigger asChild>
+                              <FormControl className='text-[14px] md:text-[14px]'>
+                                <Button
+                                  disabled={isInputDisabled}
+                                  variant='outline'
+                                  role='combobox'
+                                  className={cn(
+                                    'justify-center w-full text-center px-2 text-[14px] md:text-[14px]',
+                                    !field.value &&
+                                    'text-slate-500 dark:text-slate-200 font-normal px-2'
+                                  )}
+                                >
+                                  {field.value
+                                    ? months.find((month) => month.value === field.value)?.label
+                                    : 'Elige un mes'}
+                                  <CaretSortIcon className='h-4 w-4 shrink-0' />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent align='center' className='w-auto px-4 py-2'>
+                              <Command>
+                                <CommandInput
+                                  placeholder='Busque un mes'
+                                  className='h-9 text-[14px] md:text-[14px]'
+                                />
+                                <CommandEmpty>Mes no encontrado.</CommandEmpty>
+                                <CommandGroup className='max-h-[100px] h-auto'>
+                                  {months.map((month) => (
+                                    <CommandItem
+                                      className='text-[14px] md:text-[14px]'
+                                      value={month.label}
+                                      key={month.value}
+                                      onSelect={() => {
+                                        form.setValue('endMonth', month.value);
+                                        setIsInputSearchEndMonthOpen(false);
+                                      }}
+                                    >
+                                      {month.label}
+                                      <CheckIcon
+                                        className={cn(
+                                          'ml-auto h-4 w-4',
+                                          month.value === field.value
+                                            ? 'opacity-100'
+                                            : 'opacity-0'
+                                        )}
+                                      />
+                                    </CommandItem>
+                                  ))}
+                                </CommandGroup>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+                          <FormMessage className='text-[13px]' />
+                        </FormItem>
+                      );
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Divider */}
+              <div className='border-t border-slate-200 dark:border-slate-700/50' />
+
+              {/* Opciones del Reporte */}
+              <FormField
+                control={form.control}
+                name='types'
+                render={() => (
+                  <FormItem>
+                    <div className='mb-3'>
+                      <span className='text-[11px] font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider font-inter'>
+                        Opciones del Reporte
+                      </span>
+                    </div>
+                    <div className='flex flex-col md:grid md:grid-cols-2 items-start md:items-center mx-auto gap-x-[5rem] justify-between gap-y-2'>
+                      {Object.values(MetricOfferingExpenseSearchType).map((type) => (
+                        <FormField
+                          key={type}
+                          control={form.control}
+                          name='types'
+                          render={({ field }) => {
+                            return (
+                              <FormItem
+                                key={type}
+                                className='flex flex-row items-center space-x-3 space-y-0'
+                              >
+                                <FormControl className='text-[14px] md:text-[14px]'>
+                                  <Checkbox
+                                    disabled={isInputDisabled}
+                                    checked={field.value?.includes(type)}
+                                    onCheckedChange={(checked) => {
+                                      let updatedTypes: MetricOfferingExpenseSearchType[] = [];
+                                      checked
+                                        ? (updatedTypes = field.value
+                                          ? [...field.value, type]
+                                          : [type])
+                                        : (updatedTypes =
+                                          field.value?.filter((value) => value !== type) ?? []);
+
+                                      field.onChange(updatedTypes);
+                                    }}
+                                  />
+                                </FormControl>
+                                <FormLabel className='text-[13px] md:text-[14px] font-medium font-inter cursor-pointer text-slate-600 dark:text-slate-400'>
+                                  {MetricOfferingExpenseSearchTypeNames[type]}
+                                </FormLabel>
+                              </FormItem>
+                            );
+                          }}
+                        />
+                      ))}
+                    </div>
+                    <FormMessage className='text-[13px]' />
+                  </FormItem>
+                )}
+              />
+
+              {/* Divider */}
+              <div className='border-t border-slate-200 dark:border-slate-700/50' />
+
+              {/* Messages + Submit */}
+              <div className='flex flex-col gap-4'>
                 {isMessageErrorDisabled ? (
-                  <p className='-mb-3 md:-mb-3 md:row-start-5 md:row-end-6 md:col-start-1 md:col-end-3 mx-auto md:w-[80%] lg:w-[80%] text-center text-red-500 text-[12.5px] md:text-[13px] font-bold'>
+                  <p className='text-center text-[12px] md:text-[13px] font-medium text-red-500 font-inter px-4 py-2 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800/30'>
                     ❌ Datos incompletos, completa los campos requeridos.
                   </p>
                 ) : (
-                  <p className='-mt-2 order-last md:-mt-3 md:row-start-6 md:row-end-7 md:col-start-1 md:col-end-3 mx-auto md:w-[80%] lg:w-[80%] text-center text-green-500 text-[12.5px] md:text-[13px] font-bold'>
+                  <p className='text-center text-[12px] md:text-[13px] font-medium text-emerald-600 dark:text-emerald-400 font-inter px-4 py-2 rounded-lg bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800/30'>
                     ¡Campos completados correctamente!
                   </p>
                 )}
 
-                <div className='w-full md:w-[20rem] md:mx-auto col-start-1 col-end-3 text-sm md:text-md xl:text-base'>
-                  <Button
-                    disabled={isSubmitButtonDisabled}
-                    type='submit'
-                    variant='ghost'
-                    className={cn(
-                      'w-full px-4 py-3 text-[14px] font-semibold rounded-lg shadow-lg transition-transform transform focus:outline-none focus:ring-red-300',
-                      !generateReportQuery.isFetching &&
-                        'text-white hover:text-white dark:text-white bg-gradient-to-r from-amber-500 via-amber-600 to-amber-700 hover:from-amber-600 hover:via-amber-700 hover:to-amber-800',
-                      generateReportQuery.isFetching &&
-                        'bg-gray-100 dark:bg-gray-600 text-gray-600 dark:text-gray-200 cursor-not-allowed animate-pulse'
-                    )}
-                    onClick={() => {
-                      setTimeout(() => {
-                        if (Object.keys(form.formState.errors).length === 0) {
-                          setIsInputDisabled(true);
-                          setIsSubmitButtonDisabled(true);
-                        }
-                      }, 100);
-                    }}
-                  >
-                    <FaRegFilePdf
-                      className={cn(
-                        'mr-2 text-[1.5rem] text-white',
-                        generateReportQuery.isFetching && 'text-gray-600 dark:text-gray-200'
-                      )}
-                    />
-                    {generateReportQuery.isFetching ? 'Generando Reporte...' : 'Generar Reporte'}
-                  </Button>
-                </div>
-              </form>
-            </Form>
-            <div className='mt-3'>
-              <p className='text-blue-500 text-[14px] md:text-[14px] font-bold mb-2'>
-                Consideraciones
-              </p>
-              <p className='text-[13px] md:text-[13px] font-medium'>
-                ✅ Se generara el reporte pdf con la iglesia actual de la búsqueda.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
-      </TabsContent>
-    </Tabs>
+                <Button
+                  disabled={isSubmitButtonDisabled}
+                  type='submit'
+                  className={cn(
+                    'w-full md:w-[280px] md:mx-auto text-[13px] md:text-[14px] font-semibold font-inter',
+                    !generateReportQuery.isFetching &&
+                    'bg-gradient-to-r from-amber-500 via-amber-600 to-orange-600 text-white shadow-lg shadow-amber-500/25 hover:shadow-xl hover:shadow-amber-500/30 hover:scale-[1.02] active:scale-[0.98] transition-all duration-300',
+                    generateReportQuery.isFetching &&
+                    'bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed'
+                  )}
+                  onClick={() => {
+                    setTimeout(() => {
+                      if (Object.keys(form.formState.errors).length === 0) {
+                        setIsInputDisabled(true);
+                        setIsSubmitButtonDisabled(true);
+                      }
+                    }, 100);
+                  }}
+                >
+                  {generateReportQuery.isFetching ? (
+                    <span className='flex items-center gap-2'>
+                      <span className='w-4 h-4 border-2 border-slate-400/30 border-t-slate-400 rounded-full animate-spin' />
+                      Generando Reporte...
+                    </span>
+                  ) : (
+                    <span className='flex items-center gap-2'>
+                      <FaRegFilePdf className='text-[1.1rem]' />
+                      Generar Reporte
+                    </span>
+                  )}
+                </Button>
+              </div>
+
+              {/* Consideraciones */}
+              <div className='p-3 rounded-lg bg-blue-50/80 dark:bg-blue-900/10 border border-blue-200/50 dark:border-blue-700/30'>
+                <p className='text-blue-600 dark:text-blue-400 text-[12px] md:text-[13px] font-semibold font-inter mb-1'>
+                  Consideraciones
+                </p>
+                <p className='text-[12px] md:text-[13px] font-medium font-inter text-slate-600 dark:text-slate-400'>
+                  ✅ Se generará el reporte PDF con la iglesia actual de la búsqueda.
+                </p>
+              </div>
+
+            </form>
+          </Form>
+        </div>
+      </div>
+    </div>
   );
 };

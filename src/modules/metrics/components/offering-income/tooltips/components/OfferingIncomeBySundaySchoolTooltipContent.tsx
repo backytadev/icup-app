@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
+import { TbBook } from 'react-icons/tb';
+
 import {
   OfferingIncomeCreationCategory,
   OfferingIncomeCreationCategoryNames,
@@ -30,125 +32,169 @@ export const OfferingIncomeBySundaySchoolTooltipContent = (
     .reduce((result: any, entry: any) => result + entry.value, 0)
     .toFixed(2);
 
+  const hasPEN = +totalAccumulatedPEN > 0;
+  const hasUSD = +totalAccumulatedUSD > 0;
+  const hasEUR = +totalAccumulatedEUR > 0;
+
   return (
-    <div className='grid min-w-[8rem] items-start gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl'>
-      <p className='font-medium text-[14px] sm:text-[14px]'>{`${label?.split('-')?.reverse()?.join('/')}`}</p>
-      {payload[0]?.payload?.allOfferings?.length > 1 && (
-        <span className='font-medium text-[13.5px] md:text-[13.5px]'>Lista de Ofrendas</span>
-      )}
-      <ul className='list grid gap-1.5'>
-        {(() => {
-          let count = 0;
-          return payload.map((entry, _) => {
-            if (entry.value) {
-              count += 1;
-              return (
-                <div key={`${entry.dataKey}-${entry.payload.category}`}>
-                  <li className='flex items-center font-medium text-[13.5px] sm:text-[13.5px]'>
-                    <span
-                      className='inline-block h-2.5 w-2.5 rounded-[2px] mr-2'
-                      style={{
-                        backgroundColor: entry.color,
-                        border: `1px solid ${entry.color}`,
-                      }}
-                    ></span>
-                    <span className='font-semibold'>
-                      {`${
-                        entry?.dataKey !== 'accumulatedOfferingPEN' &&
+    <div className='min-w-[190px] max-w-[290px] rounded-xl border border-slate-200/80 dark:border-slate-700/60 bg-white dark:bg-slate-900 overflow-hidden shadow-lg'>
+      {/* Header */}
+      <div className='px-3 py-2 bg-gradient-to-r from-orange-50 to-amber-50/30 dark:from-orange-900/20 dark:to-amber-900/10 border-b border-slate-200/60 dark:border-slate-700/40'>
+        <div className='flex items-center gap-2'>
+          <div className='p-1 rounded-md bg-orange-500/10 dark:bg-orange-500/20'>
+            <TbBook className='w-3.5 h-3.5 text-orange-600 dark:text-orange-400' />
+          </div>
+          <span className='font-outfit font-semibold text-[13px] text-slate-800 dark:text-slate-100 truncate'>
+            {label?.split('-')?.reverse()?.join('/')}
+          </span>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div className='px-3 py-2.5 space-y-2'>
+        {/* Entries */}
+        <div className='space-y-1'>
+          {payload[0]?.payload?.allOfferings?.length > 1 && (
+            <span className='font-inter text-[10px] uppercase tracking-wider font-semibold text-slate-400 dark:text-slate-500'>
+              Lista de Ofrendas
+            </span>
+          )}
+          {(() => {
+            let count = 0;
+            return payload.map((entry, _) => {
+              if (entry.value) {
+                count += 1;
+                return (
+                  <div
+                    key={`${entry.dataKey}-${entry.payload.category}`}
+                    className='flex items-center justify-between gap-3'
+                  >
+                    <div className='flex items-center gap-2'>
+                      <span
+                        className='inline-block h-2.5 w-2.5 rounded-[2px] flex-shrink-0'
+                        style={{ backgroundColor: entry.color }}
+                      />
+                      <span className='font-inter text-[11px] font-medium text-slate-600 dark:text-slate-300'>
+                        {entry?.dataKey !== 'accumulatedOfferingPEN' &&
                         entry?.dataKey !== 'accumulatedOfferingUSD' &&
                         entry?.dataKey !== 'accumulatedOfferingEUR'
-                          ? `${entry.name.charAt(0).toUpperCase() + entry.name.slice(1, -4)}:`
+                          ? entry.name.charAt(0).toUpperCase() + entry.name.slice(1, -4)
                           : payload[0]?.payload?.allOfferings?.length > 1
-                            ? `${count}° Ofrenda:`
-                            : 'Ofrenda'
+                            ? `${count}° Ofrenda`
+                            : 'Ofrenda'}
+                      </span>
+                    </div>
+                    <span className='font-inter text-[11px] font-semibold text-slate-800 dark:text-slate-100'>
+                      {`${entry.value.toFixed(2)} ${
+                        entry?.dataKey === 'dayPEN' ||
+                        entry?.dataKey === 'afternoonPEN' ||
+                        entry?.dataKey === 'accumulatedOfferingPEN'
+                          ? CurrencyType.PEN
+                          : entry?.dataKey === 'dayUSD' ||
+                              entry?.dataKey === 'afternoonUSD' ||
+                              entry?.dataKey === 'accumulatedOfferingUSD'
+                            ? CurrencyType.USD
+                            : CurrencyType.EUR
                       }`}
                     </span>
-                    <span className='pl-1 font-normal dark:text-white text-black'>{`${entry.value.toFixed(2)} 
-              ${
-                entry?.dataKey === 'dayPEN' ||
-                entry?.dataKey === 'afternoonPEN' ||
-                entry?.dataKey === 'accumulatedOfferingPEN'
-                  ? CurrencyType.PEN
-                  : entry?.dataKey === 'dayUSD' ||
-                      entry?.dataKey === 'afternoonUSD' ||
-                      entry?.dataKey === 'accumulatedOfferingUSD'
-                    ? CurrencyType.USD
-                    : CurrencyType.EUR
-              }`}</span>
+                  </div>
+                );
+              }
+              return null;
+            });
+          })()}
+        </div>
+
+        {/* Metadata */}
+        <div className='pt-1.5 border-t border-dashed border-slate-200 dark:border-slate-700/50'>
+          <ul className='space-y-0.5'>
+            <li className='flex items-center gap-1.5 font-inter text-[10px] text-slate-500 dark:text-slate-400'>
+              <span className='w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600 flex-shrink-0' />
+              {`Categoría: ${OfferingIncomeCreationCategoryNames[payload[0]?.payload?.category as OfferingIncomeCreationCategory]}`}
+            </li>
+
+            {payload?.[0]?.payload?.internalDonor?.memberFullName &&
+              payload?.[0]?.payload?.internalDonor?.memberType && (
+                <>
+                  <li className='flex items-center gap-1.5 font-inter text-[10px] text-slate-500 dark:text-slate-400'>
+                    <span className='w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600 flex-shrink-0' />
+                    {`Miembro: ${payload?.[0]?.payload?.internalDonor?.memberFullName}`}
                   </li>
+                  <li className='flex items-center gap-1.5 font-inter text-[10px] text-slate-500 dark:text-slate-400'>
+                    <span className='w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600 flex-shrink-0' />
+                    {`Cargo: ${MemberTypeNames[payload?.[0]?.payload?.internalDonor?.memberType as MemberType]}`}
+                  </li>
+                </>
+              )}
+
+            {payload?.[0]?.payload?.externalDonor?.donorFullName && (
+              <>
+                <li className='flex items-center gap-1.5 font-inter text-[10px] text-slate-500 dark:text-slate-400'>
+                  <span className='w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600 flex-shrink-0' />
+                  {`País: ${payload?.[0]?.payload?.externalDonor?.sendingCountry}`}
+                </li>
+                <li className='flex items-center gap-1.5 font-inter text-[10px] text-slate-500 dark:text-slate-400'>
+                  <span className='w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600 flex-shrink-0' />
+                  {`Donante: ${payload?.[0]?.payload?.externalDonor?.donorFullName}`}
+                </li>
+              </>
+            )}
+
+            <li className='flex items-center gap-1.5 font-inter text-[10px] text-slate-500 dark:text-slate-400'>
+              <span className='w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600 flex-shrink-0' />
+              {payload[0]?.payload?.church?.abbreviatedChurchName}
+              {payload[0]?.payload?.church?.isAnexe && (
+                <span className='ml-1 px-1 py-0.5 text-[9px] rounded bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400'>
+                  Anexo
+                </span>
+              )}
+            </li>
+          </ul>
+        </div>
+
+        {/* Totals */}
+        {payload?.[0]?.payload?.category === OfferingIncomeCreationCategory.OfferingBox &&
+          (hasPEN || hasUSD || hasEUR) && (
+            <div className='pt-1.5 border-t border-slate-200 dark:border-slate-700/50 space-y-1'>
+              <span className='font-inter text-[9px] uppercase tracking-wider font-semibold text-slate-400 dark:text-slate-500'>
+                {(hasPEN && hasUSD) || (hasPEN && hasEUR) ? 'Totales acumulados' : 'Total acumulado'}
+              </span>
+              {hasPEN && (
+                <div className='flex items-center justify-between'>
+                  <div className='flex items-center gap-1.5'>
+                    <span className='inline-block h-2.5 w-2.5 rounded-[2px]' style={{ backgroundColor: 'var(--color-accumulatedOfferingPEN)' }} />
+                    <span className='font-inter text-[10px] font-medium text-slate-500 dark:text-slate-400'>Soles</span>
+                  </div>
+                  <span className='font-inter text-[11px] font-bold text-slate-800 dark:text-slate-100'>
+                    {totalAccumulatedPEN} PEN
+                  </span>
                 </div>
-              );
-            }
-            return null;
-          });
-        })()}
-      </ul>
-
-      <ul className='list-disc pl-3 sm:pl-4 flex flex-col gap-1.5'>
-        <li className={'font-medium italic text-[13.5px] sm:text-[13.5px]'}>
-          <span className='sm:-ml-1'>{`Categoría: ${OfferingIncomeCreationCategoryNames[payload[0]?.payload?.category as OfferingIncomeCreationCategory]}`}</span>
-        </li>
-
-        {payload?.[0]?.payload?.internalDonor?.memberFullName &&
-          payload?.[0]?.payload?.internalDonor?.memberType && (
-            <>
-              <li className='font-medium italic text-[13.5px] sm:text-[13.5px]'>
-                <span className='sm:-ml-1'>{`Miembro: ${payload?.[0]?.payload?.internalDonor?.memberFullName}`}</span>
-              </li>
-              <li className='font-medium italic text-[13.5px] sm:text-[13.5px]'>
-                <span className='sm:-ml-1'>{`Cargo: ${MemberTypeNames[payload?.[0]?.payload?.internalDonor?.memberType as MemberType]}`}</span>
-              </li>
-            </>
+              )}
+              {hasUSD && (
+                <div className='flex items-center justify-between'>
+                  <div className='flex items-center gap-1.5'>
+                    <span className='inline-block h-2.5 w-2.5 rounded-[2px]' style={{ backgroundColor: 'var(--color-accumulatedOfferingUSD)' }} />
+                    <span className='font-inter text-[10px] font-medium text-slate-500 dark:text-slate-400'>Dólares</span>
+                  </div>
+                  <span className='font-inter text-[11px] font-bold text-slate-800 dark:text-slate-100'>
+                    {totalAccumulatedUSD} USD
+                  </span>
+                </div>
+              )}
+              {hasEUR && (
+                <div className='flex items-center justify-between'>
+                  <div className='flex items-center gap-1.5'>
+                    <span className='inline-block h-2.5 w-2.5 rounded-[2px]' style={{ backgroundColor: 'var(--color-accumulatedOfferingEUR)' }} />
+                    <span className='font-inter text-[10px] font-medium text-slate-500 dark:text-slate-400'>Euros</span>
+                  </div>
+                  <span className='font-inter text-[11px] font-bold text-slate-800 dark:text-slate-100'>
+                    {totalAccumulatedEUR} EUR
+                  </span>
+                </div>
+              )}
+            </div>
           )}
-
-        {payload?.[0]?.payload?.externalDonor?.donorFullName && (
-          <>
-            <li className='font-medium italic text-[13.5px] sm:text-[13.5px]'>
-              <span className='sm:-ml-1'>{`País remitente: ${payload?.[0]?.payload?.externalDonor?.sendingCountry}`}</span>
-            </li>
-            <li className='font-medium italic text-[13.5px] sm:text-[13.5px]'>
-              <span className='sm:-ml-1'>{`Donante: ${payload?.[0]?.payload?.externalDonor?.donorFullName}`}</span>
-            </li>
-          </>
-        )}
-
-        <li className={'font-medium italic text-[13.5px] sm:text-[13.5px]'}>
-          <span className='sm:-ml-1'>{`Iglesia: ${payload[0]?.payload?.church?.abbreviatedChurchName} ${payload[0]?.payload?.church?.isAnexe ? ' - (Anexo)' : ''}`}</span>
-        </li>
-      </ul>
-
-      {(totalAccumulatedPEN > 0 && totalAccumulatedUSD > 0) ||
-      (totalAccumulatedPEN > 0 && totalAccumulatedEUR > 0) ? (
-        <p className='font-medium text-[13.5px] sm:text-[13.5px] dark:text-yellow-500 text-yellow-500'>
-          Totales acumulados:
-        </p>
-      ) : totalAccumulatedPEN > 0 || totalAccumulatedUSD > 0 || totalAccumulatedEUR > 0 ? (
-        <p className='font-medium text-[13.5px] sm:text-[13.5px] dark:text-yellow-500 text-yellow-500'>
-          Total acumulado:
-        </p>
-      ) : (
-        ''
-      )}
-
-      {payload?.[0]?.payload?.category === OfferingIncomeCreationCategory.OfferingBox && (
-        <ul className='list-disc pl-3 sm:pl-4 flex flex-col gap-1.5'>
-          {totalAccumulatedPEN > 0 && (
-            <li className='font-medium text-[13.5px] sm:text-[13.5px] dark:text-slate-400 text-slate-500'>
-              <span className='sm:-ml-1'>{`Soles: ${totalAccumulatedPEN} ${CurrencyType.PEN}`}</span>
-            </li>
-          )}
-          {totalAccumulatedUSD > 0 && (
-            <li className='font-medium text-[13.5px] sm:text-[13.5px] dark:text-slate-400 text-slate-500'>
-              <span className='sm:-ml-1'>{`Dolares: ${totalAccumulatedUSD} ${CurrencyType.USD}`}</span>
-            </li>
-          )}
-          {totalAccumulatedEUR > 0 && (
-            <li className='font-medium text-[13.5px] sm:text-[13.5px] dark:text-slate-400 text-slate-500'>
-              <span className='sm:-ml-1'>{`Euros: ${totalAccumulatedEUR} ${CurrencyType.EUR}`}</span>
-            </li>
-          )}
-        </ul>
-      )}
+      </div>
     </div>
   );
 };

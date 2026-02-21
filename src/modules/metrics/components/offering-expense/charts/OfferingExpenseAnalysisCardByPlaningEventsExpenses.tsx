@@ -1,8 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useEffect, useState } from 'react';
 
 import { type z } from 'zod';
@@ -13,19 +8,22 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMediaQuery } from '@react-hook/media-query';
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
 import { Bar, XAxis, YAxis, CartesianGrid, BarChart } from 'recharts';
-import { FcDataBackup, FcDataConfiguration, FcDeleteDatabase } from 'react-icons/fc';
+import { TbCalendarStats } from 'react-icons/tb';
 
 import { cn } from '@/shared/lib/utils';
 
 import { OfferingExpenseChartTooltipContent } from '@/modules/metrics/components/offering-expense/tooltips/components/OfferingExpenseChartTooltipContent';
+import { MetricCard } from '@/modules/metrics/components/shared/MetricCard';
 
 import { RecordOrder } from '@/shared/enums/record-order.enum';
 import { generateYearOptions } from '@/shared/helpers/generate-year-options.helper';
 
 import { months } from '@/modules/metrics/data/months-data';
 import { MetricSearchType } from '@/modules/metrics/enums/metrics-search-type.enum';
-import { metricsFormSchema } from '@/modules/metrics/validations/metrics-form-schema';
+import { metricsFormSchema } from '@/modules/metrics/schemas/metrics-form-schema';
 import { getPlaningEventsOfferingExpenses } from '@/modules/metrics/services/offering-expense-metrics.service';
+
+import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
 
 import {
   Command,
@@ -50,7 +48,6 @@ import {
 } from '@/shared/components/ui/select';
 import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/shared/components/ui/card';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/shared/components/ui/form';
 
@@ -89,13 +86,10 @@ interface ResultDataOptions {
   totalPercentage: string;
 }
 
-interface Props {
-  churchId: string | undefined;
-}
+export const OfferingExpenseAnalysisCardByPlaningEventsExpenses = (): JSX.Element => {
+  //* Context
+  const activeChurchId = useChurchMinistryContextStore((s) => s.activeChurchId);
 
-export const OfferingExpenseAnalysisCardByPlaningEventsExpenses = ({
-  churchId,
-}: Props): JSX.Element => {
   //* States
   const [mappedData, setMappedData] = useState<ResultDataOptions[]>();
   const [isInputSearchMonthOpen, setIsInputSearchMonthOpen] = useState<boolean>(false);
@@ -123,28 +117,26 @@ export const OfferingExpenseAnalysisCardByPlaningEventsExpenses = ({
 
   //* Queries
   const planingEventsOfferingExpenses = useQuery({
-    queryKey: ['planing-events-offering-expenses', { ...searchParams, church: churchId }],
+    queryKey: ['planing-events-offering-expenses', { ...searchParams, church: activeChurchId }],
     queryFn: () => {
       return getPlaningEventsOfferingExpenses({
         searchType: MetricSearchType.PlaningEventsOfferingExpenses,
         month: searchParams?.month ?? month,
         year: searchParams?.year ?? year,
         isSingleMonth: true,
-        church: churchId ?? '',
+        church: activeChurchId ?? '',
         order: RecordOrder.Ascending,
       });
     },
     retry: false,
-    enabled: !!searchParams?.year && !!searchParams?.month && !!churchId,
+    enabled: !!searchParams?.year && !!searchParams?.month && !!activeChurchId,
   });
 
   //* Effects
-  // Default value
   useEffect(() => {
     setSearchParams({ year, month });
   }, [planingEventsOfferingExpenses?.data, year]);
 
-  // Set data
   useEffect(() => {
     if (planingEventsOfferingExpenses?.data) {
       const transformedData = planingEventsOfferingExpenses?.data.map((offeringExpense) => {
@@ -181,21 +173,27 @@ export const OfferingExpenseAnalysisCardByPlaningEventsExpenses = ({
     setSearchParams(formData);
   };
 
+  const isFetchingData = !searchParams || (planingEventsOfferingExpenses?.isFetching && !mappedData?.length);
+  const isEmptyData = !isFetchingData && !mappedData?.length;
+
   return (
-    <Card className='bg-slate-50/40 dark:bg-slate-900/40 flex flex-col col-start-2 col-end-3 h-[24rem] sm:h-[26rem] md:h-[28rem] lg:h-[30rem] 2xl:h-[30rem] m-0 border-slate-200 dark:border-slate-800'>
-      <CardHeader className='z-10 flex flex-col sm:flex-row items-center justify-between px-4 py-2.5'>
-        <CardTitle className='flex justify-center items-center gap-2 font-bold text-[22px] sm:text-[25px] md:text-[28px] 2xl:text-[30px]'>
-          <span>Plan. de Eventos</span>
-          {planingEventsOfferingExpenses?.data &&
-            Object.entries(planingEventsOfferingExpenses?.data)?.length > 0 && (
-              <Badge
-                variant='active'
-                className='mt-1 text-[11px] text-white md:text-[11px] py-0.3 md:py-0.35 tracking-wide'
-              >
-                Activos
-              </Badge>
-            )}
-        </CardTitle>
+    <MetricCard
+      className='col-start-2 col-end-3'
+      title={
+        <>
+          Plan. de Eventos
+          {!!mappedData?.length && (
+            <Badge variant='active' className='mt-1 text-white text-[11px] py-0.3 tracking-wide'>
+              Activos
+            </Badge>
+          )}
+        </>
+      }
+      description='Gastos de planeación de eventos del mes.'
+      icon={<TbCalendarStats className='w-5 h-5 text-blue-600 dark:text-blue-400' />}
+      isFetching={isFetchingData}
+      isEmpty={isEmptyData}
+      headerAction={
         <Form {...form}>
           <form className='flex'>
             <FormField
@@ -208,9 +206,7 @@ export const OfferingExpenseAnalysisCardByPlaningEventsExpenses = ({
                       open={isInputSearchMonthOpen}
                       onOpenChange={(e) => {
                         setIsInputSearchMonthOpen(e);
-                        form.resetField('year', {
-                          defaultValue: '',
-                        });
+                        form.resetField('year', { defaultValue: '' });
                       }}
                     >
                       <PopoverTrigger asChild>
@@ -225,17 +221,14 @@ export const OfferingExpenseAnalysisCardByPlaningEventsExpenses = ({
                           >
                             {field.value
                               ? months.find((month) => month.value === field.value)?.label
-                              : 'Elige un mes'}
+                              : 'Mes'}
                             <CaretSortIcon className='h-4 w-4 shrink-0' />
                           </Button>
                         </FormControl>
                       </PopoverTrigger>
                       <PopoverContent align='center' className='w-auto px-4 py-2'>
                         <Command className='w-[10rem]'>
-                          <CommandInput
-                            placeholder='Busque un mes'
-                            className='h-9 text-[14px] md:text-[14px]'
-                          />
+                          <CommandInput placeholder='Busque un mes' className='h-9 text-[14px] md:text-[14px]' />
                           <CommandEmpty>Mes no encontrado.</CommandEmpty>
                           <CommandGroup className='max-h-[100px] h-auto'>
                             {months.map((month) => (
@@ -287,7 +280,7 @@ export const OfferingExpenseAnalysisCardByPlaningEventsExpenses = ({
                       </FormControl>
                       <SelectContent className={cn(years.length >= 3 ? 'h-[8rem]' : 'h-auto')}>
                         {Object.values(years).map(({ label, value }) => (
-                          <SelectItem className={`text-[14px]`} key={value} value={label}>
+                          <SelectItem className='text-[14px]' key={value} value={label}>
                             {label}
                           </SelectItem>
                         ))}
@@ -300,101 +293,33 @@ export const OfferingExpenseAnalysisCardByPlaningEventsExpenses = ({
             />
           </form>
         </Form>
-      </CardHeader>
-
-      {!planingEventsOfferingExpenses?.data?.length && !searchParams ? (
-        <CardContent className='h-full px-2 sm:px-4 py-0'>
-          <div className='text-blue-500 text-[14px] md:text-lg flex flex-col justify-center items-center h-full -mt-6'>
-            <FcDataBackup className='text-[6rem] pb-2' />
-            <p className='font-medium text-[15px] md:text-[16px]'>Consultando datos....</p>
-          </div>
-        </CardContent>
-      ) : (
-        <CardContent className='h-full px-2 sm:px-4 py-0'>
-          {planingEventsOfferingExpenses?.isFetching &&
-            !planingEventsOfferingExpenses?.data?.length &&
-            year && (
-              <div className='text-blue-500 text-[14px] md:text-lg flex flex-col justify-center items-center h-full -mt-6'>
-                <FcDataBackup className='text-[6rem] pb-2' />
-                <p className='font-medium text-[15px] md:text-[16px]'>Consultando datos....</p>
-              </div>
-            )}
-          {!!mappedData?.length && searchParams && (
-            <ChartContainer
-              config={chartConfig}
-              className={cn(
-                'w-full h-[283px] sm:h-[345px] md:h-[380px] lg:h-[410px] xl:h-[410px] 2xl:h-[410px]'
-              )}
-            >
-              <BarChart
-                accessibilityLayer
-                data={mappedData}
-                margin={{ top: 5, right: 5, left: -25, bottom: 10 }}
-              >
-                <CartesianGrid vertical={true} />
-                <XAxis
-                  dataKey='subType'
-                  tickLine={false}
-                  tickMargin={10}
-                  axisLine={true}
-                  className='text-[12.5px] sm:text-[14px]'
-                  tickFormatter={(value) => {
-                    if (isMobile) {
-                      const [firstWord, secondWord] = value.split(' ');
-                      return secondWord ? `${firstWord} ${secondWord.charAt(0)}.` : firstWord;
-                    }
-                    return value;
-                  }}
-                />
-
-                <YAxis className='text-[12.5px] sm:text-[14px]' />
-                <ChartTooltip cursor={false} content={OfferingExpenseChartTooltipContent as any} />
-
-                <ChartLegend
-                  content={
-                    <ChartLegendContent className='ml-6 sm:ml-6 text-[13px] md:text-[14px] flex gap-2 sm:gap-5' />
-                  }
-                />
-
-                <Bar
-                  dataKey='accumulatedOfferingPEN'
-                  stackId='subType'
-                  fill='var(--color-accumulatedOfferingPEN)'
-                  radius={[2, 2, 2, 2]}
-                />
-                <Bar
-                  dataKey='accumulatedOfferingEUR'
-                  stackId='subType'
-                  fill='var(--color-accumulatedOfferingEUR)'
-                  radius={[2, 2, 0, 0]}
-                />
-                <Bar
-                  dataKey='accumulatedOfferingUSD'
-                  stackId='subType'
-                  fill='var(--color-accumulatedOfferingUSD)'
-                  radius={[2, 2, 0, 0]}
-                />
-              </BarChart>
-            </ChartContainer>
-          )}
-          {!year && !mappedData?.length && (
-            <div className='text-emerald-500 text-[14px] md:text-lg flex flex-col justify-center items-center h-full -mt-6'>
-              <FcDataConfiguration className='text-[6rem] pb-2' />
-              <p>Esperando parámetros de consulta...</p>
-            </div>
-          )}
-          {!planingEventsOfferingExpenses?.isFetching &&
-            !planingEventsOfferingExpenses?.data?.length &&
-            year && (
-              <div className='text-red-500 flex flex-col justify-center items-center h-full -mt-6'>
-                <FcDeleteDatabase className='text-[6rem] pb-2' />
-                <p className='font-medium text-[15px] md:text-[16px]'>
-                  No hay datos disponibles para mostrar.
-                </p>
-              </div>
-            )}
-        </CardContent>
-      )}
-    </Card>
+      }
+    >
+      <ChartContainer config={chartConfig} className='w-full h-[240px] sm:h-[270px] md:h-[310px] xl:h-[320px]'>
+        <BarChart accessibilityLayer data={mappedData} margin={{ top: 5, right: 5, left: -25, bottom: 10 }}>
+          <CartesianGrid vertical={false} strokeDasharray='3 3' className='stroke-slate-200 dark:stroke-slate-700' />
+          <XAxis
+            dataKey='subType'
+            tickLine={false}
+            tickMargin={10}
+            axisLine={false}
+            className='text-xs fill-slate-500 dark:fill-slate-400'
+            tickFormatter={(value) => {
+              if (isMobile) {
+                const [firstWord, secondWord] = value.split(' ');
+                return secondWord ? `${firstWord} ${secondWord.charAt(0)}.` : firstWord;
+              }
+              return value;
+            }}
+          />
+          <YAxis tickLine={false} axisLine={false} className='text-xs fill-slate-500 dark:fill-slate-400' />
+          <ChartTooltip cursor={{ fill: 'rgba(0,0,0,0.05)' }} content={OfferingExpenseChartTooltipContent as any} />
+          <ChartLegend content={<ChartLegendContent className='flex flex-wrap justify-center gap-x-3 gap-y-1 text-xs' />} />
+          <Bar dataKey='accumulatedOfferingPEN' stackId='subType' fill='var(--color-accumulatedOfferingPEN)' radius={[2, 2, 2, 2]} />
+          <Bar dataKey='accumulatedOfferingEUR' stackId='subType' fill='var(--color-accumulatedOfferingEUR)' radius={[2, 2, 0, 0]} />
+          <Bar dataKey='accumulatedOfferingUSD' stackId='subType' fill='var(--color-accumulatedOfferingUSD)' radius={[2, 2, 0, 0]} />
+        </BarChart>
+      </ChartContainer>
+    </MetricCard>
   );
 };

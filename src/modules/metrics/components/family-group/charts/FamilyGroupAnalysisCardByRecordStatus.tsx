@@ -1,22 +1,21 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useEffect, useState } from 'react';
 
 import { type z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FcDataBackup, FcDeleteDatabase } from 'react-icons/fc';
+import { TbActivity } from 'react-icons/tb';
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
 import { Bar, XAxis, YAxis, CartesianGrid, BarChart } from 'recharts';
 
+import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
+
 import { getSimpleZones } from '@/modules/zone/services/zone.service';
 import { MetricSearchType } from '@/modules/metrics/enums/metrics-search-type.enum';
-import { metricsFormSchema } from '@/modules/metrics/validations/metrics-form-schema';
+import { metricsFormSchema } from '@/modules/metrics/schemas/metrics-form-schema';
 import { getFamilyGroupsByRecordStatus } from '@/modules/metrics/services/family-group-metrics.service';
 import { FamilyGroupsByRecordStatusTooltipContent } from '@/modules/metrics/components/family-group/tooltips/components/FamilyGroupsByRecordStatusTooltipContent';
+import { MetricCard } from '@/modules/metrics/components/shared/MetricCard';
 
 import { cn } from '@/shared/lib/utils';
 
@@ -44,13 +43,6 @@ import {
   type ChartConfig,
   ChartLegendContent,
 } from '@/shared/components/ui/chart';
-import {
-  Card,
-  CardTitle,
-  CardHeader,
-  CardContent,
-  CardDescription,
-} from '@/shared/components/ui/card';
 import { Button } from '@/shared/components/ui/button';
 import { Checkbox } from '@/shared/components/ui/checkbox';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
@@ -82,11 +74,10 @@ interface SearchParamsOptions {
   all?: boolean;
 }
 
-interface Props {
-  churchId: string | undefined;
-}
+export const FamilyGroupAnalysisCardByRecordStatus = (): JSX.Element => {
+  //* Context
+  const activeChurchId = useChurchMinistryContextStore((s) => s.activeChurchId);
 
-export const FamilyGroupAnalysisCardByRecordStatus = ({ churchId }: Props): JSX.Element => {
   //* States
   const [mappedData, setMappedData] = useState<ResultDataOptions[]>();
   const [isInputSearchZoneOpen, setIsInputSearchZoneOpen] = useState<boolean>(false);
@@ -108,24 +99,26 @@ export const FamilyGroupAnalysisCardByRecordStatus = ({ churchId }: Props): JSX.
 
   //* Queries
   const zonesQuery = useQuery({
-    queryKey: ['zones-for-family-groups-record-status', churchId],
-    queryFn: () => getSimpleZones({ churchId: churchId ?? '', isSimpleQuery: true }),
+    queryKey: ['zones-for-family-groups-record-status', activeChurchId],
+    queryFn: () => getSimpleZones({ churchId: activeChurchId ?? '', isSimpleQuery: true }),
     retry: false,
+    enabled: !!activeChurchId,
   });
 
   const familyGroupsByRecordStatusQuery = useQuery({
-    queryKey: ['family-groups-by-record-status', { ...searchParams, church: churchId }],
+    queryKey: ['family-groups-by-record-status', { ...searchParams, church: activeChurchId }],
     queryFn: () => {
       return getFamilyGroupsByRecordStatus({
         searchType: MetricSearchType.FamilyGroupsByRecordStatus,
         zone: searchParams?.zone ?? zone,
         allZones: searchParams?.all ?? all,
         order: RecordOrder.Ascending,
-        church: churchId ?? '',
+        church: activeChurchId ?? '',
       });
     },
     retry: false,
-    enabled: !!searchParams?.zone && !!churchId && !!zonesQuery?.data && !!zonesQuery.data.length,
+    enabled:
+      !!searchParams?.zone && !!activeChurchId && !!zonesQuery?.data && !!zonesQuery.data.length,
   });
 
   //* Effects
@@ -170,17 +163,19 @@ export const FamilyGroupAnalysisCardByRecordStatus = ({ churchId }: Props): JSX.
   const handleSubmit = (formData: z.infer<typeof metricsFormSchema>): void => {
     setSearchParams(formData);
   };
+
+  const isFetchingData = !searchParams || (familyGroupsByRecordStatusQuery?.isFetching && !mappedData?.length);
+  const isEmptyData = !isFetchingData && !mappedData?.length;
+
   return (
-    <Card className='bg-slate-50/40 dark:bg-slate-900/40 flex flex-col col-start-2 col-end-3 h-[24rem] md:h-[27rem] lg:h-[27rem] 2xl:h-[27rem] m-0 border-slate-200 dark:border-slate-800'>
-      <CardHeader className='z-10 flex flex-col sm:flex-row items-center justify-between px-4 pt-1.5 pb-2'>
-        <div className='flex flex-col'>
-          <CardTitle className='flex justify-center items-center gap-2 font-bold text-[22px] sm:text-[25px] md:text-[28px] 2xl:text-[30px]'>
-            Grupos Familiares
-          </CardTitle>
-          <CardDescription className='-ml-1 sm:ml-1 text-center sm:text-left text-[14px] md:text-[14.5px] italic'>
-            Por Estado de registro.
-          </CardDescription>
-        </div>
+    <MetricCard
+      className='col-start-2 col-end-3'
+      title='Grupos Familiares'
+      description='Por Estado de registro.'
+      icon={<TbActivity className='w-5 h-5 text-rose-600 dark:text-rose-400' />}
+      isFetching={isFetchingData}
+      isEmpty={isEmptyData}
+      headerAction={
         <Form {...form}>
           <form className='flex'>
             <FormField
@@ -244,7 +239,7 @@ export const FamilyGroupAnalysisCardByRecordStatus = ({ churchId }: Props): JSX.
                             </>
                           ) : (
                             zonesQuery?.data?.length === 0 && (
-                              <p className='text-[12p.5x] md:text-[14px] font-medium text-red-500 text-center'>
+                              <p className='text-[12px] md:text-[14px] font-medium text-red-500 text-center'>
                                 ❌No hay zonas disponibles.
                               </p>
                             )
@@ -281,67 +276,38 @@ export const FamilyGroupAnalysisCardByRecordStatus = ({ churchId }: Props): JSX.
             />
           </form>
         </Form>
-      </CardHeader>
-
-      {!mappedData?.length && !searchParams ? (
-        <CardContent className='h-full px-2 sm:px-4 py-0'>
-          <div className='text-blue-500 text-[14px] md:text-lg flex flex-col justify-center items-center h-full -mt-6'>
-            <FcDataBackup className='text-[6rem] pb-2' />
-            <p className='font-medium text-[15px] md:text-[16px]'>Consultando datos....</p>
-          </div>
-        </CardContent>
-      ) : (
-        <CardContent className='h-full px-2 sm:px-4 py-0'>
-          {familyGroupsByRecordStatusQuery?.isFetching && !mappedData?.length && (
-            <div className='text-blue-500 text-[14px] md:text-lg flex flex-col justify-center items-center h-full -mt-6'>
-              <FcDataBackup className='text-[6rem] pb-2' />
-              <p className='font-medium text-[15px] md:text-[16px]'>Consultando datos....</p>
-            </div>
-          )}
-          {!!mappedData?.length && searchParams && (
-            <ChartContainer
-              config={chartConfig}
-              className={cn(
-                'w-full h-[270px] sm:h-[310px] md:h-[350px] lg:h-[350px] xl:h-[350px] 2xl:h-[345px]'
-              )}
-            >
-              <BarChart
-                accessibilityLayer
-                data={mappedData}
-                margin={{ top: 5, right: 5, left: -35, bottom: 10 }}
-              >
-                <CartesianGrid vertical={true} />
-                <XAxis
-                  dataKey='zoneName'
-                  tickLine={false}
-                  tickMargin={10}
-                  axisLine={true}
-                  tickFormatter={(value) => value.slice(0, 10)}
-                  className='text-[12.5px] md:text-[14px]'
-                />
-                <YAxis type='number' className='text-[12.5px] md:text-[14px]' />
-                <ChartTooltip
-                  cursor={false}
-                  content={FamilyGroupsByRecordStatusTooltipContent as any}
-                />
-                <ChartLegend
-                  content={<ChartLegendContent className='ml-8 text-[13px] md:text-[14px]' />}
-                />
-                <Bar dataKey='active' fill='var(--color-active)' radius={4} />
-                <Bar dataKey='inactive' fill='var(--color-inactive)' radius={4} />
-              </BarChart>
-            </ChartContainer>
-          )}
-          {!familyGroupsByRecordStatusQuery?.isFetching && !mappedData?.length && (
-            <div className='text-red-500 flex flex-col justify-center items-center h-full -mt-6'>
-              <FcDeleteDatabase className='text-[6rem] pb-2' />
-              <p className='font-medium text-[15px] md:text-[16px]'>
-                No hay datos disponibles para mostrar.
-              </p>
-            </div>
-          )}
-        </CardContent>
-      )}
-    </Card>
+      }
+    >
+      <ChartContainer
+        config={chartConfig}
+        className='w-full h-[240px] sm:h-[270px] md:h-[310px] xl:h-[320px]'
+      >
+        <BarChart
+          accessibilityLayer
+          data={mappedData}
+          margin={{ top: 5, right: 5, left: -35, bottom: 10 }}
+        >
+          <CartesianGrid vertical={false} strokeDasharray='3 3' className='stroke-slate-200 dark:stroke-slate-700' />
+          <XAxis
+            dataKey='zoneName'
+            tickLine={false}
+            tickMargin={10}
+            axisLine={false}
+            tickFormatter={(value) => value.slice(0, 10)}
+            className='text-xs fill-slate-500 dark:fill-slate-400'
+          />
+          <YAxis type='number' tickLine={false} axisLine={false} className='text-xs fill-slate-500 dark:fill-slate-400' />
+          <ChartTooltip
+            cursor={{ fill: 'rgba(0,0,0,0.05)' }}
+            content={FamilyGroupsByRecordStatusTooltipContent as any}
+          />
+          <ChartLegend
+            content={<ChartLegendContent className='flex flex-wrap justify-center gap-x-3 gap-y-1 text-xs' />}
+          />
+          <Bar dataKey='active' fill='var(--color-active)' radius={4} />
+          <Bar dataKey='inactive' fill='var(--color-inactive)' radius={4} />
+        </BarChart>
+      </ChartContainer>
+    </MetricCard>
   );
 };

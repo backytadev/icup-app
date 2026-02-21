@@ -1,13 +1,10 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+import { useMemo } from 'react';
 
-import { useEffect, useState } from 'react';
-
-import { useQuery } from '@tanstack/react-query';
-import { FcDataBackup, FcDeleteDatabase } from 'react-icons/fc';
 import { Bar, YAxis, XAxis, BarChart, CartesianGrid } from 'recharts';
+
+import { TbActivity } from 'react-icons/tb';
+
+import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
 
 import { cn } from '@/shared/lib/utils';
 import { RecordOrder } from '@/shared/enums/record-order.enum';
@@ -15,6 +12,8 @@ import { MemberRole, MemberRoleNames } from '@/shared/enums/member-role.enum';
 
 import { MetricSearchType } from '@/modules/metrics/enums/metrics-search-type.enum';
 import { getMembersByRecordStatus } from '@/modules/metrics/services/member-metrics.service';
+import { useMetricsQuery } from '@/modules/metrics/hooks';
+import { MetricCard } from '@/modules/metrics/components/shared/MetricCard';
 import { MembersByRecordStatusTooltipContent } from '@/modules/metrics/components/member/tooltips/components/MembersByRecordStatusTooltipContent';
 
 import {
@@ -24,7 +23,6 @@ import {
   type ChartConfig,
   ChartLegendContent,
 } from '@/shared/components/ui/chart';
-import { Card, CardContent, CardTitle } from '@/shared/components/ui/card';
 
 const chartConfig = {
   active: {
@@ -47,126 +45,87 @@ interface ResultDataOptions {
   };
 }
 
-interface Props {
-  churchId: string | undefined;
-}
-
-export const MemberAnalysisCardByRecordStatus = ({ churchId }: Props): JSX.Element => {
-  //* States
-  const [mappedData, setMappedData] = useState<ResultDataOptions[]>();
+export const MemberAnalysisCardByRecordStatus = (): JSX.Element => {
+  //* Context
+  const activeChurchId = useChurchMinistryContextStore((s) => s.activeChurchId);
 
   //* Queries
-  const membersByRecordStatusQuery = useQuery({
-    queryKey: ['members-by-record-status', churchId],
+  const { data, isLoading, isEmpty } = useMetricsQuery({
+    queryKey: ['members-by-record-status', activeChurchId],
     queryFn: () =>
       getMembersByRecordStatus({
         searchType: MetricSearchType.MembersByRecordStatus,
         year: String(new Date().getFullYear()),
         order: RecordOrder.Ascending,
-        church: churchId ?? '',
+        church: activeChurchId ?? '',
       }),
-    retry: false,
-    enabled: !!churchId,
+    activeChurchId,
   });
 
-  //* Effects
-  useEffect(() => {
-    if (membersByRecordStatusQuery?.data) {
-      const transformedData = Object.entries(membersByRecordStatusQuery?.data).map(
-        ([role, payload]) => {
-          return {
-            role:
-              role === MemberRole.Pastor
+  //* Mapped data
+  const mappedData = useMemo<ResultDataOptions[]>(() => {
+    if (!data) return [];
+    return Object.entries(data).map(([role, payload]: [string, any]) => ({
+      role:
+        role === MemberRole.Pastor
+          ? MemberRoleNames[role]
+          : role === MemberRole.Copastor
+            ? MemberRoleNames[role]
+            : role === MemberRole.Supervisor
+              ? MemberRoleNames[role]
+              : role === MemberRole.Preacher
                 ? MemberRoleNames[role]
-                : role === MemberRole.Copastor
-                  ? MemberRoleNames[role]
-                  : role === MemberRole.Supervisor
-                    ? MemberRoleNames[role]
-                    : role === MemberRole.Preacher
-                      ? MemberRoleNames[role]
-                      : MemberRoleNames.disciple,
-            active: payload?.active,
-            inactive: payload?.inactive,
-            church: {
-              isAnexe: payload?.church?.isAnexe,
-              abbreviatedChurchName: payload?.church?.abbreviatedChurchName,
-            },
-          };
-        }
-      );
-
-      setMappedData(transformedData);
-    }
-  }, [membersByRecordStatusQuery?.data]);
+                : MemberRoleNames.disciple,
+      active: payload?.active,
+      inactive: payload?.inactive,
+      church: {
+        isAnexe: payload?.church?.isAnexe,
+        abbreviatedChurchName: payload?.church?.abbreviatedChurchName,
+      },
+    }));
+  }, [data]);
 
   return (
-    <Card className='bg-slate-50/40 dark:bg-slate-900/40 flex flex-col col-start-2 col-end-3 h-[22rem] md:h-[25rem] lg:h-[25rem] 2xl:h-[26rem] m-0 border-slate-200 dark:border-slate-800'>
-      <CardTitle className='font-bold text-center text-[22px] px-4 py-2.5 sm:text-[25px] md:text-[28px] 2xl:text-[30px] inline-block'>
-        Estado de Registro
-      </CardTitle>
+    <MetricCard
+      title='Estado de Registro'
+      icon={<TbActivity className='w-5 h-5 text-emerald-600 dark:text-emerald-400' />}
+      isLoading={isLoading}
+      isEmpty={isEmpty || !mappedData.length}
+      className='col-start-2 col-end-3'
+    >
+      <ChartContainer
+        config={chartConfig}
+        className={cn(
+          'w-full h-[240px] sm:h-[270px] md:h-[310px] xl:h-[320px]'
+        )}
+      >
+        <BarChart
+          accessibilityLayer
+          data={mappedData}
+          margin={{ top: 5, right: 5, left: -35, bottom: 10 }}
+        >
+          <CartesianGrid vertical={false} strokeDasharray='3 3' className='stroke-slate-200 dark:stroke-slate-700' />
+          <XAxis
+            dataKey='role'
+            tickLine={false}
+            tickMargin={10}
+            axisLine={false}
+            tickFormatter={(value) => value.slice(0, 8)}
+            className='text-xs fill-slate-500 dark:fill-slate-400'
+          />
 
-      {!mappedData?.length ? (
-        <CardContent className='h-full px-2 sm:px-4 py-0'>
-          {membersByRecordStatusQuery?.isFetching && !mappedData?.length && (
-            <div className='text-blue-500 text-[14px] md:text-lg flex flex-col justify-center items-center h-full -mt-6'>
-              <FcDataBackup className='text-[6rem] pb-2' />
-              <p className='font-medium text-[15px] md:text-[16px]'>Consultando datos....</p>
-            </div>
-          )}
-        </CardContent>
-      ) : (
-        <CardContent className='h-full px-2 sm:px-4 py-0'>
-          {membersByRecordStatusQuery?.isFetching && !mappedData?.length && (
-            <div className='text-blue-500 text-[14px] md:text-lg flex flex-col justify-center items-center h-full -mt-6'>
-              <FcDataBackup className='text-[6rem] pb-2' />
-              <p className='font-medium text-[15px] md:text-[16px]'>Consultando datos....</p>
-            </div>
-          )}
-          {mappedData?.length && (
-            <ChartContainer
-              config={chartConfig}
-              className={cn(
-                'w-full h-[300px] sm:h-[300px] md:h-[330px] lg:h-[330px] xl:h-[330px] 2xl:h-[345px]'
-              )}
-            >
-              <BarChart
-                accessibilityLayer
-                data={mappedData}
-                margin={{ top: 5, right: 5, left: -35, bottom: 10 }}
-              >
-                <CartesianGrid vertical={true} />
-                <XAxis
-                  dataKey='role'
-                  tickLine={false}
-                  tickMargin={10}
-                  axisLine={true}
-                  tickFormatter={(value) => value.slice(0, 8)}
-                  className='text-[12.5px] md:text-[14px]'
-                />
+          <YAxis tickLine={false} axisLine={false} className='text-xs fill-slate-500 dark:fill-slate-400' />
 
-                <YAxis className='text-[12.5px] md:text-[14px]' />
+          <ChartTooltip cursor={{ fill: 'rgba(0,0,0,0.05)' }} content={MembersByRecordStatusTooltipContent as any} />
 
-                <ChartTooltip cursor={false} content={MembersByRecordStatusTooltipContent as any} />
+          <ChartLegend
+            content={<ChartLegendContent className='flex flex-wrap justify-center gap-x-3 gap-y-1 text-xs' />}
+          />
 
-                <ChartLegend
-                  content={<ChartLegendContent className='ml-8 text-[13px] md:text-[14px]' />}
-                />
-
-                <Bar dataKey='active' fill='var(--color-active)' radius={4} />
-                <Bar dataKey='inactive' fill='var(--color-inactive)' radius={4} />
-              </BarChart>
-            </ChartContainer>
-          )}
-          {!membersByRecordStatusQuery?.isFetching && !mappedData?.length && (
-            <div className='text-red-500 flex flex-col justify-center items-center h-full -mt-6'>
-              <FcDeleteDatabase className='text-[6rem] pb-2' />
-              <p className='font-medium text-[15px] md:text-[16px]'>
-                No hay datos disponibles para mostrar.
-              </p>
-            </div>
-          )}
-        </CardContent>
-      )}
-    </Card>
+          <Bar dataKey='active' fill='var(--color-active)' radius={4} />
+          <Bar dataKey='inactive' fill='var(--color-inactive)' radius={4} />
+        </BarChart>
+      </ChartContainer>
+    </MetricCard>
   );
 };

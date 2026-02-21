@@ -15,9 +15,9 @@ import { Card } from '@/shared/components/ui/card';
 import { getExpenseDetailByType } from '@/modules/metrics/services/offering-comparative-metrics.service';
 import { OfferingExpenseSearchTypeNames } from '@/modules/offering/expense/enums/offering-expense-search-type.enum';
 import { ExpenseSubTypeDetails } from '@/modules/metrics/components/financial-balance-comparative/screens/ExpenseSubTypeDetails';
+import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
 
 interface ExpenseSummaryCardProps {
-  churchId?: string;
   year?: string;
   startMonth?: string;
   endMonth?: string;
@@ -40,12 +40,13 @@ const getKeyBySpanishValue = (label: string): string | undefined => {
 };
 
 export const ExpenseSummaryCard = ({
-  churchId,
   year,
   startMonth,
   endMonth,
   data,
 }: ExpenseSummaryCardProps) => {
+  const activeChurchId = useChurchMinistryContextStore((s) => s.activeChurchId);
+
   const [open, setOpen] = useState<boolean>(false);
   const [openMonthDetail, setOpenMonthDetail] = useState(false);
   const [selectedMonth, setSelectedMonth] = useState<string | null>(null);
@@ -54,10 +55,10 @@ export const ExpenseSummaryCard = ({
 
   //* Query
   const getExpenseDetailByTypeQuery = useQuery({
-    queryKey: ['expense-detail-by-type', startMonth, endMonth, offeringType, churchId],
+    queryKey: ['expense-detail-by-type', startMonth, endMonth, offeringType, activeChurchId],
     queryFn: () =>
       getExpenseDetailByType({
-        churchId: churchId ?? '',
+        churchId: activeChurchId ?? '',
         year: year ?? '',
         startMonth: startMonth ?? '',
         endMonth: endMonth ?? '',
@@ -245,7 +246,7 @@ export const ExpenseSummaryCard = ({
       </Dialog>
 
       <ExpenseSubTypeDetails
-        churchId={churchId}
+
         year={year}
         selectedMonth={selectedMonth}
         offeringType={offeringType}

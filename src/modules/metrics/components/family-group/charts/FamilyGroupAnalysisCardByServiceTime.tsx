@@ -1,16 +1,14 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useEffect, useState } from 'react';
 
 import { type z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FcDataBackup, FcDeleteDatabase } from 'react-icons/fc';
+import { TbClock } from 'react-icons/tb';
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
 import { Bar, XAxis, YAxis, CartesianGrid, BarChart } from 'recharts';
+
+import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
 
 import { getSimpleZones } from '@/modules/zone/services/zone.service';
 
@@ -20,9 +18,10 @@ import {
 } from '@/modules/family-group/enums/family-group-service-time.enum';
 
 import { MetricSearchType } from '@/modules/metrics/enums/metrics-search-type.enum';
-import { metricsFormSchema } from '@/modules/metrics/validations/metrics-form-schema';
+import { metricsFormSchema } from '@/modules/metrics/schemas/metrics-form-schema';
 import { getFamilyGroupsByServiceTime } from '@/modules/metrics/services/family-group-metrics.service';
 import { FamilyGroupsByServiceTimeTooltipContent } from '@/modules/metrics/components/family-group/tooltips/components/FamilyGroupsByServiceTimeTooltipContent';
+import { MetricCard } from '@/modules/metrics/components/shared/MetricCard';
 
 import { cn } from '@/shared/lib/utils';
 
@@ -50,13 +49,6 @@ import {
   type ChartConfig,
   ChartLegendContent,
 } from '@/shared/components/ui/chart';
-import {
-  Card,
-  CardTitle,
-  CardHeader,
-  CardContent,
-  CardDescription,
-} from '@/shared/components/ui/card';
 import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
 import { Checkbox } from '@/shared/components/ui/checkbox';
@@ -86,11 +78,10 @@ interface SearchParamsOptions {
   all?: boolean;
 }
 
-interface Props {
-  churchId: string | undefined;
-}
+export const FamilyGroupAnalysisCardByServiceTime = (): JSX.Element => {
+  //* Context
+  const activeChurchId = useChurchMinistryContextStore((s) => s.activeChurchId);
 
-export const FamilyGroupAnalysisCardByServiceTime = ({ churchId }: Props): JSX.Element => {
   //* States
   const [mappedData, setMappedData] = useState<ResultDataOptions[]>();
   const [isInputSearchZoneOpen, setIsInputSearchZoneOpen] = useState<boolean>(false);
@@ -112,24 +103,26 @@ export const FamilyGroupAnalysisCardByServiceTime = ({ churchId }: Props): JSX.E
 
   //* Queries
   const zonesQuery = useQuery({
-    queryKey: ['zones-for-family-groups-service-time', churchId],
-    queryFn: () => getSimpleZones({ churchId: churchId ?? '', isSimpleQuery: true }),
+    queryKey: ['zones-for-family-groups-service-time', activeChurchId],
+    queryFn: () => getSimpleZones({ churchId: activeChurchId ?? '', isSimpleQuery: true }),
     retry: false,
+    enabled: !!activeChurchId,
   });
 
   const familyGroupsByServiceTimeQuery = useQuery({
-    queryKey: ['family-groups-by-service-time', { ...searchParams, church: churchId }],
+    queryKey: ['family-groups-by-service-time', { ...searchParams, church: activeChurchId }],
     queryFn: () => {
       return getFamilyGroupsByServiceTime({
         searchType: MetricSearchType.FamilyGroupsByServiceTime,
         zone: searchParams?.zone ?? zone,
         allZones: searchParams?.all ?? all,
         order: RecordOrder.Ascending,
-        church: churchId ?? '',
+        church: activeChurchId ?? '',
       });
     },
     retry: false,
-    enabled: !!searchParams?.zone && !!churchId && !!zonesQuery?.data && !!zonesQuery.data.length,
+    enabled:
+      !!searchParams?.zone && !!activeChurchId && !!zonesQuery?.data && !!zonesQuery.data.length,
   });
 
   //* Effects
@@ -202,25 +195,31 @@ export const FamilyGroupAnalysisCardByServiceTime = ({ churchId }: Props): JSX.E
   const handleSubmit = (formData: z.infer<typeof metricsFormSchema>): void => {
     setSearchParams(formData);
   };
+
+  const isFetchingData = !searchParams || (familyGroupsByServiceTimeQuery?.isFetching && !mappedData?.length);
+  const isEmptyData = !isFetchingData && !mappedData?.length;
+
   return (
-    <Card className='bg-slate-50/40 dark:bg-slate-900/40 flex flex-col col-start-1 col-end-2 h-[24rem] md:h-[27rem] lg:h-[27rem] 2xl:h-[27rem] m-0 border-slate-200 dark:border-slate-800'>
-      <CardHeader className='z-10 flex flex-col sm:flex-row items-center justify-between px-4 pt-1.5 pb-2'>
-        <div className='flex flex-col'>
-          <CardTitle className='flex justify-center items-center gap-2 font-bold text-[22px] sm:text-[25px] md:text-[28px] 2xl:text-[30px]'>
-            <span>Grupos Familiares</span>
-            {!!zonesQuery?.data?.length && (
-              <Badge
-                variant='active'
-                className='mt-1 text-[11px] text-white md:text-[11px] py-0.3 md:py-0.35 tracking-wide'
-              >
-                Activos
-              </Badge>
-            )}
-          </CardTitle>
-          <CardDescription className='-ml-2 sm:ml-1 text-center sm:text-left text-[14px] md:text-[14.5px] italic'>
-            Por Horario de culto.
-          </CardDescription>
-        </div>
+    <MetricCard
+      className='col-start-1 col-end-2'
+      title={
+        <>
+          Grupos Familiares
+          {!!zonesQuery?.data?.length && (
+            <Badge
+              variant='active'
+              className='mt-1 text-white text-[11px] py-0.3 tracking-wide'
+            >
+              Activos
+            </Badge>
+          )}
+        </>
+      }
+      description='Por Horario de culto.'
+      icon={<TbClock className='w-5 h-5 text-purple-600 dark:text-purple-400' />}
+      isFetching={isFetchingData}
+      isEmpty={isEmptyData}
+      headerAction={
         <Form {...form}>
           <form className='flex'>
             <FormField
@@ -252,37 +251,35 @@ export const FamilyGroupAnalysisCardByServiceTime = ({ churchId }: Props): JSX.E
                       </PopoverTrigger>
                       <PopoverContent align='center' className='w-auto px-4 py-2'>
                         {zonesQuery?.data?.length && zonesQuery?.data?.length > 0 ? (
-                          <>
-                            <Command className='w-[10rem]'>
-                              <CommandInput
-                                placeholder='Busque una zona'
-                                className='h-9 text-[14px] md:text-[14px]'
-                              />
-                              <CommandEmpty>Zona no encontrada.</CommandEmpty>
-                              <CommandGroup className='max-h-[200px] h-auto'>
-                                {zonesQuery?.data?.map((zone) => (
-                                  <CommandItem
-                                    className='text-[14px] md:text-[14px]'
-                                    value={zone.zoneName}
-                                    key={zone.id}
-                                    onSelect={() => {
-                                      form.setValue('zone', zone.id);
-                                      form.handleSubmit(handleSubmit)();
-                                      setIsInputSearchZoneOpen(false);
-                                    }}
-                                  >
-                                    {zone.zoneName}
-                                    <CheckIcon
-                                      className={cn(
-                                        'ml-auto h-4 w-4',
-                                        zone.id === field.value ? 'opacity-100' : 'opacity-0'
-                                      )}
-                                    />
-                                  </CommandItem>
-                                ))}
-                              </CommandGroup>
-                            </Command>
-                          </>
+                          <Command className='w-[10rem]'>
+                            <CommandInput
+                              placeholder='Busque una zona'
+                              className='h-9 text-[14px] md:text-[14px]'
+                            />
+                            <CommandEmpty>Zona no encontrada.</CommandEmpty>
+                            <CommandGroup className='max-h-[200px] h-auto'>
+                              {zonesQuery?.data?.map((zone) => (
+                                <CommandItem
+                                  className='text-[14px] md:text-[14px]'
+                                  value={zone.zoneName}
+                                  key={zone.id}
+                                  onSelect={() => {
+                                    form.setValue('zone', zone.id);
+                                    form.handleSubmit(handleSubmit)();
+                                    setIsInputSearchZoneOpen(false);
+                                  }}
+                                >
+                                  {zone.zoneName}
+                                  <CheckIcon
+                                    className={cn(
+                                      'ml-auto h-4 w-4',
+                                      zone.id === field.value ? 'opacity-100' : 'opacity-0'
+                                    )}
+                                  />
+                                </CommandItem>
+                              ))}
+                            </CommandGroup>
+                          </Command>
                         ) : (
                           zonesQuery?.data?.length === 0 && (
                             <p className='text-[12.5px] md:text-[14px] font-medium text-red-500 text-center'>
@@ -321,66 +318,37 @@ export const FamilyGroupAnalysisCardByServiceTime = ({ churchId }: Props): JSX.E
             />
           </form>
         </Form>
-      </CardHeader>
-
-      {!mappedData?.length && !searchParams ? (
-        <CardContent className='h-full px-2 sm:px-4 py-0'>
-          <div className='text-blue-500 text-[14px] md:text-lg flex flex-col justify-center items-center h-full -mt-6'>
-            <FcDataBackup className='text-[6rem] pb-2' />
-            <p className='font-medium text-[15px] md:text-[16px]'>Consultando datos....</p>
-          </div>
-        </CardContent>
-      ) : (
-        <CardContent className='h-full px-2 sm:px-4 py-0'>
-          {familyGroupsByServiceTimeQuery?.isFetching && !mappedData?.length && (
-            <div className='text-blue-500 text-[14px] md:text-lg flex flex-col justify-center items-center h-full -mt-6'>
-              <FcDataBackup className='text-[6rem] pb-2' />
-              <p className='font-medium text-[15px] md:text-[16px]'>Consultando datos....</p>
-            </div>
-          )}
-          {!!mappedData?.length && searchParams && (
-            <ChartContainer
-              config={chartConfig}
-              className={cn(
-                'w-full h-[270px] sm:h-[310px] md:h-[350px] lg:h-[350px] xl:h-[350px] 2xl:h-[345px]'
-              )}
-            >
-              <BarChart
-                accessibilityLayer
-                data={mappedData}
-                margin={{ top: 5, right: 5, left: -35, bottom: 10 }}
-              >
-                <CartesianGrid vertical={true} />
-                <XAxis
-                  dataKey='serviceTime'
-                  tickLine={false}
-                  tickMargin={10}
-                  axisLine={true}
-                  tickFormatter={(value) => value.slice(0, 10)}
-                  className='text-[12.5px] md:text-[14px]'
-                />
-                <YAxis type='number' className='text-[12.5px] md:text-[14px]' />
-                <ChartTooltip
-                  cursor={false}
-                  content={FamilyGroupsByServiceTimeTooltipContent as any}
-                />
-                <ChartLegend
-                  content={<ChartLegendContent className='ml-8 text-[13px] md:text-[14px]' />}
-                />
-                <Bar dataKey='serviceTimesCount' fill='var(--color-serviceTimesCount)' radius={4} />
-              </BarChart>
-            </ChartContainer>
-          )}
-          {!familyGroupsByServiceTimeQuery?.isFetching && !mappedData?.length && (
-            <div className='text-red-500 flex flex-col justify-center items-center h-full -mt-6'>
-              <FcDeleteDatabase className='text-[6rem] pb-2' />
-              <p className='font-medium text-[15px] md:text-[16px]'>
-                No hay datos disponibles para mostrar.
-              </p>
-            </div>
-          )}
-        </CardContent>
-      )}
-    </Card>
+      }
+    >
+      <ChartContainer
+        config={chartConfig}
+        className='w-full h-[240px] sm:h-[270px] md:h-[310px] xl:h-[320px]'
+      >
+        <BarChart
+          accessibilityLayer
+          data={mappedData}
+          margin={{ top: 5, right: 5, left: -35, bottom: 10 }}
+        >
+          <CartesianGrid vertical={false} strokeDasharray='3 3' className='stroke-slate-200 dark:stroke-slate-700' />
+          <XAxis
+            dataKey='serviceTime'
+            tickLine={false}
+            tickMargin={10}
+            axisLine={false}
+            tickFormatter={(value) => value.slice(0, 10)}
+            className='text-xs fill-slate-500 dark:fill-slate-400'
+          />
+          <YAxis type='number' tickLine={false} axisLine={false} className='text-xs fill-slate-500 dark:fill-slate-400' />
+          <ChartTooltip
+            cursor={{ fill: 'rgba(0,0,0,0.05)' }}
+            content={FamilyGroupsByServiceTimeTooltipContent as any}
+          />
+          <ChartLegend
+            content={<ChartLegendContent className='flex flex-wrap justify-center gap-x-3 gap-y-1 text-xs' />}
+          />
+          <Bar dataKey='serviceTimesCount' fill='var(--color-serviceTimesCount)' radius={4} />
+        </BarChart>
+      </ChartContainer>
+    </MetricCard>
   );
 };

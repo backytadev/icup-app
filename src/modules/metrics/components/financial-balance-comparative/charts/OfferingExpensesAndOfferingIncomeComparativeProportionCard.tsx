@@ -1,12 +1,8 @@
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useEffect, useState } from 'react';
 
 import CountUp from 'react-countup';
 import { PieChart, Pie } from 'recharts';
 import { GiCardExchange } from 'react-icons/gi';
-import { useQuery } from '@tanstack/react-query';
 
 import { Badge } from '@/shared/components/ui/badge';
 import { ChartContainer, type ChartConfig } from '@/shared/components/ui/chart';
@@ -16,6 +12,8 @@ import { RecordOrder } from '@/shared/enums/record-order.enum';
 
 import { MetricSearchType } from '@/modules/metrics/enums/metrics-search-type.enum';
 import { getOfferingComparativeProportion as getOfferingExpensesAndOfferingIncomeByProportion } from '@/modules/metrics/services/offering-comparative-metrics.service';
+import { useMetricsQuery } from '@/modules/metrics/hooks';
+import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
 
 const chartConfigActive = {
   active: {
@@ -41,13 +39,10 @@ interface MappedDataOptions {
   fill: string;
 }
 
-interface Props {
-  churchId: string | undefined;
-}
 
-export const OfferingExpensesAndOfferingIncomeComparativeProportionCard = ({
-  churchId,
-}: Props): JSX.Element => {
+export const OfferingExpensesAndOfferingIncomeComparativeProportionCard = (): JSX.Element => {
+  //* Context
+  const activeChurchId = useChurchMinistryContextStore((s) => s.activeChurchId);
   //* States
   const [mappedOfferingIncomeRecords, setMappedOfferingIncomeRecords] =
     useState<MappedDataOptions[]>();
@@ -55,17 +50,16 @@ export const OfferingExpensesAndOfferingIncomeComparativeProportionCard = ({
     useState<MappedDataOptions[]>();
 
   //* Queries
-  const { data } = useQuery({
-    queryKey: ['offering-expenses-and-offering-income-by-proportion', churchId],
+  const { data } = useMetricsQuery({
+    queryKey: ['offering-expenses-and-offering-income-by-proportion', activeChurchId],
     queryFn: () =>
       getOfferingExpensesAndOfferingIncomeByProportion({
         searchType: MetricSearchType.OfferingExpensesAndOfferingIncomeByProportion,
         year: String(new Date().getFullYear()),
         order: RecordOrder.Ascending,
-        church: churchId ?? '',
+        church: activeChurchId ?? '',
       }),
-    retry: false,
-    enabled: !!churchId,
+    activeChurchId,
   });
 
   //* Effects
@@ -99,15 +93,17 @@ export const OfferingExpensesAndOfferingIncomeComparativeProportionCard = ({
 
   return (
     <div className='w-full grid gap-6 xl:flex xl:gap-10 justify-center items-center px-5'>
-      <Card className='w-[270px] md:w-[300px] mx-auto xl:mx-0 cursor-default shadow-md dark:shadow-slate-700 dark:bg-slate-900 bg-slate-50'>
+      <Card className='w-[270px] md:w-[300px] mx-auto xl:mx-0 cursor-default border-slate-200/80 dark:border-slate-700/50 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-shadow duration-300'>
         <CardHeader className='py-[12px]'>
           <div className='flex justify-center gap-4'>
-            <GiCardExchange className='text-[5rem] text-blue-500' />
+            <div className='flex items-center justify-center w-20 h-20 rounded-full bg-blue-100 dark:bg-blue-900/30 flex-shrink-0'>
+              <GiCardExchange className='text-[3rem] text-blue-500' />
+            </div>
             <div className='flex flex-col gap-2 items-top justify-center'>
-              <CardTitle className='text-center text-[3rem] md:text-[3rem] lg:text-[3.2rem] xl:text-[3.5rem] font-extrabold leading-10'>
+              <CardTitle className='text-center text-[3rem] md:text-[3rem] lg:text-[3.2rem] xl:text-[3.5rem] font-extrabold font-outfit leading-10 text-slate-800 dark:text-slate-100'>
                 {<CountUp end={Number(data?.totalOfferingRecordsCount)} start={0} duration={4} />}
               </CardTitle>
-              <div className='text-[15px] md:text-[15px] xl:text-[16px] font-bold text-center'>
+              <div className='text-sm font-semibold font-inter text-center text-slate-600 dark:text-slate-400'>
                 Total Registros
                 <Badge
                   variant='active'
@@ -122,11 +118,11 @@ export const OfferingExpensesAndOfferingIncomeComparativeProportionCard = ({
       </Card>
 
       <div className='flex flex-col justify-center items-center sm:flex-row gap-6 sm:gap-4 md:gap-8 xl:gap-10'>
-        {/* Active Members */}
-        <Card className='w-[270px] md:w-[300px] cursor-default shadow-md dark:shadow-slate-700 dark:bg-slate-900 bg-slate-50'>
+        {/* Offering Income Records */}
+        <Card className='w-[270px] md:w-[300px] cursor-default border-slate-200/80 dark:border-slate-700/50 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-shadow duration-300'>
           <CardHeader className='py-5'>
             <div className='flex justify-center gap-4 h-[5rem] relative'>
-              <span className='absolute -top-3 left-12 md:left-14 font-bold text-[15px] md:text-[15px]'>
+              <span className='absolute -top-3 left-12 md:left-14 font-bold font-outfit text-[15px] md:text-[15px] text-slate-700 dark:text-slate-300'>
                 {(() => {
                   const activeOfferingsIncome = data?.offeringIncomeRecordsCount ?? 0;
                   const inactiveOfferingsIncome = data?.offeringExpenseRecordsCount ?? 0;
@@ -153,11 +149,11 @@ export const OfferingExpensesAndOfferingIncomeComparativeProportionCard = ({
                 </PieChart>
               </ChartContainer>
 
-              <div className='flex flex-col  items-center justify-center'>
-                <CardDescription className='text-[15px] md:text-[15px] font-bold text-center'>
+              <div className='flex flex-col items-center justify-center'>
+                <CardDescription className='text-sm font-semibold font-inter text-center text-slate-500 dark:text-slate-400'>
                   Tasa de registros <span className='text-green-500'>Ingresos</span>
                 </CardDescription>
-                <CardTitle className='text-center text-[2.2rem] xl:text-[2.5rem] font-extrabold leading-10'>
+                <CardTitle className='text-center text-[2.2rem] xl:text-[2.5rem] font-extrabold font-outfit leading-10 text-slate-800 dark:text-slate-100'>
                   {
                     <CountUp
                       end={Number(data?.offeringIncomeRecordsCount)}
@@ -171,11 +167,11 @@ export const OfferingExpensesAndOfferingIncomeComparativeProportionCard = ({
           </CardHeader>
         </Card>
 
-        {/* Inactive Members */}
-        <Card className='w-[270px] md:w-[300px] cursor-default shadow-md dark:shadow-slate-700 dark:bg-slate-900 bg-slate-50'>
+        {/* Offering Expense Records */}
+        <Card className='w-[270px] md:w-[300px] cursor-default border-slate-200/80 dark:border-slate-700/50 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-shadow duration-300'>
           <CardHeader className='py-5'>
             <div className='flex justify-center gap-4 h-[5rem] relative'>
-              <span className='absolute -top-3 left-12 md:left-14 font-bold text-[15px] md:text-[15px]'>
+              <span className='absolute -top-3 left-12 md:left-14 font-bold font-outfit text-[15px] md:text-[15px] text-slate-700 dark:text-slate-300'>
                 {(() => {
                   const activeOfferingsIncome = data?.offeringIncomeRecordsCount ?? 0;
                   const inactiveOfferingsIncome = data?.offeringExpenseRecordsCount ?? 0;
@@ -201,11 +197,11 @@ export const OfferingExpensesAndOfferingIncomeComparativeProportionCard = ({
                   <Pie data={mappedOfferingExpensesRecords} dataKey='value' nameKey='name'></Pie>
                 </PieChart>
               </ChartContainer>
-              <div className='flex flex-col  items-center justify-center'>
-                <CardDescription className='text-[15px] md:text-[15px] font-bold text-center'>
+              <div className='flex flex-col items-center justify-center'>
+                <CardDescription className='text-sm font-semibold font-inter text-center text-slate-500 dark:text-slate-400'>
                   Tasa de registros <span className='text-red-500'>Salidas</span>
                 </CardDescription>
-                <CardTitle className='text-center text-[2.2rem] xl:text-[2.5rem] font-extrabold leading-10'>
+                <CardTitle className='text-center text-[2.2rem] xl:text-[2.5rem] font-extrabold font-outfit leading-10 text-slate-800 dark:text-slate-100'>
                   {
                     <CountUp
                       end={Number(data?.offeringExpenseRecordsCount)}

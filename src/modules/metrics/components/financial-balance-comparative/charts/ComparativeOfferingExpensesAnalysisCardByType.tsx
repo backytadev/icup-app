@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useEffect, useState } from 'react';
 
 import { type z } from 'zod';
@@ -9,10 +6,10 @@ import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
 import { XAxis, YAxis, CartesianGrid, BarChart, Bar } from 'recharts';
-import { FcDataBackup, FcDataConfiguration, FcDeleteDatabase } from 'react-icons/fc';
+import { FcDataBackup } from 'react-icons/fc';
 
 import { MetricSearchType } from '@/modules/metrics/enums/metrics-search-type.enum';
-import { metricsFormSchema } from '@/modules/metrics/validations/metrics-form-schema';
+import { metricsFormSchema } from '@/modules/metrics/schemas/metrics-form-schema';
 import { getComparativeOfferingExpensesByType } from '@/modules/metrics/services/offering-comparative-metrics.service';
 import { ComparativeOfferingExpensesByTypeTooltipContent } from '@/modules/metrics/components/financial-balance-comparative/tooltips/components/ComparativeOfferingExpensesByTypeTooltipContent';
 
@@ -56,6 +53,8 @@ import {
 import { Button } from '@/shared/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/shared/components/ui/form';
+import { EmptyState } from '@/shared/components/feedback/EmptyState';
+import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
 
 const chartConfig = {
   accumulatedOfferingPEN: {
@@ -91,15 +90,14 @@ interface ResultDataOptions {
   totalPercentage: string;
 }
 
-interface Props {
-  churchId: string | undefined;
-}
 
 const transformedArray = [
   ...Object.entries(OfferingExpenseSearchTypeNames).map(([key, value]) => ({ key, value })),
 ];
 
-export const ComparativeOfferingExpensesAnalysisCardByType = ({ churchId }: Props): JSX.Element => {
+export const ComparativeOfferingExpensesAnalysisCardByType = (): JSX.Element => {
+  //* Context
+  const activeChurchId = useChurchMinistryContextStore((s) => s.activeChurchId);
   //* States
   const [isInputSearchTypeOpen, setIsInputSearchTypeOpen] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useState<SearchParamsOptions | undefined>(undefined);
@@ -124,13 +122,13 @@ export const ComparativeOfferingExpensesAnalysisCardByType = ({ churchId }: Prop
 
   //* Queries
   const comparativeOfferingExpensesByType = useQuery({
-    queryKey: ['comparative-offering-expenses-by-type', { ...searchParams, church: churchId }],
+    queryKey: ['comparative-offering-expenses-by-type', { ...searchParams, church: activeChurchId }],
     queryFn: async () => {
       return await getComparativeOfferingExpensesByType({
         searchType: MetricSearchType.ComparativeOfferingExpensesByType,
         metricType: searchParams?.type ?? type,
         year: searchParams?.year ?? year,
-        church: churchId ?? '',
+        church: activeChurchId ?? '',
         order: RecordOrder.Descending,
       });
     },
@@ -181,18 +179,18 @@ export const ComparativeOfferingExpensesAnalysisCardByType = ({ churchId }: Prop
   };
 
   return (
-    <Card className='bg-slate-50/40 dark:bg-slate-900/40 flex flex-col col-start-1 col-end-3 h-[25.7rem] sm:h-[26.5rem] md:h-[27rem] lg:h-[31.5rem] 2xl:h-[31.5rem] m-0 border-slate-200 dark:border-slate-800'>
-      <CardHeader className='z-10 flex flex-col sm:flex-row items-center justify-between px-4 py-2.5'>
-        <div className='flex flex-col items-center sm:items-start'>
-          <CardTitle className='font-bold text-[22px] sm:text-[25px] md:text-[28px] 2xl:text-[30px]'>
+    <Card className='overflow-hidden border-slate-200/80 dark:border-slate-700/50 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col col-start-1 col-end-3'>
+      <CardHeader className='flex flex-col sm:flex-row items-start justify-between space-y-0 pb-3 pt-4 px-4 md:px-5'>
+        <div className='flex flex-col items-start'>
+          <CardTitle className='flex items-center gap-2 text-base md:text-lg font-semibold font-outfit text-slate-800 dark:text-slate-100'>
             Salidas de Ofrenda
           </CardTitle>
-          <CardDescription className='sm:ml-[2px] sm:text-left text-center text-[14px] md:text-[16px] italic'>
+          <CardDescription className='text-sm text-slate-500 dark:text-slate-400 font-inter'>
             Detallado (Acumulado por tipo, mes y año).
           </CardDescription>
         </div>
         <Form {...form}>
-          <form className='flex'>
+          <form className='flex flex-shrink-0 mx-auto sm:m-0 pt-2 sm:pt-0'>
             <FormField
               control={form.control}
               name='type'
@@ -297,96 +295,68 @@ export const ComparativeOfferingExpensesAnalysisCardByType = ({ churchId }: Prop
         </Form>
       </CardHeader>
 
-      {!comparativeOfferingExpensesByType?.data?.length && !searchParams ? (
-        <CardContent className='h-full px-2 sm:px-4 py-0'>
-          <div className='text-blue-500 text-[14px] md:text-lg flex flex-col justify-center items-center h-full -mt-6'>
-            <FcDataBackup className='text-[6rem] pb-2' />
-            <p className='font-medium text-[15px] md:text-[16px]'>Consultando datos....</p>
+      <CardContent className='px-3 md:px-5 pb-4'>
+        {!searchParams || (comparativeOfferingExpensesByType?.isFetching && !mappedData?.length) ? (
+          <div className='flex flex-col items-center justify-center py-8'>
+            <FcDataBackup className='text-[4rem] mb-2' />
+            <p className='text-sm font-medium text-slate-500 dark:text-slate-400'>Consultando datos...</p>
           </div>
-        </CardContent>
-      ) : (
-        <CardContent className='h-full px-2 sm:px-4 py-0'>
-          {comparativeOfferingExpensesByType?.isFetching &&
-            !comparativeOfferingExpensesByType?.data?.length &&
-            year && (
-              <div className='text-blue-500 text-[14px] md:text-lg flex flex-col justify-center items-center h-full -mt-6'>
-                <FcDataBackup className='text-[6rem] pb-2' />
-                <p className='font-medium text-[15px] md:text-[16px]'>Consultando datos....</p>
-              </div>
-            )}
-          {!!mappedData?.length && searchParams && (
-            <ChartContainer
-              config={chartConfig}
-              className={cn(
-                'w-full h-[288px] sm:h-[345px] md:h-[345px] lg:h-[415px] xl:h-[415px] 2xl:h-[415px]'
-              )}
+        ) : !!mappedData?.length ? (
+          <ChartContainer
+            config={chartConfig}
+            className='w-full h-[240px] sm:h-[270px] md:h-[310px] xl:h-[320px]'
+          >
+            <BarChart
+              accessibilityLayer
+              data={mappedData}
+              margin={{ top: 5, right: 5, left: -20, bottom: 10 }}
             >
-              <BarChart
-                accessibilityLayer
-                data={mappedData}
-                margin={{ top: 5, right: 5, left: -20, bottom: 10 }}
-              >
-                <CartesianGrid vertical={true} />
-                <XAxis
-                  dataKey='month'
-                  tickLine={false}
-                  tickMargin={10}
-                  axisLine={true}
-                  className='text-[12.5px] sm:text-[14px]'
-                  tickFormatter={(value) => value.slice(0, 3)}
-                />
+              <CartesianGrid vertical={false} strokeDasharray='3 3' className='stroke-slate-200 dark:stroke-slate-700' />
+              <XAxis
+                dataKey='month'
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
+                className='text-xs fill-slate-500 dark:fill-slate-400'
+                tickFormatter={(value) => value.slice(0, 3)}
+              />
 
-                <YAxis className='text-[12.5px] sm:text-[14px]' />
-                <ChartTooltip
-                  cursor={false}
-                  content={ComparativeOfferingExpensesByTypeTooltipContent as any}
-                />
+              <YAxis tickLine={false} axisLine={false} className='text-xs fill-slate-500 dark:fill-slate-400' />
+              <ChartTooltip
+                cursor={{ fill: 'rgba(0,0,0,0.05)' }}
+                content={ComparativeOfferingExpensesByTypeTooltipContent as any}
+              />
 
-                <ChartLegend
-                  content={
-                    <ChartLegendContent className='ml-4 sm:ml-8 text-[13px] md:text-[14px] flex gap-2 sm:gap-5' />
-                  }
-                />
+              <ChartLegend
+                content={
+                  <ChartLegendContent className='flex flex-wrap justify-center gap-x-3 gap-y-1 text-xs' />
+                }
+              />
 
-                <Bar
-                  dataKey='accumulatedOfferingPEN'
-                  stackId='type'
-                  fill='var(--color-accumulatedOfferingPEN)'
-                  radius={[2, 2, 2, 2]}
-                />
-                <Bar
-                  dataKey='accumulatedOfferingEUR'
-                  stackId='type'
-                  fill='var(--color-accumulatedOfferingEUR)'
-                  radius={[2, 2, 0, 0]}
-                />
-                <Bar
-                  dataKey='accumulatedOfferingUSD'
-                  stackId='type'
-                  fill='var(--color-accumulatedOfferingUSD)'
-                  radius={[2, 2, 0, 0]}
-                />
-              </BarChart>
-            </ChartContainer>
-          )}
-          {!year && !mappedData?.length && (
-            <div className='text-emerald-500 text-[14px] md:text-lg flex flex-col justify-center items-center h-full -mt-6'>
-              <FcDataConfiguration className='text-[6rem] pb-2' />
-              <p>Esperando parámetros de consulta...</p>
-            </div>
-          )}
-          {!comparativeOfferingExpensesByType?.isFetching &&
-            !comparativeOfferingExpensesByType?.data?.length &&
-            year && (
-              <div className='text-red-500 flex flex-col justify-center items-center h-full -mt-6'>
-                <FcDeleteDatabase className='text-[6rem] pb-2' />
-                <p className='font-medium text-[15px] md:text-[16px]'>
-                  No hay datos disponibles para mostrar.
-                </p>
-              </div>
-            )}
-        </CardContent>
-      )}
+              <Bar
+                dataKey='accumulatedOfferingPEN'
+                stackId='type'
+                fill='var(--color-accumulatedOfferingPEN)'
+                radius={[2, 2, 2, 2]}
+              />
+              <Bar
+                dataKey='accumulatedOfferingEUR'
+                stackId='type'
+                fill='var(--color-accumulatedOfferingEUR)'
+                radius={[2, 2, 0, 0]}
+              />
+              <Bar
+                dataKey='accumulatedOfferingUSD'
+                stackId='type'
+                fill='var(--color-accumulatedOfferingUSD)'
+                radius={[2, 2, 0, 0]}
+              />
+            </BarChart>
+          </ChartContainer>
+        ) : (
+          <EmptyState variant='chart' className='py-4' />
+        )}
+      </CardContent>
     </Card>
   );
 };

@@ -1,14 +1,6 @@
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
+import { useEffect } from 'react';
 
-import { useEffect, useState } from 'react';
-
-import { useQuery } from '@tanstack/react-query';
-
-import { SelectChurch } from '@/modules/metrics/components/shared/SelectChurch';
-import { OfferingExpenseMetricsSkeleton } from '@/modules/metrics/components/shared/OfferingExpenseMetricsSkeleton';
-
-import { getSimpleChurches } from '@/modules/church/services/church.service';
+import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
 
 import { OfferingExpenseProportionCard } from '@/modules/metrics/components/offering-expense/charts/OfferingExpenseProportionCard';
 import { OfferingExpenseReportFormCard } from '@/modules/metrics/components/offering-expense/reports/OfferingExpenseReportFormCard';
@@ -20,64 +12,45 @@ import { OfferingExpenseAnalysisCardByOperationalExpenses } from '@/modules/metr
 import { OfferingExpenseAnalysisCardByPlaningEventsExpenses } from '@/modules/metrics/components/offering-expense/charts/OfferingExpenseAnalysisCardByPlaningEventsExpenses';
 import { OfferingExpenseAnalysisCardByMaintenanceAndRepairExpenses } from '@/modules/metrics/components/offering-expense/charts/OfferingExpenseAnalysisCardByMaintenanceAndRepairExpenses';
 import { OfferingExpenseAnalysisCardByEquipmentAndTechnologyExpenses } from '@/modules/metrics/components/offering-expense/charts/OfferingExpenseAnalysisCardByEquipmentAndTechnologyExpenses';
+import { ModuleHeader } from '@/shared/components/page-header/ModuleHeader';
+import { GiPayMoney } from 'react-icons/gi';
 
 export const OfferingExpenseMetrics = (): JSX.Element => {
-  //* States
-  const [churchId, setChurchId] = useState<string | undefined>(undefined);
-
-  //* Queries
-  const { data } = useQuery({
-    queryKey: ['churches-for-offering-income-metrics'],
-    queryFn: () => getSimpleChurches({ isSimpleQuery: true }),
-    staleTime: 1000 * 60,
-    retry: false,
-  });
-
-  //* Effects
-  useEffect(() => {
-    const church = data?.map((church) => church?.id)[0];
-    setChurchId(church);
-  }, [data]);
+  //* Context
+  const activeChurchId = useChurchMinistryContextStore((s) => s.activeChurchId);
 
   useEffect(() => {
     document.title = 'Modulo Métricas - IcupApp';
   }, []);
 
   return (
-    <div className='animate-fadeInPage'>
-      <h2 className='text-center leading-12 sm:leading-none text-red-500 pt-2 md:py-2 xl:pt-3 font-sans font-bold text-[2rem] sm:text-[2.5rem] md:text-[2.5rem] lg:text-[2.8rem] xl:text-5xl'>
-        Métricas de Ofrendas
-      </h2>
+    <div className='animate-fadeInPage max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6'>
+      <ModuleHeader
+        title='Métricas de Ofrendas (Gastos)'
+        description='Análisis, comparativas e indicadores de los salidas de ofrenda.'
+        titleColor='red'
+        badge='Ofrendas'
+        badgeColor='red'
+        icon={GiPayMoney}
+        accentColor='red'
+      />
 
-      <p className='text-center text-red-500 font-bold text-[24px] sm:text-[32px] -mt-2 sm:-mt-3 md:-mt-5 lg:-mt-5 xl:-mt-2'>
-        (Gastos)
-      </p>
-
-      <p className='text-center text-[15px] md:text-[16px] lg:text-[18px] xl:text-[20px] font-medium'>
-        Análisis, comparativas e indicadores de los salidas de ofrenda
-      </p>
-      <hr className='p-[0.015rem] bg-slate-500 mt-2 mb-4 w-[90%] mx-auto' />
-
-      <OfferingExpenseProportionCard churchId={churchId} />
+      <OfferingExpenseProportionCard />
 
       <div className='flex justify-center gap-4 items-center mt-6'>
-        <SelectChurch data={data} churchId={churchId} setChurchId={setChurchId} />
-
-        <OfferingExpenseReportFormCard churchId={churchId} />
+        <OfferingExpenseReportFormCard />
       </div>
 
-      {!churchId ? (
-        <OfferingExpenseMetricsSkeleton />
-      ) : (
+      {activeChurchId && (
         <div className='mt-6 px-2 pb-10 sm:pb-10 md:px-6 xl:pb-14 flex flex-col gap-8 h-auto'>
-          <OfferingExpenseAnalysisCardByOperationalExpenses churchId={churchId} />
-          <OfferingExpenseAnalysisCardByMaintenanceAndRepairExpenses churchId={churchId} />
-          <OfferingExpenseAnalysisCardByDecorationExpenses churchId={churchId} />
-          <OfferingExpenseAnalysisCardByEquipmentAndTechnologyExpenses churchId={churchId} />
-          <OfferingExpenseAnalysisCardBySuppliesExpenses churchId={churchId} />
-          <OfferingExpenseAnalysisCardByPlaningEventsExpenses churchId={churchId} />
-          <OfferingExpenseAnalysisCardByOthersExpenses churchId={churchId} />
-          <OfferingExpenseAnalysisCardByExpensesAdjustment churchId={churchId} />
+          <OfferingExpenseAnalysisCardByOperationalExpenses />
+          <OfferingExpenseAnalysisCardByMaintenanceAndRepairExpenses />
+          <OfferingExpenseAnalysisCardByDecorationExpenses />
+          <OfferingExpenseAnalysisCardByEquipmentAndTechnologyExpenses />
+          <OfferingExpenseAnalysisCardBySuppliesExpenses />
+          <OfferingExpenseAnalysisCardByPlaningEventsExpenses />
+          <OfferingExpenseAnalysisCardByOthersExpenses />
+          <OfferingExpenseAnalysisCardByExpensesAdjustment />
         </div>
       )}
     </div>

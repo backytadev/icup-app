@@ -1,21 +1,20 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useEffect, useState } from 'react';
 
 import { type z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { FcDataBackup, FcDeleteDatabase } from 'react-icons/fc';
+import { TbMapPin } from 'react-icons/tb';
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
 import { CartesianGrid, Area, AreaChart, XAxis, YAxis } from 'recharts';
 
+import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
+
 import { MetricSearchType } from '@/modules/metrics/enums/metrics-search-type.enum';
-import { metricsFormSchema } from '@/modules/metrics/validations/metrics-form-schema';
+import { metricsFormSchema } from '@/modules/metrics/schemas/metrics-form-schema';
 import { getFamilyGroupsByZone } from '@/modules/metrics/services/family-group-metrics.service';
 import { FamilyGroupsByZoneTooltipContent } from '@/modules/metrics/components/family-group/tooltips/components/FamilyGroupsByZoneTooltipContent';
+import { MetricCard } from '@/modules/metrics/components/shared/MetricCard';
 
 import { cn } from '@/shared/lib/utils';
 
@@ -44,13 +43,6 @@ import {
   type ChartConfig,
   ChartLegendContent,
 } from '@/shared/components/ui/chart';
-import {
-  Card,
-  CardTitle,
-  CardHeader,
-  CardContent,
-  CardDescription,
-} from '@/shared/components/ui/card';
 import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
 import { Checkbox } from '@/shared/components/ui/checkbox';
@@ -85,11 +77,10 @@ interface SearchParamsOptions {
   all?: boolean;
 }
 
-interface Props {
-  churchId: string | undefined;
-}
+export const FamilyGroupAnalysisCardByZone = (): JSX.Element => {
+  //* Context
+  const activeChurchId = useChurchMinistryContextStore((s) => s.activeChurchId);
 
-export const FamilyGroupAnalysisCardByZone = ({ churchId }: Props): JSX.Element => {
   //* States
   const [mappedData, setMappedData] = useState<ResultDataOptions[]>();
   const [isInputSearchZoneOpen, setIsInputSearchZoneOpen] = useState<boolean>(false);
@@ -111,24 +102,26 @@ export const FamilyGroupAnalysisCardByZone = ({ churchId }: Props): JSX.Element 
 
   //* Queries
   const zonesQuery = useQuery({
-    queryKey: ['zones-for-family-groups-code', churchId],
-    queryFn: () => getSimpleZones({ churchId: churchId ?? '', isSimpleQuery: true }),
+    queryKey: ['zones-for-family-groups-code', activeChurchId],
+    queryFn: () => getSimpleZones({ churchId: activeChurchId ?? '', isSimpleQuery: true }),
     retry: false,
+    enabled: !!activeChurchId,
   });
 
   const familyGroupByCodeQuery = useQuery({
-    queryKey: ['family-groups-by-code', { ...searchParams, church: churchId }],
+    queryKey: ['family-groups-by-code', { ...searchParams, church: activeChurchId }],
     queryFn: () => {
       return getFamilyGroupsByZone({
         searchType: MetricSearchType.FamilyGroupsByZone,
         zone: searchParams?.zone ?? zone,
         allFamilyGroups: searchParams?.all ?? all,
         order: RecordOrder.Ascending,
-        church: churchId ?? '',
+        church: activeChurchId ?? '',
       });
     },
     retry: false,
-    enabled: !!searchParams?.zone && !!churchId && !!zonesQuery?.data && !!zonesQuery.data.length,
+    enabled:
+      !!searchParams?.zone && !!activeChurchId && !!zonesQuery?.data && !!zonesQuery.data.length,
   });
 
   //* Effects
@@ -177,25 +170,30 @@ export const FamilyGroupAnalysisCardByZone = ({ churchId }: Props): JSX.Element 
     setSearchParams(formData);
   };
 
+  const isFetchingData = !searchParams || (familyGroupByCodeQuery?.isFetching && !mappedData?.length);
+  const isEmptyData = !isFetchingData && !mappedData?.length;
+
   return (
-    <Card className='bg-slate-50/40 dark:bg-slate-900/40  flex flex-col col-start-2 col-end-3 h-[24rem] md:h-[27rem] lg:h-[27rem] 2xl:h-[27rem] m-0 border-slate-200 dark:border-slate-800'>
-      <CardHeader className='z-10 flex flex-col sm:flex-row items-center justify-between px-4 pt-1.5 pb-2'>
-        <div className='flex flex-col'>
-          <CardTitle className='flex justify-center items-center gap-2 font-bold text-[22px] sm:text-[25px] md:text-[28px] 2xl:text-[30px]'>
-            Grupos Familiares
-            {!!zonesQuery?.data?.length && (
-              <Badge
-                variant='active'
-                className='mt-1 text-[11px] text-white md:text-[11px] py-0.3 md:py-0.35 tracking-wide'
-              >
-                Activos
-              </Badge>
-            )}
-          </CardTitle>
-          <CardDescription className='-ml-1 sm:ml-1 text-center sm:text-left text-[14px] md:text-[14.5px] italic'>
-            Por Zona (discípulos y género).
-          </CardDescription>
-        </div>
+    <MetricCard
+      className='col-start-2 col-end-3'
+      title={
+        <>
+          Grupos Familiares
+          {!!zonesQuery?.data?.length && (
+            <Badge
+              variant='active'
+              className='mt-1 text-white text-[11px] py-0.3 tracking-wide'
+            >
+              Activos
+            </Badge>
+          )}
+        </>
+      }
+      description='Por Zona (discípulos y género).'
+      icon={<TbMapPin className='w-5 h-5 text-pink-600 dark:text-pink-400' />}
+      isFetching={isFetchingData}
+      isEmpty={isEmptyData}
+      headerAction={
         <Form {...form}>
           <form className='flex'>
             <FormField
@@ -297,80 +295,49 @@ export const FamilyGroupAnalysisCardByZone = ({ churchId }: Props): JSX.Element 
             />
           </form>
         </Form>
-      </CardHeader>
-
-      {!mappedData?.length && !searchParams ? (
-        <CardContent className='h-full px-2 sm:px-4 py-0'>
-          <div className='text-blue-500 text-[14px] md:text-lg flex flex-col justify-center items-center h-full -mt-6'>
-            <FcDataBackup className='text-[6rem] pb-2' />
-            <p className='font-medium text-[15px] md:text-[16px]'>Consultando datos....</p>
-          </div>
-        </CardContent>
-      ) : (
-        <CardContent className='h-full px-2 sm:px-4 py-0'>
-          {familyGroupByCodeQuery?.isFetching && !mappedData?.length && (
-            <div className='text-blue-500 text-[14px] md:text-lg flex flex-col justify-center items-center h-full -mt-6'>
-              <FcDataBackup className='text-[6rem] pb-2' />
-              <p className='font-medium text-[15px] md:text-[16px]'>Consultando datos....</p>
-            </div>
-          )}
-          {!!mappedData?.length && searchParams && (
-            <ChartContainer
-              config={chartConfig}
-              className={cn(
-                'w-full h-[270px] sm:h-[305px] md:h-[350px] lg:h-[350px] xl:h-[350px] 2xl:h-[345px]'
-              )}
-            >
-              <AreaChart
-                accessibilityLayer
-                data={mappedData}
-                margin={{ top: 5, right: 5, left: -35, bottom: 10 }}
-              >
-                <CartesianGrid vertical={false} />
-                <XAxis
-                  dataKey='familyGroupCode'
-                  tickLine={false}
-                  axisLine={false}
-                  tickMargin={8}
-                  className='text-[12.5px] md:text-[14px]'
-                  tickFormatter={(value) => value.slice(0, 5)}
-                />
-                <YAxis type='number' className='text-[12.5px] md:text-[14px]' />
-
-                <ChartTooltip cursor={false} content={FamilyGroupsByZoneTooltipContent as any} />
-
-                <Area
-                  dataKey='men'
-                  type='natural'
-                  fill='var(--color-men)'
-                  fillOpacity={0.4}
-                  stroke='var(--color-men)'
-                  stackId='men'
-                />
-                <Area
-                  dataKey='women'
-                  type='natural'
-                  fill='var(--color-women)'
-                  fillOpacity={0.4}
-                  stroke='var(--color-women)'
-                  stackId='women'
-                />
-                <ChartLegend
-                  content={<ChartLegendContent className='ml-8 text-[13px] md:text-[14px]' />}
-                />
-              </AreaChart>
-            </ChartContainer>
-          )}
-          {!familyGroupByCodeQuery?.isFetching && !mappedData?.length && (
-            <div className='text-red-500 flex flex-col justify-center items-center h-full -mt-6'>
-              <FcDeleteDatabase className='text-[6rem] pb-2' />
-              <p className='font-medium text-[15px] md:text-[16px]'>
-                No hay datos disponibles para mostrar.
-              </p>
-            </div>
-          )}
-        </CardContent>
-      )}
-    </Card>
+      }
+    >
+      <ChartContainer
+        config={chartConfig}
+        className='w-full h-[240px] sm:h-[270px] md:h-[310px] xl:h-[320px]'
+      >
+        <AreaChart
+          accessibilityLayer
+          data={mappedData}
+          margin={{ top: 5, right: 5, left: -35, bottom: 10 }}
+        >
+          <CartesianGrid vertical={false} strokeDasharray='3 3' className='stroke-slate-200 dark:stroke-slate-700' />
+          <XAxis
+            dataKey='familyGroupCode'
+            tickLine={false}
+            axisLine={false}
+            tickMargin={8}
+            className='text-xs fill-slate-500 dark:fill-slate-400'
+            tickFormatter={(value) => value.slice(0, 5)}
+          />
+          <YAxis type='number' tickLine={false} axisLine={false} className='text-xs fill-slate-500 dark:fill-slate-400' />
+          <ChartTooltip cursor={{ fill: 'rgba(0,0,0,0.05)' }} content={FamilyGroupsByZoneTooltipContent as any} />
+          <Area
+            dataKey='men'
+            type='natural'
+            fill='var(--color-men)'
+            fillOpacity={0.4}
+            stroke='var(--color-men)'
+            stackId='men'
+          />
+          <Area
+            dataKey='women'
+            type='natural'
+            fill='var(--color-women)'
+            fillOpacity={0.4}
+            stroke='var(--color-women)'
+            stackId='women'
+          />
+          <ChartLegend
+            content={<ChartLegendContent className='flex flex-wrap justify-center gap-x-3 gap-y-1 text-xs' />}
+          />
+        </AreaChart>
+      </ChartContainer>
+    </MetricCard>
   );
 };

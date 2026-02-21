@@ -1,23 +1,19 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useEffect, useMemo, useState } from 'react';
 
-import { useQuery } from '@tanstack/react-query';
 import { Sector, PieChart, Pie, Label } from 'recharts';
-import { FcDataBackup, FcDeleteDatabase } from 'react-icons/fc';
+import { TbChartDonut } from 'react-icons/tb';
+
 import { type PieSectorDataItem } from 'recharts/types/polar/Pie';
 
 import { cn } from '@/shared/lib/utils';
 import { RecordOrder } from '@/shared/enums/record-order.enum';
 
-import { getSimpleChurches } from '@/modules/church/services/church.service';
-import { type ChurchResponse } from '@/modules/church/types';
+import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
 
 import { MetricSearchType } from '@/modules/metrics/enums/metrics-search-type.enum';
 import { getMembersByCategory } from '@/modules/metrics/services/member-metrics.service';
+import { useMetricsQuery } from '@/modules/metrics/hooks';
+import { MetricCard } from '@/modules/metrics/components/shared/MetricCard';
 import { MembersByCategoryLegendContent } from '@/modules/metrics/components/member/tooltips/components/MembersByCategoryLegendContent';
 
 import {
@@ -35,7 +31,6 @@ import {
   SelectContent,
 } from '@/shared/components/ui/select';
 import { Badge } from '@/shared/components/ui/badge';
-import { Card, CardContent, CardTitle } from '@/shared/components/ui/card';
 
 const chartConfig = {
   child: {
@@ -71,15 +66,12 @@ interface ResultDataOptions {
   fill: string;
 }
 
-interface Props {
-  churchId: string | undefined;
-}
+export const MemberAnalysisCardByCategory = (): JSX.Element => {
+  //* Context
+  const activeChurchId = useChurchMinistryContextStore((s) => s.activeChurchId);
 
-export const MemberAnalysisCardByCategory = ({ churchId }: Props): JSX.Element => {
   //* States
   const [mappedData, setMappedData] = useState<ResultDataOptions[]>([]);
-  const [church, setChurch] = useState<ChurchResponse>();
-
   const id = 'pie-interactive';
   const INITIALVALUE = 'child';
   const [activeCategory, setActiveCategory] = useState<string>(INITIALVALUE);
@@ -91,35 +83,22 @@ export const MemberAnalysisCardByCategory = ({ churchId }: Props): JSX.Element =
   const categories = useMemo(() => mappedData?.map((item) => item.category), [mappedData]);
 
   //* Queries
-  const membersByCategoryQuery = useQuery({
-    queryKey: ['members-by-category', churchId],
+  const { data, isLoading, isEmpty } = useMetricsQuery({
+    queryKey: ['members-by-category', activeChurchId],
     queryFn: () =>
       getMembersByCategory({
         searchType: MetricSearchType.MembersByCategory,
         year: String(new Date().getFullYear()),
         order: RecordOrder.Ascending,
-        church: churchId ?? '',
+        church: activeChurchId ?? '',
       }),
-    retry: false,
-    enabled: !!churchId,
+    activeChurchId,
   });
-
-  const { data } = useQuery({
-    queryKey: ['churches'],
-    queryFn: () => getSimpleChurches({ isSimpleQuery: true }),
-    staleTime: 1000 * 60,
-    retry: false,
-  });
-
-  useEffect(() => {
-    const church = data?.find((church) => church?.id === churchId);
-    setChurch(church);
-  }, [data, churchId]);
 
   //* Effects
   useEffect(() => {
-    if (membersByCategoryQuery?.data) {
-      const transformedData = Object.entries(membersByCategoryQuery?.data).map(
+    if (data) {
+      const transformedData = Object.entries(data).map(
         ([category, membersCount]) => {
           return {
             ageRange:
@@ -143,35 +122,32 @@ export const MemberAnalysisCardByCategory = ({ churchId }: Props): JSX.Element =
 
       setMappedData(transformedData);
     }
-  }, [membersByCategoryQuery?.data]);
+  }, [data]);
 
   return (
-    <Card className='bg-slate-50/40 dark:bg-slate-900/40 flex flex-col col-start-1 col-end-2 h-[22rem] md:h-[25rem] lg:h-[25rem] 2xl:h-[26rem] m-0 border-slate-200 dark:border-slate-800'>
-      <CardTitle className='flex items-center gap-2.5 justify-center px-4 py-2 text-center font-bold text-[22px] sm:text-[25px] md:text-[28px] 2xl:text-[30px]'>
-        <span className='ml-16 md:ml-20'>Categoría</span>
-        <Badge
-          variant='active'
-          className='mt-1 text-white text-[11px] md:text-[11px] py-0.3 md:py-0.35 tracking-wide'
-        >
-          Activos
-        </Badge>
-      </CardTitle>
-      <span className='-mt-2 text-[14px] md:text-[14px] md:pl-3 text-center font-medium text-slate-500 dark:text-slate-400'>
-        {church?.abbreviatedChurchName}
-      </span>
-
-      {!mappedData?.length ? (
-        <CardContent className='flex flex-1 justify-center pb-0'>
-          <div className='text-blue-500 text-[14px] md:text-lg flex flex-col justify-center items-center h-full -mt-6'>
-            <FcDataBackup className='text-[6rem] pb-2' />
-            <p className='font-medium text-[15px] md:text-[16px]'>Consultando datos....</p>
-          </div>
-        </CardContent>
-      ) : (
+    <MetricCard
+      className='col-start-1 col-end-2'
+      title={
         <>
+          Categoría
+          <Badge
+            variant='active'
+            className='mt-1 text-white text-[11px] md:text-[11px] py-0.3 md:py-0.35 tracking-wide'
+          >
+            Activos
+          </Badge>
+        </>
+      }
+      // description={church?.abbreviatedChurchName}
+      icon={<TbChartDonut className='w-5 h-5 text-orange-600 dark:text-orange-400' />}
+      isFetching={isLoading || (!mappedData?.length && !isEmpty)}
+      isEmpty={isEmpty}
+      contentClassName='flex justify-center'
+      headerAction={
+        mappedData?.length ? (
           <Select value={activeCategory} onValueChange={setActiveCategory}>
             <SelectTrigger
-              className='ml-auto h-7 w-auto rounded-lg pl-2.5 mr-5 mb-8 md:mt-1'
+              className='h-7 w-auto rounded-lg pl-2.5'
               aria-label='Select a value'
             >
               <SelectValue placeholder='Selecciona una categoría' />
@@ -204,94 +180,78 @@ export const MemberAnalysisCardByCategory = ({ churchId }: Props): JSX.Element =
               })}
             </SelectContent>
           </Select>
-
-          <CardContent className='flex flex-1 justify-center pb-0'>
-            {membersByCategoryQuery?.isFetching && !mappedData?.length && (
-              <div className='text-blue-500 text-[14px] md:text-lg flex flex-col justify-center items-center h-full -mt-6'>
-                <FcDataBackup className='text-[6rem] pb-2' />
-                <p className='font-medium text-[15px] md:text-[16px]'>Consultando datos....</p>
-              </div>
-            )}
-            {!!mappedData?.length && (
-              <ChartContainer
-                id={id}
-                config={chartConfig}
-                className='mx-auto aspect-square w-full max-w-[280px] md:max-w-[345px] -mt-[3.5rem] md:-mt-[4.5rem] lg:-mt-[4.5rem] xl:-mt-[4.5rem] 2xl:-mt-[4rem]'
-              >
-                <PieChart>
-                  <ChartTooltip
-                    cursor={false}
-                    content={
-                      <ChartTooltipContent
-                        className='text-[14px] md:text-[14px] w-[10rem]'
-                        indicator='dot'
-                        hideLabel
-                      />
-                    }
+        ) : undefined
+      }
+    >
+      {!!mappedData?.length && (
+        <ChartContainer
+          id={id}
+          config={chartConfig}
+          className='mx-auto aspect-square w-full max-w-[280px] md:max-w-[320px]'
+        >
+          <PieChart>
+            <ChartTooltip
+              cursor={false}
+              content={
+                <ChartTooltipContent
+                  className='text-[14px] md:text-[14px] w-[10rem]'
+                  indicator='dot'
+                  hideLabel
+                />
+              }
+            />
+            <Pie
+              data={mappedData}
+              dataKey='membersCount'
+              nameKey='category'
+              innerRadius={70}
+              strokeWidth={5}
+              activeIndex={activeIndex}
+              activeShape={({ outerRadius = 0, ...props }: PieSectorDataItem) => (
+                <g>
+                  <Sector {...props} outerRadius={outerRadius + 10} />
+                  <Sector
+                    {...props}
+                    outerRadius={outerRadius + 20}
+                    innerRadius={outerRadius + 12}
                   />
-                  <Pie
-                    data={mappedData}
-                    dataKey='membersCount'
-                    nameKey='category'
-                    innerRadius={70}
-                    strokeWidth={5}
-                    activeIndex={activeIndex}
-                    activeShape={({ outerRadius = 0, ...props }: PieSectorDataItem) => (
-                      <g>
-                        <Sector {...props} outerRadius={outerRadius + 10} />
-                        <Sector
-                          {...props}
-                          outerRadius={outerRadius + 20}
-                          innerRadius={outerRadius + 12}
-                        />
-                      </g>
-                    )}
-                  >
-                    <Label
-                      content={({ viewBox }) => {
-                        if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
-                          return (
-                            <text
-                              x={viewBox.cx}
-                              y={viewBox.cy}
-                              textAnchor='middle'
-                              dominantBaseline='middle'
-                            >
-                              <tspan
-                                x={viewBox.cx}
-                                y={viewBox.cy}
-                                className='fill-foreground text-[45px] md:text-5xl font-bold'
-                              >
-                                {mappedData?.[activeIndex]?.membersCount.toLocaleString()}
-                              </tspan>
-                              <tspan
-                                x={viewBox.cx}
-                                y={(viewBox.cy || 0) + 34}
-                                className='fill-muted-foreground text-[14px] md:text-[14px]'
-                              >
-                                Miembros
-                              </tspan>
-                            </text>
-                          );
-                        }
-                      }}
-                    />
-                  </Pie>
-                  <ChartLegend content={<MembersByCategoryLegendContent as any />} />
-                </PieChart>
-              </ChartContainer>
-            )}
-            {!membersByCategoryQuery?.isFetching && !mappedData?.length && (
-              <div className='text-red-500 flex flex-col justify-center items-center h-full -mt-6'>
-                <FcDeleteDatabase className='text-[6rem] pb-2' />
-                <p className='font-medium text-[15px] md:text-[16px]'>
-                  No hay datos disponibles para mostrar.
-                </p>
-              </div>
-            )}
-          </CardContent>
-        </>
+                </g>
+              )}
+            >
+              <Label
+                content={({ viewBox }) => {
+                  if (viewBox && 'cx' in viewBox && 'cy' in viewBox) {
+                    return (
+                      <text
+                        x={viewBox.cx}
+                        y={viewBox.cy}
+                        textAnchor='middle'
+                        dominantBaseline='middle'
+                      >
+                        <tspan
+                          x={viewBox.cx}
+                          y={viewBox.cy}
+                          className='fill-foreground text-[45px] md:text-5xl font-bold'
+                        >
+                          {mappedData?.[activeIndex]?.membersCount.toLocaleString()}
+                        </tspan>
+                        <tspan
+                          x={viewBox.cx}
+                          y={(viewBox.cy || 0) + 34}
+                          className='fill-muted-foreground text-[14px] md:text-[14px]'
+                        >
+                          Miembros
+                        </tspan>
+                      </text>
+                    );
+                  }
+                }}
+              />
+            </Pie>
+            <ChartLegend content={<MembersByCategoryLegendContent as any />} />
+          </PieChart>
+        </ChartContainer>
       )}
-    </Card>
+    </MetricCard>
   );
 };
