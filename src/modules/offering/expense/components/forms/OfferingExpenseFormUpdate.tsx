@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/promise-function-async */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useEffect, useState } from 'react';
 
 import type * as z from 'zod';
@@ -137,14 +133,14 @@ export const OfferingExpenseFormUpdate = ({
     data,
     setFiles,
     setIsLoadingData,
-    offeringExpenseUpdateForm: form,
+    offeringExpenseUpdateForm: form as any,
   });
 
   useOfferingExpenseUpdateSubmitButtonLogic({
     isDropZoneDisabled,
     isDeleteFileButtonDisabled,
     isInputDisabled,
-    offeringExpenseUpdateForm: form,
+    offeringExpenseUpdateForm: form as any,
     setIsDropZoneDisabled,
     setIsMessageErrorDisabled,
     setIsSubmitButtonDisabled,
@@ -159,7 +155,7 @@ export const OfferingExpenseFormUpdate = ({
   });
 
   const { onDrop, removeFile, removeCloudFile, removeRejected } = useOfferingExpenseFileDropZone({
-    offeringExpenseForm: form,
+    offeringExpenseForm: form as any,
     files,
     setFiles,
     setRejected,
@@ -224,7 +220,7 @@ export const OfferingExpenseFormUpdate = ({
           currency: formData.currency,
           date: formData.date,
           comments: formData.comments,
-          churchId: formData.churchId,
+          churchId: formData.churchId ?? '',
           recordStatus: formData.recordStatus,
           imageUrls: imageUrls ?? [],
         },
