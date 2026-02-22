@@ -6,12 +6,13 @@ import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
 import { XAxis, YAxis, CartesianGrid, BarChart, Bar } from 'recharts';
-import { FcDataBackup } from 'react-icons/fc';
+import { TbCoin } from 'react-icons/tb';
 
 import { MetricSearchType } from '@/modules/metrics/enums/metrics-search-type.enum';
 import { metricsFormSchema } from '@/modules/metrics/schemas/metrics-form-schema';
 import { getComparativeOfferingIncomeByType } from '@/modules/metrics/services/offering-comparative-metrics.service';
 import { ComparativeOfferingIncomeByTypeTooltipContent } from '@/modules/metrics/components/financial-balance-comparative/tooltips/components/ComparativeOfferingIncomeByTypeTooltipContent';
+import { MetricCard } from '@/modules/metrics/components/shared/MetricCard';
 
 import {
   OfferingIncomeCreationType,
@@ -41,23 +42,16 @@ import {
   ChartLegendContent,
 } from '@/shared/components/ui/chart';
 import {
-  Card,
-  CardTitle,
-  CardHeader,
-  CardContent,
-  CardDescription,
-} from '@/shared/components/ui/card';
-import {
   Select,
   SelectItem,
   SelectValue,
   SelectContent,
   SelectTrigger,
 } from '@/shared/components/ui/select';
+import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/shared/components/ui/form';
-import { EmptyState } from '@/shared/components/feedback/EmptyState';
 import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
 
 const chartConfig = {
@@ -95,7 +89,6 @@ interface ResultDataOptions {
   totalPercentage: string;
 }
 
-
 const combinedArray = [
   ...Object.entries(OfferingIncomeCreationSubTypeNames).map(([key, value]) => ({ key, value })),
   ...Object.entries(OfferingIncomeCreationTypeNames).map(([key, value]) => ({ key, value })),
@@ -104,6 +97,7 @@ const combinedArray = [
 export const ComparativeOfferingIncomeAnalysisCardByType = (): JSX.Element => {
   //* Context
   const activeChurchId = useChurchMinistryContextStore((s) => s.activeChurchId);
+
   //* States
   const [isInputSearchTypeOpen, setIsInputSearchTypeOpen] = useState<boolean>(false);
   const [searchParams, setSearchParams] = useState<SearchParamsOptions | undefined>(undefined);
@@ -139,16 +133,14 @@ export const ComparativeOfferingIncomeAnalysisCardByType = (): JSX.Element => {
       });
     },
     retry: false,
-    enabled: !!searchParams?.year && !!searchParams?.type,
+    enabled: !!searchParams?.year && !!searchParams?.type && !!activeChurchId,
   });
 
   //* Effects
-  // Default value
   useEffect(() => {
     setSearchParams({ year, type });
   }, [comparativeOfferingIncomeByType?.data, year]);
 
-  // Set data
   useEffect(() => {
     if (comparativeOfferingIncomeByType?.data) {
       const transformedData = comparativeOfferingIncomeByType?.data.map((offering) => {
@@ -185,32 +177,40 @@ export const ComparativeOfferingIncomeAnalysisCardByType = (): JSX.Element => {
     setSearchParams(formData);
   };
 
+  const isFetchingData = !searchParams || (comparativeOfferingIncomeByType?.isFetching && !mappedData?.length);
+  const isEmptyData = !isFetchingData && !mappedData?.length;
+
   return (
-    <Card className='overflow-hidden border-slate-200/80 dark:border-slate-700/50 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col col-start-1 col-end-3'>
-      <CardHeader className='flex flex-col sm:flex-row items-start justify-between space-y-0 pb-3 pt-4 px-4 md:px-5'>
-        <div className='flex flex-col items-start'>
-          <CardTitle className='flex items-center gap-2 text-base md:text-lg font-semibold font-outfit text-slate-800 dark:text-slate-100'>
-            Ingresos de Ofrenda
-          </CardTitle>
-          <CardDescription className='text-sm text-slate-500 dark:text-slate-400 font-inter'>
-            Detallado (Acumulado por sub-tipo, mes y año).
-          </CardDescription>
-        </div>
+    <MetricCard
+      className='col-start-1 col-end-3'
+      title={
+        <>
+          Ingresos de Ofrenda
+          {!!mappedData?.length && (
+            <Badge variant='active' className='mt-1 text-white text-[11px] py-0.3 tracking-wide'>
+              Activos
+            </Badge>
+          )}
+        </>
+      }
+      description='Detallado (Acumulado por sub-tipo, mes y año).'
+      icon={<TbCoin className='w-5 h-5 text-green-600 dark:text-green-400' />}
+      isFetching={isFetchingData}
+      isEmpty={isEmptyData}
+      headerAction={
         <Form {...form}>
-          <form className='flex flex-shrink-0 mx-auto sm:m-0 pt-2 sm:pt-0'>
+          <form className='flex'>
             <FormField
               control={form.control}
               name='type'
               render={({ field }) => {
                 return (
-                  <FormItem className='md:col-start-1 md:col-end-2 md:row-start-1 md:row-end-2'>
+                  <FormItem>
                     <Popover
                       open={isInputSearchTypeOpen}
                       onOpenChange={(e) => {
                         setIsInputSearchTypeOpen(e);
-                        form.resetField('year', {
-                          defaultValue: '',
-                        });
+                        form.resetField('year', { defaultValue: '' });
                       }}
                     >
                       <PopoverTrigger asChild>
@@ -232,10 +232,7 @@ export const ComparativeOfferingIncomeAnalysisCardByType = (): JSX.Element => {
                       </PopoverTrigger>
                       <PopoverContent align='center' className='w-auto px-4 py-2'>
                         <Command className='w-[10rem]'>
-                          <CommandInput
-                            placeholder='Busque un tipo'
-                            className='h-9 text-[14px] md:text-[14px]'
-                          />
+                          <CommandInput placeholder='Busque un tipo' className='h-9 text-[14px] md:text-[14px]' />
                           <CommandEmpty>Tipo no encontrado.</CommandEmpty>
                           <CommandGroup className='max-h-[100px] h-auto'>
                             {combinedArray.map(
@@ -290,7 +287,7 @@ export const ComparativeOfferingIncomeAnalysisCardByType = (): JSX.Element => {
                       </FormControl>
                       <SelectContent className={cn(years.length >= 3 ? 'h-[8rem]' : 'h-auto')}>
                         {Object.values(years).map(({ label, value }) => (
-                          <SelectItem className={`text-[14px]`} key={value} value={label}>
+                          <SelectItem className='text-[14px]' key={value} value={label}>
                             {label}
                           </SelectItem>
                         ))}
@@ -303,69 +300,26 @@ export const ComparativeOfferingIncomeAnalysisCardByType = (): JSX.Element => {
             />
           </form>
         </Form>
-      </CardHeader>
-
-      <CardContent className='px-3 md:px-5 pb-4'>
-        {!searchParams || (comparativeOfferingIncomeByType?.isFetching && !mappedData?.length) ? (
-          <div className='flex flex-col items-center justify-center py-8'>
-            <FcDataBackup className='text-[4rem] mb-2' />
-            <p className='text-sm font-medium text-slate-500 dark:text-slate-400'>Consultando datos...</p>
-          </div>
-        ) : !!mappedData?.length ? (
-          <ChartContainer
-            config={chartConfig}
-            className='w-full h-[240px] sm:h-[270px] md:h-[310px] xl:h-[320px]'
-          >
-            <BarChart
-              accessibilityLayer
-              data={mappedData}
-              margin={{ top: 5, right: 5, left: -20, bottom: 10 }}
-            >
-              <CartesianGrid vertical={false} strokeDasharray='3 3' className='stroke-slate-200 dark:stroke-slate-700' />
-              <XAxis
-                dataKey='month'
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-                className='text-xs fill-slate-500 dark:fill-slate-400'
-              />
-
-              <YAxis tickLine={false} axisLine={false} className='text-xs fill-slate-500 dark:fill-slate-400' />
-              <ChartTooltip
-                cursor={{ fill: 'rgba(0,0,0,0.05)' }}
-                content={ComparativeOfferingIncomeByTypeTooltipContent as any}
-              />
-
-              <ChartLegend
-                content={
-                  <ChartLegendContent className='flex flex-wrap justify-center gap-x-3 gap-y-1 text-xs' />
-                }
-              />
-
-              <Bar
-                dataKey='accumulatedOfferingPEN'
-                stackId='type'
-                fill='var(--color-accumulatedOfferingPEN)'
-                radius={[2, 2, 2, 2]}
-              />
-              <Bar
-                dataKey='accumulatedOfferingEUR'
-                stackId='type'
-                fill='var(--color-accumulatedOfferingEUR)'
-                radius={[2, 2, 0, 0]}
-              />
-              <Bar
-                dataKey='accumulatedOfferingUSD'
-                stackId='type'
-                fill='var(--color-accumulatedOfferingUSD)'
-                radius={[2, 2, 0, 0]}
-              />
-            </BarChart>
-          </ChartContainer>
-        ) : (
-          <EmptyState variant='chart' className='py-4' />
-        )}
-      </CardContent>
-    </Card>
+      }
+    >
+      <ChartContainer config={chartConfig} className='w-full h-[240px] sm:h-[270px] md:h-[310px] xl:h-[320px]'>
+        <BarChart accessibilityLayer data={mappedData} margin={{ top: 5, right: 5, left: -20, bottom: 10 }}>
+          <CartesianGrid vertical={false} strokeDasharray='3 3' className='stroke-slate-200 dark:stroke-slate-700' />
+          <XAxis
+            dataKey='month'
+            tickLine={false}
+            tickMargin={10}
+            axisLine={false}
+            className='text-xs fill-slate-500 dark:fill-slate-400'
+          />
+          <YAxis tickLine={false} axisLine={false} className='text-xs fill-slate-500 dark:fill-slate-400' />
+          <ChartTooltip cursor={{ fill: 'rgba(0,0,0,0.05)' }} content={ComparativeOfferingIncomeByTypeTooltipContent as any} />
+          <ChartLegend content={<ChartLegendContent className='flex flex-wrap justify-center gap-x-3 gap-y-1 text-xs' />} />
+          <Bar dataKey='accumulatedOfferingPEN' stackId='type' fill='var(--color-accumulatedOfferingPEN)' radius={[2, 2, 2, 2]} />
+          <Bar dataKey='accumulatedOfferingEUR' stackId='type' fill='var(--color-accumulatedOfferingEUR)' radius={[2, 2, 0, 0]} />
+          <Bar dataKey='accumulatedOfferingUSD' stackId='type' fill='var(--color-accumulatedOfferingUSD)' radius={[2, 2, 0, 0]} />
+        </BarChart>
+      </ChartContainer>
+    </MetricCard>
   );
 };

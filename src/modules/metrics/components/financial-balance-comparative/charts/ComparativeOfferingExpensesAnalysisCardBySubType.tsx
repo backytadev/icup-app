@@ -7,7 +7,7 @@ import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CaretSortIcon, CheckIcon } from '@radix-ui/react-icons';
 import { Bar, XAxis, YAxis, CartesianGrid, BarChart } from 'recharts';
-import { FcDataBackup } from 'react-icons/fc';
+import { TbChartBar } from 'react-icons/tb';
 
 import {
   OfferingExpenseSearchType,
@@ -18,6 +18,7 @@ import { MetricSearchType } from '@/modules/metrics/enums/metrics-search-type.en
 import { metricsFormSchema } from '@/modules/metrics/schemas/metrics-form-schema';
 import { getComparativeOfferingExpensesBySubType } from '@/modules/metrics/services/offering-comparative-metrics.service';
 import { ComparativeOfferingExpensesBySubTypeTooltipContent } from '@/modules/metrics/components/financial-balance-comparative/tooltips/components/ComparativeOfferingExpensesBySubTypeTooltipContent';
+import { MetricCard } from '@/modules/metrics/components/shared/MetricCard';
 
 import { cn } from '@/shared/lib/utils';
 import { months } from '@/shared/data/months-data';
@@ -39,29 +40,22 @@ import {
   ChartLegendContent,
 } from '@/shared/components/ui/chart';
 import {
-  Card,
-  CardTitle,
-  CardHeader,
-  CardContent,
-  CardDescription,
-} from '@/shared/components/ui/card';
-import {
   Select,
   SelectItem,
   SelectValue,
   SelectContent,
   SelectTrigger,
 } from '@/shared/components/ui/select';
+import { Badge } from '@/shared/components/ui/badge';
 import { Button } from '@/shared/components/ui/button';
 import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/popover';
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/shared/components/ui/form';
-import { EmptyState } from '@/shared/components/feedback/EmptyState';
 import { useChurchMinistryContextStore } from '@/stores/context/church-ministry-context.store';
 
 const chartConfig = {
   accumulatedOfferingPEN: {
     label: 'Ofrenda PEN',
-    color: '#4682B4  ',
+    color: '#4682B4',
   },
   accumulatedOfferingUSD: {
     label: 'Ofrenda USD',
@@ -69,7 +63,7 @@ const chartConfig = {
   },
   accumulatedOfferingEUR: {
     label: 'Ofrenda EUR',
-    color: '#FF69B4 ',
+    color: '#FF69B4',
   },
 } satisfies ChartConfig;
 
@@ -93,7 +87,6 @@ interface ResultDataOptions {
   totalPercentage: string;
 }
 
-
 const transformedArray = [
   ...Object.entries(OfferingExpenseSearchTypeNames).map(([key, value]) => ({ key, value })),
 ];
@@ -101,6 +94,7 @@ const transformedArray = [
 export const ComparativeOfferingExpensesAnalysisCardBySubType = (): JSX.Element => {
   //* Context
   const activeChurchId = useChurchMinistryContextStore((s) => s.activeChurchId);
+
   //* States
   const [isInputSearchTypeOpen, setIsInputSearchTypeOpen] = useState<boolean>(false);
   const [isInputSearchStartMonthOpen, setIsInputSearchStartMonthOpen] = useState<boolean>(false);
@@ -148,16 +142,15 @@ export const ComparativeOfferingExpensesAnalysisCardBySubType = (): JSX.Element 
       !!searchParams?.type &&
       !!searchParams?.startMonth &&
       !!searchParams?.endMonth &&
-      !!searchParams?.year,
+      !!searchParams?.year &&
+      !!activeChurchId,
   });
 
   //* Effects
-  // Default value
   useEffect(() => {
     setSearchParams({ year, type, startMonth, endMonth });
   }, [comparativeOfferingExpensesBySubType?.data, year]);
 
-  // Set data
   useEffect(() => {
     if (comparativeOfferingExpensesBySubType?.data) {
       const transformedData = comparativeOfferingExpensesBySubType?.data.map((offering) => {
@@ -192,32 +185,40 @@ export const ComparativeOfferingExpensesAnalysisCardBySubType = (): JSX.Element 
     setSearchParams(formData);
   };
 
+  const isFetchingData = !searchParams || (comparativeOfferingExpensesBySubType?.isFetching && !mappedData?.length);
+  const isEmptyData = !isFetchingData && !mappedData?.length;
+
   return (
-    <Card className='overflow-hidden border-slate-200/80 dark:border-slate-700/50 bg-white dark:bg-slate-900 shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col col-start-1 col-end-3'>
-      <CardHeader className='flex flex-col sm:flex-row items-start justify-between space-y-0 pb-3 pt-4 px-4 md:px-5'>
-        <div className='flex flex-col items-start'>
-          <CardTitle className='flex items-center gap-2 text-base md:text-lg font-semibold font-outfit text-slate-800 dark:text-slate-100'>
-            Salidas de Ofrenda
-          </CardTitle>
-          <CardDescription className='text-sm text-slate-500 dark:text-slate-400 font-inter'>
-            Detallado (Acumulado por sub-tipo, rango de meses y año).
-          </CardDescription>
-        </div>
+    <MetricCard
+      className='col-start-1 col-end-3'
+      title={
+        <>
+          Salidas de Ofrenda
+          {!!mappedData?.length && (
+            <Badge variant='active' className='mt-1 text-white text-[11px] py-0.3 tracking-wide'>
+              Activos
+            </Badge>
+          )}
+        </>
+      }
+      description='Detallado (Acumulado por sub-tipo, rango de meses y año).'
+      icon={<TbChartBar className='w-5 h-5 text-rose-600 dark:text-rose-400' />}
+      isFetching={isFetchingData}
+      isEmpty={isEmptyData}
+      headerAction={
         <Form {...form}>
-          <form className='flex items-center flex-col sm:flex-row flex-shrink-0 mx-auto sm:m-0 pt-2 sm:pt-0'>
+          <form className='flex items-center flex-col sm:flex-row gap-1'>
             <FormField
               control={form.control}
               name='type'
               render={({ field }) => {
                 return (
-                  <FormItem className='md:col-start-1 md:col-end-2 md:row-start-1 md:row-end-2'>
+                  <FormItem>
                     <Popover
                       open={isInputSearchTypeOpen}
                       onOpenChange={(e) => {
                         setIsInputSearchTypeOpen(e);
-                        form.resetField('year', {
-                          defaultValue: '',
-                        });
+                        form.resetField('year', { defaultValue: '' });
                       }}
                     >
                       <PopoverTrigger asChild>
@@ -239,10 +240,7 @@ export const ComparativeOfferingExpensesAnalysisCardBySubType = (): JSX.Element 
                       </PopoverTrigger>
                       <PopoverContent align='center' className='w-auto px-4 py-2'>
                         <Command>
-                          <CommandInput
-                            placeholder='Busque un tipo'
-                            className='h-9 text-[14px] md:text-[14px]'
-                          />
+                          <CommandInput placeholder='Busque un tipo' className='h-9 text-[14px] md:text-[14px]' />
                           <CommandEmpty>Tipo no encontrado.</CommandEmpty>
                           <CommandGroup className='max-h-[100px] h-auto'>
                             {transformedArray.map(
@@ -283,14 +281,12 @@ export const ComparativeOfferingExpensesAnalysisCardBySubType = (): JSX.Element 
                 name='startMonth'
                 render={({ field }) => {
                   return (
-                    <FormItem className='md:col-start-1 md:col-end-2 md:row-start-1 md:row-end-2'>
+                    <FormItem>
                       <Popover
                         open={isInputSearchStartMonthOpen}
                         onOpenChange={(e) => {
                           setIsInputSearchStartMonthOpen(e);
-                          form.resetField('year', {
-                            defaultValue: '',
-                          });
+                          form.resetField('year', { defaultValue: '' });
                         }}
                       >
                         <PopoverTrigger asChild>
@@ -300,23 +296,19 @@ export const ComparativeOfferingExpensesAnalysisCardBySubType = (): JSX.Element 
                               role='combobox'
                               className={cn(
                                 'justify-between w-full text-[14px] md:text-[14px] text-center px-2',
-                                !field.value &&
-                                'text-slate-500 dark:text-slate-200 font-normal px-4'
+                                !field.value && 'text-slate-500 dark:text-slate-200 font-normal px-4'
                               )}
                             >
                               {field.value
                                 ? months.find((month) => month.value === field.value)?.label
-                                : 'Elige un mes'}
+                                : 'Inicio'}
                               <CaretSortIcon className='h-4 w-4 shrink-0' />
                             </Button>
                           </FormControl>
                         </PopoverTrigger>
                         <PopoverContent align='center' className='w-auto px-4 py-2'>
                           <Command className='w-[10rem]'>
-                            <CommandInput
-                              placeholder='Busque un mes'
-                              className='h-9 text-[14px] md:text-[14px]'
-                            />
+                            <CommandInput placeholder='Busque un mes' className='h-9 text-[14px] md:text-[14px]' />
                             <CommandEmpty>Mes no encontrado.</CommandEmpty>
                             <CommandGroup className='max-h-[100px] h-auto'>
                               {months.map((month) => (
@@ -326,11 +318,7 @@ export const ComparativeOfferingExpensesAnalysisCardBySubType = (): JSX.Element 
                                   key={month.value}
                                   onSelect={() => {
                                     form.setValue('startMonth', month.value);
-                                    type &&
-                                      startMonth &&
-                                      endMonth &&
-                                      year &&
-                                      form.handleSubmit(handleSubmit)();
+                                    type && startMonth && endMonth && year && form.handleSubmit(handleSubmit)();
                                     setIsInputSearchStartMonthOpen(false);
                                   }}
                                 >
@@ -358,14 +346,12 @@ export const ComparativeOfferingExpensesAnalysisCardBySubType = (): JSX.Element 
                 name='endMonth'
                 render={({ field }) => {
                   return (
-                    <FormItem className='md:col-start-1 md:col-end-2 md:row-start-1 md:row-end-2'>
+                    <FormItem>
                       <Popover
                         open={isInputSearchEndMonthOpen}
                         onOpenChange={(e) => {
                           setIsInputSearchEndMonthOpen(e);
-                          form.resetField('year', {
-                            defaultValue: '',
-                          });
+                          form.resetField('year', { defaultValue: '' });
                         }}
                       >
                         <PopoverTrigger asChild>
@@ -375,23 +361,19 @@ export const ComparativeOfferingExpensesAnalysisCardBySubType = (): JSX.Element 
                               role='combobox'
                               className={cn(
                                 'justify-between w-full text-[14px] md:text-[14px] text-center px-2',
-                                !field.value &&
-                                'text-slate-500 dark:text-slate-200 font-normal px-4'
+                                !field.value && 'text-slate-500 dark:text-slate-200 font-normal px-4'
                               )}
                             >
                               {field.value
                                 ? months.find((month) => month.value === field.value)?.label
-                                : 'Elige un mes'}
+                                : 'Fin'}
                               <CaretSortIcon className='h-4 w-4 shrink-0' />
                             </Button>
                           </FormControl>
                         </PopoverTrigger>
                         <PopoverContent align='center' className='w-auto px-4 py-2'>
                           <Command className='w-[10rem]'>
-                            <CommandInput
-                              placeholder='Busque un mes'
-                              className='h-9 text-[14px] md:text-[14px]'
-                            />
+                            <CommandInput placeholder='Busque un mes' className='h-9 text-[14px] md:text-[14px]' />
                             <CommandEmpty>Mes no encontrado.</CommandEmpty>
                             <CommandGroup className='max-h-[100px] h-auto'>
                               {months.map((month) => (
@@ -401,11 +383,7 @@ export const ComparativeOfferingExpensesAnalysisCardBySubType = (): JSX.Element 
                                   key={month.value}
                                   onSelect={() => {
                                     form.setValue('endMonth', month.value);
-                                    type &&
-                                      startMonth &&
-                                      endMonth &&
-                                      year &&
-                                      form.handleSubmit(handleSubmit)();
+                                    type && startMonth && endMonth && year && form.handleSubmit(handleSubmit)();
                                     setIsInputSearchEndMonthOpen(false);
                                   }}
                                 >
@@ -448,7 +426,7 @@ export const ComparativeOfferingExpensesAnalysisCardBySubType = (): JSX.Element 
                         </FormControl>
                         <SelectContent className={cn(years.length >= 3 ? 'h-[8rem]' : 'h-auto')}>
                           {Object.values(years).map(({ label, value }) => (
-                            <SelectItem className={`text-[14px]`} key={value} value={label}>
+                            <SelectItem className='text-[14px]' key={value} value={label}>
                               {label}
                             </SelectItem>
                           ))}
@@ -462,73 +440,30 @@ export const ComparativeOfferingExpensesAnalysisCardBySubType = (): JSX.Element 
             </div>
           </form>
         </Form>
-      </CardHeader>
-
-      <CardContent className='px-3 md:px-5 pb-4'>
-        {!searchParams || (comparativeOfferingExpensesBySubType?.isFetching && !mappedData?.length) ? (
-          <div className='flex flex-col items-center justify-center py-8'>
-            <FcDataBackup className='text-[4rem] mb-2' />
-            <p className='text-sm font-medium text-slate-500 dark:text-slate-400'>Consultando datos...</p>
-          </div>
-        ) : !!mappedData?.length ? (
-          <ChartContainer
-            config={chartConfig}
-            className='w-full h-[240px] sm:h-[270px] md:h-[310px] xl:h-[320px]'
-          >
-            <BarChart
-              accessibilityLayer
-              data={mappedData}
-              margin={{ top: 5, right: 5, left: -25, bottom: 10 }}
-            >
-              <CartesianGrid vertical={false} strokeDasharray='3 3' className='stroke-slate-200 dark:stroke-slate-700' />
-              <XAxis
-                dataKey='subType'
-                tickLine={false}
-                tickMargin={10}
-                axisLine={false}
-                className='text-xs fill-slate-500 dark:fill-slate-400'
-                tickFormatter={(value) => {
-                  const [firstWord, secondWord] = value.split(' ');
-                  return secondWord ? `${firstWord} ${secondWord.charAt(0)}.` : firstWord;
-                }}
-              />
-
-              <YAxis tickLine={false} axisLine={false} className='text-xs fill-slate-500 dark:fill-slate-400' />
-              <ChartTooltip
-                cursor={{ fill: 'rgba(0,0,0,0.05)' }}
-                content={ComparativeOfferingExpensesBySubTypeTooltipContent as any}
-              />
-
-              <ChartLegend
-                content={
-                  <ChartLegendContent className='flex flex-wrap justify-center gap-x-3 gap-y-1 text-xs' />
-                }
-              />
-
-              <Bar
-                dataKey='accumulatedOfferingPEN'
-                stackId='subType'
-                fill='var(--color-accumulatedOfferingPEN)'
-                radius={[2, 2, 2, 2]}
-              />
-              <Bar
-                dataKey='accumulatedOfferingEUR'
-                stackId='subType'
-                fill='var(--color-accumulatedOfferingEUR)'
-                radius={[2, 2, 0, 0]}
-              />
-              <Bar
-                dataKey='accumulatedOfferingUSD'
-                stackId='subType'
-                fill='var(--color-accumulatedOfferingUSD)'
-                radius={[2, 2, 0, 0]}
-              />
-            </BarChart>
-          </ChartContainer>
-        ) : (
-          <EmptyState variant='chart' className='py-4' />
-        )}
-      </CardContent>
-    </Card>
+      }
+    >
+      <ChartContainer config={chartConfig} className='w-full h-[240px] sm:h-[270px] md:h-[310px] xl:h-[320px]'>
+        <BarChart accessibilityLayer data={mappedData} margin={{ top: 5, right: 5, left: -25, bottom: 10 }}>
+          <CartesianGrid vertical={false} strokeDasharray='3 3' className='stroke-slate-200 dark:stroke-slate-700' />
+          <XAxis
+            dataKey='subType'
+            tickLine={false}
+            tickMargin={10}
+            axisLine={false}
+            className='text-xs fill-slate-500 dark:fill-slate-400'
+            tickFormatter={(value) => {
+              const [firstWord, secondWord] = value.split(' ');
+              return secondWord ? `${firstWord} ${secondWord.charAt(0)}.` : firstWord;
+            }}
+          />
+          <YAxis tickLine={false} axisLine={false} className='text-xs fill-slate-500 dark:fill-slate-400' />
+          <ChartTooltip cursor={{ fill: 'rgba(0,0,0,0.05)' }} content={ComparativeOfferingExpensesBySubTypeTooltipContent as any} />
+          <ChartLegend content={<ChartLegendContent className='flex flex-wrap justify-center gap-x-3 gap-y-1 text-xs' />} />
+          <Bar dataKey='accumulatedOfferingPEN' stackId='subType' fill='var(--color-accumulatedOfferingPEN)' radius={[2, 2, 2, 2]} />
+          <Bar dataKey='accumulatedOfferingEUR' stackId='subType' fill='var(--color-accumulatedOfferingEUR)' radius={[2, 2, 0, 0]} />
+          <Bar dataKey='accumulatedOfferingUSD' stackId='subType' fill='var(--color-accumulatedOfferingUSD)' radius={[2, 2, 0, 0]} />
+        </BarChart>
+      </ChartContainer>
+    </MetricCard>
   );
 };

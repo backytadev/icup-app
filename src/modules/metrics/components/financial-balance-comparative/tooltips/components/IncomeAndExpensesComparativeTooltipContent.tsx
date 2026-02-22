@@ -1,3 +1,5 @@
+import { TbArrowsUpDown } from 'react-icons/tb';
+
 import { type TooltipConfig } from '@/shared/interfaces/tooltip-config.interface';
 import { type IncomeAndExpensesComparativePayload } from '@/modules/metrics/components/financial-balance-comparative/tooltips/interfaces/income-and-expenses-comparative-tooltip-payload.interface';
 
@@ -7,52 +9,78 @@ export const IncomeAndExpensesComparativeTooltipContent = (
   const { payload, label } = props;
 
   return (
-    <div className='grid min-w-[8rem] items-start gap-1.5 rounded-lg border border-border/50 bg-background px-2.5 py-1.5 text-xs shadow-xl'>
-      <div className='flex gap-1'>
-        <span className='font-medium text-[14px] sm:text-[14px]'>{label}</span>
+    <div className='min-w-[190px] max-w-[290px] rounded-xl border border-slate-200/80 dark:border-slate-700/60 bg-white dark:bg-slate-900 overflow-hidden shadow-lg'>
+      {/* Header */}
+      <div className='px-3 py-2 bg-gradient-to-r from-blue-50 to-indigo-50/30 dark:from-blue-900/20 dark:to-indigo-900/10 border-b border-slate-200/60 dark:border-slate-700/40'>
+        <div className='flex items-center gap-2'>
+          <div className='p-1 rounded-md bg-blue-500/10 dark:bg-blue-500/20'>
+            <TbArrowsUpDown className='w-3.5 h-3.5 text-blue-600 dark:text-blue-400' />
+          </div>
+          <div className='flex-1 min-w-0'>
+            <span className='font-outfit font-semibold text-[13px] text-slate-800 dark:text-slate-100 truncate block'>
+              {label}
+            </span>
+          </div>
+        </div>
       </div>
 
-      <p className='font-medium text-[13.5px] sm:text-[13.5px] dark:text-slate-400 text-slate-500'>
-        {`${label === 'Enero' ? 'Saldo año anterior:' : 'Saldo mes anterior:'}`}{' '}
-        {payload[0]?.payload?.netResultPrevious?.toFixed(2) ?? 0} {payload[0]?.payload?.currency}
-      </p>
-
-      <div className='flex items-center'>
-        <span
-          className='inline-block h-2.5 w-2.5 rounded-[2px] mr-2'
-          style={{
-            backgroundColor: '#4ecb17',
-            border: `1px solid #4ecb17`,
-          }}
-        ></span>
-        <p className='font-medium text-[13.5px] md:text-[13.5px] text-[#4ecb17]'>
-          Ingresos Totales:
-          <span className='text-foreground pl-1'>{`${payload[0]?.payload?.totalIncome.toFixed(2)} ${payload[0]?.payload?.currency}`}</span>
+      {/* Content */}
+      <div className='px-3 py-2.5 space-y-2'>
+        {/* Previous balance */}
+        <p className='font-inter text-[11px] font-medium text-slate-500 dark:text-slate-400'>
+          {label === 'Enero' ? 'Saldo año anterior:' : 'Saldo mes anterior:'}{' '}
+          <span className='font-bold text-slate-700 dark:text-slate-200'>
+            {payload[0]?.payload?.netResultPrevious?.toFixed(2) ?? 0} {payload[0]?.payload?.currency}
+          </span>
         </p>
-      </div>
 
-      <div className='flex items-center'>
-        <span
-          className='inline-block h-2.5 w-2.5 rounded-[2px] mr-2'
-          style={{
-            backgroundColor: '#ec564b',
-            border: `1px solid #ec564b`,
-          }}
-        ></span>
-        <p className='font-medium text-[13.5px] md:text-[13.5px] text-[#ec564b]'>
-          Salidas Totales:
-          <span className='text-foreground pl-1'>{`${payload[0]?.payload?.totalExpenses.toFixed(2)} ${payload[0]?.payload?.currency}`}</span>
-        </p>
-      </div>
-      <p className='font-medium text-[13.5px] sm:text-[13.5px] dark:text-yellow-500 text-amber-500'>
-        Diferencia: {payload[0]?.payload?.netResult.toFixed(2)} {payload[0]?.payload?.currency}
-      </p>
+        {/* Income and Expenses */}
+        <div className='space-y-1.5'>
+          <div className='flex items-center justify-between'>
+            <div className='flex items-center gap-1.5'>
+              <span className='inline-block h-2.5 w-2.5 rounded-[2px]' style={{ backgroundColor: '#4ecb17' }} />
+              <span className='font-inter text-[10px] font-medium text-slate-500 dark:text-slate-400'>Ingresos</span>
+            </div>
+            <span className='font-inter text-[11px] font-bold text-slate-800 dark:text-slate-100'>
+              {payload[0]?.payload?.totalIncome.toFixed(2)} {payload[0]?.payload?.currency}
+            </span>
+          </div>
+          <div className='flex items-center justify-between'>
+            <div className='flex items-center gap-1.5'>
+              <span className='inline-block h-2.5 w-2.5 rounded-[2px]' style={{ backgroundColor: '#ec564b' }} />
+              <span className='font-inter text-[10px] font-medium text-slate-500 dark:text-slate-400'>Salidas</span>
+            </div>
+            <span className='font-inter text-[11px] font-bold text-slate-800 dark:text-slate-100'>
+              {payload[0]?.payload?.totalExpenses.toFixed(2)} {payload[0]?.payload?.currency}
+            </span>
+          </div>
+        </div>
 
-      <ul className='list-disc pl-3 sm:pl-4 flex flex-col gap-1.5'>
-        <li className={'font-medium text-[13.5px] sm:text-[13.5px]'}>
-          <span className='sm:-ml-1'>{`Iglesia: ${payload[0]?.payload?.church?.abbreviatedChurchName} ${payload[0]?.payload?.church?.isAnexe ? ' - (Anexo)' : ''}`}</span>
-        </li>
-      </ul>
+        {/* Net result */}
+        <div className='pt-1.5 border-t border-slate-200 dark:border-slate-700/50'>
+          <div className='flex items-center justify-between'>
+            <span className='font-inter text-[10px] font-semibold text-amber-600 dark:text-amber-400'>Diferencia</span>
+            <span className='font-inter text-[11px] font-bold text-amber-700 dark:text-amber-300'>
+              {payload[0]?.payload?.netResult.toFixed(2)} {payload[0]?.payload?.currency}
+            </span>
+          </div>
+        </div>
+
+        {/* Church metadata */}
+        <div className='pt-1.5 border-t border-dashed border-slate-200 dark:border-slate-700/50'>
+          <ul className='space-y-0.5'>
+            <li className='flex items-center gap-1.5 font-inter text-[10px] text-slate-500 dark:text-slate-400'>
+              <span className='w-1 h-1 rounded-full bg-slate-300 dark:bg-slate-600 flex-shrink-0' />
+              {payload[0]?.payload?.church?.abbreviatedChurchName}
+              {payload[0]?.payload?.church?.isAnexe && (
+                <span className='ml-1 px-1 py-0.5 text-[9px] rounded bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400'>
+                  Anexo
+                </span>
+              )}
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   );
 };
