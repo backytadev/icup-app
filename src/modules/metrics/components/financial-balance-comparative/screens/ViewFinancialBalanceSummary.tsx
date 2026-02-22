@@ -6,6 +6,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { FaBalanceScale } from 'react-icons/fa';
 
 import { months } from '@/shared/data/months-data';
 import { CurrencyType } from '@/modules/offering/shared/enums/currency-type.enum';
@@ -49,7 +50,7 @@ export const ViewFinancialBalanceSummary = () => {
     resolver: zodResolver(metricsFormSchema),
     defaultValues: {
       year: new Date().getFullYear().toString(),
-      startMonth: months[new Date().getMonth() - 2]?.value,
+      startMonth: ['january', 'february'].some(m => m === months[new Date().getMonth()]?.value) ? months[0]?.value : months[new Date().getMonth() - 2]?.value,
       endMonth: months[new Date().getMonth()]?.value,
       currency: CurrencyType.PEN,
     },
@@ -141,12 +142,16 @@ export const ViewFinancialBalanceSummary = () => {
     await financialSummaryBalanceQuery.refetch();
   };
 
+  // Todo: fix screen on balance in month expense
+
   return (
     <div className='flex justify-center'>
       <Button
         onClick={() => setOpen(true)}
-        className='text-white bg-amber-600 hover:bg-amber-700 w-full md:mt-6'
+        variant='outline'
+        className='mt-6 flex items-center gap-2 h-10 px-5 border-cyan-200 dark:border-cyan-700/40 text-cyan-700 dark:text-cyan-400 hover:bg-cyan-50 dark:hover:bg-cyan-900/20 font-inter font-medium text-sm shadow-sm transition-all duration-200'
       >
+        <FaBalanceScale className='text-xl flex-shrink-0' />
         Ver Balance Financiero
       </Button>
 

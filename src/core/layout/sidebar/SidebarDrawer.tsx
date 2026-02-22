@@ -186,7 +186,7 @@ export function SidebarDrawer(): JSX.Element {
               <CollapsibleContent className='space-y-2 data-[state=open]:animate-slideDown data-[state=closed]:animate-slideUp overflow-hidden'>
                 <p className='text-[13px] md:text-[14px] ml-2 text-amber-500'>Membresía:</p>
                 <ul className='ml-8 font-medium text-white list-disc'>
-                  {(roles?.includes(UserRole.AdminUser) || roles?.includes(UserRole.SuperUser)) && (
+                  {(roles?.includes(UserRole.MembershipUser) || roles?.includes(UserRole.SuperUser)) && (
                     <li className='text-[13px] md:text-[14px]'>
                       Creación, actualización e inactivación.
                     </li>
@@ -197,7 +197,7 @@ export function SidebarDrawer(): JSX.Element {
 
                 <p className='text-[13px] md:text-[14px] ml-2 text-amber-500'>Finanzas:</p>
                 <ul className='ml-8 font-medium text-white list-disc'>
-                  {(roles?.includes(UserRole.AdminUser) ||
+                  {(roles?.includes(UserRole.MembershipUser) ||
                     roles?.includes(UserRole.SuperUser) ||
                     roles?.includes(UserRole.TreasurerUser)) && (
                       <li className='text-[13px] md:text-[14px]'>

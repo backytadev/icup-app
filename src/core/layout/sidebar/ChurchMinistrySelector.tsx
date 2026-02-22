@@ -34,7 +34,7 @@ export const ChurchMinistrySelector = ({
   const isMinistryUser =
     user?.roles?.includes(UserRole.MinistryUser) &&
     !user?.roles?.includes(UserRole.SuperUser) &&
-    !user?.roles?.includes(UserRole.AdminUser);
+    !user?.roles?.includes(UserRole.MembershipUser);
 
   // Ministries filtered by active church
   const ministriesForActiveChurch = activeChurchId

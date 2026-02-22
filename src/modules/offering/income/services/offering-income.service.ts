@@ -60,8 +60,6 @@ export const getOfferingsIncome = async ({
   dateTerm,
   churchId,
 }: OfferingIncomeQueryParams): Promise<OfferingIncomeResponse[]> => {
-  console.log(dateTerm);
-
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurchId = churchId ?? contextChurchId;
   let result: OfferingIncomeResponse[];
@@ -301,7 +299,8 @@ export const getOfferingsIncomeByTerm = async ({
   if (
     searchType === OfferingIncomeSearchType.Special ||
     searchType === OfferingIncomeSearchType.ChurchGround ||
-    searchType === OfferingIncomeSearchType.YouthService
+    searchType === OfferingIncomeSearchType.YouthService ||
+    searchType === OfferingIncomeSearchType.TeenagerService
   ) {
     const term =
       searchSubType === OfferingIncomeSearchSubType.OfferingByDate

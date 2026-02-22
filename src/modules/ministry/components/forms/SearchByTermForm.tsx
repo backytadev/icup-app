@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 
 import { type z } from 'zod';
 import { useForm } from 'react-hook-form';
-import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { format } from 'date-fns';
@@ -31,8 +30,6 @@ import { type MinistrySearchFormByTerm } from '@/modules/ministry/types';
 
 import { firstNamesFormatter, lastNamesFormatter } from '@/shared/helpers/names-formatter.helper';
 import { dateFormatterTermToTimestamp } from '@/shared/helpers/date-formatter-to-timestamp.helper';
-
-import { getSimpleChurches } from '@/modules/church/services/church.service';
 
 import {
   Form,
@@ -85,13 +82,6 @@ export const SearchByTermForm = ({ onSearch, excludeSearchTypes = [] }: SearchBy
   const order = form.watch('order');
   const all = form.watch('all');
 
-  //* Queries
-  const churchesQuery = useQuery({
-    queryKey: ['churches'],
-    queryFn: () => getSimpleChurches({ isSimpleQuery: true }),
-    retry: false,
-  });
-
   //* Effects
   useEffect(() => {
     if (all) form.setValue('limit', '10');
@@ -104,12 +94,6 @@ export const SearchByTermForm = ({ onSearch, excludeSearchTypes = [] }: SearchBy
   useEffect(() => {
     form.setValue('searchSubType', undefined);
   }, [searchType, form]);
-
-  useEffect(() => {
-    if (churchesQuery.data?.length) {
-      form.setValue('churchId', churchesQuery.data[0].id);
-    }
-  }, [churchesQuery.data, form]);
 
   const handleSubmit = (formData: z.infer<typeof ministrySearchByTermFormSchema>): void => {
     let newDateTermTo;
@@ -628,51 +612,6 @@ export const SearchByTermForm = ({ onSearch, excludeSearchTypes = [] }: SearchBy
                   {Object.entries(RecordOrderNames).map(([key, value]) => (
                     <SelectItem className='text-sm' key={key} value={key}>
                       {value}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage className='text-xs font-inter' />
-            </FormItem>
-          )}
-        />
-
-        {/* Church */}
-        <FormField
-          control={form.control}
-          name='churchId'
-          render={({ field }) => (
-            <FormItem
-              className='opacity-0 animate-slide-in-up'
-              style={{ animationDelay: '0.35s', animationFillMode: 'forwards' }}
-            >
-              <FormLabel className='text-sm font-semibold text-slate-700 dark:text-slate-300 font-inter'>
-                Iglesia
-                <span className='ml-2 inline-block bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 text-[10px] font-medium px-1.5 py-0.5 rounded'>
-                  Opcional
-                </span>
-              </FormLabel>
-              <FormDescription className='text-xs text-slate-500 dark:text-slate-400'>
-                Selecciona una iglesia
-              </FormDescription>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value || churchesQuery?.data?.[0]?.id}
-                value={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger className='h-11 text-sm'>
-                    {field.value ? (
-                      <SelectValue placeholder='Elige una opción' />
-                    ) : (
-                      'Elige una opción'
-                    )}
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {churchesQuery?.data?.map((church) => (
-                    <SelectItem className='text-sm' key={church.id} value={church.id}>
-                      {church.abbreviatedChurchName}
                     </SelectItem>
                   ))}
                 </SelectContent>

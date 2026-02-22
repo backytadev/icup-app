@@ -191,6 +191,27 @@ export const SubTypeNamesOfferingIncomeSearchByYoungService: Record<
     'Por nombres y apellidos del aportante',
 };
 
+//* Offering (Teenager Service)
+export enum SubTypeOfferingIncomeSearchByTeenagerService {
+  OfferingByDate = 'offering_by_date',
+  OfferingByContributorFirstNames = 'offering_by_contributor_first_names',
+  OfferingByContributorLastNames = 'offering_by_contributor_last_names',
+  OfferingByContributorFullNames = 'offering_by_contributor_full_names',
+}
+
+export const SubTypeNamesOfferingIncomeSearchByTeenagerService: Record<
+  SubTypeOfferingIncomeSearchByTeenagerService,
+  string
+> = {
+  [SubTypeOfferingIncomeSearchByTeenagerService.OfferingByDate]: 'Por fecha',
+  [SubTypeOfferingIncomeSearchByTeenagerService.OfferingByContributorFirstNames]:
+    'Por nombres del aportante',
+  [SubTypeOfferingIncomeSearchByTeenagerService.OfferingByContributorLastNames]:
+    'Por apellidos del aportante',
+  [SubTypeOfferingIncomeSearchByTeenagerService.OfferingByContributorFullNames]:
+    'Por nombres y apellidos del aportante',
+};
+
 //* Offering (Service United)
 export enum SubTypeOfferingIncomeSearchByUnitedService {
   OfferingByDate = 'offering_by_date',

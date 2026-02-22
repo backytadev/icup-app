@@ -2,10 +2,7 @@ import { useState, useEffect } from 'react';
 
 import { type z } from 'zod';
 import { useForm } from 'react-hook-form';
-import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
-
-import { getSimpleChurches } from '@/modules/church/services/church.service';
 
 import { cn } from '@/shared/lib/utils';
 import { RecordOrder, RecordOrderNames } from '@/shared/enums/record-order.enum';
@@ -47,17 +44,10 @@ export const GeneralSearchForm = ({ onSearch }: Props): JSX.Element => {
       offset: '0',
       all: false,
       order: RecordOrder.Descending,
-      churchId: '',
     },
   });
 
   const { limit, offset, order, all } = form.watch();
-
-  const churchesQuery = useQuery({
-    queryKey: ['churches-pastor-search'],
-    queryFn: () => getSimpleChurches({ isSimpleQuery: true }),
-    retry: false,
-  });
 
   useEffect(() => {
     if (all) form.setValue('limit', '10');
@@ -66,12 +56,6 @@ export const GeneralSearchForm = ({ onSearch }: Props): JSX.Element => {
   useEffect(() => {
     setIsDisabledSubmitButton(!limit || !offset || !order);
   }, [limit, offset, order]);
-
-  useEffect(() => {
-    if (churchesQuery.data?.length) {
-      form.setValue('churchId', churchesQuery.data[0].id);
-    }
-  }, [churchesQuery.data]);
 
   function onSubmit(formData: z.infer<typeof formSearchGeneralSchema>): void {
     onSearch(formData);
@@ -178,51 +162,6 @@ export const GeneralSearchForm = ({ onSearch }: Props): JSX.Element => {
                   {Object.entries(RecordOrderNames).map(([key, value]) => (
                     <SelectItem className='text-sm' key={key} value={key}>
                       {value}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage className='text-xs font-inter' />
-            </FormItem>
-          )}
-        />
-
-        {/* Church */}
-        <FormField
-          control={form.control}
-          name='churchId'
-          render={({ field }) => (
-            <FormItem
-              className='opacity-0 animate-slide-in-up'
-              style={{ animationDelay: '0.25s', animationFillMode: 'forwards' }}
-            >
-              <FormLabel className='text-sm font-semibold text-slate-700 dark:text-slate-300 font-inter'>
-                Iglesia
-                <span className='ml-2 inline-block bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 text-[10px] font-medium px-1.5 py-0.5 rounded'>
-                  Opcional
-                </span>
-              </FormLabel>
-              <FormDescription className='text-xs text-slate-500 dark:text-slate-400'>
-                Selecciona una iglesia
-              </FormDescription>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value || churchesQuery?.data?.[0]?.id}
-                value={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger className='h-11 text-sm'>
-                    {field.value ? (
-                      <SelectValue placeholder='Elige una opción' />
-                    ) : (
-                      'Elige una opción'
-                    )}
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {churchesQuery?.data?.map((church) => (
-                    <SelectItem className='text-sm' key={church.id} value={church.id}>
-                      {church.abbreviatedChurchName}
                     </SelectItem>
                   ))}
                 </SelectContent>

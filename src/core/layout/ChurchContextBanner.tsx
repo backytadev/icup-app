@@ -23,7 +23,7 @@ export const ChurchContextBanner = (): JSX.Element | null => {
   const isMinistryUser =
     user?.roles?.includes(UserRole.MinistryUser) &&
     !user?.roles?.includes(UserRole.SuperUser) &&
-    !user?.roles?.includes(UserRole.AdminUser);
+    !user?.roles?.includes(UserRole.MembershipUser);
 
   if (!activeChurch) return null;
 

@@ -1,8 +1,5 @@
-import { useEffect } from 'react';
-
 import { type z } from 'zod';
 import { useForm } from 'react-hook-form';
-import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { cn } from '@/shared/lib/utils';
@@ -10,8 +7,6 @@ import { cn } from '@/shared/lib/utils';
 import { RecordOrder, RecordOrderNames } from '@/shared/enums/record-order.enum';
 import { formSearchGeneralSchema } from '@/shared/validations/form-search-general-schema';
 import { type GeneralSearchForm as GeneralSearchFormType } from '@/shared/interfaces/search-general-form.interface';
-
-import { getSimpleChurches } from '@/modules/church/services/church.service';
 
 import {
   Select,
@@ -53,20 +48,6 @@ export const GeneralSearchForm = ({ onSearch }: GeneralSearchFormProps): JSX.Ele
   const limit = form.watch('limit');
   const offset = form.watch('offset');
   const order = form.watch('order');
-
-  //* Queries
-  const churchesQuery = useQuery({
-    queryKey: ['churches'],
-    queryFn: () => getSimpleChurches({ isSimpleQuery: true }),
-    retry: false,
-  });
-
-  //* Effects
-  useEffect(() => {
-    if (churchesQuery.data?.length) {
-      form.setValue('churchId', churchesQuery.data[0].id);
-    }
-  }, [churchesQuery.data, form]);
 
   //* Derived state - no useEffect needed
   const isDisabledSubmitButton = !limit || !offset || !order;
@@ -154,7 +135,7 @@ export const GeneralSearchForm = ({ onSearch }: GeneralSearchFormProps): JSX.Ele
           name='order'
           render={({ field }) => (
             <FormItem
-              className='opacity-0 animate-slide-in-up'
+              className='opacity-0 animate-slide-in-up col-span-2'
               style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}
             >
               <FormLabel className='text-sm font-semibold text-slate-700 dark:text-slate-300 font-inter'>
@@ -177,51 +158,6 @@ export const GeneralSearchForm = ({ onSearch }: GeneralSearchFormProps): JSX.Ele
                   {Object.entries(RecordOrderNames).map(([key, value]) => (
                     <SelectItem className='text-sm' key={key} value={key}>
                       {value}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage className='text-xs font-inter' />
-            </FormItem>
-          )}
-        />
-
-        {/* Church */}
-        <FormField
-          control={form.control}
-          name='churchId'
-          render={({ field }) => (
-            <FormItem
-              className='opacity-0 animate-slide-in-up'
-              style={{ animationDelay: '0.25s', animationFillMode: 'forwards' }}
-            >
-              <FormLabel className='text-sm font-semibold text-slate-700 dark:text-slate-300 font-inter'>
-                Iglesia
-                <span className='ml-2 inline-block bg-slate-100 dark:bg-slate-800 text-slate-500 dark:text-slate-400 border border-slate-200 dark:border-slate-700 text-[10px] font-medium px-1.5 py-0.5 rounded'>
-                  Opcional
-                </span>
-              </FormLabel>
-              <FormDescription className='text-xs text-slate-500 dark:text-slate-400'>
-                Selecciona una iglesia
-              </FormDescription>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value || churchesQuery?.data?.[0]?.id}
-                value={field.value}
-              >
-                <FormControl>
-                  <SelectTrigger className='h-11 text-sm'>
-                    {field.value ? (
-                      <SelectValue placeholder='Elige una opción' />
-                    ) : (
-                      'Elige una opción'
-                    )}
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {churchesQuery?.data?.map((church) => (
-                    <SelectItem className='text-sm' key={church.id} value={church.id}>
-                      {church.abbreviatedChurchName}
                     </SelectItem>
                   ))}
                 </SelectContent>

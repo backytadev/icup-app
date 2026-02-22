@@ -5,11 +5,8 @@ import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
 import { useForm } from 'react-hook-form';
 import { CalendarIcon } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMediaQuery } from '@react-hook/media-query';
-
-import { getSimpleChurches } from '@/modules/church/services/church.service';
 
 import {
   SubTypeNamesOfferingExpenseSearchByOperativeExpenses,
@@ -81,12 +78,6 @@ export const SearchByTermForm = ({ onSearch }: Props): JSX.Element => {
 
   const { searchType, limit, order, all } = form.watch();
 
-  const churchesQuery = useQuery({
-    queryKey: ['churches-offering-expense-search-term'],
-    queryFn: () => getSimpleChurches({ isSimpleQuery: true }),
-    retry: false,
-  });
-
   useEffect(() => {
     if (all) form.setValue('limit', '10');
   }, [all]);
@@ -98,12 +89,6 @@ export const SearchByTermForm = ({ onSearch }: Props): JSX.Element => {
   useEffect(() => {
     form.setValue('searchSubType', undefined);
   }, [searchType]);
-
-  useEffect(() => {
-    if (churchesQuery.data?.length) {
-      form.setValue('churchId', churchesQuery.data[0].id);
-    }
-  }, [churchesQuery.data]);
 
   function onSubmit(formData: z.infer<typeof offeringExpenseSearchByTermFormSchema>): void {
     let newDateTermTo;
@@ -399,45 +384,6 @@ export const SearchByTermForm = ({ onSearch }: Props): JSX.Element => {
                   ))}
                 </SelectContent>
               </Select>
-            </FormItem>
-          )}
-        />
-
-        {/* Church */}
-        <FormField
-          control={form.control}
-          name='churchId'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel className='text-[14px] font-bold'>
-                Iglesia
-                <span className='ml-3 inline-block bg-gray-200 text-slate-600 border text-[10px] font-semibold uppercase px-2 py-[1px] rounded-full mr-1'>
-                  Opcional
-                </span>
-              </FormLabel>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value || churchesQuery?.data?.[0]?.id}
-                value={field.value}
-              >
-                <FormControl className='text-[14px]'>
-                  <SelectTrigger>
-                    {field.value ? (
-                      <SelectValue className='text-[14px]' placeholder='Elige una opcion' />
-                    ) : (
-                      'Elige una opcion'
-                    )}
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {churchesQuery?.data?.map((church) => (
-                    <SelectItem className='text-[14px]' key={church.id} value={church.id}>
-                      {church.abbreviatedChurchName}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage className='text-[13px]' />
             </FormItem>
           )}
         />

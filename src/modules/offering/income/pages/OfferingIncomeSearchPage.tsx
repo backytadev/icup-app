@@ -116,7 +116,6 @@ export const OfferingIncomeSearchPage = (): JSX.Element => {
       });
 
       if (mode === 'general') {
-        console.log(dateTermTimestamp)
         const defaultGeneralParams: GeneralSearchFormType = {
           limit: '10',
           offset: '0',

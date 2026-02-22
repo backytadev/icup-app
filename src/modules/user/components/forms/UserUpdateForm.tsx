@@ -54,7 +54,7 @@ export const UserUpdateForm = ({
     const hasMinistryUser = formData.roles.includes(UserRole.MinistryUser);
 
     const hasOtherRoles = formData.roles.some((role) =>
-      [UserRole.AdminUser, UserRole.SuperUser, UserRole.TreasurerUser, UserRole.User].includes(role)
+      [UserRole.MembershipUser, UserRole.SuperUser, UserRole.TreasurerUser, UserRole.User].includes(role)
     );
 
     if (hasMinistryUser && hasOtherRoles) {

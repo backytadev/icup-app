@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
 import { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
 
@@ -12,7 +11,7 @@ import { UserRole } from '@/modules/user/enums/user-role.enum';
 export const FamilyGroupOptionsPage = (): JSX.Element => {
   const user = useAuthStore((state) => state.user);
 
-  const allowedFullAccessRoles = [UserRole.SuperUser, UserRole.AdminUser];
+  const allowedFullAccessRoles = [UserRole.SuperUser, UserRole.MembershipUser];
   const userRoles = user?.roles ?? [];
 
   const hasFullAccess = userRoles.some((role) => allowedFullAccessRoles.includes(role as UserRole));

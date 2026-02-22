@@ -7,9 +7,7 @@ import { OfferingExpenseSearchType } from '@/modules/offering/expense/enums/offe
 import { OfferingExpenseSearchSubType } from '@/modules/offering/expense/enums/offering-expense-search-sub-type.enum';
 
 export const offeringExpenseFormSchema = z.object({
-  churchId: z.string({
-    required_error: 'La Iglesia es requerida.',
-  }),
+  churchId: z.string().optional(),
 
   type: z.string(
     z.nativeEnum(OfferingExpenseSearchType, {

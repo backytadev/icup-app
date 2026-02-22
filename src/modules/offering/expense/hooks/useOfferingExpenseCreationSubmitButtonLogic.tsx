@@ -38,7 +38,6 @@ export const useOfferingExpenseCreationSubmitButtonLogic = ({
   const date = offeringExpenseCreationForm.watch('date');
   const comments = offeringExpenseCreationForm.watch('comments');
   const fileNames = offeringExpenseCreationForm.watch('fileNames');
-  const churchId = offeringExpenseCreationForm.watch('churchId');
 
   //* Effects
   useEffect(() => {
@@ -58,7 +57,6 @@ export const useOfferingExpenseCreationSubmitButtonLogic = ({
       currency &&
       date &&
       comments.length >= 5 &&
-      churchId &&
       Object.values(offeringExpenseCreationForm.formState.errors).length === 0 &&
       (!isInputDisabled || !isDropZoneDisabled || !isDeleteFileButtonDisabled)
     ) {
@@ -68,7 +66,7 @@ export const useOfferingExpenseCreationSubmitButtonLogic = ({
 
     if (
       type === OfferingExpenseSearchType.ExpensesAdjustment &&
-      (!churchId || !amount || !currency || !date || comments.length < 5)
+      (!amount || !currency || !date || comments.length < 5)
     ) {
       setIsSubmitButtonDisabled(true);
       setIsMessageErrorDisabled(true);
@@ -87,7 +85,6 @@ export const useOfferingExpenseCreationSubmitButtonLogic = ({
       subType &&
       amount &&
       currency &&
-      churchId &&
       comments.length >= 5 &&
       Object.values(offeringExpenseCreationForm.formState.errors).length === 0 &&
       (!isInputDisabled || !isDropZoneDisabled || !isDeleteFileButtonDisabled)
@@ -97,7 +94,7 @@ export const useOfferingExpenseCreationSubmitButtonLogic = ({
     }
 
     //* Others values
-    if (!churchId || !amount || !currency || !date || comments.length < 5) {
+    if (!amount || !currency || !date || comments.length < 5) {
       setIsSubmitButtonDisabled(true);
       setIsMessageErrorDisabled(true);
     }
@@ -123,7 +120,6 @@ export const useOfferingExpenseCreationSubmitButtonLogic = ({
     amount,
     currency,
     comments,
-    churchId,
     fileNames,
   ]);
 

@@ -367,7 +367,8 @@ export const OfferingIncomeFormFields = ({
                                   )
                                 ) : (
                                   subType === OfferingIncomeCreationSubType.SundaySchool ||
-                                    subType === OfferingIncomeCreationSubType.YouthService ? (
+                                    subType === OfferingIncomeCreationSubType.YouthService ||
+                                    subType === OfferingIncomeCreationSubType.TeenagerService ? (
                                     (key === OfferingIncomeCreationCategory.OfferingBox ||
                                       key === OfferingIncomeCreationCategory.InternalDonation ||
                                       key === OfferingIncomeCreationCategory.ExternalDonation ||
@@ -463,7 +464,9 @@ export const OfferingIncomeFormFields = ({
                       (subType === OfferingIncomeCreationSubType.ChurchGround ||
                         subType === OfferingIncomeCreationSubType.Special ||
                         subType === OfferingIncomeCreationSubType.SundaySchool ||
-                        subType === OfferingIncomeCreationSubType.YouthService) &&
+                        subType === OfferingIncomeCreationSubType.YouthService ||
+                        subType === OfferingIncomeCreationSubType.TeenagerService
+                      ) &&
                       category === OfferingIncomeCreationCategory.ExternalDonation)) && (
                       <FormField
                         control={form.control}
@@ -1012,6 +1015,9 @@ export const OfferingIncomeFormFields = ({
                       category === OfferingIncomeCreationCategory.InternalDonation) ||
                     (type === OfferingIncomeCreationType.Offering &&
                       subType === OfferingIncomeCreationSubType.YouthService &&
+                      category === OfferingIncomeCreationCategory.InternalDonation) ||
+                    (type === OfferingIncomeCreationType.Offering &&
+                      subType === OfferingIncomeCreationSubType.TeenagerService &&
                       category === OfferingIncomeCreationCategory.InternalDonation)) && (
                       <FormField
                         control={form.control}

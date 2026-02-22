@@ -88,38 +88,47 @@ export const router = createBrowserRouter([
               },
               {
                 path: 'churches',
+                element: <RoleProtectedRoute allowedRoles={[UserRole.SuperUser, UserRole.AdminUser, UserRole.MembershipUser]} />,
                 children: ChurchChildrenRoutes,
               },
               {
                 path: 'ministries',
+                element: <RoleProtectedRoute allowedRoles={[UserRole.SuperUser, UserRole.AdminUser, UserRole.MembershipUser]} />,
                 children: MinistryChildrenRoutes,
               },
               {
                 path: 'pastors',
+                element: <RoleProtectedRoute allowedRoles={[UserRole.SuperUser, UserRole.AdminUser, UserRole.MembershipUser]} />,
                 children: PastorChildrenRoutes,
               },
               {
                 path: 'copastors',
+                element: <RoleProtectedRoute allowedRoles={[UserRole.SuperUser, UserRole.AdminUser, UserRole.MembershipUser]} />,
                 children: CopastorChildrenRoutes,
               },
               {
                 path: 'supervisors',
+                element: <RoleProtectedRoute allowedRoles={[UserRole.SuperUser, UserRole.AdminUser, UserRole.MembershipUser, UserRole.User]} />,
                 children: SupervisorChildrenRoutes,
               },
               {
                 path: 'preachers',
+                element: <RoleProtectedRoute allowedRoles={[UserRole.SuperUser, UserRole.AdminUser, UserRole.MembershipUser, UserRole.User]} />,
                 children: PreacherChildrenRoutes,
               },
               {
                 path: 'disciples',
+                element: <RoleProtectedRoute allowedRoles={[UserRole.SuperUser, UserRole.AdminUser, UserRole.MembershipUser, UserRole.User]} />,
                 children: DiscipleChildrenRoutes,
               },
               {
                 path: 'family-groups',
+                element: <RoleProtectedRoute allowedRoles={[UserRole.SuperUser, UserRole.AdminUser, UserRole.MembershipUser, UserRole.User]} />,
                 children: FamilyGroupChildrenRoutes,
               },
               {
                 path: 'zones',
+                element: <RoleProtectedRoute allowedRoles={[UserRole.SuperUser, UserRole.AdminUser, UserRole.MembershipUser, UserRole.User]} />,
                 children: ZoneChildrenRoutes,
               },
               {
@@ -128,10 +137,8 @@ export const router = createBrowserRouter([
                   <RoleProtectedRoute
                     allowedRoles={[
                       UserRole.SuperUser,
-                      UserRole.TreasurerUser,
                       UserRole.AdminUser,
-                      UserRole.User,
-                      UserRole.MinistryUser,
+                      UserRole.TreasurerUser,
                     ]}
                   >
                     <LazyElement>
@@ -142,6 +149,7 @@ export const router = createBrowserRouter([
               },
               {
                 path: 'metrics',
+                element: <RoleProtectedRoute allowedRoles={[UserRole.SuperUser, UserRole.AdminUser, UserRole.MembershipUser, UserRole.TreasurerUser, UserRole.User]} />,
                 children: MetricsChildrenRoutes,
               },
               {
@@ -161,10 +169,9 @@ export const router = createBrowserRouter([
           <RoleProtectedRoute
             allowedRoles={[
               UserRole.SuperUser,
-              UserRole.TreasurerUser,
               UserRole.AdminUser,
-              UserRole.User,
-              UserRole.MinistryUser,
+              UserRole.TreasurerUser,
+
             ]}
           >
             <LazyElement>
@@ -180,9 +187,8 @@ export const router = createBrowserRouter([
           <RoleProtectedRoute
             allowedRoles={[
               UserRole.SuperUser,
-              UserRole.TreasurerUser,
               UserRole.AdminUser,
-              UserRole.User,
+              UserRole.TreasurerUser,
             ]}
           >
             <LazyElement>

@@ -38,7 +38,7 @@ export const useChurchMinistryContextStore = create<ChurchMinistryContextStore>(
         const isMinistryUser =
           user.roles?.includes(UserRole.MinistryUser) &&
           !user.roles?.includes(UserRole.SuperUser) &&
-          !user.roles?.includes(UserRole.AdminUser);
+          !user.roles?.includes(UserRole.MembershipUser);
 
         // Extract ministries from user
         const ministries = (user.ministries ?? []).filter(
