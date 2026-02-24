@@ -246,7 +246,6 @@ export const ExpenseSummaryCard = ({
       </Dialog>
 
       <ExpenseSubTypeDetails
-
         year={year}
         selectedMonth={selectedMonth}
         offeringType={offeringType}
