@@ -5,14 +5,9 @@ import { RouteObject } from 'react-router-dom';
 import { LazyElement } from '@/shared/components/lazy/LazyElements';
 
 //! Lazy load children routes
-const LazyZonesGeneralSearchPage = lazy(
-  () => import('@/modules/zone/pages/ZonesGeneralSearchPage')
-);
-const LazyZoneCreatePage = lazy(() => import('@/modules/zone/pages/ZoneCreatePage'));
-const LazyZoneUpdatePage = lazy(() => import('@/modules/zone/pages/ZoneUpdatePage'));
 const LazyZoneOptionsPage = lazy(() => import('@/modules/zone/pages/ZoneOptionsPage'));
-const LazyZoneInactivatePage = lazy(() => import('@/modules/zone/pages/ZoneInactivatePage'));
-const LazyZonesSearchPageByTerm = lazy(() => import('@/modules/zone/pages/ZonesSearchPageByTerm'));
+const LazyZoneCreatePage = lazy(() => import('@/modules/zone/pages/ZoneCreatePage'));
+const LazyZoneSearchPage = lazy(() => import('@/modules/zone/pages/ZoneSearchPage'));
 
 export const ZoneChildrenRoutes: RouteObject[] = [
   {
@@ -32,34 +27,10 @@ export const ZoneChildrenRoutes: RouteObject[] = [
     ),
   },
   {
-    path: 'general-search',
+    path: 'search',
     element: (
       <LazyElement>
-        <LazyZonesGeneralSearchPage />
-      </LazyElement>
-    ),
-  },
-  {
-    path: 'search-by-term',
-    element: (
-      <LazyElement>
-        <LazyZonesSearchPageByTerm />
-      </LazyElement>
-    ),
-  },
-  {
-    path: 'update',
-    element: (
-      <LazyElement>
-        <LazyZoneUpdatePage />
-      </LazyElement>
-    ),
-  },
-  {
-    path: 'inactivate',
-    element: (
-      <LazyElement>
-        <LazyZoneInactivatePage />
+        <LazyZoneSearchPage />
       </LazyElement>
     ),
   },

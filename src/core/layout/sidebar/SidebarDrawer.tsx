@@ -40,7 +40,6 @@ export function SidebarDrawer(): JSX.Element {
     item.allowedRoles.some((role) => userInfo?.roles?.includes(role))
   );
 
-  // todo:  usar los churches y los ministries para hacer selects y esparcir esto por toda la app
   const membershipPaths = [
     '/churches',
     '/pastors',

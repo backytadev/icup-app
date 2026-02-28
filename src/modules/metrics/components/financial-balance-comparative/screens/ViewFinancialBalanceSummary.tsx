@@ -142,8 +142,6 @@ export const ViewFinancialBalanceSummary = () => {
     await financialSummaryBalanceQuery.refetch();
   };
 
-  // Todo: fix screen on balance in month expense
-
   return (
     <div className='flex justify-center'>
       <Button

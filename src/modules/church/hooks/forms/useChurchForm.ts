@@ -64,6 +64,10 @@ interface UseChurchFormReturn {
 export const useChurchForm = (options: UseChurchFormOptions): UseChurchFormReturn => {
   const { mode } = options;
 
+  //* Extract stable values from options (options object is recreated on every render)
+  const updateData = mode === 'update' ? (options as UpdateModeOptions).data : undefined;
+  const updateId = mode === 'update' ? (options as UpdateModeOptions).id : undefined;
+
   //* States
   const [isLoadingData, setIsLoadingData] = useState(mode === 'update');
   const [isInputDisabled, setIsInputDisabled] = useState<boolean>(false);
@@ -107,37 +111,33 @@ export const useChurchForm = (options: UseChurchFormOptions): UseChurchFormRetur
 
   //* Effects - Update Mode: Populate form with data
   useEffect(() => {
-    if (mode !== 'update') return;
+    if (mode !== 'update' || !updateData) return;
 
-    const updateData = (options as UpdateModeOptions).data;
-    if (updateData) {
-      form.setValue('churchName', updateData.churchName!);
-      form.setValue('abbreviatedChurchName', updateData.abbreviatedChurchName!);
-      form.setValue('foundingDate', new Date(String(updateData.foundingDate).replace(/-/g, '/')));
-      form.setValue('serviceTimes', updateData.serviceTimes as ChurchServiceTime[]);
-      form.setValue('email', updateData.email ?? '');
-      form.setValue('phoneNumber', updateData.phoneNumber ?? '');
-      form.setValue('country', updateData.country ?? '');
-      form.setValue('department', updateData.department ?? '');
-      form.setValue('province', updateData.province ?? '');
-      form.setValue('district', updateData.district ?? '');
-      form.setValue('urbanSector', updateData.urbanSector ?? '');
-      form.setValue('address', updateData.address ?? '');
-      form.setValue('referenceAddress', updateData.referenceAddress ?? '');
-      form.setValue('isAnexe', updateData.isAnexe);
-      form.setValue('theirMainChurch', updateData.theirMainChurch?.id);
-      form.setValue('recordStatus', updateData.recordStatus);
-    }
+    form.setValue('churchName', updateData.churchName!);
+    form.setValue('abbreviatedChurchName', updateData.abbreviatedChurchName!);
+    form.setValue('foundingDate', new Date(String(updateData.foundingDate).replace(/-/g, '/')));
+    form.setValue('serviceTimes', updateData.serviceTimes as ChurchServiceTime[]);
+    form.setValue('email', updateData.email ?? '');
+    form.setValue('phoneNumber', updateData.phoneNumber ?? '');
+    form.setValue('country', updateData.country ?? '');
+    form.setValue('department', updateData.department ?? '');
+    form.setValue('province', updateData.province ?? '');
+    form.setValue('district', updateData.district ?? '');
+    form.setValue('urbanSector', updateData.urbanSector ?? '');
+    form.setValue('address', updateData.address ?? '');
+    form.setValue('referenceAddress', updateData.referenceAddress ?? '');
+    form.setValue('isAnexe', updateData.isAnexe);
+    form.setValue('theirMainChurch', updateData.theirMainChurch?.id);
+    form.setValue('recordStatus', updateData.recordStatus);
 
     //* Set loading to false immediately after data is populated
     setIsLoadingData(false);
-  }, [mode, options, form]);
+  }, [mode, updateData, form]);
 
   //* Effects - Update Mode: Dynamic URL
   useEffect(() => {
-    if (mode !== 'update') return;
+    if (mode !== 'update' || !updateId) return;
 
-    const updateId = (options as UpdateModeOptions).id;
     const originalUrl = window.location.href;
     const url = new URL(window.location.href);
     url.pathname = `/churches/search/${updateId}/edit`;
@@ -146,7 +146,7 @@ export const useChurchForm = (options: UseChurchFormOptions): UseChurchFormRetur
     return () => {
       window.history.replaceState({}, '', originalUrl);
     };
-  }, [mode, options]);
+  }, [mode, updateId]);
 
   //* Helpers - pure functions, no need for useMemo (cheap computations)
   const districtsValidation = validateDistrictsAllowedByModule(pathname);

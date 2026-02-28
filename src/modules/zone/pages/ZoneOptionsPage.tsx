@@ -1,15 +1,13 @@
-/* eslint-disable @typescript-eslint/no-floating-promises */
 import { useEffect } from 'react';
 
-import { Toaster } from 'sonner';
-import { NavLink } from 'react-router-dom';
-
-import { RiDeleteBin2Fill } from 'react-icons/ri';
-import { FcClearFilters, FcSearch, FcSupport, FcFlowChart } from 'react-icons/fc';
+import { FiMap } from 'react-icons/fi';
+import { FaSearch } from 'react-icons/fa';
 
 import { useAuthStore } from '@/stores/auth/auth.store';
-import { WhiteCard } from '@/shared/components/cards/WhiteCard';
 import { UserRole } from '@/modules/user/enums/user-role.enum';
+
+import { ModuleHeader } from '@/shared/components/page-header/ModuleHeader';
+import { ModuleOptionCard } from '@/shared/components/page-header/ModuleOptionCard';
 
 export const ZoneOptionsPage = (): JSX.Element => {
   const user = useAuthStore((state) => state.user);
@@ -24,111 +22,52 @@ export const ZoneOptionsPage = (): JSX.Element => {
   }, []);
 
   return (
-    <div className='animate-fadeIn'>
-      <Toaster position='top-center' richColors />
-      <h1 className='text-center pb-2 pt-3 md:pt-2 md:pb-2 font-sans text-2xl sm:text-3xl font-bold text-emerald-500 text-[2rem] sm:text-[2.4rem] md:text-[2.6rem] lg:text-5xl xl:text-5xl'>
-        Modulo Zona
-      </h1>
-      <p className='text-center font-sans text-sm sm:text-md md:text-[15px] font-bold px-4 pb-4 lg:text-base xl:text-lg'>
-        Bienvenido, por favor elige una opción.
-      </p>
-      <hr className='p-[0.015rem] bg-slate-500' />
+    <div className='min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950'>
+      <div className='max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-8'>
+        <ModuleHeader
+          title='Modulo Zona'
+          description='Administra y gestiona la informacion de las zonas registradas en el sistema.'
+          badge='Membresía'
+          badgeColor='blue'
+          icon={FiMap}
+          accentColor='blue'
+        />
 
-      <div className='w-full pt-6 pb-10 px-[2rem] sm:px-[7rem] md:px-[4rem] lg:px-[3rem] xl:px-[3rem] 2xl:px-[4rem] grid gap-8 md:gap-6 2xl:gap-4 grid-cols-1 lg:grid-cols-2 2xl:grid-cols-4 lg:grid-rows-3 2xl:grid-rows-3 h-auto lg:h-[58rem] xl:min-h-screen'>
-        <NavLink
-          key='/zones/create'
-          to={hasFullAccess ? '/zones/create' : '#'}
-          onClick={(e) => {
-            if (!hasFullAccess) e.preventDefault();
-          }}
-          end
-          className='row-start-1 row-end-2 md:row-start-1 md:row-end-2 md:col-start-1 md:col-end-2 lg:row-start-1 lg:row-end-3 lg:col-start-1 lg:col-end-2 xl:row-start-1 xl:row-end-2 xl:col-start-1 xl:col-end-2 2xl:row-start-1 2xl:row-end-4 2xl:col-start-1 2xl:col-end-2'
+        <div
+          className='text-center opacity-0 animate-slide-in-up'
+          style={{ animationDelay: '0.15s', animationFillMode: 'forwards' }}
         >
-          <WhiteCard disabled={!hasFullAccess} className='h-[10.5rem] md:h-[11rem]' centered>
-            <FcFlowChart className='text-[4.3rem] sm:text-[5rem] md:text-[6rem] text-slate-400' />
-            <h2 className='text-green-500 font-bold text-[22px] sm:text-2xl lg:text-3xl xl:text-4xl'>
-              Registrar Zona
-            </h2>
-            <p className='font-bold text-[13px] md:text-[14px] lg:text-[15px] xl:text-[16px]'>
-              Crear nuevo registro de una zona
-            </p>
-          </WhiteCard>
-        </NavLink>
+          <p className='text-lg text-slate-600 dark:text-slate-400 font-inter'>
+            Selecciona una opcion para continuar
+          </p>
+        </div>
 
-        <NavLink
-          key='/zones/general-search'
-          to='/zones/general-search'
-          end
-          className='row-start-2 row-end-3 lg:row-start-3 lg:row-end-4 lg:col-start-1 lg:col-end-2 xl:row-start-1 xl:row-end-3 xl:col-start-2 xl:col-end-3 2xl:row-start-1 2xl:row-end-3 2xl:col-start-2 2xl:col-end-3 '
-        >
-          <WhiteCard className='h-[10.5rem] md:h-[11rem]' centered>
-            <FcSearch className='text-[4rem] sm:text-[5rem] md:text-[6rem]' />
-            <h2 className='text-blue-500 font-bold text-[22px] sm:text-2xl lg:text-3xl xl:text-4xl'>
-              Consultar Zonas
-            </h2>
-            <p className='font-bold text-[13px] md:text-[14px] lg:text-[15px] xl:text-[16px]'>
-              Consultar registros de zonas en general
-            </p>
-          </WhiteCard>
-        </NavLink>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-6 max-w-3xl mx-auto'>
+          <ModuleOptionCard
+            to='/zones/create'
+            icon={<FiMap />}
+            title='Registrar Zona'
+            description='Crear nuevo registro de una zona en el sistema.'
+            color='green'
+            disabled={!hasFullAccess}
+            delay='0.2s'
+          />
 
-        <NavLink
-          key='/zones/search-by-term'
-          to='/zones/search-by-term'
-          end
-          className='row-start-3 row-end-4 lg:row-start-1 lg:row-end-2 lg:col-start-2 lg:col-end-3 xl:row-start-2 xl:row-end-3 xl:col-start-1 xl:col-end-2 2xl:row-start-3 2xl:row-end-4 2xl:col-start-2 2xl:col-end-3'
-        >
-          <WhiteCard className='h-[10.5rem] md:h-[11rem]' centered>
-            <FcClearFilters className='text-[4rem] sm:text-[5rem] md:text-[6rem]' />
-            <h2 className='text-sky-500 font-bold text-[22px] sm:text-2xl lg:text-3xl xl:text-4xl break-words'>
-              Consultar <span className='2xl:block'>Zonas</span>
-            </h2>
-            <p className='font-bold text-[13px] md:text-[14px] lg:text-[15px] xl:text-[16px]'>
-              Consultar registros de zonas por filtros
-            </p>
-          </WhiteCard>
-        </NavLink>
+          <ModuleOptionCard
+            to='/zones/search'
+            icon={<FaSearch />}
+            title='Gestionar Zonas'
+            description='Buscar, consultar, actualizar e inactivar registros de zonas.'
+            color='blue'
+            delay='0.25s'
+          />
+        </div>
 
-        <NavLink
-          key='/zones/update'
-          to={hasFullAccess ? '/zones/update' : '#'}
-          onClick={(e) => {
-            if (!hasFullAccess) e.preventDefault();
-          }}
-          end
-          className='row-start-4 row-end-5 lg:h-full lg:row-start-2 lg:row-end-3 lg:col-start-2 lg:col-end-3 xl:row-start-3 xl:row-end-4 xl:col-start-1 xl:col-end-2 2xl:row-start-1 2xl:row-end-4 2xl:col-start-3 2xl:col-end-4'
-        >
-          <WhiteCard disabled={!hasFullAccess} className='h-[10.5rem] md:h-[11rem]' centered>
-            <FcSupport className='text-[4rem] sm:text-[5rem] md:text-[6rem]' />
-            <h2 className='text-orange-500 font-bold text-[22px] sm:text-2xl lg:text-3xl xl:text-4xl'>
-              Actualizar Zona
-            </h2>
-            <p className='font-bold text-[13px] md:text-[14px] lg:text-[15px] xl:text-[16px]'>
-              Modificar datos del registro de una zona
-            </p>
-          </WhiteCard>
-        </NavLink>
-
-        <NavLink
-          key='/zones/inactivate'
-          to={hasFullAccess ? '/zones/inactivate' : '#'}
-          onClick={(e) => {
-            if (!hasFullAccess) e.preventDefault();
-          }}
-          end
-          className='row-start-5 row-end-6 lg:row-start-3 lg:row-end-4 lg:col-start-2 lg:col-end-3 xl:row-start-3 xl:row-end-4 xl:col-start-2 xl:col-end-3 2xl:row-start-1 2xl:row-end-4 2xl:col-start-4 2xl:col-end-5'
-        >
-          <WhiteCard disabled={!hasFullAccess} className='md:h-[11rem]' centered>
-            <RiDeleteBin2Fill className='text-[4rem] sm:text-[5rem] md:text-[6rem] text-red-500' />
-            <h2 className='text-red-500 font-bold text-[22px] sm:text-2xl lg:text-3xl xl:text-4xl'>
-              Inactivar Zona
-            </h2>
-
-            <p className='font-bold text-[13px] md:text-[14px] lg:text-[15px] xl:text-[16px]'>
-              Inactivar registro de una zona
-            </p>
-          </WhiteCard>
-        </NavLink>
+        <footer className='pt-6 pb-2 text-center'>
+          <p className='text-xs text-slate-400 dark:text-slate-500 font-inter'>
+            Modulo Zona - ICUP App &copy; {new Date().getFullYear()}
+          </p>
+        </footer>
       </div>
     </div>
   );

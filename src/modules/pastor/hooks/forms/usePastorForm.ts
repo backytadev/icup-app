@@ -78,6 +78,10 @@ interface UsePastorFormReturn {
 export const usePastorForm = (options: UsePastorFormOptions): UsePastorFormReturn => {
   const { mode } = options;
 
+  //* Extract stable values from options (options object is recreated on every render)
+  const updateData = mode === 'update' ? (options as UpdateModeOptions).data : undefined;
+  const updateId = mode === 'update' ? (options as UpdateModeOptions).id : undefined;
+
   //* States
   const [isLoadingData, setIsLoadingData] = useState(mode === 'update');
   const [isInputDisabled, setIsInputDisabled] = useState<boolean>(false);
@@ -170,9 +174,7 @@ export const usePastorForm = (options: UsePastorFormOptions): UsePastorFormRetur
 
   //* Effects - Update Mode: Load ministry blocks
   useEffect(() => {
-    if (mode !== 'update') return;
-
-    const updateData = (options as UpdateModeOptions).data;
+    if (mode !== 'update' || !updateData) return;
 
     const fetchMinistriesByChurch = async (churchId: string) => {
       try {
@@ -205,52 +207,48 @@ export const usePastorForm = (options: UsePastorFormOptions): UsePastorFormRetur
     };
 
     void loadMinistryBlocks();
-  }, [mode, options, setMinistryBlocks]);
+  }, [mode, updateData, setMinistryBlocks]);
 
   //* Effects - Update Mode: Populate form with data
   useEffect(() => {
-    if (mode !== 'update') return;
+    if (mode !== 'update' || !updateData) return;
 
-    const updateData = (options as UpdateModeOptions).data;
-    if (updateData) {
-      form.setValue('firstNames', updateData.member?.firstNames ?? '');
-      form.setValue('lastNames', updateData.member?.lastNames ?? '');
-      form.setValue('gender', updateData.member?.gender ?? '');
-      form.setValue('originCountry', updateData.member?.originCountry ?? '');
-      form.setValue('birthDate', new Date(String(updateData.member?.birthDate).replace(/-/g, '/')));
-      form.setValue('maritalStatus', updateData.member?.maritalStatus ?? '');
-      form.setValue('numberChildren', String(updateData.member?.numberChildren) ?? '0');
-      form.setValue(
-        'conversionDate',
-        updateData.member?.conversionDate &&
-          String(updateData.member.conversionDate) !== '1969-12-31'
-          ? new Date(String(updateData.member.conversionDate).replace(/-/g, '/'))
-          : undefined
-      );
-      form.setValue('email', updateData.member?.email ?? '');
-      form.setValue('phoneNumber', updateData.member?.phoneNumber ?? '');
-      form.setValue('residenceCountry', updateData.member?.residenceCountry ?? '');
-      form.setValue('residenceDepartment', updateData.member?.residenceDepartment ?? '');
-      form.setValue('residenceProvince', updateData.member?.residenceProvince ?? '');
-      form.setValue('residenceDistrict', updateData.member?.residenceDistrict ?? '');
-      form.setValue('residenceUrbanSector', updateData.member?.residenceUrbanSector ?? '');
-      form.setValue('residenceAddress', updateData.member?.residenceAddress ?? '');
-      form.setValue('referenceAddress', updateData.member?.referenceAddress ?? '');
-      form.setValue('roles', updateData.member?.roles as MemberRole[]);
-      form.setValue('relationType', updateData.relationType ?? '');
-      form.setValue('theirChurch', updateData.theirChurch?.id);
-      form.setValue('recordStatus', updateData.recordStatus);
-    }
+    form.setValue('firstNames', updateData.member?.firstNames ?? '');
+    form.setValue('lastNames', updateData.member?.lastNames ?? '');
+    form.setValue('gender', updateData.member?.gender ?? '');
+    form.setValue('originCountry', updateData.member?.originCountry ?? '');
+    form.setValue('birthDate', new Date(String(updateData.member?.birthDate).replace(/-/g, '/')));
+    form.setValue('maritalStatus', updateData.member?.maritalStatus ?? '');
+    form.setValue('numberChildren', String(updateData.member?.numberChildren) ?? '0');
+    form.setValue(
+      'conversionDate',
+      updateData.member?.conversionDate &&
+        String(updateData.member.conversionDate) !== '1969-12-31'
+        ? new Date(String(updateData.member.conversionDate).replace(/-/g, '/'))
+        : undefined
+    );
+    form.setValue('email', updateData.member?.email ?? '');
+    form.setValue('phoneNumber', updateData.member?.phoneNumber ?? '');
+    form.setValue('residenceCountry', updateData.member?.residenceCountry ?? '');
+    form.setValue('residenceDepartment', updateData.member?.residenceDepartment ?? '');
+    form.setValue('residenceProvince', updateData.member?.residenceProvince ?? '');
+    form.setValue('residenceDistrict', updateData.member?.residenceDistrict ?? '');
+    form.setValue('residenceUrbanSector', updateData.member?.residenceUrbanSector ?? '');
+    form.setValue('residenceAddress', updateData.member?.residenceAddress ?? '');
+    form.setValue('referenceAddress', updateData.member?.referenceAddress ?? '');
+    form.setValue('roles', updateData.member?.roles as MemberRole[]);
+    form.setValue('relationType', updateData.relationType ?? '');
+    form.setValue('theirChurch', updateData.theirChurch?.id);
+    form.setValue('recordStatus', updateData.recordStatus);
 
     //* Set loading to false immediately after data is populated
     setIsLoadingData(false);
-  }, [mode, options, form]);
+  }, [mode, updateData, form]);
 
   //* Effects - Update Mode: Dynamic URL
   useEffect(() => {
-    if (mode !== 'update') return;
+    if (mode !== 'update' || !updateId) return;
 
-    const updateId = (options as UpdateModeOptions).id;
     const originalUrl = window.location.href;
     const url = new URL(window.location.href);
     url.pathname = `/pastors/update/${updateId}/edit`;
@@ -259,7 +257,7 @@ export const usePastorForm = (options: UsePastorFormOptions): UsePastorFormRetur
     return () => {
       window.history.replaceState({}, '', originalUrl);
     };
-  }, [mode, options]);
+  }, [mode, updateId]);
 
   //* Effects - Update Mode: Controller district and urban sector
   useEffect(() => {
@@ -272,11 +270,10 @@ export const usePastorForm = (options: UsePastorFormOptions): UsePastorFormRetur
   useEffect(() => {
     if (mode !== 'update') return;
 
-    const updateData = (options as UpdateModeOptions).data;
     if (updateData?.theirChurch?.id !== changedChurchId && changedChurchId !== undefined) {
       setIsAlertDialogOpen(true);
     }
-  }, [mode, options, changedChurchId]);
+  }, [mode, updateData, changedChurchId]);
 
   //* Submit button logic - Create Mode
   useEffect(() => {

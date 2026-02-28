@@ -43,8 +43,6 @@ import { validateUrbanSectorsAllowedByDistrict } from '@/shared/helpers/validate
 import { Form } from '@/shared/components/ui/form';
 import { Button } from '@/shared/components/ui/button';
 
-// todo: falta trabajar en el modulo de pastor y copastor, en los hooks de botones y la subida de nivel
-
 export const PreacherCreatePage = (): JSX.Element => {
   //* States
   const [isInputTheirSupervisorOpen, setIsInputTheirSupervisorOpen] = useState<boolean>(false);
@@ -268,14 +266,14 @@ export const PreacherCreatePage = (): JSX.Element => {
 
               {(relationType === RelationType.OnlyRelatedHierarchicalCover ||
                 relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover) && (
-                <SupervisorsSelect
-                  form={form as any}
-                  isInputDisabled={isInputDisabled}
-                  isInputTheirSupervisorOpen={isInputTheirSupervisorOpen}
-                  setIsInputTheirSupervisorOpen={setIsInputTheirSupervisorOpen}
-                  querySupervisors={querySupervisors}
-                />
-              )}
+                  <SupervisorsSelect
+                    form={form as any}
+                    isInputDisabled={isInputDisabled}
+                    isInputTheirSupervisorOpen={isInputTheirSupervisorOpen}
+                    setIsInputTheirSupervisorOpen={setIsInputTheirSupervisorOpen}
+                    querySupervisors={querySupervisors}
+                  />
+                )}
 
               {relationType === RelationType.OnlyRelatedMinistries && (
                 <PastorsSelect
@@ -292,30 +290,30 @@ export const PreacherCreatePage = (): JSX.Element => {
             {/* Ministries */}
             {(relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover ||
               relationType === RelationType.OnlyRelatedMinistries) && (
-              <div className='w-full border-t border-gray-300 pt-4 flex flex-col space-y-6 sm:col-start-1 sm:col-end-3'>
-                <MinistryMemberCreateForm
-                  isInputDisabled={isInputDisabled}
-                  addMinistryBlock={addMinistryBlock}
-                  ministryBlocks={ministryBlocks}
-                  updateMinistryBlock={updateMinistryBlock}
-                  queryChurches={queryChurches}
-                  handleSelectChurch={handleSelectChurch}
-                  toggleRoleInBlock={toggleRoleInBlock}
-                  removeMinistryBlock={removeMinistryBlock}
-                />
-              </div>
-            )}
+                <div className='w-full border-t border-gray-300 pt-4 flex flex-col space-y-6 sm:col-start-1 sm:col-end-3'>
+                  <MinistryMemberCreateForm
+                    isInputDisabled={isInputDisabled}
+                    addMinistryBlock={addMinistryBlock}
+                    ministryBlocks={ministryBlocks}
+                    updateMinistryBlock={updateMinistryBlock}
+                    queryChurches={queryChurches}
+                    handleSelectChurch={handleSelectChurch}
+                    toggleRoleInBlock={toggleRoleInBlock}
+                    removeMinistryBlock={removeMinistryBlock}
+                  />
+                </div>
+              )}
 
             {/* Validation message */}
             {isMessageErrorDisabled ||
-            (relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover &&
-              ministryBlocks.some(
-                (item) =>
-                  !item.churchId ||
-                  !item.ministryId ||
-                  !item.ministryType ||
-                  item.ministryRoles.length === 0
-              )) ? (
+              (relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover &&
+                ministryBlocks.some(
+                  (item) =>
+                    !item.churchId ||
+                    !item.ministryId ||
+                    !item.ministryType ||
+                    item.ministryRoles.length === 0
+                )) ? (
               <p className='mt-0 -mb-4 md:-mt-5 md:col-start-1 md:col-end-3 md:row-start-4 md:row-end-5 mx-auto md:w-[100%] lg:w-[80%] text-center text-red-500 text-[12.5px] md:text-[13px] font-bold'>
                 ❌ Datos incompletos, completa todos los campos para crear el registro.
               </p>
@@ -334,7 +332,7 @@ export const PreacherCreatePage = (): JSX.Element => {
                 className={cn(
                   'w-full text-[14px]',
                   preacherCreationMutation?.isPending &&
-                    'bg-emerald-500 hover:bg-emerald-500 disabled:opacity-100 disabled:md:text-[15px] text-white'
+                  'bg-emerald-500 hover:bg-emerald-500 disabled:opacity-100 disabled:md:text-[15px] text-white'
                 )}
                 onClick={() => {
                   setTimeout(() => {

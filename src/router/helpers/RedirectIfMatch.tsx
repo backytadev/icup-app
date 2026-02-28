@@ -84,16 +84,16 @@ export const RedirectIfMatch = (): JSX.Element => {
 
   // If starts with zone
   if (location.pathname.startsWith('/zones/general-search/')) {
-    return <Navigate to='/zones/general-search' />;
+    return <Navigate to='/zones/search' />;
   }
   if (location.pathname.startsWith('/zones/search-by-term/')) {
-    return <Navigate to='/zones/search-by-term' />;
+    return <Navigate to='/zones/search' />;
   }
   if (location.pathname.startsWith('/zones/update/')) {
-    return <Navigate to='/zones/update' />;
+    return <Navigate to='/zones/search' />;
   }
   if (location.pathname.startsWith('/zones/inactivate/')) {
-    return <Navigate to='/zones/inactivate' />;
+    return <Navigate to='/zones/search' />;
   }
 
   // If starts with preacher

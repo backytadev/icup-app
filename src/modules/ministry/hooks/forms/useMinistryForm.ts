@@ -75,6 +75,10 @@ interface UseMinistryFormReturn {
 export const useMinistryForm = (options: UseMinistryFormOptions): UseMinistryFormReturn => {
   const { mode } = options;
 
+  //* Extract stable values from options (options object is recreated on every render)
+  const updateData = mode === 'update' ? (options as UpdateModeOptions).data : undefined;
+  const updateId = mode === 'update' ? (options as UpdateModeOptions).id : undefined;
+
   //* States
   const [isLoadingData, setIsLoadingData] = useState(mode === 'update');
   const [isInputDisabled, setIsInputDisabled] = useState<boolean>(false);
@@ -117,36 +121,32 @@ export const useMinistryForm = (options: UseMinistryFormOptions): UseMinistryFor
 
   //* Effects - Update Mode: Populate form with data
   useEffect(() => {
-    if (mode !== 'update') return;
+    if (mode !== 'update' || !updateData) return;
 
-    const updateData = (options as UpdateModeOptions).data;
-    if (updateData) {
-      form.setValue('customMinistryName', updateData.customMinistryName!);
-      form.setValue('ministryType', updateData.ministryType ?? '');
-      form.setValue('foundingDate', new Date(String(updateData.foundingDate).replace(/-/g, '/')));
-      form.setValue('serviceTimes', updateData.serviceTimes as MinistryServiceTime[]);
-      form.setValue('email', updateData.email ?? '');
-      form.setValue('phoneNumber', updateData.phoneNumber ?? '');
-      form.setValue('country', updateData.country ?? '');
-      form.setValue('department', updateData.department ?? '');
-      form.setValue('province', updateData.province ?? '');
-      form.setValue('district', updateData.district ?? '');
-      form.setValue('urbanSector', updateData.urbanSector ?? '');
-      form.setValue('address', updateData.address ?? '');
-      form.setValue('referenceAddress', updateData.referenceAddress ?? '');
-      form.setValue('theirPastor', updateData.theirPastor?.id);
-      form.setValue('recordStatus', updateData.recordStatus);
-    }
+    form.setValue('customMinistryName', updateData.customMinistryName!);
+    form.setValue('ministryType', updateData.ministryType ?? '');
+    form.setValue('foundingDate', new Date(String(updateData.foundingDate).replace(/-/g, '/')));
+    form.setValue('serviceTimes', updateData.serviceTimes as MinistryServiceTime[]);
+    form.setValue('email', updateData.email ?? '');
+    form.setValue('phoneNumber', updateData.phoneNumber ?? '');
+    form.setValue('country', updateData.country ?? '');
+    form.setValue('department', updateData.department ?? '');
+    form.setValue('province', updateData.province ?? '');
+    form.setValue('district', updateData.district ?? '');
+    form.setValue('urbanSector', updateData.urbanSector ?? '');
+    form.setValue('address', updateData.address ?? '');
+    form.setValue('referenceAddress', updateData.referenceAddress ?? '');
+    form.setValue('theirPastor', updateData.theirPastor?.id);
+    form.setValue('recordStatus', updateData.recordStatus);
 
     //* Set loading to false immediately after data is populated
     setIsLoadingData(false);
-  }, [mode, options, form]);
+  }, [mode, updateData, form]);
 
   //* Effects - Update Mode: Dynamic URL
   useEffect(() => {
-    if (mode !== 'update') return;
+    if (mode !== 'update' || !updateId) return;
 
-    const updateId = (options as UpdateModeOptions).id;
     const originalUrl = window.location.href;
     const url = new URL(window.location.href);
     url.pathname = `/ministries/update/${updateId}/edit`;
@@ -155,7 +155,7 @@ export const useMinistryForm = (options: UseMinistryFormOptions): UseMinistryFor
     return () => {
       window.history.replaceState({}, '', originalUrl);
     };
-  }, [mode, options]);
+  }, [mode, updateId]);
 
   //* Helpers - pure functions, no need for useMemo (cheap computations)
   const districtsValidation = validateDistrictsAllowedByModule(pathname);
@@ -181,14 +181,10 @@ export const useMinistryForm = (options: UseMinistryFormOptions): UseMinistryFor
   useEffect(() => {
     if (mode !== 'update') return;
 
-    const updateData = (options as UpdateModeOptions).data;
-    if (
-      updateData?.theirPastor?.id !== changedPastorId &&
-      changedPastorId !== undefined
-    ) {
+    if (updateData?.theirPastor?.id !== changedPastorId && changedPastorId !== undefined) {
       setIsAlertDialogOpen(true);
     }
-  }, [mode, options, changedPastorId]);
+  }, [mode, updateData, changedPastorId]);
 
   //* Mutations
   const ministryCreationMutation = useMinistryCreationMutation({

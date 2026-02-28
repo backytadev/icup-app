@@ -13,8 +13,8 @@ import {
 } from '@/shared/components/ui/alert-dialog';
 
 import { getInitialFullNames } from '@/shared/helpers/get-full-names.helper';
-import { ZoneResponse } from '@/modules/zone/interfaces/zone-response.interface';
-import { ZoneFormData } from '@/modules/zone/interfaces/zone-form-data.interface';
+import { ZoneResponse } from '@/modules/zone/types';
+import { ZoneFormData } from '@/modules/zone/types';
 import { SupervisorResponse } from '@/modules/supervisor/interfaces/supervisor-response.interface';
 
 export interface AlertUpdateRelationZoneProps {
