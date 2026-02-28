@@ -112,16 +112,16 @@ export const RedirectIfMatch = (): JSX.Element => {
 
   // If starts with family group
   if (location.pathname.startsWith('/family-groups/general-search/')) {
-    return <Navigate to='/family-groups/general-search' />;
+    return <Navigate to='/family-groups/search' />;
   }
   if (location.pathname.startsWith('/family-groups/search-by-term/')) {
-    return <Navigate to='/family-groups/search-by-term' />;
+    return <Navigate to='/family-groups/search' />;
   }
   if (location.pathname.startsWith('/family-groups/update/')) {
-    return <Navigate to='/family-groups/update' />;
+    return <Navigate to='/family-groups/search' />;
   }
   if (location.pathname.startsWith('/family-groups/inactivate/')) {
-    return <Navigate to='/family-groups/inactivate' />;
+    return <Navigate to='/family-groups/search' />;
   }
 
   // If starts with disciple

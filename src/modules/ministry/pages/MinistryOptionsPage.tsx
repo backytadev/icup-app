@@ -29,6 +29,7 @@ export const MinistryOptionsPage = (): JSX.Element => {
           description='Administra y gestiona la informacion de los ministerios registrados en el sistema.'
           badge='Membresía'
           badgeColor='blue'
+          titleColor='blue'
           icon={PiUsersThree}
           accentColor='blue'
         />

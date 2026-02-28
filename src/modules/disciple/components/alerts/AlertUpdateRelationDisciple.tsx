@@ -15,7 +15,7 @@ import {
 import { getInitialFullNames } from '@/shared/helpers/get-full-names.helper';
 import { DiscipleResponse } from '@/modules/disciple/interfaces/disciple-response.interface';
 import { DiscipleFormData } from '@/modules/disciple/interfaces/disciple-form-data.interface';
-import { FamilyGroupResponse } from '@/modules/family-group/interfaces/family-group-response.interface';
+import { FamilyGroupResponse } from '@/modules/family-group/types/family-group-response.interface';
 
 export interface AlertUpdateRelationDiscipleProps {
   data: DiscipleResponse | undefined;
@@ -63,9 +63,9 @@ export const AlertUpdateRelationDisciple = ({
                   <span>G. Familiar:</span>{' '}
                   <strong>{`${data?.theirFamilyGroup?.familyGroupCode ?? 'Sin Grupo Familiar'} ~ 
                       ${getInitialFullNames({
-                        firstNames: data?.theirPreacher?.firstNames ?? 'Sin',
-                        lastNames: data?.theirPreacher?.lastNames ?? 'Predicador',
-                      })}
+                    firstNames: data?.theirPreacher?.firstNames ?? 'Sin',
+                    lastNames: data?.theirPreacher?.lastNames ?? 'Predicador',
+                  })}
                   `}</strong>
                 </p>
 

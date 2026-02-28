@@ -20,6 +20,7 @@ export const PastorCreatePage = (): JSX.Element => {
           description='Ingresa los datos del nuevo pastor para registrarlo en el sistema.'
           badge='Membresía'
           badgeColor='purple'
+          titleColor='green'
           icon={FcPodiumWithSpeaker}
           accentColor='purple'
         />

@@ -3,43 +3,38 @@ import { useState, useEffect, useCallback } from 'react';
 import { Toaster } from 'sonner';
 
 import {
-  type ChurchSearchMode,
-  useChurchStore,
+  type FamilyGroupSearchMode,
+  useFamilyGroupStore,
   selectFiltersDisabled,
   selectSearchMode,
-} from '@/modules/church/store';
+} from '@/modules/family-group/store';
 
-import { type ChurchResponse, type ChurchSearchFormByTerm } from '@/modules/church/types';
-import { churchUnifiedColumns as columns } from '@/modules/church/components/tables/columns/base-columns';
-import { UnifiedChurchSearchDataTable } from '@/modules/church/components/tables/UnifiedSearchDataTable';
-
-import { PiChurch } from 'react-icons/pi';
+import { type FamilyGroupResponse, type FamilyGroupSearchFormByTerm } from '@/modules/family-group/types';
+import { familyGroupUnifiedColumns as columns } from '@/modules/family-group/components/tables/columns/base-columns';
+import { UnifiedFamilyGroupSearchDataTable } from '@/modules/family-group/components/tables/UnifiedSearchDataTable';
 
 import {
   GeneralSearchForm,
   SearchByTermForm,
-} from '@/modules/church/components/forms';
+} from '@/modules/family-group/components/forms';
 
 import { ModuleHeader } from '@/shared/components/page-header/ModuleHeader';
 import { ModuleFormCard } from '@/shared/components/page-header/ModuleFormCard';
 
 import { RecordOrder } from '@/shared/enums/record-order.enum';
 import { type GeneralSearchForm as GeneralSearchFormType } from '@/shared/interfaces/search-general-form.interface';
-import { ChurchSearchType } from '@/modules/church/enums/church-search-type.enum';
+import { FamilyGroupSearchType } from '@/modules/family-group/enums/family-group-search-type.enum';
 
 import { cn } from '@/shared/lib/utils';
+import { FiHome } from 'react-icons/fi';
 
-const dataFictional: ChurchResponse[] = [
+const dataFictional: FamilyGroupResponse[] = [
   {
     id: '',
-    churchName: '',
-    abbreviatedChurchName: '',
-    churchCode: '',
-    isAnexe: false,
-    serviceTimes: ['16:00'],
-    foundingDate: new Date('2024-05-31'),
-    email: 'iglesia.central@gmail.com',
-    phoneNumber: '',
+    familyGroupName: '',
+    familyGroupNumber: 0,
+    familyGroupCode: '',
+    serviceTime: '',
     country: '',
     department: '',
     province: '',
@@ -48,29 +43,37 @@ const dataFictional: ChurchResponse[] = [
     address: '',
     referenceAddress: '',
     recordStatus: 'active',
-    theirMainChurch: null,
+    theirPastor: null,
+    theirChurch: null,
+    theirCopastor: null,
+    theirSupervisor: null,
+    theirPreacher: null,
+    theirZone: null,
   },
 ];
 
-export const ChurchSearchPage = (): JSX.Element => {
+export const FamilyGroupSearchPage = (): JSX.Element => {
   //* Store
-  const searchMode = useChurchStore(selectSearchMode);
-  const isFiltersDisabled = useChurchStore(selectFiltersDisabled);
-  const { setSearchMode, setFiltersDisabled } = useChurchStore();
+  const searchMode = useFamilyGroupStore(selectSearchMode);
+  const isFiltersDisabled = useFamilyGroupStore(selectFiltersDisabled);
+  const { setSearchMode, setFiltersDisabled } = useFamilyGroupStore();
 
   //* Local state
-  const [generalSearchParams, setGeneralSearchParams] = useState<GeneralSearchFormType | undefined>();
-  const [filterSearchParams, setFilterSearchParams] = useState<ChurchSearchFormByTerm | undefined>();
-  const [dataForm, setDataForm] = useState<ChurchSearchFormByTerm>();
+  const [generalSearchParams, setGeneralSearchParams] = useState<
+    GeneralSearchFormType | undefined
+  >();
+  const [filterSearchParams, setFilterSearchParams] = useState<
+    FamilyGroupSearchFormByTerm | undefined
+  >();
+  const [dataForm, setDataForm] = useState<FamilyGroupSearchFormByTerm>();
 
   //* Set document title
   useEffect(() => {
-    document.title = 'Gestionar Iglesias - IcupApp';
+    document.title = 'Gestionar Grupos Familiares - IcupApp';
   }, []);
 
   //* Reset to general mode and auto-execute search on mount
   useEffect(() => {
-    // Always reset to general mode when mounting to prevent stale state
     setSearchMode('general');
 
     const defaultParams: GeneralSearchFormType = {
@@ -84,15 +87,13 @@ export const ChurchSearchPage = (): JSX.Element => {
     setFiltersDisabled(false);
   }, [setFiltersDisabled, setSearchMode]);
 
-
   //* Handlers
   const handleModeChange = useCallback(
-    (mode: ChurchSearchMode): void => {
+    (mode: FamilyGroupSearchMode): void => {
       if (mode === searchMode) return;
 
       setSearchMode(mode);
 
-      // Set default search params for the new mode to trigger auto-search
       if (mode === 'general') {
         const defaultGeneralParams: GeneralSearchFormType = {
           limit: '10',
@@ -104,9 +105,9 @@ export const ChurchSearchPage = (): JSX.Element => {
         setDataForm(undefined);
         setGeneralSearchParams(defaultGeneralParams);
       } else {
-        const defaultFilterParams: ChurchSearchFormByTerm = {
-          searchType: ChurchSearchType.ChurchName,
-          inputTerm: 'iglesia',
+        const defaultFilterParams: FamilyGroupSearchFormByTerm = {
+          searchType: FamilyGroupSearchType.District,
+          inputTerm: 'Independencia',
           limit: '10',
           order: RecordOrder.Descending,
         };
@@ -129,7 +130,7 @@ export const ChurchSearchPage = (): JSX.Element => {
   );
 
   const handleFilterSearch = useCallback(
-    (params: ChurchSearchFormByTerm, formData: ChurchSearchFormByTerm): void => {
+    (params: FamilyGroupSearchFormByTerm, formData: FamilyGroupSearchFormByTerm): void => {
       setFilterSearchParams(params);
       setDataForm(formData);
       setFiltersDisabled(false);
@@ -143,13 +144,13 @@ export const ChurchSearchPage = (): JSX.Element => {
 
       <div className='max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6'>
         <ModuleHeader
-          title='Gestionar Iglesias'
-          description='Busca, consulta, actualiza e inactiva registros de iglesias y anexos en el sistema.'
+          title='Gestionar Grupos Familiares'
+          description='Busca, consulta, actualiza e inactiva registros de grupos familiares en el sistema.'
           titleColor='blue'
           badge='Membresía'
-          badgeColor='slate'
-          icon={PiChurch}
-          accentColor='blue'
+          badgeColor='amber'
+          icon={FiHome}
+          accentColor='amber'
         />
 
         {/* Mode Toggle */}
@@ -193,7 +194,7 @@ export const ChurchSearchPage = (): JSX.Element => {
             title={searchMode === 'general' ? 'Parametros de Busqueda' : 'Filtros de Busqueda'}
             description={
               searchMode === 'general'
-                ? 'Configura los parametros para realizar la busqueda de iglesias.'
+                ? 'Configura los parametros para realizar la busqueda de grupos familiares.'
                 : 'Selecciona el tipo de busqueda y configura los parametros deseados.'
             }
           >
@@ -211,7 +212,7 @@ export const ChurchSearchPage = (): JSX.Element => {
           style={{ animationDelay: '0.2s', animationFillMode: 'forwards' }}
         >
           <ModuleFormCard>
-            <UnifiedChurchSearchDataTable
+            <UnifiedFamilyGroupSearchDataTable
               columns={columns}
               data={dataFictional}
               searchMode={searchMode}
@@ -226,7 +227,7 @@ export const ChurchSearchPage = (): JSX.Element => {
 
         <footer className='pt-4 pb-2 text-center'>
           <p className='text-xs text-slate-400 dark:text-slate-500 font-inter'>
-            Modulo Iglesia - ICUP App &copy; {new Date().getFullYear()}
+            Modulo Grupo Familiar - ICUP App &copy; {new Date().getFullYear()}
           </p>
         </footer>
       </div>
@@ -234,4 +235,4 @@ export const ChurchSearchPage = (): JSX.Element => {
   );
 };
 
-export default ChurchSearchPage;
+export default FamilyGroupSearchPage;

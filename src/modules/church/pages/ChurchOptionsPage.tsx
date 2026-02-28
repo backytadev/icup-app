@@ -28,9 +28,10 @@ export const ChurchOptionsPage = (): JSX.Element => {
           title='Modulo Iglesia'
           description='Administra y gestiona la informacion de las iglesias y anexos registrados en el sistema.'
           badge='Membresía'
-          badgeColor='amber'
+          badgeColor='slate'
+          titleColor='slate'
           icon={PiChurch}
-          accentColor='amber'
+          accentColor='slate'
         />
 
         <div

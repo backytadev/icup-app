@@ -48,7 +48,7 @@ export const MinistryUpdateForm = ({
   });
 
   return (
-    <div className='w-full max-w-[1120px] mx-auto'>
+    <div className='w-full max-w-[1120px] mx-auto -mt-3'>
       {isLoadingData ? (
         <MinistryFormSkeleton />
       ) : (

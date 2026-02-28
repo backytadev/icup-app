@@ -29,6 +29,7 @@ export const PastorOptionsPage = (): JSX.Element => {
           description='Administra y gestiona la informacion de los pastores registrados en el sistema.'
           badge='Membresía'
           badgeColor='purple'
+          titleColor='purple'
           icon={FcPodiumWithSpeaker}
           accentColor='purple'
         />

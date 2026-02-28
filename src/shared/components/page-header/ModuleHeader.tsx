@@ -2,9 +2,9 @@ import { type IconType } from 'react-icons';
 
 import { cn } from '@/shared/lib/utils';
 
-type TitleColor = 'slate' | 'green' | 'blue' | 'sky' | 'orange' | 'red' | 'amber' | 'cyan';
-type BadgeColor = 'blue' | 'amber' | 'green' | 'purple' | 'red' | 'orange' | 'cyan';
-type AccentColor = 'blue' | 'amber' | 'green' | 'purple' | 'red' | 'amber' | 'orange' | 'cyan';
+type TitleColor = 'slate' | 'green' | 'blue' | 'sky' | 'orange' | 'red' | 'amber' | 'cyan' | 'purple';
+type BadgeColor = 'blue' | 'amber' | 'green' | 'purple' | 'red' | 'orange' | 'cyan' | 'slate';
+type AccentColor = 'blue' | 'amber' | 'green' | 'purple' | 'red' | 'amber' | 'orange' | 'cyan' | 'slate';
 
 interface ModuleHeaderProps {
   title: string;
@@ -26,6 +26,7 @@ const titleColorVariantsLight: Record<TitleColor, string> = {
   red: 'text-red-600',
   amber: 'text-amber-600',
   cyan: 'text-cyan-600',
+  purple: 'text-purple-600',
 };
 
 const titleColorVariantsDark: Record<TitleColor, string> = {
@@ -37,9 +38,11 @@ const titleColorVariantsDark: Record<TitleColor, string> = {
   red: 'dark:text-red-400',
   amber: 'dark:text-amber-400',
   cyan: 'dark:text-cyan-400',
+  purple: 'dark:text-purple-400',
 };
 
 const badgeColorVariants: Record<BadgeColor, string> = {
+  slate: 'text-slate-700 bg-slate-100 dark:text-slate-300 dark:bg-slate-500/20',
   blue: 'text-blue-700 bg-blue-100 dark:text-blue-300 dark:bg-blue-500/20',
   amber: 'text-amber-700 bg-amber-100 dark:text-amber-300 dark:bg-amber-500/20',
   green: 'text-emerald-700 bg-emerald-100 dark:text-emerald-300 dark:bg-emerald-500/20',
@@ -50,6 +53,7 @@ const badgeColorVariants: Record<BadgeColor, string> = {
 };
 
 const accentColorVariants: Record<AccentColor, string> = {
+  slate: 'bg-slate-200/30 dark:bg-slate-500/10',
   blue: 'bg-blue-200/30 dark:bg-blue-500/10',
   amber: 'bg-amber-200/30 dark:bg-amber-500/10',
   green: 'bg-emerald-200/30 dark:bg-emerald-500/10',

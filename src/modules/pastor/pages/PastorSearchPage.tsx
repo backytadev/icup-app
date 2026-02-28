@@ -158,7 +158,7 @@ export const PastorSearchPage = (): JSX.Element => {
           badge='Membresía'
           badgeColor='purple'
           icon={FcPodiumWithSpeaker}
-          accentColor='purple'
+          accentColor='blue'
         />
 
         {/* Mode Toggle - Same logic as Ministry module */}

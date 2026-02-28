@@ -1,5 +1,5 @@
-import { FamilyGroupTabsCard } from '@/modules/family-group/components/cards/info/FamilyGroupTabsCard';
-import { type FamilyGroupResponse } from '@/modules/family-group/interfaces/family-group-response.interface';
+import { FamilyGroupTabsCard } from '@/modules/family-group/components/FamilyGroupTabsCard';
+import { type FamilyGroupResponse } from '@/modules/family-group/types/family-group-response.interface';
 
 import { InfoItemCard, InfoItemModal } from '@/modules/dashboard/components/shared';
 

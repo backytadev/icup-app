@@ -28,9 +28,10 @@ export const ZoneOptionsPage = (): JSX.Element => {
           title='Modulo Zona'
           description='Administra y gestiona la informacion de las zonas registradas en el sistema.'
           badge='Membresía'
-          badgeColor='blue'
+          badgeColor='orange'
+          titleColor='orange'
           icon={FiMap}
-          accentColor='blue'
+          accentColor='orange'
         />
 
         <div

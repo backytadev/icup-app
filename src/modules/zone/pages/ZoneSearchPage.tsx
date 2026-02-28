@@ -138,9 +138,9 @@ export const ZoneSearchPage = (): JSX.Element => {
           description='Busca, consulta, actualiza e inactiva registros de zonas en el sistema.'
           titleColor='blue'
           badge='Membresía'
-          badgeColor='blue'
+          badgeColor='orange'
           icon={FiMap}
-          accentColor='blue'
+          accentColor='orange'
         />
 
         {/* Mode Toggle */}

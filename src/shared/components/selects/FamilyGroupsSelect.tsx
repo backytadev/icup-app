@@ -24,7 +24,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/
 import { MemberUseFormReturn } from '@/shared/interfaces/member-form-data';
 import { getInitialFullNames } from '@/shared/helpers/get-full-names.helper';
 import { getCodeAndNameFamilyGroup } from '@/shared/helpers/get-code-and-name-family-group.helper';
-import { FamilyGroupResponse } from '@/modules/family-group/interfaces/family-group-response.interface';
+import { FamilyGroupResponse } from '@/modules/family-group/types/family-group-response.interface';
 
 export interface FamilyGroupsSelectProps {
   form: MemberUseFormReturn;
@@ -75,15 +75,15 @@ export const FamilyGroupsSelect = ({
                       ? `${queryFamilyGroups?.data?.find((familyGroup) => familyGroup.id === field.value)?.familyGroupName} 
                           (${queryFamilyGroups?.data?.find((familyGroup) => familyGroup.id === field.value)?.familyGroupCode}) ~ 
                           ${getInitialFullNames({
-                            firstNames:
-                              queryFamilyGroups?.data?.find(
-                                (familyGroup) => familyGroup.id === field.value
-                              )?.theirPreacher?.firstNames ?? '',
-                            lastNames:
-                              queryFamilyGroups?.data?.find(
-                                (familyGroup) => familyGroup.id === field.value
-                              )?.theirPreacher?.lastNames ?? '',
-                          })}`
+                        firstNames:
+                          queryFamilyGroups?.data?.find(
+                            (familyGroup) => familyGroup.id === field.value
+                          )?.theirPreacher?.firstNames ?? '',
+                        lastNames:
+                          queryFamilyGroups?.data?.find(
+                            (familyGroup) => familyGroup.id === field.value
+                          )?.theirPreacher?.lastNames ?? '',
+                      })}`
                       : 'Busque y seleccione un grupo familiar'}
                     <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-5' />
                   </Button>

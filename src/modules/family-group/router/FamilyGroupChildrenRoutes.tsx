@@ -5,23 +5,14 @@ import { RouteObject } from 'react-router-dom';
 import { LazyElement } from '@/shared/components/lazy/LazyElements';
 
 //! Lazy load children routes
+const LazyFamilyGroupOptionsPage = lazy(
+  () => import('@/modules/family-group/pages/FamilyGroupOptionsPage')
+);
 const LazyFamilyGroupCreatePage = lazy(
   () => import('@/modules/family-group/pages/FamilyGroupCreatePage')
 );
-const LazyFamilyGroupUpdatePage = lazy(
-  () => import('@/modules/family-group/pages/FamilyGroupUpdatePage')
-);
-const LazyFamilyGroupInactivatePage = lazy(
-  () => import('@/modules/family-group/pages/FamilyGroupInactivatePage')
-);
-const LazyFamilyGroupsSearchPageByTerm = lazy(
-  () => import('@/modules/family-group/pages/FamilyGroupsSearchPageByTerm')
-);
-const LazyFamilyGroupsGeneralSearchPage = lazy(
-  () => import('@/modules/family-group/pages/FamilyGroupsGeneralSearchPage')
-);
-const LazyFamilyGroupOptionsPage = lazy(
-  () => import('@/modules/family-group/pages/FamilyGroupOptionsPage')
+const LazyFamilyGroupSearchPage = lazy(
+  () => import('@/modules/family-group/pages/FamilyGroupSearchPage')
 );
 
 export const FamilyGroupChildrenRoutes: RouteObject[] = [
@@ -42,34 +33,10 @@ export const FamilyGroupChildrenRoutes: RouteObject[] = [
     ),
   },
   {
-    path: 'general-search',
+    path: 'search',
     element: (
       <LazyElement>
-        <LazyFamilyGroupsGeneralSearchPage />
-      </LazyElement>
-    ),
-  },
-  {
-    path: 'search-by-term',
-    element: (
-      <LazyElement>
-        <LazyFamilyGroupsSearchPageByTerm />
-      </LazyElement>
-    ),
-  },
-  {
-    path: 'update',
-    element: (
-      <LazyElement>
-        <LazyFamilyGroupUpdatePage />
-      </LazyElement>
-    ),
-  },
-  {
-    path: 'inactivate',
-    element: (
-      <LazyElement>
-        <LazyFamilyGroupInactivatePage />
+        <LazyFamilyGroupSearchPage />
       </LazyElement>
     ),
   },

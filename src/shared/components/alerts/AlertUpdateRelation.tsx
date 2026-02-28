@@ -38,7 +38,7 @@ export interface AlertUpdateRelationProps {
   updateForm: UseFormReturn<any, any, any>;
 
   //* Config props
-  mode: 'pastor' | 'church'; // pastor: cambio de pastor en ministry, church: cambio de iglesia en pastor
+  mode: 'pastor' | 'church' | 'supervisor'; // pastor: ministry, church: pastor, supervisor: zone
   formFieldName: string; // nombre del campo del formulario a resetear
 
   //* Display props (optional)
@@ -83,6 +83,14 @@ export const AlertUpdateRelation = ({
       warningMessage:
         'Al realizar el cambio de Iglesia para este Pastor, se eliminarán sus relaciones anteriores y se establecerán las nuevas. Además, todo lo que estaban bajo su cobertura (co-pastores, supervisores, grupos familiares, zonas y discípulos) también serán reasignados con las nuevas relaciones.',
     },
+    supervisor: {
+      title: 'Cambio de Supervisor',
+      subtitle: 'Estás a punto de actualizar el Supervisor asignado a la zona',
+      currentLabel: 'Supervisor',
+      newLabel: 'Supervisor',
+      warningMessage:
+        'Al realizar el cambio de Supervisor para esta Zona, se eliminarán sus relaciones anteriores y se establecerán las nuevas. Además, todo lo que estaban bajo su cobertura (grupos familiares y discípulos) también serán reasignados con las nuevas relaciones.',
+    },
   };
 
   const texts = defaultTexts[mode];
@@ -94,6 +102,14 @@ export const AlertUpdateRelation = ({
         relation: getInitialFullNames({
           firstNames: data?.theirPastor?.firstNames ?? '',
           lastNames: data?.theirPastor?.lastNames ?? '',
+        }),
+        church: data?.theirChurch?.abbreviatedChurchName,
+      }
+      : mode === 'supervisor'
+      ? {
+        relation: getInitialFullNames({
+          firstNames: data?.theirSupervisor?.firstNames ?? '',
+          lastNames: data?.theirSupervisor?.lastNames ?? '',
         }),
         church: data?.theirChurch?.abbreviatedChurchName,
       }
@@ -118,10 +134,12 @@ export const AlertUpdateRelation = ({
         church: null,
       };
 
-  //* Get entity display name (for pastor mode shows ministry name, for church mode shows pastor name)
+  //* Get entity display name
   const displayEntityName =
     mode === 'pastor'
       ? entityName || data?.customMinistryName
+      : mode === 'supervisor'
+      ? entityName || data?.zoneName
       : entityName || getInitialFullNames({
         firstNames: data?.member?.firstNames ?? '',
         lastNames: data?.member?.lastNames ?? '',
@@ -148,7 +166,11 @@ export const AlertUpdateRelation = ({
   //* Handler for cancel action (used in both mobile and desktop)
   const handleCancel = (): void => {
     const originalValue =
-      mode === 'pastor' ? data?.theirPastor?.id : data?.theirChurch?.id;
+      mode === 'pastor'
+        ? data?.theirPastor?.id
+        : mode === 'supervisor'
+        ? data?.theirSupervisor?.id
+        : data?.theirChurch?.id;
     updateForm.setValue(formFieldName as any, originalValue as any);
     setChangedId(originalValue);
     setIsAlertDialogOpen(false);
@@ -196,7 +218,7 @@ export const AlertUpdateRelation = ({
             Información actual
           </p>
         </div>
-        <div className={cn('grid gap-3', mode === 'pastor' ? 'grid-cols-2' : 'grid-cols-1')}>
+        <div className={cn('grid gap-3', mode !== 'church' ? 'grid-cols-2' : 'grid-cols-1')}>
           <div>
             <span className='block text-[11px] font-semibold uppercase tracking-wider text-emerald-600/70 dark:text-emerald-400/70 font-inter mb-0.5'>
               {texts.currentLabel}
@@ -205,7 +227,7 @@ export const AlertUpdateRelation = ({
               {currentInfo.relation || 'Sin asignar'}
             </span>
           </div>
-          {mode === 'pastor' && currentInfo.church && (
+          {mode !== 'church' && currentInfo.church && (
             <div>
               <span className='block text-[11px] font-semibold uppercase tracking-wider text-emerald-600/70 dark:text-emerald-400/70 font-inter mb-0.5'>
                 Iglesia
@@ -233,7 +255,7 @@ export const AlertUpdateRelation = ({
             Nueva relación seleccionada
           </p>
         </div>
-        <div className={cn('grid gap-3', mode === 'pastor' ? 'grid-cols-2' : 'grid-cols-1')}>
+        <div className={cn('grid gap-3', mode !== 'church' ? 'grid-cols-2' : 'grid-cols-1')}>
           <div>
             <span className='block text-[11px] font-semibold uppercase tracking-wider text-amber-600/70 dark:text-amber-400/70 font-inter mb-0.5'>
               {texts.newLabel}
@@ -242,7 +264,7 @@ export const AlertUpdateRelation = ({
               {newInfo.relation || 'Sin seleccionar'}
             </span>
           </div>
-          {mode === 'pastor' && newInfo.church && (
+          {mode !== 'church' && newInfo.church && (
             <div>
               <span className='block text-[11px] font-semibold uppercase tracking-wider text-amber-600/70 dark:text-amber-400/70 font-inter mb-0.5'>
                 Iglesia

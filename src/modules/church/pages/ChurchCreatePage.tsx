@@ -20,9 +20,9 @@ export const ChurchCreatePage = (): JSX.Element => {
           description='Completa el formulario para crear un nuevo registro de iglesia o anexo en el sistema.'
           titleColor='green'
           badge='Membresía'
-          badgeColor='amber'
+          badgeColor='slate'
           icon={PiChurch}
-          accentColor='amber'
+          accentColor='slate'
         />
 
         <ChurchCreateForm />

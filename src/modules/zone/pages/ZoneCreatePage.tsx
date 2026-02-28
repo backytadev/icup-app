@@ -20,9 +20,9 @@ export const ZoneCreatePage = (): JSX.Element => {
           description='Completa el formulario para crear un nuevo registro de zona en el sistema.'
           titleColor='green'
           badge='Membresía'
-          badgeColor='blue'
+          badgeColor='orange'
           icon={FcFlowChart}
-          accentColor='blue'
+          accentColor='orange'
         />
 
         <ZoneCreateForm />

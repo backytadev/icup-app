@@ -5,7 +5,7 @@ import { isAxiosError } from 'axios';
 import { icupApi } from '@/core/api/icupApi';
 
 import { DashboardSearchType } from '@/modules/dashboard/enums/dashboard-search-type.enum';
-import { type FamilyGroupResponse } from '@/modules/family-group/interfaces/family-group-response.interface';
+import { type FamilyGroupResponse } from '@/modules/family-group/types/family-group-response.interface';
 
 import { type DashboardQueryParams } from '@/modules/dashboard/interfaces/dashboard-query-params.interface';
 import { type LastSundaysOfferingsResponse } from '@/modules/dashboard/interfaces/last-sundays-offerings-response';

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { FiMapPin } from 'react-icons/fi';
-import { PiUserBold } from 'react-icons/pi';
+import { FcPodiumWithSpeaker } from 'react-icons/fc';
 
 import { type PastorResponse } from '@/modules/pastor/types/pastor-response.interface';
 
@@ -149,7 +149,7 @@ export const PastorTabsCard = ({ data, id }: PastorTabsCardProps): JSX.Element =
           </div>
 
           <div className='flex-shrink-0 p-2 md:p-2.5 bg-white/10 rounded-lg'>
-            <PiUserBold className='w-5 h-5 md:w-6 md:h-6 text-white/90' />
+            <FcPodiumWithSpeaker className='w-5 h-5 md:w-6 md:h-6 text-white/90' />
           </div>
         </div>
       </div>
