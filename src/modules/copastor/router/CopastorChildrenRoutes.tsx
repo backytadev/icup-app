@@ -5,18 +5,9 @@ import { RouteObject } from 'react-router-dom';
 import { LazyElement } from '@/shared/components/lazy/LazyElements';
 
 //! Lazy load children routes
-const LazyCopastorInactivatePage = lazy(
-  () => import('@/modules/copastor/pages/CopastorInactivatePage')
-);
-const LazyCopastorsSearchPageByTerm = lazy(
-  () => import('@/modules/copastor/pages/CopastorsSearchPageByTerm')
-);
-const LazyCopastorsGeneralSearchPage = lazy(
-  () => import('@/modules/copastor/pages/CopastorsGeneralSearchPage')
-);
-const LazyCopastorUpdatePage = lazy(() => import('@/modules/copastor/pages/CopastorUpdatePage'));
-const LazyCopastorCreatePage = lazy(() => import('@/modules/copastor/pages/CopastorCreatePage'));
 const LazyCopastorOptionsPage = lazy(() => import('@/modules/copastor/pages/CopastorOptionsPage'));
+const LazyCopastorCreatePage = lazy(() => import('@/modules/copastor/pages/CopastorCreatePage'));
+const LazyCopastorSearchPage = lazy(() => import('@/modules/copastor/pages/CopastorSearchPage'));
 
 export const CopastorChildrenRoutes: RouteObject[] = [
   {
@@ -36,34 +27,10 @@ export const CopastorChildrenRoutes: RouteObject[] = [
     ),
   },
   {
-    path: 'general-search',
+    path: 'search',
     element: (
       <LazyElement>
-        <LazyCopastorsGeneralSearchPage />
-      </LazyElement>
-    ),
-  },
-  {
-    path: 'search-by-term',
-    element: (
-      <LazyElement>
-        <LazyCopastorsSearchPageByTerm />
-      </LazyElement>
-    ),
-  },
-  {
-    path: 'update',
-    element: (
-      <LazyElement>
-        <LazyCopastorUpdatePage />
-      </LazyElement>
-    ),
-  },
-  {
-    path: 'inactivate',
-    element: (
-      <LazyElement>
-        <LazyCopastorInactivatePage />
+        <LazyCopastorSearchPage />
       </LazyElement>
     ),
   },

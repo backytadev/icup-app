@@ -70,8 +70,6 @@ export const OfferingExpenseSearchPage = (): JSX.Element => {
     setSearchMode('general');
 
     const defaultParams: GeneralSearchFormType = {
-      limit: '10',
-      offset: '0',
       order: RecordOrder.Descending,
       all: false,
     };
@@ -89,10 +87,8 @@ export const OfferingExpenseSearchPage = (): JSX.Element => {
 
       if (mode === 'general') {
         const defaultGeneralParams: GeneralSearchFormType = {
-          limit: '10',
-          offset: '0',
           order: RecordOrder.Descending,
-          all: false,
+          all: true,
         };
         setFilterSearchParams(undefined);
         setDataForm(undefined);
@@ -108,7 +104,7 @@ export const OfferingExpenseSearchPage = (): JSX.Element => {
 
         const defaultFilterParams: OfferingExpenseSearchFormByTerm = {
           searchType: OfferingExpenseSearchType.OperationalExpenses,
-          limit: '10',
+          all: true,
           dateTerm: dateTermTimestamp as any,
           order: RecordOrder.Descending,
         };

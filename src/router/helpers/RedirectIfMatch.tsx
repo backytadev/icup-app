@@ -56,16 +56,16 @@ export const RedirectIfMatch = (): JSX.Element => {
 
   // If starts with copastor
   if (location.pathname.startsWith('/copastors/general-search/')) {
-    return <Navigate to='/copastors/general-search' />;
+    return <Navigate to='/copastors/search' />;
   }
   if (location.pathname.startsWith('/copastors/search-by-term/')) {
-    return <Navigate to='/copastors/search-by-term' />;
+    return <Navigate to='/copastors/search' />;
   }
   if (location.pathname.startsWith('/copastors/update/')) {
-    return <Navigate to='/copastors/update' />;
+    return <Navigate to='/copastors/search' />;
   }
   if (location.pathname.startsWith('/copastors/inactivate/')) {
-    return <Navigate to='/copastors/inactivate' />;
+    return <Navigate to='/copastors/search' />;
   }
 
   // If starts with supervisor

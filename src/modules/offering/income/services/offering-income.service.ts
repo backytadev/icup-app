@@ -64,6 +64,8 @@ export const getOfferingsIncome = async ({
   const resolvedChurchId = churchId ?? contextChurchId;
   let result: OfferingIncomeResponse[];
 
+  console.log(all);
+
   try {
     if (!all && !allByDate) {
       const { data } = await icupApi<OfferingIncomeResponse[]>('/offering-income', {

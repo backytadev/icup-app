@@ -23,7 +23,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/
 
 import { getFullNames } from '@/shared/helpers/get-full-names.helper';
 import { MemberUseFormReturn } from '@/shared/interfaces/member-form-data';
-import { CopastorResponse } from '@/modules/copastor/interfaces/copastor-response.interface';
+import { CopastorResponse } from '@/modules/copastor/types/copastor-response.interface';
 
 export interface CopastorsSelectProps {
   form: MemberUseFormReturn;

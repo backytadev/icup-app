@@ -13,7 +13,7 @@ import {
 } from '@/shared/components/ui/alert-dialog';
 
 import { getInitialFullNames } from '@/shared/helpers/get-full-names.helper';
-import { CopastorResponse } from '@/modules/copastor/interfaces/copastor-response.interface';
+import { CopastorResponse } from '@/modules/copastor/types/copastor-response.interface';
 import { SupervisorResponse } from '@/modules/supervisor/interfaces/supervisor-response.interface';
 import { SupervisorFormData } from '@/modules/supervisor/interfaces/supervisor-form-data.interface';
 

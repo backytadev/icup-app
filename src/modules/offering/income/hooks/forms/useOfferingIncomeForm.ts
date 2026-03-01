@@ -42,7 +42,7 @@ import { useImagesUploadMutation } from '@/modules/offering/shared/hooks/useImag
 import { RecordStatus } from '@/shared/enums/record-status.enum';
 
 import { type PastorResponse } from '@/modules/pastor/types/pastor-response.interface';
-import { type CopastorResponse } from '@/modules/copastor/interfaces/copastor-response.interface';
+import { type CopastorResponse } from '@/modules/copastor/types/copastor-response.interface';
 import { type PreacherResponse } from '@/modules/preacher/interfaces/preacher-response.interface';
 import { type DiscipleResponse } from '@/modules/disciple/interfaces/disciple-response.interface';
 import { type SupervisorResponse } from '@/modules/supervisor/interfaces/supervisor-response.interface';
@@ -178,7 +178,8 @@ export const useOfferingIncomeForm = (
   const updateData = mode === 'update' ? (options as UpdateModeOptions).data : undefined;
   const dialogClose = mode === 'update' ? (options as UpdateModeOptions).dialogClose : undefined;
   const scrollToTop = mode === 'update' ? (options as UpdateModeOptions).scrollToTop : undefined;
-  const onUpdateSuccess = mode === 'update' ? (options as UpdateModeOptions).onUpdateSuccess : undefined;
+  const onUpdateSuccess =
+    mode === 'update' ? (options as UpdateModeOptions).onUpdateSuccess : undefined;
 
   //* Context
   const activeChurchId = useChurchMinistryContextStore((state) => state.activeChurchId);

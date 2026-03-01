@@ -77,10 +77,8 @@ export const FamilyGroupSearchPage = (): JSX.Element => {
     setSearchMode('general');
 
     const defaultParams: GeneralSearchFormType = {
-      limit: '10',
-      offset: '0',
       order: RecordOrder.Descending,
-      all: false,
+      all: true,
     };
 
     setGeneralSearchParams(defaultParams);
@@ -96,10 +94,8 @@ export const FamilyGroupSearchPage = (): JSX.Element => {
 
       if (mode === 'general') {
         const defaultGeneralParams: GeneralSearchFormType = {
-          limit: '10',
-          offset: '0',
           order: RecordOrder.Descending,
-          all: false,
+          all: true,
         };
         setFilterSearchParams(undefined);
         setDataForm(undefined);
@@ -108,7 +104,7 @@ export const FamilyGroupSearchPage = (): JSX.Element => {
         const defaultFilterParams: FamilyGroupSearchFormByTerm = {
           searchType: FamilyGroupSearchType.District,
           inputTerm: 'Independencia',
-          limit: '10',
+          all: true,
           order: RecordOrder.Descending,
         };
         setGeneralSearchParams(undefined);

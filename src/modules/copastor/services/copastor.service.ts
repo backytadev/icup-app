@@ -3,11 +3,10 @@ import { RecordOrder } from '@/shared/enums/record-order.enum';
 import { openPdfInNewTab } from '@/shared/helpers/open-pdf-tab';
 import { getContextParams } from '@/shared/helpers/get-context-params';
 
-import { buildCopastorSearchTerm } from '@/modules/copastor/builders/buildCopastorSearchTerm';
-import { buildCopastorQueryParams } from '@/modules/copastor/builders/buildCopastorQueryParam';
-import { type CopastorResponse } from '@/modules/copastor/interfaces/copastor-response.interface';
-import { type CopastorFormData } from '@/modules/copastor/interfaces/copastor-form-data.interface';
-import { type CopastorQueryParams } from '@/modules/copastor/interfaces/copastor-query-params.interface';
+import { CopastorSearchType } from '@/modules/copastor/enums/copastor-search-type.enum';
+import { type CopastorResponse } from '@/modules/copastor/types/copastor-response.interface';
+import { type CopastorFormData } from '@/modules/copastor/types/copastor-form-data.interface';
+import { type CopastorQueryParams } from '@/modules/copastor/types/copastor-query-params.interface';
 
 export interface UpdateCopastorOptions {
   id: string;
@@ -19,6 +18,52 @@ export interface InactivateCopastorOptions {
   memberInactivationCategory: string;
   memberInactivationReason: string;
 }
+
+//* Internal helpers (previously in builders/)
+const buildCopastorSearchTerm = (params: CopastorQueryParams): string | undefined => {
+  const { searchType, inputTerm, dateTerm, selectTerm, firstNamesTerm, lastNamesTerm } = params;
+
+  const mapping: Record<CopastorSearchType, string | undefined> = {
+    [CopastorSearchType.BirthDate]: dateTerm,
+    [CopastorSearchType.BirthMonth]: selectTerm,
+    [CopastorSearchType.Gender]: selectTerm,
+    [CopastorSearchType.MaritalStatus]: selectTerm,
+    [CopastorSearchType.OriginCountry]: inputTerm,
+    [CopastorSearchType.ResidenceCountry]: inputTerm,
+    [CopastorSearchType.ResidenceDepartment]: inputTerm,
+    [CopastorSearchType.ResidenceProvince]: inputTerm,
+    [CopastorSearchType.ResidenceDistrict]: inputTerm,
+    [CopastorSearchType.ResidenceUrbanSector]: inputTerm,
+    [CopastorSearchType.ResidenceAddress]: inputTerm,
+    [CopastorSearchType.RecordStatus]: selectTerm,
+    [CopastorSearchType.FirstNames]: firstNamesTerm,
+    [CopastorSearchType.LastNames]: lastNamesTerm,
+    [CopastorSearchType.FullNames]:
+      firstNamesTerm && lastNamesTerm ? `${firstNamesTerm}-${lastNamesTerm}` : undefined,
+  };
+
+  return mapping[searchType as CopastorSearchType];
+};
+
+const buildCopastorQueryParams = (params: CopastorQueryParams, term?: string) => {
+  const { limit, offset, order, all, searchType, searchSubType, churchId } = params;
+
+  const base: Record<string, any> = {
+    term,
+    searchType,
+    order,
+  };
+
+  if (searchSubType) base.searchSubType = searchSubType;
+  if (churchId) base.churchId = churchId;
+
+  if (!all) {
+    base.limit = limit;
+    base.offset = offset;
+  }
+
+  return base;
+};
 
 //* Create
 export const createCopastor = async (formData: CopastorFormData): Promise<CopastorResponse> => {

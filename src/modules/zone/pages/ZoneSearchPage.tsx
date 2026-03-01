@@ -67,10 +67,8 @@ export const ZoneSearchPage = (): JSX.Element => {
     setSearchMode('general');
 
     const defaultParams: GeneralSearchFormType = {
-      limit: '10',
-      offset: '0',
       order: RecordOrder.Descending,
-      all: false,
+      all: true,
     };
 
     setGeneralSearchParams(defaultParams);
@@ -86,10 +84,8 @@ export const ZoneSearchPage = (): JSX.Element => {
 
       if (mode === 'general') {
         const defaultGeneralParams: GeneralSearchFormType = {
-          limit: '10',
-          offset: '0',
           order: RecordOrder.Descending,
-          all: false,
+          all: true,
         };
         setFilterSearchParams(undefined);
         setDataForm(undefined);
@@ -98,7 +94,7 @@ export const ZoneSearchPage = (): JSX.Element => {
         const defaultFilterParams: ZoneSearchFormByTerm = {
           searchType: ZoneSearchType.Department,
           inputTerm: 'Lima',
-          limit: '10',
+          all: true,
           order: RecordOrder.Descending,
         };
         setGeneralSearchParams(undefined);

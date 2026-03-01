@@ -74,10 +74,8 @@ export const ChurchSearchPage = (): JSX.Element => {
     setSearchMode('general');
 
     const defaultParams: GeneralSearchFormType = {
-      limit: '10',
-      offset: '0',
       order: RecordOrder.Descending,
-      all: false,
+      all: true,
     };
 
     setGeneralSearchParams(defaultParams);
@@ -95,10 +93,8 @@ export const ChurchSearchPage = (): JSX.Element => {
       // Set default search params for the new mode to trigger auto-search
       if (mode === 'general') {
         const defaultGeneralParams: GeneralSearchFormType = {
-          limit: '10',
-          offset: '0',
           order: RecordOrder.Descending,
-          all: false,
+          all: true,
         };
         setFilterSearchParams(undefined);
         setDataForm(undefined);
@@ -107,7 +103,7 @@ export const ChurchSearchPage = (): JSX.Element => {
         const defaultFilterParams: ChurchSearchFormByTerm = {
           searchType: ChurchSearchType.ChurchName,
           inputTerm: 'iglesia',
-          limit: '10',
+          all: true,
           order: RecordOrder.Descending,
         };
         setGeneralSearchParams(undefined);

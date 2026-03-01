@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
 import { useEffect, useState } from 'react';
 
 import { type z } from 'zod';
@@ -12,9 +8,7 @@ import { FaEyeSlash, FaEye } from 'react-icons/fa';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import { usePasswordUpdateMutation } from '@/modules/user/hooks/mutations/usePasswordUpdateMutation';
-
 import { userUpdatePasswordFormSchema } from '@/modules/user/schemas/user-password-update-form-schema';
-
 import { cn } from '@/shared/lib/utils';
 
 import {
@@ -146,7 +140,7 @@ export const UserPasswordUpdateForm = ({
   };
 
   return (
-    <div className='w-full -mt-2 md:-mt-5'>
+    <div className='w-full md:min-w-[400px] -mt-2 md:-mt-6 md:-mb-1'>
       {/* Header */}
       <div className='relative overflow-hidden rounded-t-xl bg-gradient-to-r from-purple-500 via-purple-600 to-indigo-600 dark:from-purple-700 dark:via-purple-800 dark:to-indigo-800 px-6 py-5'>
         <div className='flex flex-col gap-1'>

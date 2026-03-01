@@ -89,11 +89,9 @@ export const OfferingIncomeSearchPage = (): JSX.Element => {
     });
 
     const defaultParams: GeneralSearchFormType = {
-      limit: '10',
-      offset: '0',
       order: RecordOrder.Descending,
       dateTerm: dateTermTimestamp as any,
-      all: false,
+      all: true,
     };
 
     setGeneralSearchParams(defaultParams);
@@ -117,11 +115,10 @@ export const OfferingIncomeSearchPage = (): JSX.Element => {
 
       if (mode === 'general') {
         const defaultGeneralParams: GeneralSearchFormType = {
-          limit: '10',
-          offset: '0',
+
           order: RecordOrder.Descending,
           dateTerm: dateTermTimestamp as any,
-          all: false,
+          all: true,
         };
         setFilterSearchParams(undefined);
         setDataForm(undefined);
@@ -130,7 +127,7 @@ export const OfferingIncomeSearchPage = (): JSX.Element => {
         const defaultFilterParams: OfferingIncomeSearchFormByTerm = {
           searchType: OfferingIncomeSearchType.FamilyGroup,
           searchSubType: OfferingIncomeSearchSubType.OfferingByDate,
-          limit: '10',
+          all: true,
           dateTerm: dateTermTimestamp as any,
           order: RecordOrder.Descending,
         };
