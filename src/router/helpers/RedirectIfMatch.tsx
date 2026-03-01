@@ -70,16 +70,16 @@ export const RedirectIfMatch = (): JSX.Element => {
 
   // If starts with supervisor
   if (location.pathname.startsWith('/supervisors/general-search/')) {
-    return <Navigate to='/supervisors/general-search' />;
+    return <Navigate to='/supervisors/search' />;
   }
   if (location.pathname.startsWith('/supervisors/search-by-term/')) {
-    return <Navigate to='/supervisors/search-by-term' />;
+    return <Navigate to='/supervisors/search' />;
   }
   if (location.pathname.startsWith('/supervisors/update/')) {
-    return <Navigate to='/supervisors/update' />;
+    return <Navigate to='/supervisors/search' />;
   }
   if (location.pathname.startsWith('/supervisors/inactivate/')) {
-    return <Navigate to='/supervisors/inactivate' />;
+    return <Navigate to='/supervisors/search' />;
   }
 
   // If starts with zone

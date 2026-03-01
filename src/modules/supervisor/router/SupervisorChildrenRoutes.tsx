@@ -5,23 +5,14 @@ import { RouteObject } from 'react-router-dom';
 import { LazyElement } from '@/shared/components/lazy/LazyElements';
 
 //! Lazy load children routes
-const LazySupervisorUpdatePage = lazy(
-  () => import('@/modules/supervisor/pages/SupervisorUpdatePage')
+const LazySupervisorOptionsPage = lazy(
+  () => import('@/modules/supervisor/pages/SupervisorOptionsPage')
 );
 const LazySupervisorCreatePage = lazy(
   () => import('@/modules/supervisor/pages/SupervisorCreatePage')
 );
-const LazySupervisorInactivatePage = lazy(
-  () => import('@/modules/supervisor/pages/SupervisorInactivatePage')
-);
-const LazySupervisorsSearchPageByTerm = lazy(
-  () => import('@/modules/supervisor/pages/SupervisorsSearchPageByTerm')
-);
-const LazySupervisorsGeneralSearchPage = lazy(
-  () => import('@/modules/supervisor/pages/SupervisorsGeneralSearchPage')
-);
-const LazySupervisorOptionsPage = lazy(
-  () => import('@/modules/supervisor/pages/SupervisorOptionsPage')
+const LazySupervisorSearchPage = lazy(
+  () => import('@/modules/supervisor/pages/SupervisorSearchPage')
 );
 
 export const SupervisorChildrenRoutes: RouteObject[] = [
@@ -42,34 +33,10 @@ export const SupervisorChildrenRoutes: RouteObject[] = [
     ),
   },
   {
-    path: 'general-search',
+    path: 'search',
     element: (
       <LazyElement>
-        <LazySupervisorsGeneralSearchPage />
-      </LazyElement>
-    ),
-  },
-  {
-    path: 'search-by-term',
-    element: (
-      <LazyElement>
-        <LazySupervisorsSearchPageByTerm />
-      </LazyElement>
-    ),
-  },
-  {
-    path: 'update',
-    element: (
-      <LazyElement>
-        <LazySupervisorUpdatePage />
-      </LazyElement>
-    ),
-  },
-  {
-    path: 'inactivate',
-    element: (
-      <LazyElement>
-        <LazySupervisorInactivatePage />
+        <LazySupervisorSearchPage />
       </LazyElement>
     ),
   },

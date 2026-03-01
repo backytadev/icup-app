@@ -3,11 +3,10 @@ import { RecordOrder } from '@/shared/enums/record-order.enum';
 import { openPdfInNewTab } from '@/shared/helpers/open-pdf-tab';
 import { getContextParams } from '@/shared/helpers/get-context-params';
 
-import { buildSupervisorSearchTerm } from '@/modules/supervisor/builders/buildSupervisorSearchTerm';
-import { buildSupervisorQueryParams } from '@/modules/supervisor/builders/buildSupervisorQueryParam';
-import { type SupervisorResponse } from '@/modules/supervisor/interfaces/supervisor-response.interface';
-import { type SupervisorFormData } from '@/modules/supervisor/interfaces/supervisor-form-data.interface';
-import { type SupervisorQueryParams } from '@/modules/supervisor/interfaces/supervisor-query-params.interface';
+import { SupervisorSearchType } from '@/modules/supervisor/enums/supervisor-search-type.enum';
+import { type SupervisorResponse } from '@/modules/supervisor/types/supervisor-response.interface';
+import { type SupervisorFormData } from '@/modules/supervisor/types/supervisor-form-data.interface';
+import { type SupervisorQueryParams } from '@/modules/supervisor/types/supervisor-query-params.interface';
 
 export interface UpdateSupervisorOptions {
   id: string;
@@ -31,6 +30,47 @@ export interface AvailableSupervisorsOptions {
   withNullZone: boolean;
 }
 
+//* Builders (inlined)
+const buildSupervisorSearchTerm = (params: SupervisorQueryParams): string | undefined => {
+  const { searchType, inputTerm, dateTerm, selectTerm, firstNamesTerm, lastNamesTerm, copastorTerm, churchTerm } = params;
+
+  const mapping: Partial<Record<SupervisorSearchType, string | undefined>> = {
+    [SupervisorSearchType.BirthDate]: dateTerm,
+    [SupervisorSearchType.BirthMonth]: selectTerm,
+    [SupervisorSearchType.Gender]: selectTerm,
+    [SupervisorSearchType.MaritalStatus]: selectTerm,
+    [SupervisorSearchType.ZoneName]: inputTerm,
+    [SupervisorSearchType.AvailableSupervisorsByCopastor]: copastorTerm,
+    [SupervisorSearchType.AvailableSupervisorsByChurch]: churchTerm,
+    [SupervisorSearchType.OriginCountry]: inputTerm,
+    [SupervisorSearchType.ResidenceCountry]: inputTerm,
+    [SupervisorSearchType.ResidenceDepartment]: inputTerm,
+    [SupervisorSearchType.ResidenceProvince]: inputTerm,
+    [SupervisorSearchType.ResidenceDistrict]: inputTerm,
+    [SupervisorSearchType.ResidenceUrbanSector]: inputTerm,
+    [SupervisorSearchType.ResidenceAddress]: inputTerm,
+    [SupervisorSearchType.RecordStatus]: selectTerm,
+    [SupervisorSearchType.FirstNames]: firstNamesTerm,
+    [SupervisorSearchType.LastNames]: lastNamesTerm,
+    [SupervisorSearchType.FullNames]:
+      firstNamesTerm && lastNamesTerm ? `${firstNamesTerm}-${lastNamesTerm}` : undefined,
+  };
+
+  return mapping[searchType as SupervisorSearchType];
+};
+
+const buildSupervisorQueryParams = (params: SupervisorQueryParams, term?: string) => {
+  const { limit, offset, order, all, searchType, searchSubType, churchId, withNullZone } = params;
+
+  const base: Record<string, any> = { term, searchType, order, withNullZone };
+
+  if (searchSubType) base.searchSubType = searchSubType;
+  if (churchId) base.churchId = churchId;
+  if (!all) { base.limit = limit; base.offset = offset; }
+
+  return base;
+};
+
 //* Create
 export const createSupervisor = async (
   formData: SupervisorFormData
@@ -41,7 +81,6 @@ export const createSupervisor = async (
 //* Find simple
 export const getSimpleSupervisors = async ({
   churchId,
-  // withNullZone,
   isSimpleQuery,
 }: SimpleSupervisorsOptions): Promise<SupervisorResponse[]> => {
   const { churchId: contextChurchId } = getContextParams();
@@ -49,7 +88,6 @@ export const getSimpleSupervisors = async ({
     params: {
       order: RecordOrder.Ascending,
       isSimpleQuery: isSimpleQuery.toString(),
-      // withNullZone: withNullZone.toString(),
       churchId: churchId ?? contextChurchId,
     },
   });
@@ -132,6 +170,5 @@ export const getSupervisorsReportByTerm = async (
   });
 
   openPdfInNewTab(pdf);
-
   return true;
 };

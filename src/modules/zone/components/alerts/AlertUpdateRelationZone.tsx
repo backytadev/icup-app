@@ -4,7 +4,7 @@ import { type UseQueryResult } from '@tanstack/react-query';
 import { AlertUpdateRelation } from '@/shared/components/alerts';
 
 import { type ZoneResponse, type ZoneFormData } from '@/modules/zone/types';
-import { type SupervisorResponse } from '@/modules/supervisor/interfaces/supervisor-response.interface';
+import { type SupervisorResponse } from '@/modules/supervisor/types/supervisor-response.interface';
 
 export interface AlertUpdateRelationZoneProps {
   data: ZoneResponse | undefined;

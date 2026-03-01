@@ -15,7 +15,7 @@ import {
 import { getInitialFullNames } from '@/shared/helpers/get-full-names.helper';
 import { PreacherResponse } from '@/modules/preacher/interfaces/preacher-response.interface';
 import { PreacherFormData } from '@/modules/preacher/interfaces/preacher-form-data.interface';
-import { SupervisorResponse } from '@/modules/supervisor/interfaces/supervisor-response.interface';
+import { SupervisorResponse } from '@/modules/supervisor/types/supervisor-response.interface';
 
 export interface AlertUpdateRelationPreacherProps {
   data: PreacherResponse | undefined;

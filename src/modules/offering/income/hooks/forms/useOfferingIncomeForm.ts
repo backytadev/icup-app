@@ -45,7 +45,7 @@ import { type PastorResponse } from '@/modules/pastor/types/pastor-response.inte
 import { type CopastorResponse } from '@/modules/copastor/types/copastor-response.interface';
 import { type PreacherResponse } from '@/modules/preacher/interfaces/preacher-response.interface';
 import { type DiscipleResponse } from '@/modules/disciple/interfaces/disciple-response.interface';
-import { type SupervisorResponse } from '@/modules/supervisor/interfaces/supervisor-response.interface';
+import { type SupervisorResponse } from '@/modules/supervisor/types/supervisor-response.interface';
 
 //* Types
 type FormMode = 'create' | 'update';

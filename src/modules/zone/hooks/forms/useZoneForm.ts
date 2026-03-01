@@ -19,7 +19,7 @@ import { useZoneCreationMutation, useZoneUpdateMutation } from '@/modules/zone/h
 import { getSimpleChurches } from '@/modules/church/services/church.service';
 import { getSupervisorsByFilters } from '@/modules/supervisor/services/supervisor.service';
 import { SupervisorSearchType } from '@/modules/supervisor/enums/supervisor-search-type.enum';
-import { type SupervisorResponse } from '@/modules/supervisor/interfaces/supervisor-response.interface';
+import { type SupervisorResponse } from '@/modules/supervisor/types/supervisor-response.interface';
 
 //* Constant noop function - stable reference, no need for useCallback
 const NOOP = (): void => {};

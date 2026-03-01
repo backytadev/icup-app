@@ -38,7 +38,7 @@ export interface AlertUpdateRelationProps {
   updateForm: UseFormReturn<any, any, any>;
 
   //* Config props
-  mode: 'pastor' | 'church' | 'supervisor'; // pastor: ministry, church: pastor, supervisor: zone
+  mode: 'pastor' | 'church' | 'supervisor' | 'copastor'; // pastor: ministry, church: pastor, supervisor: zone, copastor: supervisor
   formFieldName: string; // nombre del campo del formulario a resetear
 
   //* Display props (optional)
@@ -91,6 +91,14 @@ export const AlertUpdateRelation = ({
       warningMessage:
         'Al realizar el cambio de Supervisor para esta Zona, se eliminarán sus relaciones anteriores y se establecerán las nuevas. Además, todo lo que estaban bajo su cobertura (grupos familiares y discípulos) también serán reasignados con las nuevas relaciones.',
     },
+    copastor: {
+      title: 'Cambio de Co-Pastor',
+      subtitle: 'Estás a punto de actualizar el Co-Pastor asignado al siguiente Supervisor',
+      currentLabel: 'Co-Pastor',
+      newLabel: 'Co-Pastor',
+      warningMessage:
+        'Al realizar el cambio de Co-Pastor para este Supervisor, se eliminarán sus relaciones anteriores y se establecerán las nuevas. Además, todo lo que estaba bajo su cobertura (zona, grupos familiares y discípulos) también será reasignado con las nuevas relaciones.',
+    },
   };
 
   const texts = defaultTexts[mode];
@@ -106,22 +114,30 @@ export const AlertUpdateRelation = ({
         church: data?.theirChurch?.abbreviatedChurchName,
       }
       : mode === 'supervisor'
-      ? {
-        relation: getInitialFullNames({
-          firstNames: data?.theirSupervisor?.firstNames ?? '',
-          lastNames: data?.theirSupervisor?.lastNames ?? '',
-        }),
-        church: data?.theirChurch?.abbreviatedChurchName,
-      }
-      : {
-        relation: data?.theirChurch?.abbreviatedChurchName,
-        church: null, // No mostrar iglesia en modo church
-      };
+        ? {
+          relation: getInitialFullNames({
+            firstNames: data?.theirSupervisor?.firstNames ?? '',
+            lastNames: data?.theirSupervisor?.lastNames ?? '',
+          }),
+          church: data?.theirChurch?.abbreviatedChurchName,
+        }
+        : mode === 'copastor'
+          ? {
+            relation: getInitialFullNames({
+              firstNames: data?.theirCopastor?.firstNames ?? '',
+              lastNames: data?.theirCopastor?.lastNames ?? '',
+            }),
+            church: data?.theirChurch?.abbreviatedChurchName,
+          }
+          : {
+            relation: data?.theirChurch?.abbreviatedChurchName,
+            church: null, // No mostrar iglesia en modo church
+          };
 
   //* Extract new info based on mode
   const newEntity = query?.data?.find((item: any) => item.id === changedId);
   const newInfo =
-    mode === 'pastor'
+    mode === 'pastor' || mode === 'copastor'
       ? {
         relation: getInitialFullNames({
           firstNames: newEntity?.member?.firstNames ?? newEntity?.firstNames ?? '',
@@ -129,21 +145,29 @@ export const AlertUpdateRelation = ({
         }),
         church: newEntity?.theirChurch?.abbreviatedChurchName,
       }
-      : {
-        relation: newEntity?.abbreviatedChurchName,
-        church: null,
-      };
+      : mode === 'supervisor'
+        ? {
+          relation: getInitialFullNames({
+            firstNames: newEntity?.member?.firstNames ?? newEntity?.firstNames ?? '',
+            lastNames: newEntity?.member?.lastNames ?? newEntity?.lastNames ?? '',
+          }),
+          church: newEntity?.theirChurch?.abbreviatedChurchName,
+        }
+        : {
+          relation: newEntity?.abbreviatedChurchName,
+          church: null,
+        };
 
   //* Get entity display name
   const displayEntityName =
     mode === 'pastor'
       ? entityName || data?.customMinistryName
       : mode === 'supervisor'
-      ? entityName || data?.zoneName
-      : entityName || getInitialFullNames({
-        firstNames: data?.member?.firstNames ?? '',
-        lastNames: data?.member?.lastNames ?? '',
-      });
+        ? entityName || data?.zoneName
+        : entityName || getInitialFullNames({
+          firstNames: data?.member?.firstNames ?? '',
+          lastNames: data?.member?.lastNames ?? '',
+        }); // covers 'church' and 'copastor'
 
   //* Hook to detect mobile/desktop breakpoint
   const [isMobile, setIsMobile] = useState(false);
@@ -169,8 +193,10 @@ export const AlertUpdateRelation = ({
       mode === 'pastor'
         ? data?.theirPastor?.id
         : mode === 'supervisor'
-        ? data?.theirSupervisor?.id
-        : data?.theirChurch?.id;
+          ? data?.theirSupervisor?.id
+          : mode === 'copastor'
+            ? data?.theirCopastor?.id
+            : data?.theirChurch?.id;
     updateForm.setValue(formFieldName as any, originalValue as any);
     setChangedId(originalValue);
     setIsAlertDialogOpen(false);

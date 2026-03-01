@@ -15,7 +15,7 @@ import { DepartmentNames } from '@/shared/enums/department.enum';
 import { type ZoneFormData, type ZoneResponse } from '@/modules/zone/types';
 import { AlertUpdateRelationZone } from '@/modules/zone/components/alerts/AlertUpdateRelationZone';
 
-import { type SupervisorResponse } from '@/modules/supervisor/interfaces/supervisor-response.interface';
+import { type SupervisorResponse } from '@/modules/supervisor/types/supervisor-response.interface';
 
 import {
   Form,

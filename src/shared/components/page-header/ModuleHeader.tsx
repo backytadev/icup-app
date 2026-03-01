@@ -2,9 +2,9 @@ import { type IconType } from 'react-icons';
 
 import { cn } from '@/shared/lib/utils';
 
-type TitleColor = 'slate' | 'green' | 'blue' | 'sky' | 'orange' | 'red' | 'amber' | 'cyan' | 'purple';
-type BadgeColor = 'blue' | 'amber' | 'green' | 'purple' | 'red' | 'orange' | 'cyan' | 'slate';
-type AccentColor = 'blue' | 'amber' | 'green' | 'purple' | 'red' | 'amber' | 'orange' | 'cyan' | 'slate';
+type TitleColor = 'slate' | 'green' | 'blue' | 'sky' | 'orange' | 'red' | 'amber' | 'cyan' | 'purple' | 'teal';
+type BadgeColor = 'blue' | 'amber' | 'green' | 'purple' | 'red' | 'orange' | 'cyan' | 'slate' | 'teal';
+type AccentColor = 'blue' | 'amber' | 'green' | 'purple' | 'red' | 'amber' | 'orange' | 'cyan' | 'slate' | 'teal';
 
 interface ModuleHeaderProps {
   title: string;
@@ -27,6 +27,7 @@ const titleColorVariantsLight: Record<TitleColor, string> = {
   amber: 'text-amber-600',
   cyan: 'text-cyan-600',
   purple: 'text-purple-600',
+  teal: 'text-teal-600',
 };
 
 const titleColorVariantsDark: Record<TitleColor, string> = {
@@ -39,6 +40,7 @@ const titleColorVariantsDark: Record<TitleColor, string> = {
   amber: 'dark:text-amber-400',
   cyan: 'dark:text-cyan-400',
   purple: 'dark:text-purple-400',
+  teal: 'dark:text-teal-400',
 };
 
 const badgeColorVariants: Record<BadgeColor, string> = {
@@ -50,6 +52,7 @@ const badgeColorVariants: Record<BadgeColor, string> = {
   red: 'text-red-700 bg-red-100 dark:text-red-300 dark:bg-red-500/20',
   orange: 'text-orange-700 bg-orange-100 dark:text-orange-300 dark:bg-orange-500/20',
   cyan: 'text-cyan-700 bg-cyan-100 dark:text-cyan-300 dark:bg-cyan-500/20',
+  teal: 'text-teal-700 bg-teal-100 dark:text-teal-300 dark:bg-teal-500/20',
 };
 
 const accentColorVariants: Record<AccentColor, string> = {
@@ -61,6 +64,7 @@ const accentColorVariants: Record<AccentColor, string> = {
   red: 'bg-red-200/30 dark:bg-red-500/10',
   orange: 'bg-orange-200/30 dark:bg-orange-500/10',
   cyan: 'bg-cyan-200/30 dark:bg-cyan-500/10',
+  teal: 'bg-teal-200/30 dark:bg-teal-500/10',
 };
 
 export const ModuleHeader = ({

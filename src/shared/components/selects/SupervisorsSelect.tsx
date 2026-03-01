@@ -23,7 +23,7 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/shared/components/ui/
 
 import { getFullNames } from '@/shared/helpers/get-full-names.helper';
 import { MemberUseFormReturn } from '@/shared/interfaces/member-form-data';
-import { SupervisorResponse } from '@/modules/supervisor/interfaces/supervisor-response.interface';
+import { SupervisorResponse } from '@/modules/supervisor/types/supervisor-response.interface';
 
 export interface SupervisorsSelectProps {
   form: MemberUseFormReturn;
