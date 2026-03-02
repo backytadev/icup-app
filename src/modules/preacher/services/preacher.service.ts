@@ -2,11 +2,10 @@ import { apiRequest } from '@/shared/helpers/api-request';
 import { RecordOrder } from '@/shared/enums/record-order.enum';
 import { getContextParams } from '@/shared/helpers/get-context-params';
 
-import { type PreacherFormData } from '@/modules/preacher/interfaces/preacher-form-data.interface';
-import { type PreacherResponse } from '@/modules/preacher/interfaces/preacher-response.interface';
-import { type PreacherQueryParams } from '@/modules/preacher/interfaces/preacher-query-params.interface';
-import { buildPreacherSearchTerm } from '@/modules/preacher/builders/buildPreacherSearchTerm';
-import { buildPreacherQueryParams } from '@/modules/preacher/builders/buildPreacherQueryParam';
+import { type PreacherFormData } from '@/modules/preacher/types/preacher-form-data.interface';
+import { type PreacherResponse } from '@/modules/preacher/types/preacher-response.interface';
+import { type PreacherQueryParams } from '@/modules/preacher/types/preacher-query-params.interface';
+import { PreacherSearchType } from '@/modules/preacher/enums/preacher-search-type.enum';
 
 export interface UpdatePreacherOptions {
   id: string;
@@ -24,6 +23,60 @@ export interface AvailablePreachersOptions {
   zoneId: string;
   isNullFamilyGroup: boolean;
 }
+
+//* Builder: resolve search term from params
+const buildSearchTerm = (params: PreacherQueryParams): string | undefined => {
+  const { searchType, inputTerm, dateTerm, selectTerm, firstNamesTerm, lastNamesTerm, zoneTerm } =
+    params;
+
+  const mapping: Partial<Record<PreacherSearchType, string | undefined>> = {
+    [PreacherSearchType.BirthDate]: dateTerm,
+    [PreacherSearchType.BirthMonth]: selectTerm,
+    [PreacherSearchType.Gender]: selectTerm,
+    [PreacherSearchType.MaritalStatus]: selectTerm,
+    [PreacherSearchType.ZoneName]: inputTerm,
+    [PreacherSearchType.AvailablePreachersByZone]: zoneTerm,
+    [PreacherSearchType.FamilyGroupCode]: inputTerm,
+    [PreacherSearchType.FamilyGroupName]: inputTerm,
+    [PreacherSearchType.OriginCountry]: inputTerm,
+    [PreacherSearchType.ResidenceCountry]: inputTerm,
+    [PreacherSearchType.ResidenceDepartment]: inputTerm,
+    [PreacherSearchType.ResidenceProvince]: inputTerm,
+    [PreacherSearchType.ResidenceDistrict]: inputTerm,
+    [PreacherSearchType.ResidenceUrbanSector]: inputTerm,
+    [PreacherSearchType.ResidenceAddress]: inputTerm,
+    [PreacherSearchType.RecordStatus]: selectTerm,
+    [PreacherSearchType.FirstNames]: firstNamesTerm,
+    [PreacherSearchType.LastNames]: lastNamesTerm,
+    [PreacherSearchType.FullNames]:
+      firstNamesTerm && lastNamesTerm ? `${firstNamesTerm}-${lastNamesTerm}` : undefined,
+  };
+
+  return mapping[searchType as PreacherSearchType];
+};
+
+//* Builder: build query params object
+const buildQueryParams = (params: PreacherQueryParams, term?: string): Record<string, any> => {
+  const { limit, offset, order, all, searchType, searchSubType, churchId, withNullFamilyGroup } =
+    params;
+
+  const base: Record<string, any> = {
+    term,
+    searchType,
+    order,
+    withNullFamilyGroup,
+  };
+
+  if (searchSubType) base.searchSubType = searchSubType;
+  if (churchId) base.churchId = churchId;
+
+  if (!all) {
+    base.limit = limit;
+    base.offset = offset;
+  }
+
+  return base;
+};
 
 //* Create
 export const createPreacher = async (formData: PreacherFormData): Promise<PreacherResponse> => {
@@ -65,8 +118,8 @@ export const getPreachers = async (params: PreacherQueryParams): Promise<Preache
 export const getPreachersByFilters = async (
   params: PreacherQueryParams
 ): Promise<PreacherResponse[]> => {
-  const term = buildPreacherSearchTerm(params);
-  const queryParams = buildPreacherQueryParams(params, term);
+  const term = buildSearchTerm(params);
+  const queryParams = buildQueryParams(params, term);
   const { churchId } = getContextParams();
 
   return apiRequest<PreacherResponse[]>('get', '/preachers/search', {
@@ -98,7 +151,6 @@ const openPdfInNewTab = (pdfBlob: Blob): void => {
   newTab?.focus();
 };
 
-//* Reports
 export const getGeneralPreachersReport = async (params: PreacherQueryParams): Promise<boolean> => {
   const { limit, offset, order, all } = params;
   const { churchId } = getContextParams();
@@ -115,8 +167,8 @@ export const getGeneralPreachersReport = async (params: PreacherQueryParams): Pr
 };
 
 export const getPreachersReportByTerm = async (params: PreacherQueryParams): Promise<boolean> => {
-  const term = buildPreacherSearchTerm(params);
-  const queryParams = buildPreacherQueryParams(params, term);
+  const term = buildSearchTerm(params);
+  const queryParams = buildQueryParams(params, term);
   const { churchId } = getContextParams();
 
   const pdf = await apiRequest<Blob>('get', '/reports/preachers/search', {
@@ -126,6 +178,5 @@ export const getPreachersReportByTerm = async (params: PreacherQueryParams): Pro
   });
 
   openPdfInNewTab(pdf);
-
   return true;
 };

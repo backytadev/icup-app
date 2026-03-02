@@ -1,353 +1,221 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
-import type * as z from 'zod';
 import { Toaster } from 'sonner';
-import { useForm } from 'react-hook-form';
-import { useLocation } from 'react-router-dom';
-import { useQuery } from '@tanstack/react-query';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { FiUsers } from 'react-icons/fi';
+import { BookOpenCheck } from 'lucide-react';
 
-import { usePreacherCreationMutation } from '@/modules/preacher/hooks/usePreacherCreationMutation';
-import { usePreacherCreationSubmitButtonLogic } from '@/modules/preacher/hooks/usePreacherCreationSubmitButtonLogic';
-
-import { getSimplePastors } from '@/modules/pastor/services/pastor.service';
-import { getSimpleChurches } from '@/modules/church/services/church.service';
-import { getSimpleSupervisors } from '@/modules/supervisor/services/supervisor.service';
-
-import { RelationType } from '@/shared/enums/relation-type.enum';
-import { MinistryMemberBlock } from '@/shared/interfaces/ministry-member-block.interface';
-
-import { PageTitle } from '@/shared/components/page-header/PageTitle';
-import { preacherFormSchema } from '@/modules/preacher/validations/preacher-form-schema';
+import { usePreacherForm } from '@/modules/preacher/hooks/forms';
 
 import { cn } from '@/shared/lib/utils';
-import { useMinistryBlocks } from '@/shared/hooks/useMinistryBlocks';
-import { PageSubTitle } from '@/shared/components/page-header/PageSubTitle';
-import { BasicMemberCreateForm } from '@/shared/components/forms/BasicMemberCreateForm';
-import { useRoleValidationByPath } from '@/shared/hooks/useRoleValidationByPath';
-import { RoleMemberCheckBox } from '@/shared/components/selects/RoleMemberCheckBox';
 
-import { Country } from '@/shared/enums/country.enum';
-import { Province } from '@/shared/enums/province.enum';
-import { Department } from '@/shared/enums/department.enum';
-import { MemberRole } from '@/shared/enums/member-role.enum';
+import { ModuleHeader } from '@/shared/components/page-header/ModuleHeader';
+
+import { RelationType } from '@/shared/enums/relation-type.enum';
 
 import { PastorsSelect } from '@/shared/components/selects/PastorsSelect';
 import { SupervisorsSelect } from '@/shared/components/selects/SupervisorsSelect';
+import { RoleMemberCheckBox } from '@/shared/components/selects/RoleMemberCheckBox';
 import { RelationTypesSelect } from '@/shared/components/selects/RelationTypesSelect';
+import { BasicMemberCreateForm } from '@/shared/components/forms/BasicMemberCreateForm';
 import { MinistryMemberCreateForm } from '@/shared/components/forms/MinistryMemberCreateForm';
-
-import { validateDistrictsAllowedByModule } from '@/shared/helpers/validate-districts-allowed-by-module.helper';
-import { validateUrbanSectorsAllowedByDistrict } from '@/shared/helpers/validate-urban-sectors-allowed-by-district.helper';
 
 import { Form } from '@/shared/components/ui/form';
 import { Button } from '@/shared/components/ui/button';
 
 export const PreacherCreatePage = (): JSX.Element => {
-  //* States
-  const [isInputTheirSupervisorOpen, setIsInputTheirSupervisorOpen] = useState<boolean>(false);
-  const [isInputBirthDateOpen, setIsInputBirthDateOpen] = useState<boolean>(false);
-  const [isInputConvertionDateOpen, setIsInputConvertionDateOpen] = useState<boolean>(false);
-
-  const [isInputDisabled, setIsInputDisabled] = useState<boolean>(false);
-  const [isSubmitButtonDisabled, setIsSubmitButtonDisabled] = useState<boolean>(true);
-  const [isMessageErrorDisabled, setIsMessageErrorDisabled] = useState<boolean>(true);
-  const [isInputTheirPastorOpen, setIsInputTheirPastorOpen] = useState<boolean>(false);
-
-  const [ministryBlocks, setMinistryBlocks] = useState<MinistryMemberBlock[]>([
-    {
-      churchId: null,
-      ministryType: null,
-      ministryId: null,
-      ministryRoles: [],
-      churchPopoverOpen: false,
-      ministryPopoverOpen: false,
-      ministries: [],
-    },
-  ]);
-
-  //* Library hooks
-  const { pathname } = useLocation();
-
-  //* Form
-  const form = useForm<z.infer<typeof preacherFormSchema>>({
-    mode: 'onChange',
-    resolver: zodResolver(preacherFormSchema),
-    defaultValues: {
-      firstNames: '',
-      lastNames: '',
-      gender: '',
-      originCountry: '',
-      birthDate: undefined,
-      conversionDate: undefined,
-      numberChildren: '',
-      maritalStatus: '',
-      relationType: undefined,
-      email: '',
-      phoneNumber: '',
-      residenceCountry: Country.Perú,
-      residenceDepartment: Department.Lima,
-      residenceProvince: Province.Lima,
-      residenceDistrict: '',
-      residenceAddress: '',
-      referenceAddress: '',
-      roles: [MemberRole.Preacher],
-      theirCopastor: '',
-      theirSupervisor: '',
-      theirPastorOnlyMinistries: '',
-      theirPastorRelationDirect: '',
-      theirMinistries: [],
-    },
-  });
-
-  //* Watchers
-  const residenceDistrict = form.watch('residenceDistrict');
-  const relationType = form.watch('relationType');
-
-  //* Effects
-  useEffect(() => {
-    form.resetField('residenceUrbanSector', {
-      keepError: true,
-    });
-  }, [residenceDistrict]);
+  const {
+    form,
+    isInputDisabled,
+    isSubmitButtonDisabled,
+    isMessageErrorDisabled,
+    isPending,
+    isInputBirthDateOpen,
+    setIsInputBirthDateOpen,
+    isInputConvertionDateOpen,
+    setIsInputConvertionDateOpen,
+    isInputTheirSupervisorOpen,
+    setIsInputTheirSupervisorOpen,
+    isInputTheirPastorOnlyMinistriesOpen,
+    setIsInputTheirPastorOnlyMinistriesOpen,
+    district,
+    districtsValidation,
+    urbanSectorsValidation,
+    disabledRoles,
+    ministryBlocks,
+    addMinistryBlock,
+    removeMinistryBlock,
+    updateMinistryBlock,
+    toggleRoleInBlock,
+    handleSelectChurch,
+    supervisorsQuery,
+    pastorsQuery,
+    churchesQuery,
+    handleSubmit,
+  } = usePreacherForm({ mode: 'create' });
 
   useEffect(() => {
     document.title = 'Modulo Predicador - IcupApp';
   }, []);
 
-  useEffect(() => {
-    if (relationType === RelationType.OnlyRelatedHierarchicalCover) {
-      form.setValue('theirPastorOnlyMinistries', '');
-    }
-    if (relationType === RelationType.OnlyRelatedMinistries) {
-      form.setValue('theirSupervisor', '');
-    }
-    if (relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover) {
-      form.setValue('theirPastorOnlyMinistries', '');
-    }
-  }, [relationType]);
+  const relationType = form.watch('relationType');
 
-  useEffect(() => {
-    if (
-      relationType !== RelationType.RelatedBothMinistriesAndHierarchicalCover &&
-      ministryBlocks.length > 0
-    ) {
-      setMinistryBlocks([
-        {
-          churchId: null,
-          ministryType: null,
-          ministryId: null,
-          ministryRoles: [],
-          churchPopoverOpen: false,
-          ministryPopoverOpen: false,
-          ministries: [],
-        },
-      ]);
-    }
-  }, [relationType]);
-
-  //* Helpers
-  const districtsValidation = validateDistrictsAllowedByModule(pathname);
-  const urbanSectorsValidation = validateUrbanSectorsAllowedByDistrict(residenceDistrict);
-
-  //* Custom hooks
-  const { disabledRoles } = useRoleValidationByPath({
-    path: pathname,
-  });
-
-  usePreacherCreationSubmitButtonLogic({
-    preacherCreationForm: form,
-    isInputDisabled,
-    ministryBlocks,
-    setIsMessageErrorDisabled,
-    setIsSubmitButtonDisabled,
-  });
-
-  const preacherCreationMutation = usePreacherCreationMutation({
-    preacherCreationForm: form,
-    setIsInputDisabled,
-    setIsSubmitButtonDisabled,
-  });
-
-  const {
-    addMinistryBlock,
-    removeMinistryBlock,
-    handleSelectChurch,
-    toggleRoleInBlock,
-    updateMinistryBlock,
-  } = useMinistryBlocks({ setMinistryBlocks });
-
-  //* Queries
-  const querySupervisors = useQuery({
-    queryKey: ['supervisors'],
-    queryFn: () => getSimpleSupervisors({ isSimpleQuery: true }),
-    retry: false,
-  });
-
-  const queryChurches = useQuery({
-    queryKey: ['churches'],
-    queryFn: () => getSimpleChurches({ isSimpleQuery: true }),
-    retry: false,
-  });
-
-  const queryPastors = useQuery({
-    queryKey: ['pastors'],
-    queryFn: () => getSimplePastors({ isSimpleQuery: true }),
-    retry: false,
-  });
-
-  //* Form handler
-  const handleSubmit = (formData: z.infer<typeof preacherFormSchema>): void => {
-    const ministriesData = ministryBlocks.map((ministryData) => {
-      return {
-        ministryId: ministryData.ministryId,
-        ministryRoles: ministryData.ministryRoles,
-      };
-    });
-
-    preacherCreationMutation.mutate({
-      ...formData,
-      theirMinistries: ministriesData.some(
-        (item) => !item.ministryId || item.ministryRoles?.length === 0
-      )
-        ? []
-        : ministriesData,
-    });
-  };
+  const showMinistryBlocks =
+    relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover ||
+    relationType === RelationType.OnlyRelatedMinistries;
 
   return (
-    <div className='animate-fadeInPage'>
-      <PageTitle className='text-preacher-color'>Modulo Predicador</PageTitle>
+    <div className='min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950'>
+      <Toaster position='top-center' richColors />
 
-      <PageSubTitle
-        subTitle='Crear un nuevo predicador'
-        description='Por favor llena los siguientes datos para crear un nuevo predicador.'
-      />
+      <div className='max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6'>
+        <ModuleHeader
+          title='Registrar Nuevo Predicador'
+          description='Completa el formulario para crear un nuevo registro de predicador en el sistema.'
+          titleColor='green'
+          badge='Membresía'
+          badgeColor='purple'
+          icon={FiUsers}
+          accentColor='purple'
+        />
 
-      <div className='flex min-h-screen flex-col items-center justify-between px-6 py-4 sm:px-8 sm:py-6 lg:py-6 xl:px-14 2xl:px-[5rem]'>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleSubmit)}
-            className='w-full flex flex-col gap-y-6 md:grid md:grid-cols-2 md:gap-y-8 md:gap-x-10'
-          >
-            {/* Basic Form */}
-            <BasicMemberCreateForm
-              form={form as any}
-              isInputDisabled={isInputDisabled}
-              isInputBirthDateOpen={isInputBirthDateOpen}
-              setIsInputBirthDateOpen={setIsInputBirthDateOpen}
-              isInputConvertionDateOpen={isInputConvertionDateOpen}
-              setIsInputConvertionDateOpen={setIsInputConvertionDateOpen}
-              residenceDistrict={residenceDistrict}
-              districtsValidation={districtsValidation}
-              urbanSectorsValidation={urbanSectorsValidation}
-            />
-
-            {/* Roles */}
-            <div className='sm:col-start-1 sm:col-end-2 sm:row-start-2 sm:row-end-3 h-auto'>
-              <RoleMemberCheckBox
-                form={form as any}
-                isInputDisabled={isInputDisabled}
-                disabledRoles={disabledRoles}
-              />
-            </div>
-
-            {/* Relations */}
-            <div className='sm:col-start-2 sm:col-end-3 sm:row-start-2 sm:row-end-3'>
-              <legend className='font-bold col-start-1 col-end-3 text-[16.5px] sm:text-[18px]'>
-                Relaciones
-              </legend>
-
-              <RelationTypesSelect
-                form={form as any}
-                isInputDisabled={isInputDisabled}
-                moduleName='preacher'
-              />
-
-              {(relationType === RelationType.OnlyRelatedHierarchicalCover ||
-                relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover) && (
-                  <SupervisorsSelect
-                    form={form as any}
-                    isInputDisabled={isInputDisabled}
-                    isInputTheirSupervisorOpen={isInputTheirSupervisorOpen}
-                    setIsInputTheirSupervisorOpen={setIsInputTheirSupervisorOpen}
-                    querySupervisors={querySupervisors}
-                  />
-                )}
-
-              {relationType === RelationType.OnlyRelatedMinistries && (
-                <PastorsSelect
+        <div className='w-full max-w-[1220px] mx-auto'>
+          <div className='bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-700/50 rounded-xl'>
+            <Form {...form}>
+              <form
+                onSubmit={form.handleSubmit(handleSubmit)}
+                className='w-full flex flex-col gap-y-6 md:grid md:grid-cols-2 md:gap-y-8 md:gap-x-10 p-5 md:p-6'
+              >
+                {/* Basic Form */}
+                <BasicMemberCreateForm
                   form={form as any}
                   isInputDisabled={isInputDisabled}
-                  isInputTheirPastorOpen={isInputTheirPastorOpen}
-                  setIsInputTheirPastorOpen={setIsInputTheirPastorOpen}
-                  queryPastors={queryPastors}
-                  fieldName='theirPastorOnlyMinistries'
+                  isInputBirthDateOpen={isInputBirthDateOpen}
+                  setIsInputBirthDateOpen={setIsInputBirthDateOpen}
+                  isInputConvertionDateOpen={isInputConvertionDateOpen}
+                  setIsInputConvertionDateOpen={setIsInputConvertionDateOpen}
+                  residenceDistrict={district}
+                  districtsValidation={districtsValidation}
+                  urbanSectorsValidation={urbanSectorsValidation}
                 />
-              )}
-            </div>
 
-            {/* Ministries */}
-            {(relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover ||
-              relationType === RelationType.OnlyRelatedMinistries) && (
-                <div className='w-full border-t border-gray-300 pt-4 flex flex-col space-y-6 sm:col-start-1 sm:col-end-3'>
-                  <MinistryMemberCreateForm
+                {/* Roles */}
+                <div className='sm:col-start-1 sm:col-end-2 sm:row-start-2 sm:row-end-3 h-auto'>
+                  <RoleMemberCheckBox
+                    form={form as any}
                     isInputDisabled={isInputDisabled}
-                    addMinistryBlock={addMinistryBlock}
-                    ministryBlocks={ministryBlocks}
-                    updateMinistryBlock={updateMinistryBlock}
-                    queryChurches={queryChurches}
-                    handleSelectChurch={handleSelectChurch}
-                    toggleRoleInBlock={toggleRoleInBlock}
-                    removeMinistryBlock={removeMinistryBlock}
+                    disabledRoles={disabledRoles}
                   />
                 </div>
-              )}
 
-            {/* Validation message */}
-            {isMessageErrorDisabled ||
-              (relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover &&
-                ministryBlocks.some(
-                  (item) =>
-                    !item.churchId ||
-                    !item.ministryId ||
-                    !item.ministryType ||
-                    item.ministryRoles.length === 0
-                )) ? (
-              <p className='mt-0 -mb-4 md:-mt-5 md:col-start-1 md:col-end-3 md:row-start-4 md:row-end-5 mx-auto md:w-[100%] lg:w-[80%] text-center text-red-500 text-[12.5px] md:text-[13px] font-bold'>
-                ❌ Datos incompletos, completa todos los campos para crear el registro.
-              </p>
-            ) : (
-              <p className='order-last -mt-3 md:-mt-6 md:col-start-1 md:col-end-3 md:row-start-5 md:row-end-6 mx-auto md:w-[70%] lg:w-[50%] text-center text-green-500 text-[12.5px] md:text-[13px] font-bold'>
-                ¡Campos completados correctamente!
-              </p>
-            )}
+                {/* Relations */}
+                <div className='sm:col-start-2 sm:col-end-3 sm:row-start-2 sm:row-end-3'>
+                  <legend className='font-bold col-start-1 col-end-3 text-[16.5px] sm:text-[18px] mb-3'>
+                    Relaciones
+                  </legend>
 
-            {/* Submit button */}
-            <div className='md:mt-2 lg:mt-2 col-start-1 col-end-3 row-start-4 row-end-5 w-full md:w-[20rem] md:m-auto'>
-              <Toaster position='top-center' richColors />
-              <Button
-                disabled={isSubmitButtonDisabled}
-                type='submit'
-                className={cn(
-                  'w-full text-[14px]',
-                  preacherCreationMutation?.isPending &&
-                  'bg-emerald-500 hover:bg-emerald-500 disabled:opacity-100 disabled:md:text-[15px] text-white'
+                  <RelationTypesSelect
+                    form={form as any}
+                    isInputDisabled={isInputDisabled}
+                    moduleName='preacher'
+                  />
+
+                  {(relationType === RelationType.OnlyRelatedHierarchicalCover ||
+                    relationType === RelationType.RelatedBothMinistriesAndHierarchicalCover) && (
+                      <SupervisorsSelect
+                        form={form as any}
+                        isInputDisabled={isInputDisabled}
+                        isInputTheirSupervisorOpen={isInputTheirSupervisorOpen}
+                        setIsInputTheirSupervisorOpen={setIsInputTheirSupervisorOpen}
+                        querySupervisors={supervisorsQuery}
+                      />
+                    )}
+
+                  {relationType === RelationType.OnlyRelatedMinistries && (
+                    <PastorsSelect
+                      form={form as any}
+                      isInputDisabled={isInputDisabled}
+                      isInputTheirPastorOpen={isInputTheirPastorOnlyMinistriesOpen}
+                      setIsInputTheirPastorOpen={setIsInputTheirPastorOnlyMinistriesOpen}
+                      queryPastors={pastorsQuery}
+                      fieldName='theirPastorOnlyMinistries'
+                    />
+                  )}
+                </div>
+
+                {/* Ministries — styled section */}
+                {showMinistryBlocks && (
+                  <div className='w-full sm:col-start-1 sm:col-end-3 rounded-xl border border-blue-200 dark:border-blue-800/50 bg-blue-50/60 dark:bg-blue-900/10 overflow-hidden'>
+                    <div className='flex items-center gap-3 px-4 py-3 border-b border-blue-200 dark:border-blue-800/50 bg-blue-100/60 dark:bg-blue-900/20'>
+                      <div className='flex items-center justify-center w-7 h-7 rounded-lg bg-blue-500/15 dark:bg-blue-400/15'>
+                        <BookOpenCheck className='w-4 h-4 text-blue-600 dark:text-blue-400' />
+                      </div>
+                      <div>
+                        <p className='text-[13.5px] font-bold text-blue-700 dark:text-blue-300'>
+                          Asignación de Ministerios
+                        </p>
+                        <p className='text-[11px] text-blue-500 dark:text-blue-400 leading-tight'>
+                          Selecciona tipo, iglesia, ministerio y rol para cada bloque.
+                        </p>
+                      </div>
+                    </div>
+                    <div className='px-4 py-4'>
+                      <MinistryMemberCreateForm
+                        isInputDisabled={isInputDisabled}
+                        addMinistryBlock={addMinistryBlock}
+                        ministryBlocks={ministryBlocks}
+                        updateMinistryBlock={updateMinistryBlock}
+                        queryChurches={churchesQuery}
+                        handleSelectChurch={handleSelectChurch}
+                        toggleRoleInBlock={toggleRoleInBlock}
+                        removeMinistryBlock={removeMinistryBlock}
+                      />
+                    </div>
+                  </div>
                 )}
-                onClick={() => {
-                  setTimeout(() => {
-                    if (Object.keys(form.formState.errors).length === 0) {
-                      setIsSubmitButtonDisabled(true);
-                      setIsInputDisabled(true);
-                    }
-                  }, 100);
-                }}
-              >
-                {preacherCreationMutation?.isPending ? 'Procesando...' : 'Registrar Predicador'}
-              </Button>
-            </div>
-          </form>
-        </Form>
+
+                {/* Validation message */}
+                {isMessageErrorDisabled ||
+                  (showMinistryBlocks &&
+                    ministryBlocks.some(
+                      (item: any) =>
+                        !item.churchId ||
+                        !item.ministryId ||
+                        !item.ministryType ||
+                        item.ministryRoles.length === 0
+                    )) ? (
+                  <p className='mt-0 -mb-4 md:-mt-5 md:col-start-1 md:col-end-3 md:row-start-4 md:row-end-5 mx-auto md:w-[100%] lg:w-[80%] text-center text-red-500 text-[12.5px] md:text-[13px] font-bold'>
+                    ❌ Datos incompletos, completa todos los campos para crear el registro.
+                  </p>
+                ) : (
+                  <p className='order-last -mt-3 md:-mt-6 md:col-start-1 md:col-end-3 md:row-start-5 md:row-end-6 mx-auto md:w-[70%] lg:w-[50%] text-center text-green-500 text-[12.5px] md:text-[13px] font-bold'>
+                    ¡Campos completados correctamente!
+                  </p>
+                )}
+
+                {/* Submit button */}
+                <div className='md:mt-2 lg:mt-2 col-start-1 col-end-3 row-start-4 row-end-5 w-full md:w-[20rem] md:m-auto'>
+                  <Button
+                    disabled={isSubmitButtonDisabled}
+                    type='submit'
+                    className={cn(
+                      'w-full text-[14px]',
+                      isPending &&
+                      'bg-emerald-500 hover:bg-emerald-500 disabled:opacity-100 disabled:md:text-[15px] text-white'
+                    )}
+                  >
+                    {isPending ? 'Procesando...' : 'Registrar Predicador'}
+                  </Button>
+                </div>
+              </form>
+            </Form>
+          </div>
+        </div>
+
+        <footer className='pt-4 pb-2 text-center'>
+          <p className='text-xs text-slate-400 dark:text-slate-500 font-inter'>
+            Modulo Predicador - ICUP App &copy; {new Date().getFullYear()}
+          </p>
+        </footer>
       </div>
     </div>
   );

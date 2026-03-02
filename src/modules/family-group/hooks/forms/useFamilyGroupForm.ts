@@ -27,7 +27,7 @@ import { getSimpleZones } from '@/modules/zone/services/zone.service';
 import { type ZoneResponse } from '@/modules/zone/types';
 import { getPreachersByFilters } from '@/modules/preacher/services/preacher.service';
 import { PreacherSearchType } from '@/modules/preacher/enums/preacher-search-type.enum';
-import { type PreacherResponse } from '@/modules/preacher/interfaces/preacher-response.interface';
+import { type PreacherResponse } from '@/modules/preacher/types/preacher-response.interface';
 
 //* Constant noop function - stable reference, no need for useCallback
 const NOOP = (): void => {};

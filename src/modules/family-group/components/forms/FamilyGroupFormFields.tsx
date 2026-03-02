@@ -15,7 +15,7 @@ import { validateDistrictsAllowedByModule } from '@/shared/helpers/validate-dist
 import { validateUrbanSectorsAllowedByDistrict } from '@/shared/helpers/validate-urban-sectors-allowed-by-district.helper';
 
 import { type ZoneResponse } from '@/modules/zone/types';
-import { type PreacherResponse } from '@/modules/preacher/interfaces/preacher-response.interface';
+import { type PreacherResponse } from '@/modules/preacher/types/preacher-response.interface';
 import { type FamilyGroupResponse, type FamilyGroupFormData } from '@/modules/family-group/types';
 import { FamilyGroupServiceTimeNames } from '@/modules/family-group/enums';
 
