@@ -72,18 +72,11 @@ export const FamilyGroupsSelect = ({
                     )}
                   >
                     {field.value
-                      ? `${queryFamilyGroups?.data?.find((familyGroup) => familyGroup.id === field.value)?.familyGroupName} 
-                          (${queryFamilyGroups?.data?.find((familyGroup) => familyGroup.id === field.value)?.familyGroupCode}) ~ 
-                          ${getInitialFullNames({
-                        firstNames:
-                          queryFamilyGroups?.data?.find(
-                            (familyGroup) => familyGroup.id === field.value
-                          )?.theirPreacher?.firstNames ?? '',
-                        lastNames:
-                          queryFamilyGroups?.data?.find(
-                            (familyGroup) => familyGroup.id === field.value
-                          )?.theirPreacher?.lastNames ?? '',
-                      })}`
+                      ? (() => {
+                          const fg = queryFamilyGroups?.data?.find((fg) => fg.id === field.value);
+                          if (!fg) return queryFamilyGroups?.isLoading ? 'Cargando...' : field.value;
+                          return `${fg.familyGroupName} (${fg.familyGroupCode}) ~ ${getInitialFullNames({ firstNames: fg.theirPreacher?.firstNames ?? '', lastNames: fg.theirPreacher?.lastNames ?? '' })}`;
+                        })()
                       : 'Busque y seleccione un grupo familiar'}
                     <CaretSortIcon className='ml-2 h-4 w-4 shrink-0 opacity-5' />
                   </Button>

@@ -84,12 +84,12 @@ export const FormModal = ({
       })()
       : children;
 
-  // Build size classes based on maxWidth
+  // Build size classes based on maxWidth (must use static strings for Tailwind detection)
   const sizeClasses =
     maxWidth === '2xl'
-      ? `md:max-w-[740px] lg:${MODAL_SIZES.xl} xl:${MODAL_SIZES['2xl']}`
+      ? 'md:max-w-[740px] lg:max-w-[1050px] xl:max-w-[1160px]'
       : maxWidth === 'xl'
-        ? `md:max-w-[740px] lg:${MODAL_SIZES.xl} xl:${MODAL_SIZES.xl}`
+        ? 'md:max-w-[740px] lg:max-w-[1050px]'
         : `md:${MODAL_SIZES[maxWidth]}`;
 
   if (isDesktop) {

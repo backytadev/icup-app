@@ -2,7 +2,7 @@ import { UseFormReturn } from 'react-hook-form';
 
 import { type PastorFormData } from '@/modules/pastor/types';
 import { CopastorFormData } from '@/modules/copastor/types/copastor-form-data.interface';
-import { DiscipleFormData } from '@/modules/disciple/interfaces/disciple-form-data.interface';
+import { DiscipleFormData } from '@/modules/disciple/types/disciple-form-data.interface';
 import { PreacherFormData } from '@/modules/preacher/types/preacher-form-data.interface';
 import { SupervisorFormData } from '@/modules/supervisor/types/supervisor-form-data.interface';
 

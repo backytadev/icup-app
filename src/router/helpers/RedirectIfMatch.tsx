@@ -126,16 +126,16 @@ export const RedirectIfMatch = (): JSX.Element => {
 
   // If starts with disciple
   if (location.pathname.startsWith('/disciples/general-search/')) {
-    return <Navigate to='/disciples/general-search' />;
+    return <Navigate to='/disciples/search' />;
   }
   if (location.pathname.startsWith('/disciples/search-by-term/')) {
-    return <Navigate to='/disciples/search-by-term' />;
+    return <Navigate to='/disciples/search' />;
   }
   if (location.pathname.startsWith('/disciples/update/')) {
-    return <Navigate to='/disciples/update' />;
+    return <Navigate to='/disciples/search' />;
   }
   if (location.pathname.startsWith('/disciples/inactivate/')) {
-    return <Navigate to='/disciples/inactivate' />;
+    return <Navigate to='/disciples/search' />;
   }
 
   // If starts with user

@@ -38,7 +38,7 @@ export interface AlertUpdateRelationProps {
   updateForm: UseFormReturn<any, any, any>;
 
   //* Config props
-  mode: 'pastor' | 'church' | 'supervisor' | 'copastor'; // pastor: ministry, church: pastor, supervisor: zone, copastor: supervisor
+  mode: 'pastor' | 'church' | 'supervisor' | 'copastor' | 'familyGroup';
   formFieldName: string; // nombre del campo del formulario a resetear
 
   //* Display props (optional)
@@ -99,6 +99,14 @@ export const AlertUpdateRelation = ({
       warningMessage:
         'Al realizar el cambio de Co-Pastor para este Supervisor, se eliminarán sus relaciones anteriores y se establecerán las nuevas. Además, todo lo que estaba bajo su cobertura (zona, grupos familiares y discípulos) también será reasignado con las nuevas relaciones.',
     },
+    familyGroup: {
+      title: 'Cambio de Grupo Familiar',
+      subtitle: 'Estás a punto de actualizar el Grupo Familiar asignado al siguiente Discípulo',
+      currentLabel: 'G. Familiar',
+      newLabel: 'G. Familiar',
+      warningMessage:
+        'Al realizar el cambio de Grupo Familiar para este Discípulo, se eliminarán sus relaciones anteriores y se establecerán las nuevas en su lugar.',
+    },
   };
 
   const texts = defaultTexts[mode];
@@ -129,10 +137,19 @@ export const AlertUpdateRelation = ({
             }),
             church: data?.theirChurch?.abbreviatedChurchName,
           }
-          : {
-            relation: data?.theirChurch?.abbreviatedChurchName,
-            church: null, // No mostrar iglesia en modo church
-          };
+          : mode === 'familyGroup'
+            ? {
+              familyGroup: data?.theirFamilyGroup?.familyGroupCode
+                ? `${data.theirFamilyGroup.familyGroupCode} ~ ${getInitialFullNames({ firstNames: data?.theirPreacher?.firstNames ?? '', lastNames: data?.theirPreacher?.lastNames ?? '' })}`
+                : 'Sin Grupo Familiar',
+              supervisor: getInitialFullNames({ firstNames: data?.theirSupervisor?.firstNames ?? '', lastNames: data?.theirSupervisor?.lastNames ?? '' }) || 'Sin asignar',
+              copastor: getInitialFullNames({ firstNames: data?.theirCopastor?.firstNames ?? '', lastNames: data?.theirCopastor?.lastNames ?? '' }) || 'Sin asignar',
+              church: data?.theirChurch?.abbreviatedChurchName || 'Sin asignar',
+            }
+            : {
+              relation: data?.theirChurch?.abbreviatedChurchName,
+              church: null, // No mostrar iglesia en modo church
+            };
 
   //* Extract new info based on mode
   const newEntity = query?.data?.find((item: any) => item.id === changedId);
@@ -153,10 +170,19 @@ export const AlertUpdateRelation = ({
           }),
           church: newEntity?.theirChurch?.abbreviatedChurchName,
         }
-        : {
-          relation: newEntity?.abbreviatedChurchName,
-          church: null,
-        };
+        : mode === 'familyGroup'
+          ? {
+            familyGroup: newEntity?.familyGroupCode
+              ? `${newEntity.familyGroupCode} ~ ${getInitialFullNames({ firstNames: newEntity?.theirPreacher?.firstNames ?? '', lastNames: newEntity?.theirPreacher?.lastNames ?? '' })}`
+              : 'Sin seleccionar',
+            supervisor: getInitialFullNames({ firstNames: newEntity?.theirSupervisor?.firstNames ?? '', lastNames: newEntity?.theirSupervisor?.lastNames ?? '' }) || 'Sin asignar',
+            copastor: getInitialFullNames({ firstNames: newEntity?.theirCopastor?.firstNames ?? '', lastNames: newEntity?.theirCopastor?.lastNames ?? '' }) || 'Sin asignar',
+            church: newEntity?.theirChurch?.abbreviatedChurchName || 'Sin asignar',
+          }
+          : {
+            relation: newEntity?.abbreviatedChurchName,
+            church: null,
+          };
 
   //* Get entity display name
   const displayEntityName =
@@ -167,7 +193,7 @@ export const AlertUpdateRelation = ({
         : entityName || getInitialFullNames({
           firstNames: data?.member?.firstNames ?? '',
           lastNames: data?.member?.lastNames ?? '',
-        }); // covers 'church' and 'copastor'
+        }); // covers 'church', 'copastor', 'familyGroup'
 
   //* Hook to detect mobile/desktop breakpoint
   const [isMobile, setIsMobile] = useState(false);
@@ -196,7 +222,9 @@ export const AlertUpdateRelation = ({
           ? data?.theirSupervisor?.id
           : mode === 'copastor'
             ? data?.theirCopastor?.id
-            : data?.theirChurch?.id;
+            : mode === 'familyGroup'
+              ? data?.theirFamilyGroup?.id
+              : data?.theirChurch?.id;
     updateForm.setValue(formFieldName as any, originalValue as any);
     setChangedId(originalValue);
     setIsAlertDialogOpen(false);
@@ -233,6 +261,26 @@ export const AlertUpdateRelation = ({
     </div>
   );
 
+  //* Helper for a labeled info field
+  const InfoField = ({
+    label,
+    value,
+    colorClass,
+  }: {
+    label: string;
+    value: string;
+    colorClass: string;
+  }): JSX.Element => (
+    <div>
+      <span className={cn('block text-[11px] font-semibold uppercase tracking-wider font-inter mb-0.5', colorClass)}>
+        {label}
+      </span>
+      <span className={cn('text-[13px] md:text-[14px] font-medium font-inter', colorClass.replace('/70', '').replace('600', '800').replace('400', '200'))}>
+        {value}
+      </span>
+    </div>
+  );
+
   //* Shared body content
   const BodyContent = (): JSX.Element => (
     <div className='space-y-4'>
@@ -244,26 +292,35 @@ export const AlertUpdateRelation = ({
             Información actual
           </p>
         </div>
-        <div className={cn('grid gap-3', mode !== 'church' ? 'grid-cols-2' : 'grid-cols-1')}>
-          <div>
-            <span className='block text-[11px] font-semibold uppercase tracking-wider text-emerald-600/70 dark:text-emerald-400/70 font-inter mb-0.5'>
-              {texts.currentLabel}
-            </span>
-            <span className='text-[13px] md:text-[14px] font-medium text-emerald-800 dark:text-emerald-200 font-inter'>
-              {currentInfo.relation || 'Sin asignar'}
-            </span>
+        {mode === 'familyGroup' ? (
+          <div className='grid grid-cols-2 gap-x-4 gap-y-2'>
+            <InfoField label='G. Familiar' value={(currentInfo as any).familyGroup} colorClass='text-emerald-600/70 dark:text-emerald-400/70' />
+            <InfoField label='Supervisor' value={(currentInfo as any).supervisor} colorClass='text-emerald-600/70 dark:text-emerald-400/70' />
+            <InfoField label='Co-Pastor' value={(currentInfo as any).copastor} colorClass='text-emerald-600/70 dark:text-emerald-400/70' />
+            <InfoField label='Iglesia' value={(currentInfo as any).church} colorClass='text-emerald-600/70 dark:text-emerald-400/70' />
           </div>
-          {mode !== 'church' && currentInfo.church && (
+        ) : (
+          <div className={cn('grid gap-3', mode !== 'church' ? 'grid-cols-2' : 'grid-cols-1')}>
             <div>
               <span className='block text-[11px] font-semibold uppercase tracking-wider text-emerald-600/70 dark:text-emerald-400/70 font-inter mb-0.5'>
-                Iglesia
+                {texts.currentLabel}
               </span>
               <span className='text-[13px] md:text-[14px] font-medium text-emerald-800 dark:text-emerald-200 font-inter'>
-                {currentInfo.church}
+                {(currentInfo as any).relation || 'Sin asignar'}
               </span>
             </div>
-          )}
-        </div>
+            {mode !== 'church' && (currentInfo as any).church && (
+              <div>
+                <span className='block text-[11px] font-semibold uppercase tracking-wider text-emerald-600/70 dark:text-emerald-400/70 font-inter mb-0.5'>
+                  Iglesia
+                </span>
+                <span className='text-[13px] md:text-[14px] font-medium text-emerald-800 dark:text-emerald-200 font-inter'>
+                  {(currentInfo as any).church}
+                </span>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Arrow indicator */}
@@ -281,26 +338,35 @@ export const AlertUpdateRelation = ({
             Nueva relación seleccionada
           </p>
         </div>
-        <div className={cn('grid gap-3', mode !== 'church' ? 'grid-cols-2' : 'grid-cols-1')}>
-          <div>
-            <span className='block text-[11px] font-semibold uppercase tracking-wider text-amber-600/70 dark:text-amber-400/70 font-inter mb-0.5'>
-              {texts.newLabel}
-            </span>
-            <span className='text-[13px] md:text-[14px] font-medium text-amber-800 dark:text-amber-200 font-inter'>
-              {newInfo.relation || 'Sin seleccionar'}
-            </span>
+        {mode === 'familyGroup' ? (
+          <div className='grid grid-cols-2 gap-x-4 gap-y-2'>
+            <InfoField label='G. Familiar' value={(newInfo as any).familyGroup} colorClass='text-amber-600/70 dark:text-amber-400/70' />
+            <InfoField label='Supervisor' value={(newInfo as any).supervisor} colorClass='text-amber-600/70 dark:text-amber-400/70' />
+            <InfoField label='Co-Pastor' value={(newInfo as any).copastor} colorClass='text-amber-600/70 dark:text-amber-400/70' />
+            <InfoField label='Iglesia' value={(newInfo as any).church} colorClass='text-amber-600/70 dark:text-amber-400/70' />
           </div>
-          {mode !== 'church' && newInfo.church && (
+        ) : (
+          <div className={cn('grid gap-3', mode !== 'church' ? 'grid-cols-2' : 'grid-cols-1')}>
             <div>
               <span className='block text-[11px] font-semibold uppercase tracking-wider text-amber-600/70 dark:text-amber-400/70 font-inter mb-0.5'>
-                Iglesia
+                {texts.newLabel}
               </span>
               <span className='text-[13px] md:text-[14px] font-medium text-amber-800 dark:text-amber-200 font-inter'>
-                {newInfo.church}
+                {(newInfo as any).relation || 'Sin seleccionar'}
               </span>
             </div>
-          )}
-        </div>
+            {mode !== 'church' && (newInfo as any).church && (
+              <div>
+                <span className='block text-[11px] font-semibold uppercase tracking-wider text-amber-600/70 dark:text-amber-400/70 font-inter mb-0.5'>
+                  Iglesia
+                </span>
+                <span className='text-[13px] md:text-[14px] font-medium text-amber-800 dark:text-amber-200 font-inter'>
+                  {(newInfo as any).church}
+                </span>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Warning */}

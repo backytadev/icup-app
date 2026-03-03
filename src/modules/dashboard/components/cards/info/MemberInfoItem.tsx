@@ -1,5 +1,5 @@
-import { DiscipleTabsCard } from '@/modules/disciple/components/cards/info/DiscipleTabsCard';
-import { type DiscipleResponse } from '@/modules/disciple/interfaces/disciple-response.interface';
+import { DiscipleTabsCard } from '@/modules/disciple/components/DiscipleTabsCard';
+import { type DiscipleResponse } from '@/modules/disciple/types/disciple-response.interface';
 
 import { InfoItemCard, InfoItemModal } from '@/modules/dashboard/components/shared';
 

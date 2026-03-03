@@ -7,11 +7,10 @@ import { apiRequest } from '@/shared/helpers/api-request';
 import { openPdfInNewTab } from '@/shared/helpers/open-pdf-tab';
 import { getContextParams } from '@/shared/helpers/get-context-params';
 
-import { type DiscipleResponse } from '@/modules/disciple/interfaces/disciple-response.interface';
-import { type DiscipleFormData } from '@/modules/disciple/interfaces/disciple-form-data.interface';
-import { type DiscipleQueryParams } from '@/modules/disciple/interfaces/disciple-query-params.interface';
-import { buildDiscipleSearchTerm } from '@/modules/disciple/builders/buildDiscipleSearchTerm';
-import { buildDiscipleQueryParams } from '@/modules/disciple/builders/buildDiscipleQueryParam';
+import { type DiscipleResponse } from '@/modules/disciple/types/disciple-response.interface';
+import { type DiscipleFormData } from '@/modules/disciple/types/disciple-form-data.interface';
+import { type DiscipleQueryParams } from '@/modules/disciple/types/disciple-query-params.interface';
+import { DiscipleSearchType } from '@/modules/disciple/enums/disciple-search-type.enum';
 
 export interface UpdateDiscipleOptions {
   id: string;
@@ -23,6 +22,55 @@ export interface InactivateDiscipleOptions {
   memberInactivationCategory: string;
   memberInactivationReason: string;
 }
+
+//* Inline builders
+const buildDiscipleSearchTerm = (params: DiscipleQueryParams): string | undefined => {
+  const { searchType, inputTerm, dateTerm, selectTerm, firstNamesTerm, lastNamesTerm } = params;
+
+  const mapping: Record<DiscipleSearchType, string | undefined> = {
+    [DiscipleSearchType.BirthDate]: dateTerm,
+    [DiscipleSearchType.BirthMonth]: selectTerm,
+    [DiscipleSearchType.Gender]: selectTerm,
+    [DiscipleSearchType.MaritalStatus]: selectTerm,
+    [DiscipleSearchType.ZoneName]: inputTerm,
+    [DiscipleSearchType.FamilyGroupCode]: inputTerm,
+    [DiscipleSearchType.FamilyGroupName]: inputTerm,
+    [DiscipleSearchType.OriginCountry]: inputTerm,
+    [DiscipleSearchType.ResidenceCountry]: inputTerm,
+    [DiscipleSearchType.ResidenceDepartment]: inputTerm,
+    [DiscipleSearchType.ResidenceProvince]: inputTerm,
+    [DiscipleSearchType.ResidenceDistrict]: inputTerm,
+    [DiscipleSearchType.ResidenceUrbanSector]: inputTerm,
+    [DiscipleSearchType.ResidenceAddress]: inputTerm,
+    [DiscipleSearchType.RecordStatus]: selectTerm,
+    [DiscipleSearchType.FirstNames]: firstNamesTerm,
+    [DiscipleSearchType.LastNames]: lastNamesTerm,
+    [DiscipleSearchType.FullNames]:
+      firstNamesTerm && lastNamesTerm ? `${firstNamesTerm}-${lastNamesTerm}` : undefined,
+  };
+
+  return mapping[searchType as DiscipleSearchType];
+};
+
+const buildDiscipleQueryParams = (params: DiscipleQueryParams, term?: string) => {
+  const { limit, offset, order, all, searchType, searchSubType, churchId } = params;
+
+  const base: Record<string, any> = {
+    term,
+    searchType,
+    order,
+  };
+
+  if (searchSubType) base.searchSubType = searchSubType;
+  if (churchId) base.churchId = churchId;
+
+  if (!all) {
+    base.limit = limit;
+    base.offset = offset;
+  }
+
+  return base;
+};
 
 //* Create
 export const createDisciple = async (formData: DiscipleFormData): Promise<DiscipleResponse> => {
