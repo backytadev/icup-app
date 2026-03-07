@@ -6,9 +6,9 @@ import { type ColumnDef } from '@tanstack/react-table';
 
 import {
   getOfferingsExpenses,
-  getOfferingsExpensesByTerm,
+  getOfferingsExpensesByFilters,
   getGeneralOfferingExpensesReport,
-  getOfferingExpensesReportByTerm,
+  getOfferingExpensesReportByFilters,
 } from '@/modules/offering/expense/services/offering-expense.service';
 
 import { type OfferingExpenseQueryParams } from '@/modules/offering/expense/interfaces/offering-expense-query-params.interface';
@@ -97,7 +97,7 @@ export function UnifiedOfferingExpenseSearchDataTable<TData, TValue>({
   //* Query for filter search
   const filterQuery = useConditionalListQuery({
     queryKey: ['unified-offering-expense-filters', filterSearchParams],
-    queryFn: () => getOfferingsExpensesByTerm(filterSearchParams as OfferingExpenseQueryParams),
+    queryFn: () => getOfferingsExpensesByFilters(filterSearchParams as OfferingExpenseQueryParams),
     enabled: searchMode === 'filters' && !!filterSearchParams,
   });
 
@@ -174,7 +174,7 @@ export function UnifiedOfferingExpenseSearchDataTable<TData, TValue>({
   const filterReportQuery = useManualQuery({
     queryKey: ['unified-offering-expense-report-filters', filterSearchParams],
     queryFn: () =>
-      getOfferingExpensesReportByTerm(filterSearchParams as OfferingExpenseQueryParams),
+      getOfferingExpensesReportByFilters(filterSearchParams as OfferingExpenseQueryParams),
   });
 
   const activeReportQuery = searchMode === 'general' ? generalReportQuery : filterReportQuery;

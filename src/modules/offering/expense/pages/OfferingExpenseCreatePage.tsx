@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import type * as z from 'zod';
 import { format } from 'date-fns';
 import { es } from 'date-fns/locale';
-import { toast } from 'sonner';
+import { toast, Toaster } from 'sonner';
 import { useForm } from 'react-hook-form';
 import { useDropzone } from 'react-dropzone';
 import { TiDeleteOutline } from 'react-icons/ti';
@@ -219,6 +219,7 @@ export const OfferingExpenseCreatePage = (): JSX.Element => {
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950'>
+      <Toaster position='top-center' richColors />
       <div className='max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6'>
         <ModuleHeader
           title='Registrar Nueva Salida'
