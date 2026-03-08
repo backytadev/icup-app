@@ -47,8 +47,8 @@ export const OfferingIncomeGenerateReceipt = ({
   const handleGenerateReport = (): void => {
     setIsLoadingModalOpen(true);
     generateReportQuery.refetch().then((result) => {
-      if (result.data?.data) {
-        setPdfBlob(result.data.data);
+      if (result.data) {
+        setPdfBlob(result.data);
         setIsLoadingModalOpen(false);
         setIsPreviewModalOpen(true);
       }

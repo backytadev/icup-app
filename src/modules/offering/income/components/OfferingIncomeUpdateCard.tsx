@@ -47,8 +47,8 @@ export const OfferingIncomeUpdateCard = ({ idRow }: OfferingIncomeUpdateCardProp
         generationType: 'with-qr',
       });
 
-      if (response?.data) {
-        setPdfBlob(response.data);
+      if (response) {
+        setPdfBlob(response);
         setIsPreviewModalOpen(true);
       }
     } catch (error) {
