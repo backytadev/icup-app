@@ -1,8 +1,5 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
-import { isAxiosError } from 'axios';
-
-import { icupApi } from '@/core/api/icupApi';
+import { apiRequest } from '@/shared/helpers/api-request';
+import { openPdfInNewTab } from '@/shared/helpers/open-pdf-tab';
 import { getContextParams } from '@/shared/helpers/get-context-params';
 
 import { type MetricsQueryParams } from '@/modules/metrics/interfaces/shared/metrics-query-params.interface';
@@ -23,26 +20,13 @@ export const getFamilyGroupsProportion = async ({
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurch = church || contextChurchId;
 
-  try {
-    const { data } = await icupApi<FamilyGroupsProportionResponse>(`/metrics/${resolvedChurch}`, {
-      params: {
-        searchType,
-        order,
-      },
-    });
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest<FamilyGroupsProportionResponse>('get', `/metrics/${resolvedChurch}`, {
+    params: { searchType, order },
+  });
 };
 
 //? SEARCH BY TERM
-//* Get Fluctuation Members by year
+//* Get fluctuation family groups by year
 export const getFluctuationFamilyGroupsByYear = async ({
   searchType,
   year,
@@ -52,28 +36,14 @@ export const getFluctuationFamilyGroupsByYear = async ({
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurch = church || contextChurchId;
 
-  try {
-    const { data } = await icupApi<FamilyGroupsFluctuationResponse[]>(
-      `/metrics/${resolvedChurch}&${year}`,
-      {
-        params: {
-          searchType,
-          order,
-        },
-      }
-    );
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest<FamilyGroupsFluctuationResponse[]>(
+    'get',
+    `/metrics/${resolvedChurch}&${year}`,
+    { params: { searchType, order } }
+  );
 };
 
-//* Get Family groups by zone
+//* Get family groups by zone
 export const getFamilyGroupsByZone = async ({
   searchType,
   allFamilyGroups,
@@ -84,26 +54,12 @@ export const getFamilyGroupsByZone = async ({
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurch = church || contextChurchId;
 
-  try {
-    const { data } = await icupApi<FamilyGroupsByZoneResponse>(`/metrics/${resolvedChurch}&${zone}`, {
-      params: {
-        searchType,
-        allFamilyGroups: allFamilyGroups?.toString(),
-        order,
-      },
-    });
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest<FamilyGroupsByZoneResponse>('get', `/metrics/${resolvedChurch}&${zone}`, {
+    params: { searchType, allFamilyGroups: allFamilyGroups?.toString(), order },
+  });
 };
 
-//* Get Family groups by copastor and zone
+//* Get family groups by copastor and zone
 export const getFamilyGroupsByCopastorAndZone = async ({
   searchType,
   allZones,
@@ -114,29 +70,14 @@ export const getFamilyGroupsByCopastorAndZone = async ({
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurch = church || contextChurchId;
 
-  try {
-    const { data } = await icupApi<FamilyGroupsByCopastorAndZoneResponse>(
-      `/metrics/${resolvedChurch}&${copastor}`,
-      {
-        params: {
-          searchType,
-          allZones: allZones?.toString(),
-          order,
-        },
-      }
-    );
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest<FamilyGroupsByCopastorAndZoneResponse>(
+    'get',
+    `/metrics/${resolvedChurch}&${copastor}`,
+    { params: { searchType, allZones: allZones?.toString(), order } }
+  );
 };
 
-//* Get Family groups by district
+//* Get family groups by district
 export const getFamilyGroupsByDistrict = async ({
   searchType,
   district,
@@ -146,28 +87,14 @@ export const getFamilyGroupsByDistrict = async ({
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurch = church || contextChurchId;
 
-  try {
-    const { data } = await icupApi<FamilyGroupsByCopastorAndZoneResponse>(
-      `/metrics/${resolvedChurch}&${district}`,
-      {
-        params: {
-          searchType,
-          order,
-        },
-      }
-    );
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest<FamilyGroupsByCopastorAndZoneResponse>(
+    'get',
+    `/metrics/${resolvedChurch}&${district}`,
+    { params: { searchType, order } }
+  );
 };
 
-//* Get Family groups by service time
+//* Get family groups by service time
 export const getFamilyGroupsByServiceTime = async ({
   searchType,
   zone,
@@ -178,29 +105,14 @@ export const getFamilyGroupsByServiceTime = async ({
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurch = church || contextChurchId;
 
-  try {
-    const { data } = await icupApi<FamilyGroupsByServiceTimeResponse>(
-      `/metrics/${resolvedChurch}&${zone}`,
-      {
-        params: {
-          searchType,
-          allZones: allZones?.toString(),
-          order,
-        },
-      }
-    );
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest<FamilyGroupsByServiceTimeResponse>(
+    'get',
+    `/metrics/${resolvedChurch}&${zone}`,
+    { params: { searchType, allZones: allZones?.toString(), order } }
+  );
 };
 
-//* Get Family groups by record status
+//* Get family groups by record status
 export const getFamilyGroupsByRecordStatus = async ({
   searchType,
   zone,
@@ -211,35 +123,14 @@ export const getFamilyGroupsByRecordStatus = async ({
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurch = church || contextChurchId;
 
-  try {
-    const { data } = await icupApi<FamilyGroupsByRecordStatusResponse>(
-      `/metrics/${resolvedChurch}&${zone}`,
-      {
-        params: {
-          searchType,
-          allZones: allZones?.toString(),
-          order,
-        },
-      }
-    );
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest<FamilyGroupsByRecordStatusResponse>(
+    'get',
+    `/metrics/${resolvedChurch}&${zone}`,
+    { params: { searchType, allZones: allZones?.toString(), order } }
+  );
 };
 
 //? FAMILY GROUP METRICS REPORTS
-const openPdfInNewTab = (pdfBlob: Blob): void => {
-  const pdfUrl = URL.createObjectURL(pdfBlob);
-  const newTab = window.open(pdfUrl, '_blank');
-  newTab?.focus();
-};
-
 interface MetricReportQueryParams {
   year: string;
   churchId: string;
@@ -257,33 +148,18 @@ export const getFamilyGroupMetricsReport = async ({
   const resolvedChurchId = churchId || contextChurchId;
   const joinedReportTypes = types.join('+');
 
-  try {
-    const res = await icupApi<Blob>('/reports/family-group-metrics', {
-      params: {
-        churchId: resolvedChurchId,
-        year,
-        types: joinedReportTypes,
-      },
-      headers: {
-        'Content-Type': 'application/pdf',
-      },
-      responseType: 'blob',
-    });
+  const blob = await apiRequest<Blob>('get', '/reports/family-group-metrics', {
+    params: { churchId: resolvedChurchId, year, types: joinedReportTypes },
+    headers: { 'Content-Type': 'application/pdf' },
+    responseType: 'blob',
+  });
 
-    setTimeout(() => {
-      dialogClose();
-    }, 100);
+  setTimeout(() => {
+    dialogClose();
+  }, 100);
+  setTimeout(() => {
+    openPdfInNewTab(blob);
+  }, 300);
 
-    setTimeout(() => {
-      openPdfInNewTab(res.data);
-    }, 300);
-
-    return true;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return true;
 };

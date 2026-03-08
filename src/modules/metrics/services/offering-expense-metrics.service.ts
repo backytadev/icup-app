@@ -1,8 +1,5 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
-import { isAxiosError } from 'axios';
-
-import { icupApi } from '@/core/api/icupApi';
+import { apiRequest } from '@/shared/helpers/api-request';
+import { openPdfInNewTab } from '@/shared/helpers/open-pdf-tab';
 import { getContextParams } from '@/shared/helpers/get-context-params';
 
 import { type MetricsQueryParams } from '@/modules/metrics/interfaces/shared/metrics-query-params.interface';
@@ -20,22 +17,9 @@ export const getOfferingExpensesProportion = async ({
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurch = church || contextChurchId;
 
-  try {
-    const { data } = await icupApi<OfferingExpensesProportionResponse>(`/metrics/${resolvedChurch}`, {
-      params: {
-        searchType,
-        order,
-      },
-    });
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest<OfferingExpensesProportionResponse>('get', `/metrics/${resolvedChurch}`, {
+    params: { searchType, order },
+  });
 };
 
 //? SEARCH BY TERM
@@ -51,26 +35,11 @@ export const getOperationalOfferingExpenses = async ({
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurch = church || contextChurchId;
 
-  try {
-    const { data } = await icupApi<OfferingExpenseChartResponse[]>(
-      `/metrics/${resolvedChurch}&${month}&${year}`,
-      {
-        params: {
-          searchType,
-          isSingleMonth: isSingleMonth?.toString(),
-          order,
-        },
-      }
-    );
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest<OfferingExpenseChartResponse[]>(
+    'get',
+    `/metrics/${resolvedChurch}&${month}&${year}`,
+    { params: { searchType, isSingleMonth: isSingleMonth?.toString(), order } }
+  );
 };
 
 //* Maintenance and repair offering expenses
@@ -85,29 +54,14 @@ export const getMaintenanceAndRepairOfferingExpenses = async ({
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurch = church || contextChurchId;
 
-  try {
-    const { data } = await icupApi<OfferingExpenseChartResponse[]>(
-      `/metrics/${resolvedChurch}&${month}&${year}`,
-      {
-        params: {
-          searchType,
-          isSingleMonth: isSingleMonth?.toString(),
-          order,
-        },
-      }
-    );
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest<OfferingExpenseChartResponse[]>(
+    'get',
+    `/metrics/${resolvedChurch}&${month}&${year}`,
+    { params: { searchType, isSingleMonth: isSingleMonth?.toString(), order } }
+  );
 };
 
-//* Decoration and repair offering expenses
+//* Decoration offering expenses
 export const getDecorationOfferingExpenses = async ({
   searchType,
   church,
@@ -119,29 +73,14 @@ export const getDecorationOfferingExpenses = async ({
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurch = church || contextChurchId;
 
-  try {
-    const { data } = await icupApi<OfferingExpenseChartResponse[]>(
-      `/metrics/${resolvedChurch}&${month}&${year}`,
-      {
-        params: {
-          searchType,
-          isSingleMonth: isSingleMonth?.toString(),
-          order,
-        },
-      }
-    );
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest<OfferingExpenseChartResponse[]>(
+    'get',
+    `/metrics/${resolvedChurch}&${month}&${year}`,
+    { params: { searchType, isSingleMonth: isSingleMonth?.toString(), order } }
+  );
 };
 
-//* Equipment and technology and repair offering expenses
+//* Equipment and technology offering expenses
 export const getEquipmentAndTechnologyOfferingExpenses = async ({
   searchType,
   church,
@@ -153,26 +92,11 @@ export const getEquipmentAndTechnologyOfferingExpenses = async ({
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurch = church || contextChurchId;
 
-  try {
-    const { data } = await icupApi<OfferingExpenseChartResponse[]>(
-      `/metrics/${resolvedChurch}&${month}&${year}`,
-      {
-        params: {
-          searchType,
-          isSingleMonth: isSingleMonth?.toString(),
-          order,
-        },
-      }
-    );
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest<OfferingExpenseChartResponse[]>(
+    'get',
+    `/metrics/${resolvedChurch}&${month}&${year}`,
+    { params: { searchType, isSingleMonth: isSingleMonth?.toString(), order } }
+  );
 };
 
 //* Supplies offering expenses
@@ -187,26 +111,11 @@ export const getSuppliesOfferingExpenses = async ({
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurch = church || contextChurchId;
 
-  try {
-    const { data } = await icupApi<OfferingExpenseChartResponse[]>(
-      `/metrics/${resolvedChurch}&${month}&${year}`,
-      {
-        params: {
-          searchType,
-          isSingleMonth: isSingleMonth?.toString(),
-          order,
-        },
-      }
-    );
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest<OfferingExpenseChartResponse[]>(
+    'get',
+    `/metrics/${resolvedChurch}&${month}&${year}`,
+    { params: { searchType, isSingleMonth: isSingleMonth?.toString(), order } }
+  );
 };
 
 //* Planing events offering expenses
@@ -221,26 +130,11 @@ export const getPlaningEventsOfferingExpenses = async ({
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurch = church || contextChurchId;
 
-  try {
-    const { data } = await icupApi<OfferingExpenseChartResponse[]>(
-      `/metrics/${resolvedChurch}&${month}&${year}`,
-      {
-        params: {
-          searchType,
-          isSingleMonth: isSingleMonth?.toString(),
-          order,
-        },
-      }
-    );
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest<OfferingExpenseChartResponse[]>(
+    'get',
+    `/metrics/${resolvedChurch}&${month}&${year}`,
+    { params: { searchType, isSingleMonth: isSingleMonth?.toString(), order } }
+  );
 };
 
 //* Others offering expenses
@@ -255,26 +149,11 @@ export const getOthersOfferingExpenses = async ({
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurch = church || contextChurchId;
 
-  try {
-    const { data } = await icupApi<OfferingExpenseChartResponse[]>(
-      `/metrics/${resolvedChurch}&${month}&${year}`,
-      {
-        params: {
-          searchType,
-          isSingleMonth: isSingleMonth?.toString(),
-          order,
-        },
-      }
-    );
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest<OfferingExpenseChartResponse[]>(
+    'get',
+    `/metrics/${resolvedChurch}&${month}&${year}`,
+    { params: { searchType, isSingleMonth: isSingleMonth?.toString(), order } }
+  );
 };
 
 //* Offering expenses adjustment
@@ -289,35 +168,14 @@ export const getOfferingExpensesAdjustment = async ({
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurch = church || contextChurchId;
 
-  try {
-    const { data } = await icupApi<OfferingExpensesAdjustmentResponse[]>(
-      `/metrics/${resolvedChurch}&${month}&${year}`,
-      {
-        params: {
-          searchType,
-          isSingleMonth: isSingleMonth?.toString(),
-          order,
-        },
-      }
-    );
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest<OfferingExpensesAdjustmentResponse[]>(
+    'get',
+    `/metrics/${resolvedChurch}&${month}&${year}`,
+    { params: { searchType, isSingleMonth: isSingleMonth?.toString(), order } }
+  );
 };
 
 //? OFFERING EXPENSE METRICS REPORTS
-const openPdfInNewTab = (pdfBlob: Blob): void => {
-  const pdfUrl = URL.createObjectURL(pdfBlob);
-  const newTab = window.open(pdfUrl, '_blank');
-  newTab?.focus();
-};
-
 interface MetricReportQueryParams {
   year: string;
   startMonth: string;
@@ -339,35 +197,18 @@ export const getOfferingExpenseMetricsReport = async ({
   const resolvedChurchId = churchId || contextChurchId;
   const joinedReportTypes = types.join('+');
 
-  try {
-    const res = await icupApi<Blob>('/reports/offering-expense-metrics', {
-      params: {
-        churchId: resolvedChurchId,
-        year,
-        startMonth,
-        endMonth,
-        types: joinedReportTypes,
-      },
-      headers: {
-        'Content-Type': 'application/pdf',
-      },
-      responseType: 'blob',
-    });
+  const blob = await apiRequest<Blob>('get', '/reports/offering-expense-metrics', {
+    params: { churchId: resolvedChurchId, year, startMonth, endMonth, types: joinedReportTypes },
+    headers: { 'Content-Type': 'application/pdf' },
+    responseType: 'blob',
+  });
 
-    setTimeout(() => {
-      dialogClose();
-    }, 100);
+  setTimeout(() => {
+    dialogClose();
+  }, 100);
+  setTimeout(() => {
+    openPdfInNewTab(blob);
+  }, 300);
 
-    setTimeout(() => {
-      openPdfInNewTab(res.data);
-    }, 300);
-
-    return true;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return true;
 };

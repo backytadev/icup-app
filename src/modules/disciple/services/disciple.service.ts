@@ -1,7 +1,3 @@
-import { isAxiosError } from 'axios';
-
-import { icupApi } from '@/core/api/icupApi';
-
 import { RecordOrder } from '@/shared/enums/record-order.enum';
 import { apiRequest } from '@/shared/helpers/api-request';
 import { openPdfInNewTab } from '@/shared/helpers/open-pdf-tab';
@@ -130,27 +126,12 @@ export const updateDisciple = async ({
 };
 
 //* Delete
-export const inactivateDisciple = async ({
-  id,
-  memberInactivationCategory,
-  memberInactivationReason,
-}: InactivateDiscipleOptions): Promise<void> => {
-  try {
-    const { data } = await icupApi.delete(`/disciples/${id}`, {
-      params: {
-        memberInactivationReason,
-        memberInactivationCategory,
-      },
-    });
+export const inactivateDisciple = async (params: InactivateDiscipleOptions): Promise<void> => {
+  const { id, memberInactivationReason, memberInactivationCategory } = params;
 
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest('delete', `/disciples/${id}`, {
+    params: { memberInactivationReason, memberInactivationCategory },
+  });
 };
 
 //* Reports

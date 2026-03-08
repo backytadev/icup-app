@@ -1,8 +1,5 @@
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
-
-import { isAxiosError } from 'axios';
-
-import { icupApi } from '@/core/api/icupApi';
+import { apiRequest } from '@/shared/helpers/api-request';
+import { openPdfInNewTab } from '@/shared/helpers/open-pdf-tab';
 import { getContextParams } from '@/shared/helpers/get-context-params';
 
 import { type MetricsQueryParams } from '@/modules/metrics/interfaces/shared/metrics-query-params.interface';
@@ -28,22 +25,9 @@ export const getOfferingIncomeProportion = async ({
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurch = church || contextChurchId;
 
-  try {
-    const { data } = await icupApi<OfferingIncomeProportionResponse>(`/metrics/${resolvedChurch}`, {
-      params: {
-        searchType,
-        order,
-      },
-    });
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest<OfferingIncomeProportionResponse>('get', `/metrics/${resolvedChurch}`, {
+    params: { searchType, order },
+  });
 };
 
 //? SEARCH BY TERM
@@ -59,26 +43,11 @@ export const getOfferingIncomeBySundayService = async ({
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurch = church || contextChurchId;
 
-  try {
-    const { data } = await icupApi<OfferingIncomeBySundayServiceResponse[]>(
-      `/metrics/${resolvedChurch}&${month}&${year}`,
-      {
-        params: {
-          searchType,
-          isSingleMonth: isSingleMonth?.toString(),
-          order,
-        },
-      }
-    );
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest<OfferingIncomeBySundayServiceResponse[]>(
+    'get',
+    `/metrics/${resolvedChurch}&${month}&${year}`,
+    { params: { searchType, isSingleMonth: isSingleMonth?.toString(), order } }
+  );
 };
 
 //* Offering income by family group
@@ -94,26 +63,11 @@ export const getOfferingIncomeByFamilyGroup = async ({
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurch = church || contextChurchId;
 
-  try {
-    const { data } = await icupApi<OfferingIncomeByFamilyGroupResponse[]>(
-      `/metrics/${resolvedChurch}&${zone}&${month}&${year}`,
-      {
-        params: {
-          searchType,
-          isSingleMonth: isSingleMonth?.toString(),
-          order,
-        },
-      }
-    );
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest<OfferingIncomeByFamilyGroupResponse[]>(
+    'get',
+    `/metrics/${resolvedChurch}&${zone}&${month}&${year}`,
+    { params: { searchType, isSingleMonth: isSingleMonth?.toString(), order } }
+  );
 };
 
 //* Offering income by sunday school
@@ -128,26 +82,11 @@ export const getOfferingIncomeBySundaySchool = async ({
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurch = church || contextChurchId;
 
-  try {
-    const { data } = await icupApi<OfferingIncomeBySundaySchoolResponse[]>(
-      `/metrics/${resolvedChurch}&${month}&${year}`,
-      {
-        params: {
-          searchType,
-          isSingleMonth: isSingleMonth?.toString(),
-          order,
-        },
-      }
-    );
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest<OfferingIncomeBySundaySchoolResponse[]>(
+    'get',
+    `/metrics/${resolvedChurch}&${month}&${year}`,
+    { params: { searchType, isSingleMonth: isSingleMonth?.toString(), order } }
+  );
 };
 
 //* Offering income by fasting and vigil
@@ -162,26 +101,11 @@ export const getOfferingIncomeByFastingAndVigil = async ({
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurch = church || contextChurchId;
 
-  try {
-    const { data } = await icupApi<OfferingIncomeByFastingAndVigilResponse[]>(
-      `/metrics/${resolvedChurch}&${month}&${year}`,
-      {
-        params: {
-          searchType,
-          isSingleMonth: isSingleMonth?.toString(),
-          order,
-        },
-      }
-    );
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest<OfferingIncomeByFastingAndVigilResponse[]>(
+    'get',
+    `/metrics/${resolvedChurch}&${month}&${year}`,
+    { params: { searchType, isSingleMonth: isSingleMonth?.toString(), order } }
+  );
 };
 
 //* Offering income by youth service
@@ -196,26 +120,11 @@ export const getOfferingIncomeByYouthService = async ({
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurch = church || contextChurchId;
 
-  try {
-    const { data } = await icupApi<OfferingIncomeByYouthServiceResponse[]>(
-      `/metrics/${resolvedChurch}&${month}&${year}`,
-      {
-        params: {
-          searchType,
-          isSingleMonth: isSingleMonth?.toString(),
-          order,
-        },
-      }
-    );
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest<OfferingIncomeByYouthServiceResponse[]>(
+    'get',
+    `/metrics/${resolvedChurch}&${month}&${year}`,
+    { params: { searchType, isSingleMonth: isSingleMonth?.toString(), order } }
+  );
 };
 
 //* Offering income by special offering
@@ -230,26 +139,11 @@ export const getOfferingIncomeBySpecialOffering = async ({
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurch = church || contextChurchId;
 
-  try {
-    const { data } = await icupApi<OfferingIncomeBySpecialOfferingResponse[]>(
-      `/metrics/${resolvedChurch}&${month}&${year}`,
-      {
-        params: {
-          searchType,
-          isSingleMonth: isSingleMonth?.toString(),
-          order,
-        },
-      }
-    );
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest<OfferingIncomeBySpecialOfferingResponse[]>(
+    'get',
+    `/metrics/${resolvedChurch}&${month}&${year}`,
+    { params: { searchType, isSingleMonth: isSingleMonth?.toString(), order } }
+  );
 };
 
 //* Offering income by church ground
@@ -264,26 +158,11 @@ export const getOfferingIncomeByChurchGround = async ({
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurch = church || contextChurchId;
 
-  try {
-    const { data } = await icupApi<OfferingIncomeByChurchGroundOfferingResponse[]>(
-      `/metrics/${resolvedChurch}&${month}&${year}`,
-      {
-        params: {
-          searchType,
-          isSingleMonth: isSingleMonth?.toString(),
-          order,
-        },
-      }
-    );
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest<OfferingIncomeByChurchGroundOfferingResponse[]>(
+    'get',
+    `/metrics/${resolvedChurch}&${month}&${year}`,
+    { params: { searchType, isSingleMonth: isSingleMonth?.toString(), order } }
+  );
 };
 
 //* Offering income by united service
@@ -298,26 +177,11 @@ export const getOfferingIncomeByUnitedService = async ({
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurch = church || contextChurchId;
 
-  try {
-    const { data } = await icupApi<OfferingIncomeByUnitedServiceResponse[]>(
-      `/metrics/${resolvedChurch}&${month}&${year}`,
-      {
-        params: {
-          searchType,
-          isSingleMonth: isSingleMonth?.toString(),
-          order,
-        },
-      }
-    );
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest<OfferingIncomeByUnitedServiceResponse[]>(
+    'get',
+    `/metrics/${resolvedChurch}&${month}&${year}`,
+    { params: { searchType, isSingleMonth: isSingleMonth?.toString(), order } }
+  );
 };
 
 //* Offering income by activities
@@ -332,26 +196,11 @@ export const getOfferingIncomeByActivities = async ({
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurch = church || contextChurchId;
 
-  try {
-    const { data } = await icupApi<OfferingIncomeByActivitiesResponse[]>(
-      `/metrics/${resolvedChurch}&${month}&${year}`,
-      {
-        params: {
-          searchType,
-          isSingleMonth: isSingleMonth?.toString(),
-          order,
-        },
-      }
-    );
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest<OfferingIncomeByActivitiesResponse[]>(
+    'get',
+    `/metrics/${resolvedChurch}&${month}&${year}`,
+    { params: { searchType, isSingleMonth: isSingleMonth?.toString(), order } }
+  );
 };
 
 //* Offering income adjustment
@@ -366,35 +215,14 @@ export const getOfferingIncomeAdjustment = async ({
   const { churchId: contextChurchId } = getContextParams();
   const resolvedChurch = church || contextChurchId;
 
-  try {
-    const { data } = await icupApi<OfferingIncomeByIncomeAdjustmentResponse[]>(
-      `/metrics/${resolvedChurch}&${month}&${year}`,
-      {
-        params: {
-          searchType,
-          isSingleMonth: isSingleMonth?.toString(),
-          order,
-        },
-      }
-    );
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return apiRequest<OfferingIncomeByIncomeAdjustmentResponse[]>(
+    'get',
+    `/metrics/${resolvedChurch}&${month}&${year}`,
+    { params: { searchType, isSingleMonth: isSingleMonth?.toString(), order } }
+  );
 };
 
 //? OFFERING INCOME METRICS REPORTS
-const openPdfInNewTab = (pdfBlob: Blob): void => {
-  const pdfUrl = URL.createObjectURL(pdfBlob);
-  const newTab = window.open(pdfUrl, '_blank');
-  newTab?.focus();
-};
-
 interface MetricReportQueryParams {
   year: string;
   startMonth: string;
@@ -416,35 +244,18 @@ export const getOfferingIncomeMetricsReport = async ({
   const resolvedChurchId = churchId || contextChurchId;
   const joinedReportTypes = types.join('+');
 
-  try {
-    const res = await icupApi<Blob>('/reports/offering-income-metrics', {
-      params: {
-        churchId: resolvedChurchId,
-        year,
-        startMonth,
-        endMonth,
-        types: joinedReportTypes,
-      },
-      headers: {
-        'Content-Type': 'application/pdf',
-      },
-      responseType: 'blob',
-    });
+  const blob = await apiRequest<Blob>('get', '/reports/offering-income-metrics', {
+    params: { churchId: resolvedChurchId, year, startMonth, endMonth, types: joinedReportTypes },
+    headers: { 'Content-Type': 'application/pdf' },
+    responseType: 'blob',
+  });
 
-    setTimeout(() => {
-      dialogClose();
-    }, 100);
+  setTimeout(() => {
+    dialogClose();
+  }, 100);
+  setTimeout(() => {
+    openPdfInNewTab(blob);
+  }, 300);
 
-    setTimeout(() => {
-      openPdfInNewTab(res.data);
-    }, 300);
-
-    return true;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
+  return true;
 };
