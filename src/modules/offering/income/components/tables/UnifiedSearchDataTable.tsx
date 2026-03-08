@@ -7,9 +7,9 @@ import { FaRegFilePdf } from 'react-icons/fa6';
 
 import {
   getOfferingsIncome,
-  getOfferingsIncomeByTerm,
+  getOfferingsIncomeByFilters,
   getGeneralOfferingIncomeReport,
-  getOfferingIncomeReportByTerm,
+  getOfferingIncomeReportByFilters,
 } from '@/modules/offering/income/services/offering-income.service';
 
 import { type OfferingIncomeQueryParams } from '@/modules/offering/income/interfaces/offering-income-query-params.interface';
@@ -111,7 +111,7 @@ export function UnifiedOfferingIncomeSearchDataTable<TData, TValue>({
   //* Query for filter search
   const filterQuery = useConditionalListQuery({
     queryKey: ['unified-offering-income-filters', filterSearchParams],
-    queryFn: () => getOfferingsIncomeByTerm(filterSearchParams as OfferingIncomeQueryParams),
+    queryFn: () => getOfferingsIncomeByFilters(filterSearchParams as OfferingIncomeQueryParams),
     enabled: searchMode === 'filters' && !!filterSearchParams,
   });
 
@@ -189,7 +189,7 @@ export function UnifiedOfferingIncomeSearchDataTable<TData, TValue>({
   const filterReportQuery = useManualQuery({
     queryKey: ['unified-offering-income-report-filters', filterSearchParams],
     queryFn: () =>
-      getOfferingIncomeReportByTerm(filterSearchParams as OfferingIncomeQueryParams),
+      getOfferingIncomeReportByFilters(filterSearchParams as OfferingIncomeQueryParams),
   });
 
   const activeReportQuery = searchMode === 'general' ? generalReportQuery : filterReportQuery;

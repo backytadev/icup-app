@@ -1,8 +1,6 @@
-import { isAxiosError } from 'axios';
-
-import { icupApi } from '@/core/api/icupApi';
-
 import { RecordOrder } from '@/shared/enums/record-order.enum';
+import { apiRequest } from '@/shared/helpers/api-request';
+import { openPdfInNewTab } from '@/shared/helpers/open-pdf-tab';
 import { getContextParams } from '@/shared/helpers/get-context-params';
 
 import { OfferingIncomeSearchType } from '@/modules/offering/income/enums/offering-income-search-type.enum';
@@ -14,477 +12,11 @@ import { type OfferingIncomeResponse } from '@/modules/offering/income/interface
 import { type OfferingIncomeFormData } from '@/modules/offering/income/interfaces/offering-income-form-data.interface';
 import { type OfferingIncomeQueryParams } from '@/modules/offering/income/interfaces/offering-income-query-params.interface';
 
-//? CREATE OFFERING INCOME
-export const createOfferingIncome = async (
-  formData: OfferingIncomeFormData
-): Promise<OfferingIncomeResponse> => {
-  try {
-    const { data } = await icupApi.post<OfferingIncomeResponse>('/offering-income', formData);
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado');
-  }
-};
-
-//? GET ALL EXTERNAL DONORS (paginated)
-export const getExternalDonors = async (): Promise<ExternalDonorResponse[]> => {
-  try {
-    const { data } = await icupApi<OfferingIncomeResponse[]>('/external-donor', {
-      params: {
-        order: RecordOrder.Descending,
-      },
-    });
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
-};
-
-//* GET ALL OFFERING INCOME (paginated)
-export const getOfferingsIncome = async ({
-  limit,
-  offset,
-  all,
-  allByDate,
-  order,
-  dateTerm,
-  churchId,
-}: OfferingIncomeQueryParams): Promise<OfferingIncomeResponse[]> => {
-  const { churchId: contextChurchId } = getContextParams();
-  const resolvedChurchId = churchId ?? contextChurchId;
-  let result: OfferingIncomeResponse[];
-
-  try {
-    if (!all && !allByDate) {
-      const { data } = await icupApi<OfferingIncomeResponse[]>('/offering-income', {
-        params: {
-          limit,
-          offset,
-          order,
-          searchDate: dateTerm,
-          churchId: resolvedChurchId,
-        },
-      });
-
-      result = data;
-    }
-    // else if (allByDate && !all) {
-    //   const { data } = await icupApi<OfferingIncomeResponse[]>('/offering-income', {
-    //     params: {
-    //       order,
-    //       searchDate: dateTerm,
-    //       churchId,
-    //     },
-    //   });
-
-    //   result = data;
-    // }
-    else {
-      const { data } = await icupApi<OfferingIncomeResponse[]>('/offering-income', {
-        params: {
-          order,
-          searchDate: dateTerm,
-          churchId,
-        },
-      });
-
-      result = data;
-    }
-
-    return result;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
-};
-
-//? GET OFFERING INCOME BY TERM (paginated)
-export const getOfferingsIncomeByTerm = async ({
-  searchType,
-  searchSubType,
-  inputTerm,
-  dateTerm,
-  selectTerm,
-  firstNamesTerm,
-  lastNamesTerm,
-  limit,
-  offset,
-  all,
-  order,
-  churchId,
-}: OfferingIncomeQueryParams): Promise<OfferingIncomeResponse[] | undefined> => {
-  const { churchId: contextChurchId } = getContextParams();
-  const resolvedChurchId = churchId ?? contextChurchId;
-  churchId = resolvedChurchId;
-  let result: OfferingIncomeResponse[];
-
-  //* Sunday Service, Sunday School
-  if (
-    searchType === OfferingIncomeSearchType.SundayService ||
-    searchType === OfferingIncomeSearchType.SundaySchool
-  ) {
-    const term =
-      searchSubType === OfferingIncomeSearchSubType.OfferingByShift
-        ? selectTerm
-        : searchSubType === OfferingIncomeSearchSubType.OfferingByDate
-          ? dateTerm
-          : searchSubType === OfferingIncomeSearchSubType.OfferingByShiftDate
-            ? `${selectTerm}&${dateTerm}`
-            : searchSubType === OfferingIncomeSearchSubType.OfferingByContributorFirstNames
-              ? `${selectTerm}&${firstNamesTerm}`
-              : searchSubType === OfferingIncomeSearchSubType.OfferingByContributorLastNames
-                ? `${selectTerm}&${lastNamesTerm}`
-                : `${selectTerm}&${firstNamesTerm}-${lastNamesTerm}`;
-
-    try {
-      if (!all) {
-        const { data } = await icupApi<OfferingIncomeResponse[]>(`/offering-income/${term}`, {
-          params: {
-            limit,
-            offset,
-            order,
-            churchId,
-            searchType,
-            searchSubType,
-          },
-        });
-
-        result = data;
-      } else {
-        const { data } = await icupApi<OfferingIncomeResponse[]>(`/offering-income/${term}`, {
-          params: {
-            order,
-            churchId,
-            searchType,
-            searchSubType,
-          },
-        });
-        result = data;
-      }
-
-      return result;
-    } catch (error) {
-      if (isAxiosError(error) && error.response) {
-        throw error.response.data;
-      }
-
-      throw new Error('Ocurrió un error inesperado, hable con el administrador');
-    }
-  }
-
-  //* Family group
-  if (searchType === OfferingIncomeSearchType.FamilyGroup) {
-    const term =
-      searchSubType === OfferingIncomeSearchSubType.OfferingByDate
-        ? dateTerm
-        : searchSubType === OfferingIncomeSearchSubType.OfferingByGroupCode ||
-            searchSubType === OfferingIncomeSearchSubType.OfferingByZone
-          ? inputTerm
-          : searchSubType === OfferingIncomeSearchSubType.OfferingByGroupCodeDate ||
-              searchSubType === OfferingIncomeSearchSubType.OfferingByZoneDate
-            ? `${inputTerm}&${dateTerm}`
-            : searchSubType === OfferingIncomeSearchSubType.OfferingByPreacherFirstNames
-              ? firstNamesTerm
-              : searchSubType === OfferingIncomeSearchSubType.OfferingByPreacherLastNames
-                ? lastNamesTerm
-                : `${firstNamesTerm}-${lastNamesTerm}`;
-
-    try {
-      if (!all) {
-        const { data } = await icupApi<OfferingIncomeResponse[]>(`/offering-income/${term}`, {
-          params: {
-            limit,
-            offset,
-            order,
-            churchId,
-            searchType,
-            searchSubType,
-          },
-        });
-
-        result = data;
-      } else {
-        const { data } = await icupApi<OfferingIncomeResponse[]>(`/offering-income/${term}`, {
-          params: {
-            order,
-            churchId,
-            searchType,
-            searchSubType,
-          },
-        });
-        result = data;
-      }
-
-      return result;
-    } catch (error) {
-      if (isAxiosError(error) && error.response) {
-        throw error.response.data;
-      }
-
-      throw new Error('Ocurrió un error inesperado, hable con el administrador');
-    }
-  }
-
-  //* Zonal fasting and vigil and Zonal Evangelism and Zone United Service
-  if (
-    searchType === OfferingIncomeSearchType.ZonalFasting ||
-    searchType === OfferingIncomeSearchType.ZonalVigil ||
-    searchType === OfferingIncomeSearchType.ZonalUnitedService ||
-    searchType === OfferingIncomeSearchType.ZonalEvangelism
-  ) {
-    const term =
-      searchSubType === OfferingIncomeSearchSubType.OfferingByDate
-        ? dateTerm
-        : searchSubType === OfferingIncomeSearchSubType.OfferingByZone
-          ? inputTerm
-          : searchSubType === OfferingIncomeSearchSubType.OfferingByZoneDate
-            ? `${inputTerm}&${dateTerm}`
-            : searchSubType === OfferingIncomeSearchSubType.OfferingBySupervisorFirstNames
-              ? firstNamesTerm
-              : searchSubType === OfferingIncomeSearchSubType.OfferingBySupervisorLastNames
-                ? lastNamesTerm
-                : `${firstNamesTerm}-${lastNamesTerm}`;
-
-    try {
-      if (!all) {
-        const { data } = await icupApi<OfferingIncomeResponse[]>(`/offering-income/${term}`, {
-          params: {
-            limit,
-            offset,
-            order,
-            churchId,
-            searchType,
-            searchSubType,
-          },
-        });
-
-        result = data;
-      } else {
-        const { data } = await icupApi<OfferingIncomeResponse[]>(`/offering-income/${term}`, {
-          params: {
-            order,
-            churchId,
-            searchType,
-            searchSubType,
-          },
-        });
-
-        result = data;
-      }
-
-      return result;
-    } catch (error) {
-      if (isAxiosError(error) && error.response) {
-        throw error.response.data;
-      }
-
-      throw new Error('Ocurrió un error inesperado, hable con el administrador');
-    }
-  }
-
-  //* Special, ground church, youth service
-  if (
-    searchType === OfferingIncomeSearchType.Special ||
-    searchType === OfferingIncomeSearchType.ChurchGround ||
-    searchType === OfferingIncomeSearchType.YouthService ||
-    searchType === OfferingIncomeSearchType.TeenagerService
-  ) {
-    const term =
-      searchSubType === OfferingIncomeSearchSubType.OfferingByDate
-        ? dateTerm
-        : searchSubType === OfferingIncomeSearchSubType.OfferingByContributorFirstNames
-          ? `${selectTerm}&${firstNamesTerm}`
-          : searchSubType === OfferingIncomeSearchSubType.OfferingByContributorLastNames
-            ? `${selectTerm}&${lastNamesTerm}`
-            : `${selectTerm}&${firstNamesTerm}-${lastNamesTerm}`;
-
-    try {
-      if (!all) {
-        const { data } = await icupApi<OfferingIncomeResponse[]>(`/offering-income/${term}`, {
-          params: {
-            limit,
-            offset,
-            order,
-            churchId,
-            searchType,
-            searchSubType,
-          },
-        });
-
-        result = data;
-      } else {
-        const { data } = await icupApi<OfferingIncomeResponse[]>(`/offering-income/${term}`, {
-          params: {
-            order,
-            churchId,
-            searchType,
-            searchSubType,
-          },
-        });
-        result = data;
-      }
-
-      return result;
-    } catch (error) {
-      if (isAxiosError(error) && error.response) {
-        throw error.response.data;
-      }
-
-      throw new Error('Ocurrió un error inesperado, hable con el administrador');
-    }
-  }
-
-  //* General Vigil, general fasting, general evangelism, united service, activities, adjustment income
-  if (
-    searchType === OfferingIncomeSearchType.GeneralFasting ||
-    searchType === OfferingIncomeSearchType.GeneralVigil ||
-    searchType === OfferingIncomeSearchType.GeneralEvangelism ||
-    searchType === OfferingIncomeSearchType.UnitedService ||
-    searchType === OfferingIncomeSearchType.Activities ||
-    searchType === OfferingIncomeSearchType.IncomeAdjustment
-  ) {
-    const term =
-      searchSubType === OfferingIncomeSearchSubType.OfferingByDate
-        ? dateTerm
-        : `${selectTerm}&${dateTerm}`;
-    try {
-      if (!all) {
-        const { data } = await icupApi<OfferingIncomeResponse[]>(`/offering-income/${term}`, {
-          params: {
-            limit,
-            offset,
-            order,
-            churchId,
-            searchType,
-            searchSubType,
-          },
-        });
-
-        result = data;
-      } else {
-        const { data } = await icupApi<OfferingIncomeResponse[]>(`/offering-income/${term}`, {
-          params: {
-            order,
-            churchId,
-            searchType,
-            searchSubType,
-          },
-        });
-
-        result = data;
-      }
-
-      return result;
-    } catch (error) {
-      if (isAxiosError(error) && error.response) {
-        throw error.response.data;
-      }
-
-      throw new Error('Ocurrió un error inesperado, hable con el administrador');
-    }
-  }
-
-  //* Record Status
-  if (searchType === OfferingIncomeSearchType.RecordStatus) {
-    try {
-      if (!all) {
-        const { data } = await icupApi<OfferingIncomeResponse[]>(`/offering-income/${selectTerm}`, {
-          params: {
-            limit,
-            offset,
-            order,
-            churchId,
-            searchType,
-          },
-        });
-
-        result = data;
-      } else {
-        const { data } = await icupApi<OfferingIncomeResponse[]>(`/offering-income/${selectTerm}`, {
-          params: {
-            order,
-            churchId,
-            searchType,
-          },
-        });
-
-        result = data;
-      }
-
-      return result;
-    } catch (error) {
-      if (isAxiosError(error) && error.response) {
-        throw error.response.data;
-      }
-
-      throw new Error('Ocurrió un error inesperado, hable con el administrador');
-    }
-  }
-};
-
-//? UPDATE OFFERING INCOME BY TERM
 export interface UpdateOfferingIncomeOptions {
   id: string;
   formData: OfferingIncomeFormData;
 }
 
-export const updateOfferingIncome = async ({
-  id,
-  formData,
-}: UpdateOfferingIncomeOptions): Promise<OfferingIncomeResponse> => {
-  try {
-    const { data } = await icupApi.patch<OfferingIncomeResponse>(
-      `/offering-income/${id}`,
-      formData
-    );
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado');
-  }
-};
-
-//? UPDATE EXTERNAL DONOR BY ID
-export interface UpdateExternalDonorOptions {
-  id: string | undefined;
-  formData: ExternalDonorFormData;
-}
-
-export const updateExternalDonor = async ({
-  id,
-  formData,
-}: UpdateExternalDonorOptions): Promise<ExternalDonorResponse> => {
-  try {
-    const { data } = await icupApi.patch<ExternalDonorResponse>(`/external-donor/${id}`, formData);
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado');
-  }
-};
-
-//! INACTIVATE OFFERING INCOME BY ID
 export interface InactivateOfferingIncomeOptions {
   id: string;
   offeringInactivationReason: string;
@@ -493,176 +25,24 @@ export interface InactivateOfferingIncomeOptions {
   exchangeCurrencyTypes?: string;
 }
 
-export const inactivateOfferingIncome = async ({
-  id,
-  offeringInactivationReason,
-  offeringInactivationDescription,
-  exchangeRate,
-  exchangeCurrencyTypes,
-}: InactivateOfferingIncomeOptions): Promise<void> => {
-  try {
-    const { data } = await icupApi.delete(`/offering-income/${id}`, {
-      params: {
-        exchangeRate,
-        exchangeCurrencyTypes,
-        offeringInactivationReason,
-        offeringInactivationDescription,
-      },
-    });
-
-    return data;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
-};
-
-//? GENERATE RECEIPT BY OFFERING INCOME ID
-export interface GenerateReceiptOptions {
-  id: string;
-  shouldOpenReceiptInBrowser?: string;
-  setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
-  generationType?: string;
+export interface UpdateExternalDonorOptions {
+  id: string | undefined;
+  formData: ExternalDonorFormData;
 }
-export const generateReceiptByOfferingIncomeId = async ({
-  id,
-  setOpen,
-  shouldOpenReceiptInBrowser,
-  generationType,
-}: GenerateReceiptOptions): Promise<any> => {
-  try {
-    const res = await icupApi<Blob>(`/reports/offering-income/${id}/receipt`, {
-      params: {
-        generationType: generationType,
-      },
-      headers: {
-        'Content-Type': 'application/pdf',
-      },
-      responseType: 'blob',
-    });
 
-    if (setOpen) {
-      setOpen!(false);
-    }
+//* Inline builders
+const buildOfferingIncomeSearchTerm = (params: OfferingIncomeQueryParams): string | undefined => {
+  const {
+    searchType,
+    searchSubType,
+    inputTerm,
+    dateTerm,
+    selectTerm,
+    firstNamesTerm,
+    lastNamesTerm,
+  } = params;
 
-    if (shouldOpenReceiptInBrowser === 'yes' || !shouldOpenReceiptInBrowser) {
-      setTimeout(() => {
-        openPdfInNewTab(res.data);
-      }, 100);
-    }
-
-    return res;
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
-};
-
-//? OFFERING INCOME REPORTS
-const openPdfInNewTab = (pdfBlob: Blob): void => {
-  const pdfUrl = URL.createObjectURL(pdfBlob);
-  const newTab = window.open(pdfUrl, '_blank');
-  newTab?.focus();
-};
-
-//* General
-export const getGeneralOfferingIncomeReport = async ({
-  limit,
-  offset,
-  all,
-  order,
-  churchId,
-  allByDate,
-  dateTerm,
-}: OfferingIncomeQueryParams): Promise<boolean> => {
-  try {
-    if (!all && !allByDate) {
-      const res = await icupApi<Blob>('/reports/offering-income', {
-        params: {
-          limit,
-          offset,
-          order,
-          churchId,
-        },
-        headers: {
-          'Content-Type': 'application/pdf',
-        },
-        responseType: 'blob',
-      });
-
-      openPdfInNewTab(res.data);
-
-      return true;
-    }
-    // else if (allByDate && !all) {
-    //   const res = await icupApi<Blob>('/reports/offering-income', {
-    //     params: {
-    //       searchDate: dateTerm,
-    //       order,
-    //       churchId,
-    //     },
-    //     headers: {
-    //       'Content-Type': 'application/pdf',
-    //     },
-    //     responseType: 'blob',
-    //   });
-
-    //   openPdfInNewTab(res.data);
-
-    //   return true;
-    // }
-    else {
-      const res = await icupApi<Blob>('/reports/offering-income', {
-        params: {
-          order,
-          churchId,
-          searchDate: dateTerm,
-        },
-        headers: {
-          'Content-Type': 'application/pdf',
-        },
-        responseType: 'blob',
-      });
-
-      openPdfInNewTab(res.data);
-
-      return true;
-    }
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
-  }
-};
-
-//* By term
-export const getOfferingIncomeReportByTerm = async ({
-  searchType,
-  searchSubType,
-  inputTerm,
-  dateTerm,
-  selectTerm,
-  firstNamesTerm,
-  lastNamesTerm,
-  limit,
-  offset,
-  all,
-  order,
-  churchId,
-}: OfferingIncomeQueryParams): Promise<boolean> => {
-  let newTerm: string | undefined = '';
-
-  const termMapping: Partial<
-    Record<OfferingIncomeSearchSubType | OfferingIncomeSearchType, string | undefined>
-  > = {
+  const subTypeMapping: Partial<Record<OfferingIncomeSearchSubType, string | undefined>> = {
     [OfferingIncomeSearchSubType.OfferingByDate]: dateTerm,
     [OfferingIncomeSearchSubType.OfferingByShift]: selectTerm,
     [OfferingIncomeSearchSubType.OfferingByShiftDate]: `${selectTerm}&${dateTerm}`,
@@ -679,56 +59,175 @@ export const getOfferingIncomeReportByTerm = async ({
     [OfferingIncomeSearchSubType.OfferingByContributorFirstNames]: `${selectTerm}&${firstNamesTerm}`,
     [OfferingIncomeSearchSubType.OfferingByContributorLastNames]: `${selectTerm}&${lastNamesTerm}`,
     [OfferingIncomeSearchSubType.OfferingByContributorFullNames]: `${selectTerm}&${firstNamesTerm}-${lastNamesTerm}`,
-    [OfferingIncomeSearchType.RecordStatus]: selectTerm,
   };
 
-  newTerm =
-    termMapping[searchSubType as OfferingIncomeSearchSubType] ??
-    termMapping[searchType as OfferingIncomeSearchType];
+  if (searchSubType) return subTypeMapping[searchSubType as OfferingIncomeSearchSubType];
+  if (searchType === OfferingIncomeSearchType.RecordStatus) return selectTerm;
 
-  try {
-    if (!all) {
-      const res = await icupApi<Blob>(`/reports/offering-income/${newTerm}`, {
-        params: {
-          limit,
-          offset,
-          order,
-          churchId,
-          searchType,
-          searchSubType,
-        },
-        headers: {
-          'Content-Type': 'application/pdf',
-        },
-        responseType: 'blob',
-      });
+  return dateTerm;
+};
 
-      openPdfInNewTab(res.data);
+const buildOfferingIncomeQueryParams = (params: OfferingIncomeQueryParams, term?: string) => {
+  const { limit, offset, order, all, searchType, searchSubType } = params;
 
-      return true;
-    } else {
-      const res = await icupApi<Blob>(`/reports/offering-income/${newTerm}`, {
-        params: {
-          order,
-          churchId,
-          searchType,
-          searchSubType,
-        },
-        headers: {
-          'Content-Type': 'application/pdf',
-        },
-        responseType: 'blob',
-      });
+  const base: Record<string, any> = {
+    term,
+    searchType,
+    order,
+  };
 
-      openPdfInNewTab(res.data);
+  if (searchSubType) base.searchSubType = searchSubType;
 
-      return true;
-    }
-  } catch (error) {
-    if (isAxiosError(error) && error.response) {
-      throw error.response.data;
-    }
-
-    throw new Error('Ocurrió un error inesperado, hable con el administrador');
+  if (!all) {
+    base.limit = limit;
+    base.offset = offset;
   }
+
+  return base;
+};
+
+//* Create
+export const createOfferingIncome = async (
+  formData: OfferingIncomeFormData
+): Promise<OfferingIncomeResponse> => {
+  return apiRequest('post', '/offering-income', formData);
+};
+
+//* Find all external donors
+export const getExternalDonors = async (): Promise<ExternalDonorResponse[]> => {
+  return apiRequest<ExternalDonorResponse[]>('get', '/external-donor', {
+    params: { order: RecordOrder.Descending },
+  });
+};
+
+//* Find all
+export const getOfferingsIncome = async (
+  params: OfferingIncomeQueryParams
+): Promise<OfferingIncomeResponse[]> => {
+  const { limit, offset, order, all, dateTerm, churchId } = params;
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurchId = churchId ?? contextChurchId;
+
+  const query = all
+    ? { order, churchId: resolvedChurchId, searchDate: dateTerm }
+    : { limit, offset, order, searchDate: dateTerm, churchId: resolvedChurchId };
+
+  return apiRequest<OfferingIncomeResponse[]>('get', '/offering-income', { params: query });
+};
+
+//* Find by filters
+export const getOfferingsIncomeByFilters = async (
+  params: OfferingIncomeQueryParams
+): Promise<OfferingIncomeResponse[]> => {
+  const term = buildOfferingIncomeSearchTerm(params);
+  const queryParams = buildOfferingIncomeQueryParams(params, term);
+  const { churchId } = getContextParams();
+
+  return apiRequest<OfferingIncomeResponse[]>('get', '/offering-income/search', {
+    params: { ...queryParams, churchId },
+  });
+};
+
+//* Update
+export const updateOfferingIncome = async ({
+  id,
+  formData,
+}: UpdateOfferingIncomeOptions): Promise<OfferingIncomeResponse> => {
+  return apiRequest('patch', `/offering-income/${id}`, formData);
+};
+
+//* Update external donor
+export const updateExternalDonor = async ({
+  id,
+  formData,
+}: UpdateExternalDonorOptions): Promise<ExternalDonorResponse> => {
+  return apiRequest('patch', `/external-donor/${id}`, formData);
+};
+
+//* Inactivate
+export const inactivateOfferingIncome = async ({
+  id,
+  offeringInactivationReason,
+  offeringInactivationDescription,
+  exchangeRate,
+  exchangeCurrencyTypes,
+}: InactivateOfferingIncomeOptions): Promise<void> => {
+  return apiRequest('delete', `/offering-income/${id}`, {
+    params: {
+      exchangeRate,
+      exchangeCurrencyTypes,
+      offeringInactivationReason,
+      offeringInactivationDescription,
+    },
+  });
+};
+
+//* Reports
+export interface GenerateReceiptOptions {
+  id: string;
+  shouldOpenReceiptInBrowser?: string;
+  setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+  generationType?: string;
+}
+
+export const generateReceiptByOfferingIncomeId = async ({
+  id,
+  setOpen,
+  shouldOpenReceiptInBrowser,
+  generationType,
+}: GenerateReceiptOptions): Promise<Blob> => {
+  const pdf = await apiRequest<Blob>('get', `/reports/offering-income/${id}/receipt`, {
+    params: { generationType },
+    headers: { 'Content-Type': 'application/pdf' },
+    responseType: 'blob',
+  });
+
+  if (setOpen) setOpen(false);
+
+  if (shouldOpenReceiptInBrowser === 'yes' || !shouldOpenReceiptInBrowser) {
+    setTimeout(() => {
+      openPdfInNewTab(pdf);
+    }, 100);
+  }
+
+  return pdf;
+};
+
+//* General
+export const getGeneralOfferingIncomeReport = async (
+  params: OfferingIncomeQueryParams
+): Promise<boolean> => {
+  const { limit, offset, order, all, dateTerm, churchId } = params;
+  const { churchId: contextChurchId } = getContextParams();
+  const resolvedChurchId = churchId ?? contextChurchId;
+
+  const query = all
+    ? { order, churchId: resolvedChurchId, searchDate: dateTerm }
+    : { limit, offset, order, churchId: resolvedChurchId };
+
+  const pdf = await apiRequest<Blob>('get', '/reports/offering-income', {
+    params: query,
+    responseType: 'blob',
+  });
+
+  openPdfInNewTab(pdf);
+  return true;
+};
+
+//* By filters
+export const getOfferingIncomeReportByFilters = async (
+  params: OfferingIncomeQueryParams
+): Promise<boolean> => {
+  const term = buildOfferingIncomeSearchTerm(params);
+  const queryParams = buildOfferingIncomeQueryParams(params, term);
+  const { churchId } = getContextParams();
+
+  const pdf = await apiRequest<Blob>('get', '/reports/offering-income/search', {
+    params: { ...queryParams, churchId },
+    responseType: 'blob',
+    headers: { 'Content-Type': 'application/pdf' },
+  });
+
+  openPdfInNewTab(pdf);
+  return true;
 };

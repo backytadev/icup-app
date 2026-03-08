@@ -115,8 +115,8 @@ export const useOfferingIncomeCreationMutation = ({
         });
 
         // Call the callback with the PDF blob
-        if (onReceiptGenerated && response?.data) {
-          onReceiptGenerated(response.data, data.id);
+        if (onReceiptGenerated && response) {
+          onReceiptGenerated(response, data.id);
         }
 
         queryClient.invalidateQueries({ queryKey: ['general-offering-income'] });
