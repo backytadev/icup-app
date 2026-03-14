@@ -159,6 +159,7 @@ export const Sidebar = (): JSX.Element => {
   const dashboardItem = filteredItems.find((i) => i.href === '/dashboard');
   const offeringsItem = filteredItems.find((i) => i.href === '/offerings');
   const metricsItem = filteredItems.find((i) => i.href === '/metrics');
+  const eventsItem = filteredItems.find((i) => i.href === '/calendar-events');
   const usersItem = filteredItems.find((i) => i.href === '/users');
 
   const ThemeIcon = theme === 'dark' ? Moon : theme === 'light' ? Sun : Monitor;
@@ -358,6 +359,16 @@ export const Sidebar = (): JSX.Element => {
             href={metricsItem.href}
             Icon={metricsItem.Icon}
             title={metricsItem.title}
+            isExpanded={isExpanded}
+          />
+        )}
+
+        {/* Events */}
+        {eventsItem && (
+          <SidebarItem
+            href={eventsItem.href}
+            Icon={eventsItem.Icon}
+            title={eventsItem.title}
             isExpanded={isExpanded}
           />
         )}

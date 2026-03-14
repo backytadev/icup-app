@@ -30,6 +30,9 @@ import { FamilyGroupChildrenRoutes } from '@/modules/family-group/router/FamilyG
 import { OfferingIncomeChildrenRoutes } from '@/modules/offering/income/router/OfferingIncomeChildrenRoutes';
 import { OfferingExpenseChildrenRoutes } from '@/modules/offering/expense/router/OfferingExpenseChildrenRoutes';
 
+//* Events
+import { CalendarEventChildrenRoutes } from '@/modules/calendar-event/router/CalendarEventChildrenRoutes';
+
 //* Metrics and charts
 import { MetricsChildrenRoutes } from '@/modules/metrics/router/MetricsChildrenRoutes';
 
@@ -151,6 +154,11 @@ export const router = createBrowserRouter([
                 path: 'metrics',
                 element: <RoleProtectedRoute allowedRoles={[UserRole.SuperUser, UserRole.AdminUser, UserRole.MembershipUser, UserRole.TreasurerUser, UserRole.User]} />,
                 children: MetricsChildrenRoutes,
+              },
+              {
+                path: 'calendar-events',
+                element: <RoleProtectedRoute allowedRoles={[UserRole.SuperUser, UserRole.AdminUser]} />,
+                children: CalendarEventChildrenRoutes,
               },
               {
                 path: 'users',

@@ -34,7 +34,7 @@ import { useOfferingExpenseCreationSubmitButtonLogic } from '@/modules/offering/
 import { offeringExpenseFormSchema } from '@/modules/offering/expense/schemas/offering-expense-form-schema';
 
 import { CurrencyTypeNames } from '@/modules/offering/shared/enums/currency-type.enum';
-import { OfferingFileType } from '@/modules/offering/shared/enums/offering-file-type.enum';
+import { FileFolder } from '@/shared/enums/offering-file-type.enum';
 
 import { cn } from '@/shared/lib/utils';
 import { getContextParams } from '@/shared/helpers/get-context-params';
@@ -182,7 +182,7 @@ export const OfferingExpenseCreatePage = (): JSX.Element => {
       if (files.length >= 1) {
         const uploadResult = await uploadImagesMutation.mutateAsync({
           files: files as any,
-          fileType: OfferingFileType.Expense,
+          fileFolder: FileFolder.Expense,
           offeringType: formData.type,
           offeringSubType: formData.subType ?? null,
         });

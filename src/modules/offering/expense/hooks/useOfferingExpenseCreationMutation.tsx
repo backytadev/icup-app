@@ -17,7 +17,7 @@ import {
   extractPublicId,
 } from '@/modules/offering/shared/helpers/extract-data-secure-url.helper';
 import { deleteImage } from '@/modules/offering/shared/services/images-files.service';
-import { OfferingFileType } from '@/modules/offering/shared/enums/offering-file-type.enum';
+import { FileFolder } from '@/shared/enums/offering-file-type.enum';
 import { type FilesProps } from '@/modules/offering/shared/interfaces/files-props.interface';
 
 interface Options {
@@ -63,7 +63,7 @@ export const useOfferingExpenseCreationMutation = ({
             publicId: extractPublicId(imageUrl),
             path: extractPath(imageUrl),
             secureUrl: imageUrl,
-            fileType: OfferingFileType.Expense,
+            fileFolder: FileFolder.Expense,
           });
         });
 

@@ -13,7 +13,7 @@ import {
   extractPath,
   extractPublicId,
 } from '@/modules/offering/shared/helpers/extract-data-secure-url.helper';
-import { OfferingFileType } from '@/modules/offering/shared/enums/offering-file-type.enum';
+import { FileFolder } from '@/shared/enums/offering-file-type.enum';
 import { deleteImage } from '@/modules/offering/shared/services/images-files.service';
 
 interface Options {
@@ -69,7 +69,7 @@ export const useOfferingIncomeUpdateMutation = ({
               publicId: extractPublicId(imageUrl),
               path: extractPath(imageUrl),
               secureUrl: imageUrl,
-              fileType: OfferingFileType.Income,
+              fileFolder: FileFolder.Income,
             });
           })
         );

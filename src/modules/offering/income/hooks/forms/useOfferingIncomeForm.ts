@@ -33,7 +33,7 @@ import { getSimpleChurches } from '@/modules/church/services/church.service';
 import { getSimpleFamilyGroups } from '@/modules/family-group/services/family-group.service';
 
 import { useModuleQueries } from '@/modules/offering/shared/hooks/useModuleQueries';
-import { OfferingFileType } from '@/modules/offering/shared/enums/offering-file-type.enum';
+import { FileFolder } from '@/shared/enums/offering-file-type.enum';
 import { CurrencyType } from '@/modules/offering/shared/enums/currency-type.enum';
 import { type FilesProps } from '@/modules/offering/shared/interfaces/files-props.interface';
 import { type RejectionProps } from '@/modules/offering/shared/interfaces/rejected-props.interface';
@@ -483,7 +483,7 @@ export const useOfferingIncomeForm = (
       if (files.length >= 1) {
         const uploadResult = await uploadImagesMutation.mutateAsync({
           files: files as any,
-          fileType: OfferingFileType.Income,
+          fileFolder: FileFolder.Income,
           offeringType: formData.type,
           offeringSubType: formData.subType ?? null,
         });
@@ -542,7 +542,7 @@ export const useOfferingIncomeForm = (
         if (filesOnly.length >= 1) {
           const uploadResult = await uploadImagesMutation.mutateAsync({
             files: filesOnly as any,
-            fileType: OfferingFileType.Income,
+            fileFolder: FileFolder.Income,
             offeringType: formData.type,
             offeringSubType: formData.subType ?? null,
           });

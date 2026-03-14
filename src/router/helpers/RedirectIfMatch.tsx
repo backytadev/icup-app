@@ -7,27 +7,15 @@ export const RedirectIfMatch = (): JSX.Element => {
   if (location.pathname.startsWith('/churches/search/')) {
     return <Navigate to='/churches/search' />;
   }
-  if (location.pathname.startsWith('/churches/general-search')) {
+  if (location.pathname.startsWith('/churches/update/')) {
     return <Navigate to='/churches/search' />;
   }
-  if (location.pathname.startsWith('/churches/search-by-term')) {
-    return <Navigate to='/churches/search' />;
-  }
-  if (location.pathname.startsWith('/churches/update')) {
-    return <Navigate to='/churches/search' />;
-  }
-  if (location.pathname.startsWith('/churches/inactivate')) {
+  if (location.pathname.startsWith('/churches/inactivate/')) {
     return <Navigate to='/churches/search' />;
   }
 
   // If starts with ministry
   if (location.pathname.startsWith('/ministries/search/')) {
-    return <Navigate to='/ministries/search' />;
-  }
-  if (location.pathname.startsWith('/ministries/general-search/')) {
-    return <Navigate to='/ministries/search' />;
-  }
-  if (location.pathname.startsWith('/ministries/search-by-term/')) {
     return <Navigate to='/ministries/search' />;
   }
   if (location.pathname.startsWith('/ministries/update/')) {
@@ -41,12 +29,6 @@ export const RedirectIfMatch = (): JSX.Element => {
   if (location.pathname.startsWith('/pastors/search/')) {
     return <Navigate to='/pastors/search' />;
   }
-  if (location.pathname.startsWith('/pastors/general-search/')) {
-    return <Navigate to='/pastors/search' />;
-  }
-  if (location.pathname.startsWith('/pastors/search-by-term/')) {
-    return <Navigate to='/pastors/search' />;
-  }
   if (location.pathname.startsWith('/pastors/update/')) {
     return <Navigate to='/pastors/search' />;
   }
@@ -55,10 +37,7 @@ export const RedirectIfMatch = (): JSX.Element => {
   }
 
   // If starts with copastor
-  if (location.pathname.startsWith('/copastors/general-search/')) {
-    return <Navigate to='/copastors/search' />;
-  }
-  if (location.pathname.startsWith('/copastors/search-by-term/')) {
+  if (location.pathname.startsWith('/copastors/search/')) {
     return <Navigate to='/copastors/search' />;
   }
   if (location.pathname.startsWith('/copastors/update/')) {
@@ -69,10 +48,7 @@ export const RedirectIfMatch = (): JSX.Element => {
   }
 
   // If starts with supervisor
-  if (location.pathname.startsWith('/supervisors/general-search/')) {
-    return <Navigate to='/supervisors/search' />;
-  }
-  if (location.pathname.startsWith('/supervisors/search-by-term/')) {
+  if (location.pathname.startsWith('/supervisors/search/')) {
     return <Navigate to='/supervisors/search' />;
   }
   if (location.pathname.startsWith('/supervisors/update/')) {
@@ -83,10 +59,7 @@ export const RedirectIfMatch = (): JSX.Element => {
   }
 
   // If starts with zone
-  if (location.pathname.startsWith('/zones/general-search/')) {
-    return <Navigate to='/zones/search' />;
-  }
-  if (location.pathname.startsWith('/zones/search-by-term/')) {
+  if (location.pathname.startsWith('/zones/search/')) {
     return <Navigate to='/zones/search' />;
   }
   if (location.pathname.startsWith('/zones/update/')) {
@@ -97,24 +70,18 @@ export const RedirectIfMatch = (): JSX.Element => {
   }
 
   // If starts with preacher
-  if (location.pathname.startsWith('/preachers/general-search/')) {
-    return <Navigate to='/preachers/general-search' />;
-  }
-  if (location.pathname.startsWith('/preachers/search-by-term/')) {
-    return <Navigate to='/preachers/search-by-term' />;
+  if (location.pathname.startsWith('/preachers/search/')) {
+    return <Navigate to='/preachers/search' />;
   }
   if (location.pathname.startsWith('/preachers/update/')) {
-    return <Navigate to='/preachers/update' />;
+    return <Navigate to='/preachers/search' />;
   }
   if (location.pathname.startsWith('/preachers/inactivate/')) {
-    return <Navigate to='/preachers/inactivate' />;
+    return <Navigate to='/preachers/search' />;
   }
 
   // If starts with family group
-  if (location.pathname.startsWith('/family-groups/general-search/')) {
-    return <Navigate to='/family-groups/search' />;
-  }
-  if (location.pathname.startsWith('/family-groups/search-by-term/')) {
+  if (location.pathname.startsWith('/family-groups/search/')) {
     return <Navigate to='/family-groups/search' />;
   }
   if (location.pathname.startsWith('/family-groups/update/')) {
@@ -125,10 +92,7 @@ export const RedirectIfMatch = (): JSX.Element => {
   }
 
   // If starts with disciple
-  if (location.pathname.startsWith('/disciples/general-search/')) {
-    return <Navigate to='/disciples/search' />;
-  }
-  if (location.pathname.startsWith('/disciples/search-by-term/')) {
+  if (location.pathname.startsWith('/disciples/search/')) {
     return <Navigate to='/disciples/search' />;
   }
   if (location.pathname.startsWith('/disciples/update/')) {
@@ -139,30 +103,48 @@ export const RedirectIfMatch = (): JSX.Element => {
   }
 
   // If starts with user
-  if (location.pathname.startsWith('/churches/search/')) {
-    return <Navigate to='/churches/search' />;
-  }
-  if (location.pathname.startsWith('/users/general-search/')) {
-    return <Navigate to='/churches/search' />;
-  }
-  if (location.pathname.startsWith('/users/search-by-term/')) {
-    return <Navigate to='/churches/search' />;
+  if (location.pathname.startsWith('/users/search/')) {
+    return <Navigate to='/users/search' />;
   }
   if (location.pathname.startsWith('/users/update/')) {
-    return <Navigate to='/churches/search' />;
+    return <Navigate to='/users/search' />;
   }
   if (location.pathname.startsWith('/users/inactivate/')) {
-    return <Navigate to='/churches/search' />;
+    return <Navigate to='/users/search' />;
+  }
+
+
+  // If starts with calendar events
+  if (location.pathname.startsWith('/calendar-events/search/')) {
+    return <Navigate to='/calendar-events/search' />;
+  }
+  if (location.pathname.startsWith('/calendar-events/update/')) {
+    return <Navigate to='/calendar-events/search' />;
+  }
+  if (location.pathname.startsWith('/calendar-events/inactivate/')) {
+    return <Navigate to='/calendar-events/search' />;
   }
 
   // If starts with offering income
   if (location.pathname.startsWith('/offerings/income/search/')) {
     return <Navigate to='/offerings/income/search' />;
   }
+  if (location.pathname.startsWith('/offerings/income/update/')) {
+    return <Navigate to='/offerings/income/search' />;
+  }
+  if (location.pathname.startsWith('/calendar-events/inactivate/')) {
+    return <Navigate to='/calendar-events/search' />;
+  }
 
   // If starts with offering expense
   if (location.pathname.startsWith('/offerings/expenses/search/')) {
     return <Navigate to='/offerings/expenses/search' />;
+  }
+  if (location.pathname.startsWith('/offerings/expense/update/')) {
+    return <Navigate to='/offerings/expense/search' />;
+  }
+  if (location.pathname.startsWith('/offerings/expense/inactivate/')) {
+    return <Navigate to='/offerings/expense/search' />;
   }
 
   // If it doesn't match the pattern, show the 404 component or redirect in another way

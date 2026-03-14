@@ -28,7 +28,7 @@ import { OfferingIncomeCreationShiftTypeNames } from '@/modules/offering/income/
 import { ExternalDonorForm } from '@/modules/offering/income/components/forms';
 
 import { CurrencyTypeNames } from '@/modules/offering/shared/enums/currency-type.enum';
-import { OfferingFileType } from '@/modules/offering/shared/enums/offering-file-type.enum';
+import { FileFolder } from '@/shared/enums/offering-file-type.enum';
 import { DestroyImageButton } from '@/modules/offering/shared/components/DestroyImageButton';
 
 import { cn } from '@/shared/lib/utils';
@@ -1710,7 +1710,7 @@ export const OfferingIncomeFormFields = ({
                             </Button>
                           ) : (
                             <DestroyImageButton
-                              fileType={OfferingFileType.Income}
+                              fileFolder={FileFolder.Income}
                               isDeleteFileButtonDisabled={isDeleteFileButtonDisabled}
                               secureUrl={file as any}
                               removeCloudFile={removeCloudFile}

@@ -20,7 +20,7 @@ import {
 
 import { type ErrorResponse } from '@/shared/interfaces/error-response.interface';
 
-import { OfferingFileType } from '@/modules/offering/shared/enums/offering-file-type.enum';
+import { FileFolder } from '@/shared/enums/offering-file-type.enum';
 import { type FilesProps } from '@/modules/offering/shared/interfaces/files-props.interface';
 import { deleteImage } from '@/modules/offering/shared/services/images-files.service';
 
@@ -77,7 +77,7 @@ export const useOfferingIncomeCreationMutation = ({
               publicId: extractPublicId(imageUrl),
               path: extractPath(imageUrl),
               secureUrl: imageUrl,
-              fileType: OfferingFileType.Income,
+              fileFolder: FileFolder.Income,
             });
           });
         }

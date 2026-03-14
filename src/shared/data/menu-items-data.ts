@@ -14,6 +14,7 @@ import {
   FcReadingEbook,
   FcBusinesswoman,
   FcPodiumWithSpeaker,
+  FcCalendar,
 } from 'react-icons/fc';
 
 import { PiChurch } from 'react-icons/pi';
@@ -122,5 +123,12 @@ export const menuItems: MenuItem[] = [
       UserRole.TreasurerUser,
       UserRole.User,
     ],
+  },
+  {
+    title: 'Eventos',
+    subTitle: 'Modulo Eventos',
+    href: '/calendar-events',
+    Icon: FcCalendar,
+    allowedRoles: [UserRole.SuperUser, UserRole.AdminUser],
   },
 ];

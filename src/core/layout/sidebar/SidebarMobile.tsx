@@ -94,6 +94,7 @@ export const SidebarMobile = (): JSX.Element => {
   const dashboardItem = filteredItems.find((i) => i.href === '/dashboard');
   const offeringsItem = filteredItems.find((i) => i.href === '/offerings');
   const metricsItem = filteredItems.find((i) => i.href === '/metrics');
+  const eventsItem = filteredItems.find((i) => i.href === '/calendar-events');
   const usersItem = filteredItems.find((i) => i.href === '/users');
 
   const avatarSrc = gender === 'male' ? '/images/boy.webp' : '/images/girl.webp';
@@ -252,6 +253,16 @@ export const SidebarMobile = (): JSX.Element => {
                       href={metricsItem.href}
                       Icon={metricsItem.Icon}
                       title={metricsItem.title}
+                      onClose={closeMobile}
+                    />
+                  )}
+
+                  {/* Events */}
+                  {eventsItem && (
+                    <MobileNavItem
+                      href={eventsItem.href}
+                      Icon={eventsItem.Icon}
+                      title={eventsItem.title}
                       onClose={closeMobile}
                     />
                   )}

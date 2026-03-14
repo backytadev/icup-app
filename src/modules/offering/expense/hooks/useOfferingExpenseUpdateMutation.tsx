@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-misused-promises */
-/* eslint-disable @typescript-eslint/no-floating-promises */
-
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient, type UseMutationResult } from '@tanstack/react-query';
@@ -18,7 +15,7 @@ import {
   extractPublicId,
 } from '@/modules/offering/shared/helpers/extract-data-secure-url.helper';
 import { deleteImage } from '@/modules/offering/shared/services/images-files.service';
-import { OfferingFileType } from '@/modules/offering/shared/enums/offering-file-type.enum';
+import { FileFolder } from '@/shared/enums/offering-file-type.enum';
 
 interface Options {
   dialogClose: () => void;
@@ -64,7 +61,7 @@ export const useOfferingExpenseUpdateMutation = ({
             publicId: extractPublicId(imageUrl),
             path: extractPath(imageUrl),
             secureUrl: imageUrl,
-            fileType: OfferingFileType.Expense,
+            fileFolder: FileFolder.Expense,
           });
         });
 

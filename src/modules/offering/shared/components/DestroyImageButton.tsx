@@ -11,7 +11,7 @@ import {
   extractPath,
   extractPublicId,
 } from '@/modules/offering/shared/helpers/extract-data-secure-url.helper';
-import { type OfferingFileType } from '@/modules/offering/shared/enums/offering-file-type.enum';
+import { type FileFolder } from '@/shared/enums/offering-file-type.enum';
 import { useImageDeletionMutation } from '@/modules/offering/shared/hooks/useImageDeletionMutation';
 
 import {
@@ -23,17 +23,23 @@ import {
 } from '@/shared/components/ui/dialog';
 
 interface ButtonDestroyProps {
-  fileType: OfferingFileType;
+  fileFolder: FileFolder;
   secureUrl: string;
   isDeleteFileButtonDisabled: boolean;
   removeCloudFile: (name: any) => void;
+  description?: string;
+  withDescription?: boolean
+  disabledButtonDelete?: boolean
 }
 
 export const DestroyImageButton = ({
-  fileType,
+  fileFolder,
   secureUrl,
   removeCloudFile,
   isDeleteFileButtonDisabled,
+  description,
+  withDescription = true,
+  disabledButtonDelete = true
 }: ButtonDestroyProps): JSX.Element => {
   //* States
   const [isCardOpen, setIsCardOpen] = useState<boolean>(false);
@@ -44,6 +50,8 @@ export const DestroyImageButton = ({
     setIsCardOpen,
     setIsButtonDisabled,
   });
+
+  console.log(isButtonDisabled)
 
   return (
     <Dialog open={isCardOpen} onOpenChange={setIsCardOpen}>
@@ -80,7 +88,7 @@ export const DestroyImageButton = ({
             </span>
             <br />
             <span className='inline-block mb-2 text-[14.5px] md:text-[15px]'>
-              ❌ Esta imagen se borrara del alojamiento en la nube y del registro de la ofrenda.
+              ❌ Esta imagen se borrara del alojamiento en la nube y del registro del documento.
             </span>
             <span className='inline-block mb-2 text-[14.5px] md:text-[15px]'>
               ❌ No se podrá recuperar esta imagen después de ejecutar esta acción.
@@ -104,14 +112,13 @@ export const DestroyImageButton = ({
             No, cancelar
           </Button>
           <Button
-            // disabled={isButtonDisabled}
-            disabled
+            disabled={disabledButtonDelete}
             onClick={async () => {
               setIsButtonDisabled(true);
               await imageDeletionMutation.mutateAsync({
                 publicId: extractPublicId(secureUrl),
                 path: extractPath(secureUrl),
-                fileType,
+                fileFolder,
                 secureUrl,
               });
               removeCloudFile(secureUrl);
@@ -125,9 +132,13 @@ export const DestroyImageButton = ({
             {imageDeletionMutation?.isPending ? 'Procesando...' : 'Sí, eliminar'}
           </Button>
         </div>
-        <p className='text-center font-bold text-red-500 text-[14px]'>
-          No puedes eliminar esta imagen, ya que es esencial para el registro de la ofrenda.
-        </p>
+        {
+          withDescription && (
+            <p className='text-center font-bold text-red-500 text-[14px]'>
+              {description ?? 'No puedes eliminar esta imagen, ya que es esencial para el registro de la ofrenda.'}
+            </p>
+          )
+        }
       </DialogContent>
     </Dialog>
   );
