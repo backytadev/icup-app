@@ -7,7 +7,7 @@ import {
 export interface CalendarEventResponse {
   id: string;
   title: string;
-  description: string;
+  description?: string;
   category: string;
   status: string;
   startDate: Date;

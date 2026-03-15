@@ -10,8 +10,8 @@ export const calendarEventFormSchema = z.object({
 
   description: z
     .string()
-    .min(1, { message: 'La descripción es requerida.' })
-    .max(1000, { message: 'La descripción no puede exceder 1000 caracteres.' }),
+    .max(1000, { message: 'La descripción no puede exceder 1000 caracteres.' })
+    .optional(),
 
   category: z.string().min(1, { message: 'Selecciona una categoría.' }),
 

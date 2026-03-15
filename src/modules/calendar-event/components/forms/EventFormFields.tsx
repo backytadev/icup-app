@@ -206,7 +206,12 @@ export const EventFormFields = memo(({
               name='description'
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className='text-[14px] md:text-[14.5px] font-bold'>Descripción</FormLabel>
+                  <FormLabel className='text-[14px] md:text-[14.5px] font-bold flex items-center gap-2'>
+                    Descripción
+                    <span className='inline-block bg-slate-100 text-slate-500 border border-slate-200 text-[10px] font-semibold uppercase px-2 py-[2px] rounded-full dark:bg-slate-800 dark:text-slate-400 dark:border-slate-700'>
+                      Opcional
+                    </span>
+                  </FormLabel>
                   <FormDescription className='text-[13.5px] md:text-[14px]'>
                     Describe brevemente el propósito del evento.
                   </FormDescription>
